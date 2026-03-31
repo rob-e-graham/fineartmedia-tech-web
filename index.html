@@ -829,9 +829,30 @@ function drawFitFocus(ctx,img,ox,oy,w,h,fx=0.5,fy=0.5){
 
 // ─── LIGHTBOX ─────────────────────────────────────────────────
 const lb=document.getElementById('lb'),lbImg=document.getElementById('lbImg');
+const GALLERY_DUPLICATES={
+  'FAMTEC Images/IMG_3977 (1).JPG':'FAMTEC Images/IMG_3977.JPG',
+  'FAMTEC Images/boyd-heidi-auction-tdf-2a-1000x1290 (1).jpg':'FAMTEC Images/boyd-heidi-auction-tdf-2a-1000x1290.jpg',
+  'FAMTEC Images/22-3_TWMA-Noonan_15c_MS02_midres (1).jpg':'FAMTEC Images/22-3_TWMA-Noonan_15c_MS02_midres.jpg',
+  'FAMTEC Images/22-3_TWMA-Noonan_62_MS02_midres (1).jpg':'FAMTEC Images/22-3_TWMA-Noonan_62_MS02_midres.jpg'
+};
+const canonicalGallerySrc=src=>GALLERY_DUPLICATES[src] || src;
 const galleryItems=[...document.querySelectorAll('.g-item')];
-const visibleGalleryItems=galleryItems.slice(0,18);
-galleryItems.slice(18).forEach(el=>el.classList.add('is-hidden'));
+const uniqueGalleryItems=[];
+const seenGallerySources=new Set();
+
+galleryItems.forEach(el=>{
+  const canonicalSrc=canonicalGallerySrc(el.dataset.src);
+  el.dataset.canonicalSrc=canonicalSrc;
+  if(seenGallerySources.has(canonicalSrc)){
+    el.classList.add('is-hidden');
+    return;
+  }
+  seenGallerySources.add(canonicalSrc);
+  uniqueGalleryItems.push(el);
+});
+
+const visibleGalleryItems=uniqueGalleryItems.slice(0,18);
+uniqueGalleryItems.slice(18).forEach(el=>el.classList.add('is-hidden'));
 visibleGalleryItems.forEach((el,i)=>{
   const dx=((i % 5) - 2) * 2.2;
   const dy=((i % 7) - 3) * 1.6;
@@ -850,9 +871,9 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape') lb.classList.remove
 
 // ─── GALLERY FLIP BOARD ──────────────────────────────────────
 const galleryPool=galleryItems.map(el=>({
-  src:el.dataset.src,
+  src:el.dataset.canonicalSrc || el.dataset.src,
   alt:el.querySelector('img')?.alt || 'Work'
-}));
+})).filter((item,index,arr)=>arr.findIndex(entry=>entry.src===item.src)===index);
 const reservedGallerySources=new Set();
 
 function rand(min,max){
@@ -863,7 +884,7 @@ function visibleGallerySources(excludeEl){
   return new Set(
     visibleGalleryItems
       .filter(item=>item !== excludeEl && !item.classList.contains('is-hidden'))
-      .map(item=>item.dataset.src)
+      .map(item=>item.dataset.canonicalSrc || item.dataset.src)
   );
 }
 
@@ -892,7 +913,7 @@ function scheduleTileFlip(el){
       scheduleTileFlip(el);
       return;
     }
-    const target=pickNewGalleryItem(el.dataset.src,el);
+    const target=pickNewGalleryItem(el.dataset.canonicalSrc || el.dataset.src,el);
     if(!target){
       scheduleTileFlip(el);
       return;
@@ -902,6 +923,7 @@ function scheduleTileFlip(el){
     el.classList.add('is-flipping');
     setTimeout(()=>{
       el.dataset.src=target.src;
+      el.dataset.canonicalSrc=target.src;
       img.src=target.src;
       img.alt=target.alt;
     },575);
