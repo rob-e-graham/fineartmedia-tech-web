@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rob Graham — FAMTEC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080808;
+  --surface: #0f0f0f;
+  --surface2: #161616;
+  --border: #1e1e1e;
+  --border2: #2a2a2a;
+  --text: #ede9e1;
+  --text2: #b8b0a7;
+  --text3: #787068;
+  --accent: #c8a96e;
+  --accent-dim: rgba(200,169,110,0.15);
+  --serif: 'Cormorant Garamond', serif;
+  --mono: 'DM Mono', monospace;
+  --sans: 'DM Sans', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* CUSTOM CURSOR */
+.cursor {
+  position: fixed;
+  width: 8px; height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+  mix-blend-mode: screen;
+}
+.cursor-ring {
+  position: fixed;
+  width: 32px; height: 32px;
+  border: 1px solid rgba(200,169,110,0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.18s ease, width 0.25s, height 0.25s;
+}
+body:has(a:hover) .cursor-ring,
+body:has(button:hover) .cursor-ring {
+  width: 56px; height: 56px;
+  border-color: rgba(200,169,110,0.6);
+}
+
+/* ── HEADER ── */
+header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 60px;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.4s, background 0.4s, padding 0.4s;
+}
+header.scrolled {
+  border-bottom-color: var(--border);
+  background: rgba(8,8,8,0.92);
+  backdrop-filter: blur(12px);
+  padding: 18px 60px;
+}
+.logo {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 1.1rem;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  color: var(--text);
+  text-decoration: none;
+}
+.logo em {
+  font-style: italic;
+  color: var(--accent);
+}
+nav {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+nav a {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text3);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+nav a:hover { color: var(--accent); }
+
+/* ── SCANLINE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.025) 2px,
+    rgba(0,0,0,0.025) 4px
+  );
+  pointer-events: none;
+  z-index: 9990;
+}
+
+/* ── CANVAS ── */
+#heroCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── GLITCH LOGO ── */
+.logo {
+  position: relative;
+}
+.logo::before, .logo::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 1.1rem;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  opacity: 0;
+  pointer-events: none;
+}
+.logo:hover::before {
+  color: #7ecfcf;
+  animation: glitchA 0.35s steps(2) forwards;
+  clip-path: polygon(0 20%, 100% 20%, 100% 45%, 0 45%);
+}
+.logo:hover::after {
+  color: #c87060;
+  animation: glitchB 0.35s steps(2) 0.06s forwards;
+  clip-path: polygon(0 58%, 100% 58%, 100% 78%, 0 78%);
+}
+@keyframes glitchA {
+  0%   { opacity:0.9; transform: translateX(-4px); }
+  50%  { opacity:0.6; transform: translateX(4px); }
+  100% { opacity:0; transform: translateX(0); }
+}
+@keyframes glitchB {
+  0%   { opacity:0.9; transform: translateX(4px); }
+  50%  { opacity:0.6; transform: translateX(-4px); }
+  100% { opacity:0; transform: translateX(0); }
+}
+
+/* ── SIGNAL TICKER ── */
+.ticker-wrap {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 26px;
+  background: rgba(8,8,8,0.7);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+}
+.ticker-track {
+  display: flex;
+  animation: tickerScroll 32s linear infinite;
+  white-space: nowrap;
+}
+.ticker-track:hover { animation-play-state: paused; }
+.ticker-item {
+  font-family: var(--mono);
+  font-size: 0.46rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text3);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ticker-item span { color: var(--accent); }
+@keyframes tickerScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ── HERO PARALLAX WRAP ── */
+.hero-content-wrap {
+  position: relative;
+  z-index: 3;
+}
+
+/* ── WORK CARD SCAN EFFECT ── */
+.work-card::after {
+  content: '';
+  position: absolute;
+  top: -100%; left: 0;
+  width: 100%; height: 60%;
+  background: linear-gradient(180deg, transparent, rgba(200,169,110,0.05), transparent);
+  transition: top 0s;
+  pointer-events: none;
+  z-index: 2;
+}
+.work-card:hover::after {
+  top: 140%;
+  transition: top 0.9s ease;
+}
+
+/* ── ARCHAI STATUS ANIMATE ── */
+.status-row {
+  transition: background 0.2s, padding-left 0.2s;
+}
+.status-row:hover {
+  background: rgba(200,169,110,0.04);
+  padding-left: 8px;
+}
+
+/* ── RESEARCH CARD BORDER SWEEP ── */
+.research-card {
+  position: relative;
+  overflow: hidden;
+}
+.research-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  transition: left 0.5s ease;
+}
+.research-card:hover::before {
+  left: 100%;
+}
+
+/* ── CREDENTIAL HOVER ── */
+.credential {
+  transition: padding-left 0.2s, background 0.2s;
+}
+.credential:hover {
+  padding-left: 8px;
+  background: rgba(200,169,110,0.03);
+}
+.credential:hover .cred-place { color: var(--text); }
+
+/* ── CONTACT LINK SHIMMER ── */
+.contact-link {
+  position: relative;
+  overflow: hidden;
+}
+.contact-link::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(200,169,110,0.05), transparent);
+  transition: left 0.4s ease;
+  pointer-events: none;
+}
+.contact-link:hover::before { left: 100%; }
+
+/* ── PILLAR ACCENT LINE ── */
+.pillar {
+  transition: background 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.pillar::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0; height: 1px;
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+.pillar:hover::after { width: 100%; }
+.pillar:hover { background: rgba(200,169,110,0.03); }
+
+/* ── SECTION NUM ANIMATE ── */
+.section-num {
+  display: inline-block;
+  transition: opacity 0.3s, letter-spacing 0.3s;
+}
+
+/* ── HERO ── */
+.hero {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 80px 60px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 60% 50% at 70% 40%, rgba(200,169,110,0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 20% 80%, rgba(143,188,176,0.03) 0%, transparent 60%);
+}
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
+}
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.3s forwards;
+}
+.hero-title {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(3.5rem, 8vw, 7rem);
+  line-height: 1.0;
+  letter-spacing: -0.5px;
+  max-width: 900px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.5s forwards;
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.hero-sub {
+  margin-top: 28px;
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  color: var(--text3);
+  font-weight: 300;
+  max-width: 480px;
+  line-height: 1.6;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.7s forwards;
+}
+.hero-meta {
+  position: absolute;
+  right: 60px;
+  bottom: 80px;
+  text-align: right;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.9s forwards;
+}
+.hero-meta span {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.52rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text3);
+  line-height: 2.2;
+}
+.scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 60px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  opacity: 0;
+  animation: fadeUp 0.8s 1.2s forwards;
+}
+.scroll-hint span {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+.scroll-line {
+  width: 40px;
+  height: 1px;
+  background: var(--border2);
+  position: relative;
+  overflow: hidden;
+}
+.scroll-line::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: var(--accent);
+  animation: scanline 2s ease-in-out infinite;
+}
+@keyframes scanline {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SECTION STRUCTURE ── */
+section {
+  padding: 120px 60px;
+  border-top: 1px solid var(--border);
+}
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  margin-bottom: 64px;
+}
+.section-num {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 2px;
+  color: var(--accent);
+  opacity: 0.6;
+}
+.section-title {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 2.6rem;
+  letter-spacing: 1px;
+}
+.section-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  margin-left: 20px;
+}
+
+/* ── WORKS ── */
+#works .grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1px;
+  background: var(--border);
+}
+.work-card {
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  aspect-ratio: 4/3;
+}
+.work-card:nth-child(1) { grid-column: span 7; aspect-ratio: unset; min-height: 480px; }
+.work-card:nth-child(2) { grid-column: span 5; }
+.work-card:nth-child(3) { grid-column: span 4; }
+.work-card:nth-child(4) { grid-column: span 4; }
+.work-card:nth-child(5) { grid-column: span 4; }
+.work-card:nth-child(6) { grid-column: span 12; aspect-ratio: unset; min-height: 240px; }
+
+.work-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(0.6) contrast(1.1);
+  transition: filter 0.5s, transform 0.6s;
+}
+.work-placeholder {
+  width: 100%; height: 100%;
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.work-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(8,8,8,0.95) 100%);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.work-card:hover .work-overlay { opacity: 1; }
+.work-card:hover .work-img { filter: saturate(1) contrast(1.05); transform: scale(1.03); }
+
+.work-tag {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.work-name {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 300;
+}
+.work-desc {
+  font-size: 0.75rem;
+  color: var(--text2);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+.work-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-family: var(--mono);
+  font-size: 0.48rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border: 1px solid var(--border2);
+  background: rgba(8,8,8,0.7);
+  backdrop-filter: blur(4px);
+  color: var(--text3);
+}
+.work-badge.live {
+  border-color: rgba(200,169,110,0.4);
+  color: var(--accent);
+}
+
+/* ── ARCHAI SECTION ── */
+#archai {
+  background: var(--surface);
+}
+.archai-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+.archai-body p {
+  font-size: 0.92rem;
+  color: var(--text2);
+  line-height: 1.85;
+  margin-bottom: 20px;
+}
+.archai-pillars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  margin-top: 40px;
+}
+.pillar {
+  background: var(--bg);
+  padding: 20px;
+}
+.pillar-label {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.pillar-text {
+  font-size: 0.78rem;
+  color: var(--text3);
+  line-height: 1.6;
+}
+.archai-status {
+  border: 1px solid var(--border2);
+  padding: 28px;
+}
+.status-head {
+  font-family: var(--mono);
+  font-size: 0.52rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.58rem;
+}
+.status-row:last-child { border-bottom: none; }
+.status-name { color: var(--text2); }
+.status-val {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text3);
+}
+.dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-on { background: #7aad8a; animation: pulse 2.5s ease infinite; }
+.dot-warn { background: #e8a840; animation: pulse 1.5s ease infinite; }
+.dot-blue { background: #7090c8; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ── RESEARCH ── */
+.research-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+}
+.research-card {
+  background: var(--bg);
+  padding: 32px;
+  transition: background 0.2s;
+}
+.research-card:hover { background: var(--surface); }
+.rc-year {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 2px;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.rc-title {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 300;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.rc-body {
+  font-size: 0.75rem;
+  color: var(--text3);
+  line-height: 1.65;
+}
+.rc-link {
+  display: inline-block;
+  margin-top: 16px;
+  font-family: var(--mono);
+  font-size: 0.52rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text3);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border2);
+  padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.rc-link:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ── ABOUT / PROFILE ── */
+#about {
+  background: var(--surface);
+}
+.about-layout {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 80px;
+  align-items: start;
+}
+.about-aside {
+  position: sticky;
+  top: 100px;
+}
+.about-name {
+  font-family: var(--serif);
+  font-size: 2.4rem;
+  font-weight: 300;
+  margin-bottom: 4px;
+}
+.about-role {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 28px;
+}
+.about-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 28px;
+}
+.tag {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border: 1px solid var(--border2);
+  color: var(--text3);
+}
+.about-body p {
+  font-size: 0.9rem;
+  color: var(--text2);
+  line-height: 1.9;
+  margin-bottom: 20px;
+}
+.about-body p:last-child { margin-bottom: 0; }
+.credential-list {
+  margin-top: 32px;
+}
+.credential {
+  display: flex;
+  gap: 20px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.58rem;
+}
+.cred-year { color: var(--text3); min-width: 60px; }
+.cred-place { color: var(--accent); min-width: 120px; }
+.cred-role { color: var(--text2); }
+
+/* ── CONTACT ── */
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+.contact-statement {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  font-weight: 300;
+  line-height: 1.4;
+  color: var(--text2);
+}
+.contact-statement em {
+  font-style: italic;
+  color: var(--accent);
+}
+.contact-links {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--border);
+}
+.contact-link {
+  background: var(--bg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.contact-link:hover { background: var(--surface2); }
+.cl-label {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+.cl-value {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  color: var(--text2);
+}
+.cl-arrow {
+  color: var(--text3);
+  font-size: 0.8rem;
+  transition: transform 0.2s, color 0.2s;
+}
+.contact-link:hover .cl-arrow { transform: translateX(4px); color: var(--accent); }
+
+/* ── EXHIBITIONS ── */
+.exh-intro {
+  max-width: 700px;
+  margin-bottom: 60px;
+}
+.exh-intro p {
+  font-size: 0.88rem;
+  color: var(--text2);
+  line-height: 1.85;
+  margin-bottom: 20px;
+}
+.exh-certs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.exh-cert {
+  font-family: var(--mono);
+  font-size: 0.48rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border: 1px solid var(--border2);
+  color: var(--text3);
+}
+.exh-timeline {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 0;
+}
+.exh-year-block {
+  display: contents;
+}
+.exh-year-label {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 2px;
+  color: var(--accent);
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+  padding-right: 24px;
+  line-height: 1;
+  padding-top: 22px;
+}
+.exh-entries {
+  border-top: 1px solid var(--border);
+  padding: 8px 0 8px 0;
+}
+.exh-entry {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: baseline;
+  transition: padding-left 0.2s, background 0.2s;
+  cursor: default;
+}
+.exh-entry:last-child { border-bottom: none; }
+.exh-entry:hover {
+  padding-left: 10px;
+  background: rgba(200,169,110,0.025);
+}
+.exh-title {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--text);
+  line-height: 1.3;
+}
+.exh-meta {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 1px;
+  color: var(--text3);
+  text-align: right;
+  line-height: 1.6;
+  max-width: 340px;
+}
+.exh-entry:hover .exh-title { color: var(--text); }
+.exh-entry:hover .exh-meta { color: var(--text2); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-logo {
+  font-family: var(--serif);
+  font-size: 0.9rem;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+.footer-copy {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+.footer-links {
+  display: flex;
+  gap: 24px;
+}
+.footer-links a {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text3);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--accent); }
+
+/* ── REVEAL ANIMATIONS ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  header { padding: 24px 30px; }
+  header.scrolled { padding: 16px 30px; }
+  nav { display: none; }
+  .hero { padding: 60px 30px; }
+  .hero-meta { display: none; }
+  .scroll-hint { left: 30px; }
+  section { padding: 80px 30px; }
+  footer { padding: 28px 30px; flex-direction: column; gap: 16px; text-align: center; }
+  #works .grid { grid-template-columns: 1fr 1fr; }
+  .work-card:nth-child(n) { grid-column: span 2; }
+  .archai-layout, .about-layout, .contact-layout, .research-grid { grid-template-columns: 1fr; gap: 40px; }
+  .about-aside { position: static; }
+  .hero-title { font-size: clamp(2.5rem, 10vw, 5rem); }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- HEADER -->
+<header id="header">
+  <a href="#" class="logo" data-text="FAMTEC">FAMT<em>EC</em></a>
+  <nav>
+    <a href="#works">Works</a>
+    <a href="#archai">ARCHAI</a>
+    <a href="#research">Research</a>
+    <a href="#exhibitions">Exhibitions</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <canvas id="heroCanvas"></canvas>
+  <div class="ticker-wrap">
+    <div class="ticker-track" id="ticker">
+      <div class="ticker-item">ARCHAI <span>●</span> Sovereign AI Infrastructure</div>
+      <div class="ticker-item">ISEA 2026 <span>●</span> Dubai — April</div>
+      <div class="ticker-item">RMIT University <span>●</span> PhD Researcher — Design</div>
+      <div class="ticker-item">Vector DB <span>●</span> Qdrant — Local Inference</div>
+      <div class="ticker-item">NFC Object Conversations <span>●</span> Active</div>
+      <div class="ticker-item">FAMTEC Exchange <span>●</span> Melbourne AU</div>
+      <div class="ticker-item">RTX 4090 ×2 <span>●</span> On-Premise Compute</div>
+      <div class="ticker-item">Cultural Heritage Tech <span>●</span> 20+ Years</div>
+      <!-- duplicate for seamless loop -->
+      <div class="ticker-item">ARCHAI <span>●</span> Sovereign AI Infrastructure</div>
+      <div class="ticker-item">ISEA 2026 <span>●</span> Dubai — April</div>
+      <div class="ticker-item">RMIT University <span>●</span> PhD Researcher — Design</div>
+      <div class="ticker-item">Vector DB <span>●</span> Qdrant — Local Inference</div>
+      <div class="ticker-item">NFC Object Conversations <span>●</span> Active</div>
+      <div class="ticker-item">FAMTEC Exchange <span>●</span> Melbourne AU</div>
+      <div class="ticker-item">RTX 4090 ×2 <span>●</span> On-Premise Compute</div>
+      <div class="ticker-item">Cultural Heritage Tech <span>●</span> 20+ Years</div>
+    </div>
+  </div>
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content-wrap">
+  <div class="hero-eyebrow">Fine Art Media Technology — Melbourne</div>
+  <h1 class="hero-title">Creative Technology<br>for <em>Cultural Heritage</em></h1>
+  <p class="hero-sub">Museum systems, AI infrastructure, and interactive experiences at the intersection of art, technology, and institutional memory.</p>
+  </div>
+  <div class="hero-meta">
+    <span>Rob Graham</span>
+    <span>Head of Technology</span>
+    <span>PhD Candidate — RMIT</span>
+    <span>ISEA 2026</span>
+    <span id="liveClock" style="color:var(--accent);opacity:0.7;"></span>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- WORKS -->
+<section id="works">
+  <div class="section-header reveal">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Selected Works</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="grid reveal">
+
+    <div class="work-card">
+      <div class="work-placeholder" style="background:linear-gradient(135deg,#0e0e0e 0%,#181410 100%)">
+        <svg width="120" height="60" viewBox="0 0 120 60" fill="none">
+          <rect x="10" y="10" width="40" height="40" stroke="#2a2a2a" stroke-width="1"/>
+          <rect x="70" y="10" width="40" height="40" stroke="#2a2a2a" stroke-width="1"/>
+          <line x1="50" y1="30" x2="70" y2="30" stroke="#c8a96e" stroke-width="0.5" opacity="0.5"/>
+          <circle cx="30" cy="30" r="8" stroke="#c8a96e" stroke-width="0.5" opacity="0.4"/>
+          <circle cx="90" cy="30" r="8" stroke="#7ecfcf" stroke-width="0.5" opacity="0.4"/>
+        </svg>
+      </div>
+      <div class="work-badge live">Live — NCM 2025</div>
+      <div class="work-overlay">
+        <div class="work-tag">AI Infrastructure</div>
+        <div class="work-name">ARCHAI</div>
+        <div class="work-desc">Sovereign AI framework for cultural heritage institutions. Local LLMs, vector search, NFC-enabled object conversations.</div>
+      </div>
+    </div>
+
+    <div class="work-card">
+      <div class="work-placeholder" style="background:linear-gradient(135deg,#0a0e12 0%,#0e1218 100%)">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+          <circle cx="40" cy="40" r="30" stroke="#1e2a3a" stroke-width="1"/>
+          <circle cx="40" cy="40" r="20" stroke="#2a3a4a" stroke-width="1"/>
+          <circle cx="40" cy="40" r="10" stroke="#7090c8" stroke-width="0.5" opacity="0.5"/>
+          <circle cx="40" cy="40" r="2" fill="#7090c8" opacity="0.6"/>
+        </svg>
+      </div>
+      <div class="work-overlay">
+        <div class="work-tag">Data Installation</div>
+        <div class="work-name">Signal to Noise</div>
+        <div class="work-desc">Machine interpretation of 12M planetary image archives.</div>
+      </div>
+    </div>
+
+    <div class="work-card">
+      <div class="work-placeholder" style="background:linear-gradient(135deg,#0e0a0a 0%,#181010 100%)">
+        <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+          <rect x="5" y="5" width="50" height="50" stroke="#2a1e1e" stroke-width="1"/>
+          <rect x="14" y="14" width="32" height="32" stroke="#3a2a2a" stroke-width="1"/>
+          <rect x="23" y="23" width="14" height="14" fill="#c87060" opacity="0.2"/>
+          <rect x="23" y="23" width="14" height="14" stroke="#c87060" stroke-width="0.5" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="work-overlay">
+        <div class="work-tag">Projection Mapping</div>
+        <div class="work-name">Heritage Reanimation</div>
+        <div class="work-desc">3D projection mapping on heritage architecture.</div>
+      </div>
+    </div>
+
+    <div class="work-card">
+      <div class="work-placeholder" style="background:linear-gradient(135deg,#080e0a 0%,#0e1810 100%)">
+        <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+          <polyline points="5,50 15,30 25,40 35,15 45,25 55,10" stroke="#7aad8a" stroke-width="0.8" fill="none" opacity="0.6"/>
+          <line x1="5" y1="55" x2="55" y2="55" stroke="#1e2a1e" stroke-width="0.5"/>
+          <circle cx="35" cy="15" r="3" fill="#7aad8a" opacity="0.4"/>
+        </svg>
+      </div>
+      <div class="work-overlay">
+        <div class="work-tag">Interactive Systems</div>
+        <div class="work-name">The Operator</div>
+        <div class="work-desc">NFC-triggered conversational AI terminals for museum collections.</div>
+      </div>
+    </div>
+
+    <div class="work-card">
+      <div class="work-placeholder" style="background:linear-gradient(135deg,#0a080e 0%,#100e18 100%)">
+        <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+          <path d="M10 50 Q30 5 50 50" stroke="#9b8fbf" stroke-width="0.8" fill="none" opacity="0.6"/>
+          <path d="M15 50 Q30 15 45 50" stroke="#9b8fbf" stroke-width="0.5" fill="none" opacity="0.3"/>
+          <circle cx="30" cy="22" r="4" stroke="#9b8fbf" stroke-width="0.5" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="work-overlay">
+        <div class="work-tag">Immersive XR</div>
+        <div class="work-name">Immersive Experiences</div>
+        <div class="work-desc">Large-scale immersive environments and spatial computing.</div>
+      </div>
+    </div>
+
+    <div class="work-card">
+      <div class="work-placeholder" style="background:linear-gradient(90deg,#080808 0%,#111111 100%)">
+        <div style="display:flex;gap:2px;align-items:flex-end;height:40px">
+          <div style="width:6px;height:20px;background:#1e1e1e"></div>
+          <div style="width:6px;height:32px;background:#1e1e1e"></div>
+          <div style="width:6px;height:16px;background:#1e1e1e"></div>
+          <div style="width:6px;height:38px;background:#2a2a2a"></div>
+          <div style="width:6px;height:12px;background:#1e1e1e"></div>
+          <div style="width:6px;height:28px;background:#2a2a2a"></div>
+          <div style="width:6px;height:24px;background:#1e1e1e"></div>
+          <div style="width:6px;height:40px;background:#c8a96e;opacity:0.3"></div>
+          <div style="width:6px;height:10px;background:#1e1e1e"></div>
+          <div style="width:6px;height:34px;background:#1e1e1e"></div>
+          <div style="width:6px;height:18px;background:#1e1e1e"></div>
+          <div style="width:6px;height:30px;background:#2a2a2a"></div>
+        </div>
+      </div>
+      <div class="work-overlay">
+        <div class="work-tag">Technology Strategy</div>
+        <div class="work-name">FAMTEC Exchange</div>
+        <div class="work-desc">Open hardware sharing network for cultural institutions across Australia.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ARCHAI -->
+<section id="archai">
+  <div class="section-header reveal">
+    <span class="section-num">02</span>
+    <h2 class="section-title">ARCHAI</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="archai-layout">
+    <div class="archai-body reveal">
+      <p>Augmented Reanimation for Cultural Heritage and Artificial Intelligence — a local-first AI infrastructure framework designed specifically for GLAM institutions.</p>
+      <p>ARCHAI rejects dependency on cloud platforms, instead deploying sovereign inference servers, vector databases, and semantic collections within the institutional boundary. Each collection object gains its own dedicated AI instance, accessible via NFC-triggered conversational terminals.</p>
+      <p>Presented at ISEA 2026, Dubai. PhD research at RMIT University, School of Design.</p>
+      <div class="archai-pillars">
+        <div class="pillar">
+          <div class="pillar-label">Data Sovereignty</div>
+          <div class="pillar-text">All inference and storage local to the institution. No external API dependency.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-label">Curatorial Authority</div>
+          <div class="pillar-text">Semantic collections governed by curators, not algorithms.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-label">Object Intelligence</div>
+          <div class="pillar-text">Per-object Ollama instances with hallucination validation layers.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-label">Living Archive</div>
+          <div class="pillar-text">Collections that grow through visitor interaction and institutional knowledge.</div>
+        </div>
+      </div>
+    </div>
+    <div class="archai-status reveal">
+      <div class="status-head">System Architecture — Current</div>
+      <div class="status-row">
+        <span class="status-name">Vector Database</span>
+        <span class="status-val"><span class="dot dot-on"></span>Qdrant — Local</span>
+      </div>
+      <div class="status-row">
+        <span class="status-name">LLM Runtime</span>
+        <span class="status-val"><span class="dot dot-on"></span>Ollama — On-premise</span>
+      </div>
+      <div class="status-row">
+        <span class="status-name">NFC Interface</span>
+        <span class="status-val"><span class="dot dot-warn"></span>In Development</span>
+      </div>
+      <div class="status-row">
+        <span class="status-name">Collection CMS</span>
+        <span class="status-val"><span class="dot dot-on"></span>Axiell / Sanity</span>
+      </div>
+      <div class="status-row">
+        <span class="status-name">Compute</span>
+        <span class="status-val"><span class="dot dot-on"></span>RTX 4090 ×2</span>
+      </div>
+      <div class="status-row">
+        <span class="status-name">Hallucination Guard</span>
+        <span class="status-val"><span class="dot dot-on"></span>5-layer validation</span>
+      </div>
+      <div class="status-row">
+        <span class="status-name">ISEA 2026</span>
+        <span class="status-val"><span class="dot dot-blue"></span>Dubai — April 2026</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section id="research">
+  <div class="section-header reveal">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Research</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="research-grid reveal">
+    <div class="research-card">
+      <div class="rc-year">2024 — Ongoing</div>
+      <div class="rc-title">ARCHAI: Cultivating a Living Archive</div>
+      <div class="rc-body">PhD research at RMIT University, School of Design, Generative Practice mode. Developing a sovereign AI infrastructure framework for GLAM institutions — rejecting cloud dependency in favour of institutional sovereignty.</div>
+      <a href="#" class="rc-link">RMIT Research →</a>
+    </div>
+    <div class="research-card">
+      <div class="rc-year">ISEA 2026</div>
+      <div class="rc-title">Conference Paper — Dubai</div>
+      <div class="rc-body">Accepted paper examining ARCHAI as a framework for reanimating cultural heritage through local AI infrastructure. Exploring temporal collapse, technological reanimation, and the two-layer architecture of institutional memory.</div>
+      <a href="#" class="rc-link">Abstract →</a>
+    </div>
+    <div class="research-card">
+      <div class="rc-year">2013</div>
+      <div class="rc-title">3D Projection on Heritage Architecture</div>
+      <div class="rc-body">Master's thesis at RMIT examining how projection mapping reshapes relationships to cultural memory and heritage architecture. Foundational research that established a long-running inquiry into technology and institutional memory.</div>
+      <a href="#" class="rc-link">Thesis →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-header reveal">
+    <span class="section-num">04</span>
+    <h2 class="section-title">About</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="about-layout">
+    <div class="about-aside reveal">
+      <div class="about-name">Rob Graham</div>
+      <div class="about-role">Head of Technology — Creative Technologist — PhD Researcher</div>
+      <div class="about-tags">
+        <span class="tag">Museum Tech</span>
+        <span class="tag">AI Infrastructure</span>
+        <span class="tag">GLAM</span>
+        <span class="tag">Open Source</span>
+        <span class="tag">PhD — RMIT</span>
+        <span class="tag">Immersive XR</span>
+        <span class="tag">Vector DB</span>
+        <span class="tag">Local LLM</span>
+        <span class="tag">NFC Systems</span>
+        <span class="tag">Melbourne</span>
+      </div>
+      <div class="credential-list">
+        <div class="credential">
+          <span class="cred-year">2026–</span>
+          <span class="cred-place">RMIT</span>
+          <span class="cred-role">PhD Researcher (Design)</span>
+        </div>
+        <div class="credential">
+          <span class="cred-year">2022–26</span>
+          <span class="cred-place">NCM</span>
+          <span class="cred-role">Head of Technology & Digital Media</span>
+        </div>
+        <div class="credential">
+          <span class="cred-year">Indep.</span>
+          <span class="cred-place">ACMI</span>
+          <span class="cred-role">Media Artist / Creative Technologist</span>
+        </div>
+        <div class="credential">
+          <span class="cred-year">Indep.</span>
+          <span class="cred-place">Museums Victoria</span>
+          <span class="cred-role">Creative Technology</span>
+        </div>
+        <div class="credential">
+          <span class="cred-year">Indep.</span>
+          <span class="cred-place">MIFF / Heide / TarraWarra</span>
+          <span class="cred-role">Immersive Installations</span>
+        </div>
+        <div class="credential">
+          <span class="cred-year">MA</span>
+          <span class="cred-place">RMIT University</span>
+          <span class="cred-role">Creative Media — Animation & Interactive</span>
+        </div>
+        <div class="credential">
+          <span class="cred-year">BA</span>
+          <span class="cred-place">RMIT University</span>
+          <span class="cred-role">Media Arts</span>
+        </div>
+      </div>
+    </div>
+    <div class="about-body reveal">
+      <p>Strategic technology leader and creative technologist with over 20 years' experience at the intersection of art, digital infrastructure, artificial intelligence, and cultural heritage. I specialise in large-scale media systems, immersive environments, AI-integrated collections infrastructure, and exhibition technology.</p>
+      <p>At the National Communications Museum I led the full technical transformation of a heritage 1930s telephone exchange into a functioning contemporary technology museum — designing all digital infrastructure, delivering immersive exhibitions integrating XR and projection mapping, and securing over $100,000 in hardware savings through industry partnerships.</p>
+      <p>My independent practice spans immersive projection environments, interactive installations, extended reality works, and experimental AI-driven art systems. Collaborators include ACMI, Museums Victoria, MIFF, Heide Museum of Modern Art, and TarraWarra Museum of Art. My artistic inquiry explores the Hyper Sublime, techno-shamanism, simulation and digital ecologies, and post-religious transcendence in screen culture.</p>
+      <p>Current PhD research at RMIT develops ARCHAI — a sovereign AI infrastructure framework returning computational autonomy to GLAM institutions. The core proposition: AI belongs in museums, but on the institution's terms, not the cloud's.</p>
+      <div style="margin-top:32px;border-top:1px solid var(--border);padding-top:24px;">
+        <div class="section-label" style="font-family:var(--mono);font-size:0.52rem;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:16px;">Professional Vision</div>
+        <p style="font-family:var(--serif);font-size:1.1rem;font-weight:300;font-style:italic;color:var(--text2);line-height:1.7;">To build sovereign, preservation-aware, AI-integrated cultural infrastructure that allows institutions to maintain autonomy while expanding interpretive depth, access, and public engagement.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skills Matrix -->
+  <div style="margin-top:80px;" class="reveal">
+    <div style="font-family:var(--mono);font-size:0.52rem;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:24px;">Skills Matrix</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);">
+      <div style="background:var(--bg);padding:20px;">
+        <div style="font-family:var(--mono);font-size:0.5rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Expert</div>
+        <div style="font-size:0.78rem;color:var(--text2);line-height:2;">Exhibition Technology<br>Museum IT Leadership<br>Creative Direction<br>Vendor Negotiation</div>
+      </div>
+      <div style="background:var(--bg);padding:20px;">
+        <div style="font-family:var(--mono);font-size:0.5rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Advanced</div>
+        <div style="font-size:0.78rem;color:var(--text2);line-height:2;">AI Infrastructure<br>XR Installation<br>Server Architecture<br>Semantic System Design</div>
+      </div>
+      <div style="background:var(--bg);padding:20px;">
+        <div style="font-family:var(--mono);font-size:0.5rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Technical Stack</div>
+        <div style="font-size:0.78rem;color:var(--text2);line-height:2;">Qdrant · Ollama · Python<br>Proxmox · TrueNAS · LTO<br>CollectiveAccess · Axiell<br>ResourceSpace · Sanity</div>
+      </div>
+      <div style="background:var(--bg);padding:20px;">
+        <div style="font-family:var(--mono);font-size:0.5rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Compute</div>
+        <div style="font-size:0.78rem;color:var(--text2);line-height:2;">Mac Studio M2 Max<br>RTX 4090 ×2<br>Synology NAS<br>3-2-1 Backup + LTO</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXHIBITIONS -->
+<section id="exhibitions">
+  <div class="section-header reveal">
+    <span class="section-num">05</span>
+    <h2 class="section-title">Exhibition History</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="exh-intro reveal">
+    <p>Media artist, production manager, and senior technician with a demonstrated history across fine art, immersive installation, projection mapping, and international exhibition delivery. Collaborators include Heide Museum of Modern Art, TarraWarra Museum of Art, Museums Victoria, ACMI, MIFF, Anna Schwartz Gallery, Grande Experiences, and institutions across the US, Brazil, and Australia.</p>
+    <div class="exh-certs">
+      <span class="exh-cert">Yellow Card</span>
+      <span class="exh-cert">White Card</span>
+      <span class="exh-cert">HRW</span>
+      <span class="exh-cert">Test &amp; Tag</span>
+      <span class="exh-cert">Light Rigid Truck</span>
+      <span class="exh-cert">Forklift</span>
+      <span class="exh-cert">Boom Lift</span>
+      <span class="exh-cert">Scissor Lift</span>
+    </div>
+  </div>
+
+  <div class="exh-timeline reveal">
+
+    <div class="exh-year-block">
+      <div class="exh-year-label">2023</div>
+      <div class="exh-entries">
+        <div class="exh-entry">
+          <div class="exh-title">Catherine Opie — Binding Ties</div>
+          <div class="exh-meta">Technical Lead · Heide Museum of Modern Art, Melbourne</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">TarraWarra Biennale — ua usiusi faʻavaʻasavili</div>
+          <div class="exh-meta">Technical Lead · TarraWarra Museum of Art, Melbourne</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Barbara Hepworth — In Equilibrium + w-Hole</div>
+          <div class="exh-meta">Technical Lead · Tate Britain / Heide Museum of Modern Art, Melbourne</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exh-year-block">
+      <div class="exh-year-label">2022</div>
+      <div class="exh-entries">
+        <div class="exh-entry">
+          <div class="exh-title">Sonia Leber &amp; David Chesworth — Where Lakes Once Had Water</div>
+          <div class="exh-meta">Technical Lead · TarraWarra Museum of Art, Melbourne</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Bruce Munro — From Sunrise Road</div>
+          <div class="exh-meta">Technical Lead · Heide Museum of Modern Art, Melbourne</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">David Noonan — Only When It's Cloudless</div>
+          <div class="exh-meta">Design + Installation, Senior AV Technician · Anna Schwartz Gallery / TarraWarra Museum of Art</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Rationale Digital Gallery</div>
+          <div class="exh-meta">Management, Design + Installation, Senior Technician / Production Manager · Kyneton, Melbourne</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Modern In Motion — Margel Hinder</div>
+          <div class="exh-meta">Senior AV Technician · Heide Museum of Modern Art, Melbourne</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Sometimes I Miss the Applause — Dean Cross</div>
+          <div class="exh-meta">Senior AV Technician · Heide Museum of Modern Art, Melbourne</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Melbourne International Film Festival</div>
+          <div class="exh-meta">Digital Content Manager · MIFF, Melbourne</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Climate &amp; Country</div>
+          <div class="exh-meta">Management + Online Artist Seminar Delivery, Senior AV Technician · TarraWarra Museum of Art</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exh-year-block">
+      <div class="exh-year-label">2021–22</div>
+      <div class="exh-entries">
+        <div class="exh-entry">
+          <div class="exh-title">Summer Lights</div>
+          <div class="exh-meta">Management, Design + Installation — Projection Mapping Program · Maribyrnong Council, Melbourne</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exh-year-block">
+      <div class="exh-year-label">2021</div>
+      <div class="exh-entries">
+        <div class="exh-entry">
+          <div class="exh-title">Wilam Biik</div>
+          <div class="exh-meta">Projection Mapping Exhibition, Senior AV Technician · TarraWarra Museum of Art</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Language Is A River</div>
+          <div class="exh-meta">Senior AV Technician — International Media Art Installation · MUMA, Melbourne</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">COP26 Climate Change — Animation + Projection Mapping</div>
+          <div class="exh-meta">Australian Council · Maribyrnong City Council, Melbourne</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">TarraWarra Biennial — Slow Moving Waters</div>
+          <div class="exh-meta">Senior AV Technician · TarraWarra Museum of Art</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Blue Over Time — Robert Owen: A Survey</div>
+          <div class="exh-meta">Senior AV Technician · Heide Museum of Modern Art, Melbourne</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Street Art International</div>
+          <div class="exh-meta">Immersive 3D Mapping Exhibition, Curatorial Associate · Grande Experiences, Melbourne</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">PHOTO21 — Agnieszka Polska / Hoda Afshar / Brook Andrew</div>
+          <div class="exh-meta">Senior AV Technician · Melbourne</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exh-year-block">
+      <div class="exh-year-label">2020</div>
+      <div class="exh-entries">
+        <div class="exh-entry">
+          <div class="exh-title">Esoteric Festival — Snake Pit with Sub Temple</div>
+          <div class="exh-meta">Video Mapping + Production Manager · Melbourne</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Looking Glass — Judy Watson and Yhonnie Scarce</div>
+          <div class="exh-meta">Senior AV Technician · TarraWarra Museum of Art, Melbourne</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Da Vinci Inventions</div>
+          <div class="exh-meta">International Project Manager · Kean University, New York, USA</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Da Vinci the Genius &amp; Secrets of Mona Lisa</div>
+          <div class="exh-meta">International Project Manager · Peoria Riverfront Museum, Illinois, USA</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Leonardo Da Vinci 500</div>
+          <div class="exh-meta">AV / Exhibition Technician · Museum of Image &amp; Sound, São Paulo, Brazil</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exh-year-block">
+      <div class="exh-year-label">2019</div>
+      <div class="exh-entries">
+        <div class="exh-entry">
+          <div class="exh-title">Temptation to Co-exist — Jane Burchill &amp; Jennifer McCamely</div>
+          <div class="exh-meta">Lead Technician — Media Installation / Production · Heide Museum of Modern Art</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Robin Boyd — Design Legend</div>
+          <div class="exh-meta">Lead Technician — Video Mapped &amp; Media Installation · Heide Museum of Modern Art</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Archibald Prize 2019</div>
+          <div class="exh-meta">Lead AV Technician · TarraWarra Museum of Art</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">TarraWarra International — The Tangible Trace</div>
+          <div class="exh-meta">Lead AV Technician — Francis Alÿs, Hiwa K &amp; more · TarraWarra Museum of Art</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Body Remembers — Tracey Moffatt</div>
+          <div class="exh-meta">Lead Technician — Media Installation · TarraWarra Museum of Art</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exh-year-block">
+      <div class="exh-year-label">2018</div>
+      <div class="exh-entries">
+        <div class="exh-entry">
+          <div class="exh-title">There Is No There — Gabriella &amp; Silvana Mangano</div>
+          <div class="exh-meta">Lead Technician — Video Mapping &amp; Audio Installation · Geelong Gallery</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Through Love… — Patricia Piccinini</div>
+          <div class="exh-meta">Lead Technician — Media Art Installation · TarraWarra Museum of Art</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Make Believe — Museums Victoria</div>
+          <div class="exh-meta">Lead Technician — 360° Video Mapping &amp; Full AV Synchronisation</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">NAIDOC Opening Ceremony</div>
+          <div class="exh-meta">Lead Technician — Video Mapping Rock Wall &amp; Video Production · Museums Victoria</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">TarraWarra Biennial — Mike Parr</div>
+          <div class="exh-meta">Lead Technician — Media Art Installation · TarraWarra Museum of Art</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Mao's Last Dancer</div>
+          <div class="exh-meta">Lead Technician — with Museum of Brisbane · Museums Victoria</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Vikings — with Swedish History Museum</div>
+          <div class="exh-meta">Lead Technician · Museums Victoria</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Lunar New Year — Royal Exhibition Building</div>
+          <div class="exh-meta">Lead Technician / Producer — Video Mapping · Museums Victoria</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exh-year-block">
+      <div class="exh-year-label">2017</div>
+      <div class="exh-entries">
+        <div class="exh-entry">
+          <div class="exh-title">Solstice — Nai Palm</div>
+          <div class="exh-meta">Interactive Multi-screen Video Installation · Immigration Museum, Melbourne</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exh-year-block">
+      <div class="exh-year-label">2015</div>
+      <div class="exh-entries">
+        <div class="exh-entry">
+          <div class="exh-title">David Bowie Is — with V&amp;A Museum</div>
+          <div class="exh-meta">Interactive Animation · ACMI, Melbourne</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exh-year-block">
+      <div class="exh-year-label">2014</div>
+      <div class="exh-entries">
+        <div class="exh-entry">
+          <div class="exh-title">Kingston Arts: Vault</div>
+          <div class="exh-meta">Video Work — Opening of New Digital Art Space · VIC</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">Gertrude Street Projection Festival</div>
+          <div class="exh-meta">Interactive Video Work — Opening Night · VIC</div>
+        </div>
+        <div class="exh-entry">
+          <div class="exh-title">White Night: Projection Festival</div>
+          <div class="exh-meta">Installation &amp; Interactive Video Wall above Section 8 · VIC</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exh-year-block">
+      <div class="exh-year-label">2013</div>
+      <div class="exh-entries">
+        <div class="exh-entry">
+          <div class="exh-title">CHANNELS: Australian Video Art Festival</div>
+          <div class="exh-meta">Video Screening and Installation · VIC</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-header reveal">
+    <span class="section-num">06</span>
+    <h2 class="section-title">Contact</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="contact-layout">
+    <div class="contact-statement reveal">
+      Interested in museum AI infrastructure, <em>creative technology</em>, or research collaboration?
+    </div>
+    <div class="reveal">
+      <div class="contact-links">
+        <a href="mailto:rob@fineartmedia.tech" class="contact-link">
+          <span class="cl-label">Email</span>
+          <span class="cl-value">rob@fineartmedia.tech</span>
+          <span class="cl-arrow">→</span>
+        </a>
+        <a href="tel:+61409336251" class="contact-link">
+          <span class="cl-label">Phone</span>
+          <span class="cl-value">0409 336 251</span>
+          <span class="cl-arrow">→</span>
+        </a>
+        <a href="#" class="contact-link">
+          <span class="cl-label">Location</span>
+          <span class="cl-value">Melbourne, Australia</span>
+          <span class="cl-arrow">→</span>
+        </a>
+        <a href="https://fineartmedia.tech" class="contact-link">
+          <span class="cl-label">Web</span>
+          <span class="cl-value">fineartmedia.tech</span>
+          <span class="cl-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">FAMTEC</div>
+  <div class="footer-copy">© Rob Graham — Melbourne 2026</div>
+  <div class="footer-links">
+    <a href="#works">Works</a>
+    <a href="#archai">ARCHAI</a>
+    <a href="#research">Research</a>
+    <a href="#exhibitions">Exhibitions</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+// ── CUSTOM CURSOR ──
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+});
+(function animRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(animRing);
+})();
+
+// ── CANVAS PARTICLE FIELD ──
+const canvas = document.getElementById('heroCanvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [], nodes = [];
+
+function resize() {
+  W = canvas.width = canvas.offsetWidth;
+  H = canvas.height = canvas.offsetHeight;
+}
+resize();
+window.addEventListener('resize', () => { resize(); initParticles(); });
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.vx = (Math.random() - 0.5) * 0.3;
+    this.vy = (Math.random() - 0.5) * 0.3;
+    this.size = Math.random() * 1.2 + 0.3;
+    this.alpha = Math.random() * 0.4 + 0.05;
+    this.pulse = Math.random() * Math.PI * 2;
+    this.pulseSpeed = 0.008 + Math.random() * 0.012;
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.pulse += this.pulseSpeed;
+    if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+  }
+  draw() {
+    const a = this.alpha * (0.6 + 0.4 * Math.sin(this.pulse));
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(200,169,110,${a})`;
+    ctx.fill();
+  }
+}
+
+// Static node positions for signal graph
+function initNodes() {
+  nodes = [];
+  const count = 12;
+  for (let i = 0; i < count; i++) {
+    nodes.push({
+      x: (Math.random() * 0.8 + 0.1) * W,
+      y: (Math.random() * 0.7 + 0.15) * H,
+      vx: (Math.random() - 0.5) * 0.15,
+      vy: (Math.random() - 0.5) * 0.15,
+    });
+  }
+}
+
+function initParticles() {
+  particles = Array.from({ length: 80 }, () => new Particle());
+  initNodes();
+}
+initParticles();
+
+let animFrame = 0;
+function drawCanvas() {
+  ctx.clearRect(0, 0, W, H);
+  animFrame++;
+
+  // Move nodes slowly
+  nodes.forEach(n => {
+    n.x += n.vx; n.y += n.vy;
+    if (n.x < 0.05*W || n.x > 0.95*W) n.vx *= -1;
+    if (n.y < 0.05*H || n.y > 0.95*H) n.vy *= -1;
+  });
+
+  // Draw edges between nearby nodes
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const dx = nodes[i].x - nodes[j].x;
+      const dy = nodes[i].y - nodes[j].y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      const maxDist = W * 0.22;
+      if (dist < maxDist) {
+        const alpha = (1 - dist / maxDist) * 0.12;
+        ctx.beginPath();
+        ctx.moveTo(nodes[i].x, nodes[i].y);
+        ctx.lineTo(nodes[j].x, nodes[j].y);
+        ctx.strokeStyle = `rgba(200,169,110,${alpha})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+
+  // Draw node dots
+  nodes.forEach((n, i) => {
+    const pulse = 0.7 + 0.3 * Math.sin(animFrame * 0.02 + i);
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, 1.5 * pulse, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(200,169,110,${0.25 * pulse})`;
+    ctx.fill();
+  });
+
+  // Draw particles
+  particles.forEach(p => { p.update(); p.draw(); });
+
+  // Occasional scan line
+  if (animFrame % 180 < 60) {
+    const progress = (animFrame % 180) / 60;
+    const y = progress * H;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(W, y);
+    ctx.strokeStyle = `rgba(200,169,110,${0.04 * Math.sin(progress * Math.PI)})`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  requestAnimationFrame(drawCanvas);
+}
+drawCanvas();
+
+// ── PARALLAX HERO ON SCROLL ──
+const heroContent = document.querySelector('.hero-content-wrap');
+const heroMeta = document.querySelector('.hero-meta');
+window.addEventListener('scroll', () => {
+  const sy = window.scrollY;
+  if (heroContent) heroContent.style.transform = `translateY(${sy * 0.18}px)`;
+  if (heroMeta) heroMeta.style.transform = `translateY(${sy * 0.08}px)`;
+  // header
+  document.getElementById('header').classList.toggle('scrolled', sy > 60);
+}, { passive: true });
+
+// ── MAGNETIC NAV LINKS ──
+document.querySelectorAll('nav a').forEach(link => {
+  link.addEventListener('mousemove', e => {
+    const rect = link.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = (e.clientX - cx) * 0.35;
+    const dy = (e.clientY - cy) * 0.35;
+    link.style.transform = `translate(${dx}px, ${dy}px)`;
+  });
+  link.addEventListener('mouseleave', () => {
+    link.style.transform = '';
+  });
+});
+
+// ── SCROLL REVEAL ──
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
+reveals.forEach(el => io.observe(el));
+
+// ── SMOOTH SCROLL ──
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+
+// ── LIVE CLOCK IN HERO META ──
+const clockEl = document.getElementById('liveClock');
+function updateClock() {
+  if (!clockEl) return;
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const s = String(now.getSeconds()).padStart(2,'0');
+  clockEl.textContent = `${h}:${m}:${s} AEST`;
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// ── RANDOM GLITCH ON SECTION TITLES ──
+document.querySelectorAll('.section-title').forEach(el => {
+  const original = el.textContent;
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  el.addEventListener('mouseenter', () => {
+    let iter = 0;
+    const interval = setInterval(() => {
+      el.textContent = original.split('').map((c, i) => {
+        if (i < iter) return original[i];
+        if (c === ' ') return ' ';
+        return chars[Math.floor(Math.random() * chars.length)];
+      }).join('');
+      iter += 1.5;
+      if (iter >= original.length + 2) {
+        el.textContent = original;
+        clearInterval(interval);
+      }
+    }, 40);
+  });
+});
+</script>
+</body>
+</html>

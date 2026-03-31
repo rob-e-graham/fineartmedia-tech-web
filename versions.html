@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAMTEC Versions</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0a0a0a;
+      --fg:#e8e4dc;
+      --muted:#8b847b;
+      --rule:rgba(232,228,220,0.1);
+      --gold:#c8a96e;
+    }
+    body{
+      min-height:100vh;
+      background:var(--bg);
+      color:var(--fg);
+      font:16px/1.6 Georgia,serif;
+      padding:48px 24px;
+    }
+    .wrap{max-width:820px;margin:0 auto}
+    h1{
+      font-size:clamp(32px,5vw,56px);
+      font-weight:400;
+      line-height:1;
+      margin-bottom:14px;
+    }
+    p{
+      color:var(--muted);
+      max-width:640px;
+      margin-bottom:32px;
+    }
+    .list{
+      border-top:1px solid var(--rule);
+    }
+    .item{
+      display:flex;
+      justify-content:space-between;
+      gap:20px;
+      padding:18px 0;
+      border-bottom:1px solid var(--rule);
+      align-items:center;
+    }
+    .meta strong{
+      display:block;
+      font-size:15px;
+      font-weight:400;
+      color:var(--fg);
+      margin-bottom:3px;
+    }
+    .meta span{
+      display:block;
+      font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;
+      color:var(--muted);
+    }
+    a{
+      color:var(--gold);
+      text-decoration:none;
+      font:12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+    a:hover{color:var(--fg)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Available Versions</h1>
+    <p>Access the current site and each uploaded HTML variation from one place.</p>
+    <div class="list">
+      <div class="item">
+        <div class="meta">
+          <strong>Current Live Version</strong>
+          <span>/index.html</span>
+        </div>
+        <a href="/index.html">Open</a>
+      </div>
+      <div class="item">
+        <div class="meta">
+          <strong>FAMTEC Web</strong>
+          <span>/version-famtec-web.html</span>
+        </div>
+        <a href="/version-famtec-web.html">Open</a>
+      </div>
+      <div class="item">
+        <div class="meta">
+          <strong>FAMTEC Web Copy</strong>
+          <span>/version-famtec-web-copy.html</span>
+        </div>
+        <a href="/version-famtec-web-copy.html">Open</a>
+      </div>
+      <div class="item">
+        <div class="meta">
+          <strong>FAMTEC Website</strong>
+          <span>/version-famtec-website.html</span>
+        </div>
+        <a href="/version-famtec-website.html">Open</a>
+      </div>
+      <div class="item">
+        <div class="meta">
+          <strong>FAMTEC — Rob Graham</strong>
+          <span>/version-rob-graham.html</span>
+        </div>
+        <a href="/version-rob-graham.html">Open</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
