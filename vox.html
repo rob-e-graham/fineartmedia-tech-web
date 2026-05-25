@@ -1,0 +1,502 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at https://mozilla.org/MPL/2.0/.
+   - Copyright (c) 2026 Rob Graham / FAMTEC -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARCHAI™ Vox</title>
+<meta name="description" content="Talk to museum objects. ARCHAI™ Vox — AI-grounded conversations with cultural heritage.">
+<meta name="theme-color" content="#080808">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080808;
+  --fg:#e8e4dc;
+  --dim:#524e48;
+  --gold:#c8a96e;
+  --teal:#5fb4a2;
+  --met-gold:#d4a843;
+  --va-purple:#9b7ec8;
+  --rule:rgba(232,228,220,0.07);
+  --mono:'DM Mono',monospace;
+  --serif:'Libre Baskerville',Georgia,serif;
+  --sans:'DM Sans',sans-serif;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--serif);font-size:16px;line-height:1.7;min-height:100vh;min-height:100dvh;padding-top:var(--safe-top);padding-bottom:var(--safe-bottom)}
+
+/* LOADING STATE */
+.vox-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;gap:16px}
+.vox-loading .spinner{width:24px;height:24px;border:2px solid var(--rule);border-top-color:var(--gold);border-radius:50%;animation:spin 0.6s linear infinite}
+.vox-loading p{font-family:var(--mono);font-size:10px;letter-spacing:0.12em;color:var(--dim)}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ERROR STATE */
+.vox-error{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;padding:40px;text-align:center;gap:16px}
+.vox-error h2{font-family:var(--mono);font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold)}
+.vox-error p{font-family:var(--mono);font-size:10px;color:var(--dim);max-width:320px}
+
+/* HEADER */
+.vox-header{position:sticky;top:0;z-index:100;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;background:rgba(8,8,8,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule)}
+.vox-brand{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color 0.2s}
+.vox-brand:hover{color:var(--gold)}
+.vox-source{font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;padding:3px 8px;border:1px solid rgba(232,228,220,0.1)}
+.vox-source.col-mv{color:var(--teal);border-color:rgba(95,180,162,0.2)}
+.vox-source.col-met{color:var(--met-gold);border-color:rgba(212,168,67,0.2)}
+.vox-source.col-va{color:var(--va-purple);border-color:rgba(155,126,200,0.2)}
+
+/* OBJECT HERO */
+.vox-hero{position:relative;width:100%;aspect-ratio:4/3;max-height:50vh;overflow:hidden;background:#0b0b0b}
+.vox-hero img{width:100%;height:100%;object-fit:cover;filter:brightness(0.75) saturate(0.9)}
+.vox-hero .vox-hero-grad{position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,transparent 40%)}
+
+/* OBJECT INFO */
+.vox-info{padding:0 20px;margin-top:-40px;position:relative;z-index:2}
+.vox-title{font-size:clamp(22px,5vw,36px);font-weight:400;line-height:1.1;margin-bottom:6px}
+.vox-maker{font-family:var(--mono);font-size:11px;color:var(--gold);margin-bottom:20px}
+.vox-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;margin-bottom:24px}
+.vox-meta-item .vm-label{font-family:var(--mono);font-size:7px;letter-spacing:0.14em;text-transform:uppercase;color:var(--dim)}
+.vox-meta-item .vm-value{font-family:var(--mono);font-size:10px;color:rgba(232,228,220,0.75);margin-top:1px}
+.vox-desc{font-size:14px;line-height:1.8;color:rgba(232,228,220,0.6);margin-bottom:28px;max-height:120px;overflow:hidden;position:relative}
+.vox-desc.expanded{max-height:none}
+.vox-desc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(transparent,var(--bg))}
+.vox-desc.expanded::after{display:none}
+.vox-expand{font-family:var(--mono);font-size:9px;letter-spacing:0.12em;color:var(--gold);cursor:pointer;margin-bottom:28px;display:inline-block}
+
+/* CHAT */
+.vox-chat{padding:0 20px;border-top:1px solid var(--rule);padding-top:24px}
+.vox-chat-label{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.vox-chat-hint{font-family:var(--mono);font-size:8px;color:var(--dim);margin-bottom:12px;line-height:1.6}
+.vox-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.vox-chips button{padding:6px 12px;border:1px solid rgba(232,228,220,0.08);background:transparent;color:var(--dim);font-family:var(--mono);font-size:8px;letter-spacing:0.06em;cursor:pointer;transition:all 0.2s;border-radius:2px}
+.vox-chips button:hover,.vox-chips button:active{border-color:var(--gold);color:var(--gold)}
+.vox-messages{max-height:400px;overflow-y:auto;margin-bottom:14px;scroll-behavior:smooth}
+.vox-msg{margin-bottom:10px;padding:10px 14px;font-family:var(--mono);font-size:11px;line-height:1.7;border-radius:2px}
+.vox-msg.user{background:rgba(200,169,110,0.08);border-left:2px solid var(--gold);color:rgba(232,228,220,0.85)}
+.vox-msg.assistant{background:rgba(232,228,220,0.03);border-left:2px solid var(--dim);color:rgba(232,228,220,0.7)}
+.vox-msg .typing{display:inline-block;width:12px;height:12px;border:1.5px solid var(--rule);border-top-color:var(--gold);border-radius:50%;animation:spin 0.5s linear infinite}
+.vox-input-row{display:flex;gap:0;position:sticky;bottom:var(--safe-bottom);background:var(--bg);padding-bottom:12px}
+.vox-input-row input{flex:1;padding:12px 14px;background:rgba(232,228,220,0.03);border:1px solid rgba(232,228,220,0.1);border-right:none;color:var(--fg);font-family:var(--mono);font-size:12px;outline:none;border-radius:2px 0 0 2px}
+.vox-input-row input::placeholder{color:var(--dim)}
+.vox-input-row button{padding:12px 20px;background:rgba(200,169,110,0.15);border:1px solid rgba(232,228,220,0.1);color:var(--gold);font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;border-radius:0 2px 2px 0;transition:background 0.2s}
+.vox-input-row button:hover{background:rgba(200,169,110,0.25)}
+
+/* COMMENTS */
+.vox-comments{padding:20px;border-top:1px solid var(--rule);margin-top:28px}
+.vox-comments-label{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.vox-comment{margin-bottom:12px;padding:10px 14px;border-left:2px solid var(--rule);background:rgba(232,228,220,0.02)}
+.vox-comment .vc-text{font-family:var(--sans);font-size:13px;line-height:1.6;color:rgba(232,228,220,0.7)}
+.vox-comment .vc-meta{font-family:var(--mono);font-size:8px;color:var(--dim);margin-top:4px}
+.vox-comment-form{margin-top:16px}
+.vox-comment-form textarea{width:100%;padding:10px 14px;background:rgba(232,228,220,0.03);border:1px solid rgba(232,228,220,0.08);color:var(--fg);font-family:var(--sans);font-size:13px;resize:vertical;min-height:60px;outline:none;border-radius:2px}
+.vox-comment-form button{margin-top:8px;padding:8px 18px;background:rgba(200,169,110,0.12);border:1px solid rgba(232,228,220,0.08);color:var(--gold);font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;border-radius:2px}
+.vox-comment-status{font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:8px}
+
+/* RELATED */
+.vox-related{padding:20px;border-top:1px solid var(--rule);margin-top:20px}
+.vox-related-label{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.vox-related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.vox-related-card{background:rgba(232,228,220,0.02);border:1px solid var(--rule);overflow:hidden;cursor:pointer;transition:all 0.2s;text-decoration:none;color:var(--fg)}
+.vox-related-card:hover{border-color:rgba(200,169,110,0.2)}
+.vox-related-card img{width:100%;aspect-ratio:1;object-fit:cover;filter:brightness(0.65)}
+.vox-related-card .vrc-title{padding:8px 10px;font-family:var(--mono);font-size:9px;line-height:1.4}
+
+/* FOOTER */
+.vox-footer{padding:32px 20px;border-top:1px solid var(--rule);margin-top:32px;text-align:center}
+.vox-footer p{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;color:var(--dim)}
+.vox-footer a{color:var(--gold);text-decoration:none}
+
+/* SHARE */
+.vox-share{display:flex;gap:8px;margin-top:20px;padding:0 20px}
+.vox-share button{padding:6px 12px;border:1px solid rgba(232,228,220,0.08);background:transparent;color:var(--dim);font-family:var(--mono);font-size:8px;letter-spacing:0.1em;cursor:pointer;transition:all 0.2s}
+.vox-share button:hover{border-color:var(--gold);color:var(--gold)}
+
+/* OFFLINE BANNER */
+.vox-offline{padding:8px 20px;background:rgba(200,169,110,0.08);font-family:var(--mono);font-size:9px;color:var(--gold);text-align:center;border-bottom:1px solid rgba(200,169,110,0.12)}
+
+@media(min-width:768px){
+  body{display:flex;justify-content:center}
+  .vox-container{max-width:480px;width:100%;border-left:1px solid var(--rule);border-right:1px solid var(--rule)}
+}
+</style>
+</head>
+<body>
+
+<div class="vox-container" id="app">
+  <div class="vox-loading" id="loadingState">
+    <div class="spinner"></div>
+    <p>Loading object...</p>
+  </div>
+</div>
+
+<script>
+// ── Config ──────────────────────────────────────────────────────
+const BACKEND_CANDIDATES = [
+  'https://archai-api.fineartmedia.tech',
+  'http://100.109.26.39:8787',
+  'http://localhost:8787',
+];
+let API_BASE = '';
+let backendLive = false;
+
+// ── Parse URL params ────────────────────────────────────────────
+const params = new URLSearchParams(window.location.search);
+const objectId = params.get('id') || params.get('object') || '';
+const collection = params.get('col') || params.get('collection') || 'archai_pilot';
+const pointId = params.get('point') || '';
+
+// ── Backend discovery ───────────────────────────────────────────
+async function discoverBackend() {
+  for (const url of BACKEND_CANDIDATES) {
+    try {
+      const r = await fetch(url + '/api/health', { signal: AbortSignal.timeout(3000) });
+      if (r.ok) { API_BASE = url; backendLive = true; return true; }
+    } catch {}
+  }
+  return false;
+}
+
+// ── Fetch object data ───────────────────────────────────────────
+async function fetchObject() {
+  if (!backendLive) return null;
+
+  // Try by registration/accession number first
+  if (objectId) {
+    try {
+      const r = await fetch(API_BASE + '/api/proxy/curator/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: objectId, limit: 5 }),
+      });
+      const d = await r.json();
+      if (d.results && d.results.length) {
+        // Find exact match by reg number
+        const exact = d.results.find(r => {
+          const p = r.payload || {};
+          return (p.registration_number === objectId || p.accession_number === objectId);
+        });
+        return exact || d.results[0];
+      }
+    } catch {}
+  }
+
+  // Try by Qdrant point ID
+  if (pointId) {
+    try {
+      const r = await fetch(API_BASE + '/api/proxy/qdrant/scroll', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ collection, limit: 1, offset: parseInt(pointId) - 1 }),
+      });
+      const d = await r.json();
+      if (d.result && d.result.points && d.result.points.length) {
+        return d.result.points[0];
+      }
+    } catch {}
+  }
+
+  return null;
+}
+
+// ── Fetch related objects ───────────────────────────────────────
+async function fetchRelated(title) {
+  if (!backendLive || !title) return [];
+  try {
+    const r = await fetch(API_BASE + '/api/proxy/curator/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: title, limit: 6 }),
+    });
+    const d = await r.json();
+    return (d.results || []).slice(1, 6); // skip self
+  } catch { return []; }
+}
+
+// ── Fetch comments ──────────────────────────────────────────────
+async function fetchComments() {
+  if (!backendLive || !objectId) return [];
+  try {
+    const r = await fetch(API_BASE + '/api/comments?objectId=' + encodeURIComponent(objectId));
+    const d = await r.json();
+    return d.comments || [];
+  } catch { return []; }
+}
+
+// ── Chat ────────────────────────────────────────────────────────
+let chatHistory = [];
+let currentSystemPrompt = '';
+
+async function askObject(question) {
+  if (!question || !backendLive) return;
+  const input = document.getElementById('chatInput');
+  if (input) input.value = '';
+
+  const msgs = document.getElementById('chatMessages');
+  msgs.innerHTML += '<div class="vox-msg user">' + escHtml(question) + '</div>';
+  msgs.innerHTML += '<div class="vox-msg assistant" id="pendingMsg"><span class="typing"></span></div>';
+  msgs.scrollTop = msgs.scrollHeight;
+
+  try {
+    const r = await fetch(API_BASE + '/api/proxy/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        systemPrompt: currentSystemPrompt,
+        userPrompt: question,
+        history: chatHistory.slice(-6),
+      }),
+    });
+    const d = await r.json();
+    const reply = d.message?.content || 'I could not respond right now.';
+    chatHistory.push({ role: 'user', content: question });
+    chatHistory.push({ role: 'assistant', content: reply });
+    const pending = document.getElementById('pendingMsg');
+    if (pending) { pending.id = ''; pending.innerHTML = escHtml(reply); }
+  } catch {
+    const pending = document.getElementById('pendingMsg');
+    if (pending) { pending.id = ''; pending.innerHTML = 'Connection lost. Try again.'; }
+  }
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// ── Submit comment ──────────────────────────────────────────────
+async function submitComment() {
+  const textarea = document.getElementById('commentText');
+  const status = document.getElementById('commentStatus');
+  const text = (textarea?.value || '').trim();
+  if (!text) return;
+
+  status.textContent = 'Submitting...';
+  try {
+    const r = await fetch(API_BASE + '/api/comments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ objectId, collection, text, authorType: 'visitor' }),
+    });
+    const d = await r.json();
+    if (d.ok) {
+      textarea.value = '';
+      if (d.comment?.status === 'pending_review') {
+        status.textContent = 'Thanks — your comment is being reviewed by a curator.';
+      } else {
+        status.textContent = 'Comment posted!';
+        // Reload comments
+        const comments = await fetchComments();
+        renderComments(comments);
+      }
+    } else {
+      status.textContent = 'Could not submit. Try again.';
+    }
+  } catch {
+    status.textContent = 'Offline — comment saved locally.';
+    // localStorage fallback
+    const saved = JSON.parse(localStorage.getItem('vox_comments_' + objectId) || '[]');
+    saved.push({ text, time: new Date().toISOString() });
+    localStorage.setItem('vox_comments_' + objectId, JSON.stringify(saved));
+  }
+}
+
+// ── Share ───────────────────────────────────────────────────────
+function shareObject(title) {
+  const url = window.location.href;
+  if (navigator.share) {
+    navigator.share({ title: 'ARCHAI™ — ' + title, url });
+  } else {
+    navigator.clipboard.writeText(url);
+    alert('Link copied!');
+  }
+}
+
+// ── Helpers ─────────────────────────────────────────────────────
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderComments(comments) {
+  const container = document.getElementById('commentsList');
+  if (!container) return;
+  if (!comments.length) { container.innerHTML = '<p style="font-family:var(--mono);font-size:9px;color:var(--dim)">No comments yet. Be the first.</p>'; return; }
+  container.innerHTML = comments.map(c => {
+    const text = typeof c === 'string' ? c : (c.text || '');
+    const author = c.author_type || 'visitor';
+    const time = c.created_at ? new Date(c.created_at).toLocaleDateString() : '';
+    return '<div class="vox-comment"><div class="vc-text">' + escHtml(text) + '</div><div class="vc-meta">' + author + (time ? ' · ' + time : '') + '</div></div>';
+  }).join('');
+}
+
+// ── Render ──────────────────────────────────────────────────────
+function renderObject(result) {
+  const p = result.payload || result;
+  const title = p.title || p.object_name || 'Untitled Object';
+  const maker = p.maker || p.artist || p.creator || '';
+  const date = p.date || p.date_display || p.production_date || '';
+  const desc = p.description || p.ai || '';
+  const img = p.image_url || p.primaryImageSmall || '';
+  const type = p.type || p.object_type || p.classification || '';
+  const materials = p.materials || p.medium || '';
+  const location = p.location || p.gallery || '';
+  const reg = p.registration_number || p.accession_number || objectId;
+  const col = p._source_collection || collection;
+  const institution = col === 'archai_met' ? 'The Metropolitan Museum of Art' : col === 'archai_va' ? 'Victoria and Albert Museum' : 'Museums Victoria';
+  const colClass = col === 'archai_met' ? 'col-met' : col === 'archai_va' ? 'col-va' : 'col-mv';
+  const colLabel = col === 'archai_met' ? 'Met NYC' : col === 'archai_va' ? 'V&A London' : 'Museums Victoria';
+
+  // Set page title
+  document.title = title + ' — ARCHAI™ Vox';
+
+  // Build system prompt for chat (Obtext)
+  currentSystemPrompt = 'You are "' + title + '", a museum object at ' + institution + '. Speak in first person. Be conversational and informative.\n' +
+    Object.entries(p).filter(([k]) => !k.startsWith('_')).map(([k,v]) => k + ': ' + String(v).substring(0, 200)).join('\n');
+
+  let html = '';
+
+  // Header
+  html += '<div class="vox-header">';
+  html += '<a class="vox-brand" href="/archai.html">ARCHAI™ Vox</a>';
+  html += '<span class="vox-source ' + colClass + '">' + colLabel + '</span>';
+  html += '</div>';
+
+  // Offline banner
+  if (!backendLive) {
+    html += '<div class="vox-offline">Offline mode — chat unavailable</div>';
+  }
+
+  // Hero image
+  if (img) {
+    html += '<div class="vox-hero"><img src="' + img + '" alt="' + escHtml(title) + '" onerror="this.parentElement.style.display=\'none\'"><div class="vox-hero-grad"></div></div>';
+  }
+
+  // Object info
+  html += '<div class="vox-info">';
+  html += '<h1 class="vox-title">' + escHtml(title) + '</h1>';
+  if (maker) html += '<div class="vox-maker">' + escHtml(maker) + (date ? ' · ' + escHtml(date) : '') + '</div>';
+
+  html += '<div class="vox-meta">';
+  if (type) html += '<div class="vox-meta-item"><div class="vm-label">Type</div><div class="vm-value">' + escHtml(type) + '</div></div>';
+  if (materials) html += '<div class="vox-meta-item"><div class="vm-label">Materials</div><div class="vm-value">' + escHtml(materials) + '</div></div>';
+  if (location) html += '<div class="vox-meta-item"><div class="vm-label">Location</div><div class="vm-value">' + escHtml(location) + '</div></div>';
+  if (reg) html += '<div class="vox-meta-item"><div class="vm-label">Registration</div><div class="vm-value">' + escHtml(reg) + '</div></div>';
+  html += '</div>';
+
+  if (desc) {
+    html += '<div class="vox-desc" id="voxDesc">' + escHtml(desc.substring(0, 800)) + '</div>';
+    if (desc.length > 200) html += '<span class="vox-expand" onclick="document.getElementById(\'voxDesc\').classList.toggle(\'expanded\');this.textContent=this.textContent===\'Read more →\'?\'Less ↑\':\'Read more →\'">Read more →</span>';
+  }
+  html += '</div>';
+
+  // Share buttons
+  html += '<div class="vox-share">';
+  html += '<button onclick="shareObject(\'' + escHtml(title).replace(/'/g, "\\'") + '\')">Share</button>';
+  html += '<button onclick="window.open(\'mailto:?subject=' + encodeURIComponent('Check out: ' + title) + '&body=' + encodeURIComponent(window.location.href) + '\')">Email</button>';
+  html += '</div>';
+
+  // Chat section
+  if (backendLive) {
+    html += '<div class="vox-chat">';
+    html += '<div class="vox-chat-label">Talk to this object</div>';
+    html += '<div class="vox-chat-hint">This object speaks for itself using verified museum metadata. Ask anything about its history, materials, or significance.</div>';
+    html += '<div class="vox-chips">';
+    html += '<button onclick="askObject(\'What are you?\')">What are you?</button>';
+    html += '<button onclick="askObject(\'When were you made?\')">When made?</button>';
+    html += '<button onclick="askObject(\'What are you made of?\')">Materials?</button>';
+    html += '<button onclick="askObject(\'Tell me something surprising about yourself\')">Surprise me</button>';
+    html += '</div>';
+    html += '<div class="vox-messages" id="chatMessages"></div>';
+    html += '<div class="vox-input-row">';
+    html += '<input type="text" id="chatInput" placeholder="Ask me anything..." onkeydown="if(event.key===\'Enter\')askObject(this.value)">';
+    html += '<button onclick="askObject(document.getElementById(\'chatInput\').value)">Ask</button>';
+    html += '</div>';
+    html += '</div>';
+  }
+
+  // Comments
+  html += '<div class="vox-comments">';
+  html += '<div class="vox-comments-label">Visitor Comments</div>';
+  html += '<div id="commentsList"></div>';
+  html += '<div class="vox-comment-form">';
+  html += '<textarea id="commentText" placeholder="Share your thoughts about this object..."></textarea>';
+  html += '<button onclick="submitComment()">Post Comment</button>';
+  html += '<div class="vox-comment-status" id="commentStatus"></div>';
+  html += '</div>';
+  html += '</div>';
+
+  // Related objects placeholder
+  html += '<div class="vox-related" id="relatedSection" style="display:none">';
+  html += '<div class="vox-related-label">Related Objects</div>';
+  html += '<div class="vox-related-grid" id="relatedGrid"></div>';
+  html += '</div>';
+
+  // Footer
+  html += '<div class="vox-footer">';
+  html += '<p>ARCHAI™ &copy; 2026 <a href="/">Rob Graham / FAMTEC</a></p>';
+  html += '<p style="margin-top:4px">Object data: ' + institution + '</p>';
+  html += '</div>';
+
+  document.getElementById('app').innerHTML = html;
+
+  return { title, col };
+}
+
+function renderError(msg) {
+  document.getElementById('app').innerHTML = '<div class="vox-error"><h2>Object not found</h2><p>' + msg + '</p><p style="margin-top:12px"><a href="/archai.html" style="color:var(--gold)">← Back to ARCHAI™</a></p></div>';
+}
+
+// ── Init ────────────────────────────────────────────────────────
+(async function() {
+  if (!objectId && !pointId) {
+    renderError('No object specified. Use ?id=REGISTRATION_NUMBER or ?point=QDRANT_ID in the URL.');
+    return;
+  }
+
+  await discoverBackend();
+
+  if (!backendLive) {
+    renderError('Backend offline. ARCHAI™ Vox requires a connection to the collection database. Try again when the backend is available.');
+    return;
+  }
+
+  const result = await fetchObject();
+  if (!result) {
+    renderError('Could not find object "' + escHtml(objectId || pointId) + '" in the collection. Check the ID and try again.');
+    return;
+  }
+
+  const { title } = renderObject(result);
+
+  // Load comments
+  const comments = await fetchComments();
+  renderComments(comments);
+
+  // Load related
+  const related = await fetchRelated(title);
+  if (related.length) {
+    document.getElementById('relatedSection').style.display = '';
+    const grid = document.getElementById('relatedGrid');
+    grid.innerHTML = related.map(r => {
+      const rp = r.payload || {};
+      const rTitle = rp.title || rp.object_name || 'Untitled';
+      const rImg = rp.image_url || rp.primaryImageSmall || '';
+      const rId = rp.registration_number || rp.accession_number || '';
+      const rCol = rp._source_collection || 'archai_pilot';
+      const href = '/vox.html?id=' + encodeURIComponent(rId) + '&col=' + rCol;
+      let card = '<a class="vox-related-card" href="' + href + '">';
+      if (rImg) card += '<img src="' + rImg + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">';
+      card += '<div class="vrc-title">' + escHtml(rTitle.substring(0, 60)) + '</div></a>';
+      return card;
+    }).join('');
+  }
+})();
+</script>
+
+</body>
+</html>
