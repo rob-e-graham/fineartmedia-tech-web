@@ -32,9 +32,6 @@
 html{font-size:16px;scroll-behavior:smooth}
 body{background:var(--bg);color:var(--fg);font-family:var(--sans);min-height:100dvh;overflow-x:hidden;line-height:1.6}
 
-/* ─── Layout ─── */
-.container{max-width:680px;margin:0 auto;padding:2rem 1.5rem}
-
 /* ─── Header ─── */
 header{text-align:center;padding:4rem 1.5rem 2rem;border-bottom:1px solid var(--rule)}
 .logo{font-family:var(--mono);font-size:2.5rem;font-weight:500;letter-spacing:0.15em;color:var(--gold)}
@@ -42,42 +39,29 @@ header{text-align:center;padding:4rem 1.5rem 2rem;border-bottom:1px solid var(--
 .subtitle{font-family:var(--serif);font-size:0.95rem;color:var(--dim);margin-top:0.5rem;font-style:italic}
 .expansion{font-family:var(--mono);font-size:0.7rem;color:var(--dim);margin-top:1rem;letter-spacing:0.1em;text-transform:uppercase}
 
-/* ─── Object Card ─── */
-.object-stage{padding:3rem 1.5rem;text-align:center;min-height:50vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.object-intro{font-family:var(--serif);font-size:1.1rem;line-height:1.8;color:var(--fg);max-width:560px;opacity:0;transform:translateY(10px);transition:all 0.6s ease}
-.object-intro.visible{opacity:1;transform:translateY(0)}
-.object-meta{font-family:var(--mono);font-size:0.7rem;color:var(--dim);margin-top:1.5rem;letter-spacing:0.05em}
-.object-meta .institution{color:var(--teal)}
-.object-meta .institution.met{color:var(--met-gold)}
-.object-meta .institution.va{color:var(--va-purple)}
-.object-image{width:200px;height:200px;object-fit:cover;border-radius:4px;margin-bottom:1.5rem;opacity:0.9;border:1px solid var(--rule)}
-.object-image.no-img{display:none}
-
-/* ─── Chat ─── */
-.chat-area{padding:0 1.5rem 3rem;max-width:680px;margin:0 auto}
-.chat-thread{margin-bottom:1.5rem;max-height:400px;overflow-y:auto;padding-right:0.5rem}
-.chat-msg{margin-bottom:1rem;padding:0.8rem 1rem;border-radius:8px;font-size:0.9rem;line-height:1.6;animation:fadeIn 0.3s ease}
-.chat-msg.object{background:rgba(200,169,110,0.06);border-left:2px solid var(--gold);color:var(--fg)}
-.chat-msg.user{background:rgba(255,255,255,0.03);border-left:2px solid var(--dim);color:var(--dim)}
-.chat-msg.error{background:rgba(200,60,60,0.08);border-left:2px solid #c83c3c;color:#e8a0a0;font-size:0.8rem}
-.chat-input-row{display:flex;gap:0.5rem}
-.chat-input{flex:1;background:rgba(255,255,255,0.04);border:1px solid var(--rule);border-radius:6px;padding:0.7rem 1rem;font-family:var(--sans);font-size:0.9rem;color:var(--fg);outline:none;transition:border-color 0.2s}
-.chat-input:focus{border-color:var(--gold)}
-.chat-input::placeholder{color:var(--dim)}
-.chat-btn{background:var(--gold);color:var(--bg);border:none;border-radius:6px;padding:0.7rem 1.2rem;font-family:var(--mono);font-size:0.8rem;font-weight:500;cursor:pointer;letter-spacing:0.05em;transition:opacity 0.2s}
-.chat-btn:hover{opacity:0.85}
-.chat-btn:disabled{opacity:0.4;cursor:not-allowed}
-
-/* ─── Controls ─── */
-.controls{text-align:center;padding:1rem;border-top:1px solid var(--rule)}
-.new-object-btn{background:none;border:1px solid var(--dim);color:var(--dim);border-radius:20px;padding:0.5rem 1.5rem;font-family:var(--mono);font-size:0.75rem;cursor:pointer;letter-spacing:0.08em;transition:all 0.2s}
-.new-object-btn:hover{border-color:var(--gold);color:var(--gold)}
-
 /* ─── Status ─── */
 .status{text-align:center;padding:1rem;font-family:var(--mono);font-size:0.7rem;color:var(--dim)}
 .status .dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:0.4rem;vertical-align:middle}
 .status .dot.online{background:#5fb4a2}
 .status .dot.offline{background:#c83c3c}
+
+/* ─── Object Frame ─── */
+.object-frame{max-width:800px;margin:0 auto;padding:0 1rem}
+.object-frame iframe{width:100%;height:75vh;border:1px solid var(--rule);border-radius:6px;background:var(--bg)}
+.object-frame.offline{text-align:center;padding:4rem 1.5rem}
+.offline-msg{font-family:var(--serif);font-size:0.95rem;color:var(--dim);font-style:italic;line-height:1.8}
+
+/* ─── Controls ─── */
+.controls{text-align:center;padding:1.5rem;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.ctrl-btn{background:none;border:1px solid var(--dim);color:var(--dim);border-radius:20px;padding:0.5rem 1.5rem;font-family:var(--mono);font-size:0.75rem;cursor:pointer;letter-spacing:0.08em;transition:all 0.2s;text-decoration:none;display:inline-block}
+.ctrl-btn:hover{border-color:var(--gold);color:var(--gold)}
+.ctrl-btn.primary{border-color:var(--gold);color:var(--gold)}
+
+/* ─── Info Sections ─── */
+.info-section{padding:3rem 1.5rem;max-width:680px;margin:0 auto;border-top:1px solid var(--rule)}
+.info-section h2{font-family:var(--mono);font-size:0.8rem;color:var(--gold);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1rem}
+.info-section p{font-family:var(--sans);font-size:0.85rem;color:var(--dim);line-height:1.7;margin-bottom:1rem}
+.obtext-block{background:rgba(255,255,255,0.02);border:1px solid var(--rule);border-radius:6px;padding:1rem;font-family:var(--mono);font-size:0.7rem;color:var(--dim);line-height:1.8;overflow-x:auto;white-space:pre}
 
 /* ─── Footer ─── */
 footer{text-align:center;padding:2rem 1.5rem;border-top:1px solid var(--rule);font-family:var(--mono);font-size:0.65rem;color:var(--dim);letter-spacing:0.05em}
@@ -86,21 +70,10 @@ footer a{color:var(--gold);text-decoration:none}
 /* ─── Loader ─── */
 .loader{display:inline-block;width:16px;height:16px;border:2px solid var(--rule);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto}
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-
-/* ─── Offline state ─── */
-.offline-msg{font-family:var(--serif);font-size:0.95rem;color:var(--dim);text-align:center;padding:3rem 1.5rem;font-style:italic}
-
-/* ─── Obtext section ─── */
-.info-section{padding:3rem 1.5rem;max-width:680px;margin:0 auto;border-top:1px solid var(--rule)}
-.info-section h2{font-family:var(--mono);font-size:0.8rem;color:var(--gold);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1rem}
-.info-section p{font-family:var(--sans);font-size:0.85rem;color:var(--dim);line-height:1.7;margin-bottom:1rem}
-.obtext-block{background:rgba(255,255,255,0.02);border:1px solid var(--rule);border-radius:6px;padding:1rem;font-family:var(--mono);font-size:0.7rem;color:var(--dim);line-height:1.8;overflow-x:auto;white-space:pre}
 
 @media(max-width:480px){
   .logo{font-size:2rem}
-  .object-stage{padding:2rem 1rem;min-height:40vh}
-  .chat-thread{max-height:300px}
+  .object-frame iframe{height:65vh}
 }
 </style>
 </head>
@@ -117,26 +90,21 @@ footer a{color:var(--gold);text-decoration:none}
   <span id="statusText">Connecting...</span>
 </div>
 
-<section class="object-stage" id="objectStage">
-  <div class="loader" id="loader"></div>
-</section>
-
-<section class="chat-area" id="chatArea" style="display:none">
-  <div class="chat-thread" id="chatThread"></div>
-  <div class="chat-input-row">
-    <input class="chat-input" id="chatInput" type="text" placeholder="Ask me anything..." autocomplete="off">
-    <button class="chat-btn" id="chatBtn" onclick="sendMessage()">Ask</button>
-  </div>
-</section>
+<div class="object-frame" id="objectFrame">
+  <div style="text-align:center;padding:4rem"><div class="loader"></div></div>
+</div>
 
 <div class="controls" id="controls" style="display:none">
-  <button class="new-object-btn" onclick="loadRandomObject()">Meet another object</button>
+  <button class="ctrl-btn primary" onclick="loadRandom()">Meet another object</button>
+  <a class="ctrl-btn" href="/archai.html">Search collections</a>
 </div>
 
 <section class="info-section">
   <h2>What is this?</h2>
-  <p>AUX.IO is a live demonstration of ARCHAI™ — sovereign AI infrastructure that lets museum objects speak for themselves using verified institutional data. No hallucination. No cloud APIs. Everything runs on a single computer.</p>
+  <p>AUX.IO is a live demonstration of ARCHAI™ — sovereign AI infrastructure that lets museum objects speak for themselves using verified institutional data. No hallucination. No cloud APIs. Everything runs on a single Mac Studio in Melbourne.</p>
   <p>Each object answers from its <strong style="color:var(--fg)">Obtext</strong> (Object Context) — a structured data format containing only verified metadata. When you ask something outside its record, it says so.</p>
+  <p>200 objects across three institutions — Museums Victoria, The Metropolitan Museum of Art, and the Victoria and Albert Museum — are currently live and conversational.</p>
+
   <h2 style="margin-top:2rem">Obtext format</h2>
   <div class="obtext-block">{
   "identity": "1866 Proof Sovereign",
@@ -152,8 +120,12 @@ footer a{color:var(--gold);text-decoration:none}
     "My knowledge ends at my last verified update"
   ]
 }</div>
+
   <h2 style="margin-top:2rem">Five-layer hallucination prevention</h2>
   <p>1. Obtext grounding — 2. Safety wrapper — 3. Token limits — 4. Prompt injection blocking — 5. Graceful uncertainty</p>
+
+  <h2 style="margin-top:2rem">Access methods</h2>
+  <p>AUX.IO is access-method agnostic. The same object page works via NFC tag, QR code, hyperlink, or Bluetooth beacon. The object speaks regardless of how you arrived.</p>
 </section>
 
 <footer>
@@ -163,192 +135,50 @@ footer a{color:var(--gold);text-decoration:none}
 </footer>
 
 <script>
-// ─── Configuration ───────────────────────────────────────────────
 const API_ENDPOINTS = [
-  'https://archai-api.fineartmedia.tech/api/proxy',
-  'http://100.109.26.39:8787/api/proxy',
-  'http://localhost:8787/api/proxy',
+  'https://archai-api.fineartmedia.tech',
+  'http://100.109.26.39:8787',
+  'http://localhost:8787',
 ];
 
 let API_BASE = null;
-let currentObject = null;
-let chatHistory = [];
 
-// ─── Backend Discovery ───────────────────────────────────────────
 async function discoverBackend() {
-  for (const endpoint of API_ENDPOINTS) {
+  for (const url of API_ENDPOINTS) {
     try {
-      const r = await fetch(`${endpoint}/ollama/health`, { signal: AbortSignal.timeout(4000) });
-      if (r.ok) {
-        const data = await r.json();
-        if (data.ok) { API_BASE = endpoint; return true; }
-      }
+      const r = await fetch(url + '/api/health', { signal: AbortSignal.timeout(4000) });
+      if (r.ok) { API_BASE = url; return true; }
     } catch {}
   }
   return false;
 }
 
-// ─── Status ──────────────────────────────────────────────────────
 function setStatus(online) {
-  const dot = document.getElementById('statusDot');
-  const text = document.getElementById('statusText');
-  dot.className = 'dot ' + (online ? 'online' : 'offline');
-  text.textContent = online ? 'Collection intelligence online' : 'Backend offline — check back later';
+  document.getElementById('statusDot').className = 'dot ' + (online ? 'online' : 'offline');
+  document.getElementById('statusText').textContent = online
+    ? 'Collection intelligence online — 200 objects across 3 institutions'
+    : 'Backend offline — the Mac Studio may be sleeping';
 }
 
-// ─── Load Random Object ──────────────────────────────────────────
-async function loadRandomObject() {
-  const stage = document.getElementById('objectStage');
-  const chatArea = document.getElementById('chatArea');
-  const controls = document.getElementById('controls');
-
-  stage.innerHTML = '<div class="loader"></div>';
-  chatArea.style.display = 'none';
-  controls.style.display = 'none';
-  chatHistory = [];
-
-  try {
-    const r = await fetch(`${API_BASE}/random-object`);
-    const data = await r.json();
-    if (!data.ok) throw new Error(data.error);
-
-    currentObject = data.object;
-    renderObject(currentObject);
-    chatArea.style.display = 'block';
-    controls.style.display = 'block';
-    document.getElementById('chatThread').innerHTML = '';
-    document.getElementById('chatInput').focus();
-  } catch (e) {
-    stage.innerHTML = '<p class="offline-msg">Could not load an object. The collection intelligence may be resting.</p>';
-  }
+function loadRandom() {
+  const n = Math.floor(Math.random() * 200) + 1;
+  const page = 'NFC' + String(n).padStart(3, '0') + '.html';
+  const frame = document.getElementById('objectFrame');
+  frame.innerHTML = '<iframe src="' + API_BASE + '/aux/' + page + '" allow="microphone"></iframe>';
+  document.getElementById('controls').style.display = 'flex';
 }
 
-// ─── Render Object ───────────────────────────────────────────────
-function renderObject(obj) {
-  const stage = document.getElementById('objectStage');
-  const instClass = obj.collection === 'archai_met' ? 'met' : obj.collection === 'archai_va' ? 'va' : '';
-
-  const imgHtml = obj.image
-    ? `<img class="object-image" src="${obj.image}" alt="${obj.title}" onerror="this.classList.add('no-img')">`
-    : '';
-
-  const greeting = buildGreeting(obj);
-
-  stage.innerHTML = `
-    ${imgHtml}
-    <div class="object-intro visible">${greeting}</div>
-    <div class="object-meta">
-      <span class="institution ${instClass}">${obj.institution}</span>
-      ${obj.registration ? ' · ' + obj.registration : ''}
-      ${obj.date ? ' · ' + obj.date : ''}
-    </div>
-  `;
-
-  // Add initial greeting to chat
-  addChatMessage('object', greeting);
-}
-
-function buildGreeting(obj) {
-  const parts = [];
-  if (obj.type) parts.push(`I am a ${obj.type.toLowerCase()}`);
-  else parts.push('I am an object');
-
-  if (obj.date) parts[0] += ` from ${obj.date}`;
-  parts[0] += '.';
-
-  if (obj.title && obj.title !== 'Untitled') {
-    parts.push(`My name is "${obj.title}".`);
-  }
-  if (obj.materials) {
-    parts.push(`I am made of ${obj.materials.toLowerCase()}.`);
-  }
-  parts.push('Ask me anything about my history, my making, or my significance.');
-
-  return parts.join(' ');
-}
-
-// ─── Chat ────────────────────────────────────────────────────────
-function addChatMessage(role, text) {
-  const thread = document.getElementById('chatThread');
-  const div = document.createElement('div');
-  div.className = `chat-msg ${role}`;
-  div.textContent = text;
-  thread.appendChild(div);
-  thread.scrollTop = thread.scrollHeight;
-}
-
-async function sendMessage() {
-  const input = document.getElementById('chatInput');
-  const btn = document.getElementById('chatBtn');
-  const msg = input.value.trim();
-  if (!msg || !currentObject) return;
-
-  input.value = '';
-  btn.disabled = true;
-  addChatMessage('user', msg);
-
-  // Build system prompt from Obtext
-  const systemPrompt = buildSystemPrompt(currentObject);
-  chatHistory.push({ role: 'user', content: msg });
-
-  try {
-    const r = await fetch(`${API_BASE}/chat`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        systemPrompt,
-        userPrompt: msg,
-        history: chatHistory.slice(-8),
-      }),
-    });
-    const data = await r.json();
-
-    if (data.ok && data.message?.content) {
-      addChatMessage('object', data.message.content);
-      chatHistory.push({ role: 'assistant', content: data.message.content });
-    } else if (data.error) {
-      addChatMessage('error', data.error);
-    } else {
-      addChatMessage('error', 'No response received.');
-    }
-  } catch (e) {
-    addChatMessage('error', 'Connection lost. The collection intelligence may have gone offline.');
-  }
-
-  btn.disabled = false;
-  input.focus();
-}
-
-function buildSystemPrompt(obj) {
-  let prompt = `You are "${obj.title}" from ${obj.institution}.`;
-  prompt += `\nRegistration: ${obj.registration || 'unknown'}`;
-  if (obj.date) prompt += `\nDate: ${obj.date}`;
-  if (obj.maker) prompt += `\nMaker: ${obj.maker}`;
-  if (obj.materials) prompt += `\nMaterials: ${obj.materials}`;
-  if (obj.type) prompt += `\nType: ${obj.type}`;
-  if (obj.description) prompt += `\nDescription: ${obj.description}`;
-  prompt += `\n\nConstraints: You ONLY know what is in the record above. If asked anything outside this, say "That is not in my verified record." Never invent information.`;
-  return prompt;
-}
-
-// ─── Input handling ──────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('chatInput').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-  });
-});
-
-// ─── Init ────────────────────────────────────────────────────────
 (async () => {
   const online = await discoverBackend();
   setStatus(online);
   if (online) {
-    loadRandomObject();
+    loadRandom();
   } else {
-    document.getElementById('objectStage').innerHTML = `
-      <p class="offline-msg">The collection intelligence is currently offline.<br>
-      It runs on sovereign infrastructure — a single Mac Studio in Melbourne.<br><br>
-      Check back when the machine is awake.</p>`;
+    document.getElementById('objectFrame').innerHTML =
+      '<div class="offline">' +
+      '<p class="offline-msg">The collection intelligence is currently offline.<br>' +
+      'It runs on sovereign infrastructure — a single Mac Studio in Melbourne.<br><br>' +
+      'Check back when the machine is awake.</p></div>';
   }
 })();
 </script>
