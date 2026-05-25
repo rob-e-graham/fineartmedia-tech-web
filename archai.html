@@ -146,6 +146,19 @@ footer a:hover{color:var(--fg)}
 .loading::after{content:'';display:inline-block;width:16px;height:16px;border:2px solid var(--rule);border-top-color:var(--gold);border-radius:50%;animation:spin 0.6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
+/* AUX STAGE */
+.aux-intro{max-width:680px;margin:0 auto 40px;text-align:center}
+.aux-intro p{font-family:var(--sans,var(--mono));font-size:14px;color:rgba(232,228,220,0.5);line-height:1.7}
+.aux-intro em{color:var(--gold);font-style:italic}
+.aux-stage{max-width:680px;margin:0 auto;text-align:center;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.aux-obj-img{width:180px;height:180px;object-fit:cover;border-radius:4px;margin-bottom:20px;opacity:0.85;border:1px solid var(--rule)}
+.aux-greeting{font-family:var(--serif);font-size:15px;line-height:1.8;color:rgba(232,228,220,0.8);max-width:560px}
+.aux-obj-meta{font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:14px;letter-spacing:0.06em}
+.aux-obj-meta .inst-mv{color:var(--teal)}
+.aux-obj-meta .inst-met{color:var(--met-gold)}
+.aux-obj-meta .inst-va{color:var(--va-purple)}
+.aux-chat{max-width:680px;margin:20px auto 0}
+
 /* REVEAL */
 .rv{opacity:0;transform:translateY(14px);transition:opacity 0.6s,transform 0.6s}
 .rv.on{opacity:1;transform:none}
@@ -177,6 +190,7 @@ footer a:hover{color:var(--fg)}
     <li><a href="/#bio">Profile</a></li>
     <li><a href="/#works">Works</a></li>
     <li><a href="/archai.html" class="active">ARCHAI™</a></li>
+    <li><a href="/aux.html">AUX.IO</a></li>
     <li><a href="/dark-plates.html">Dark Plates</a></li>
     <li><a href="/#contact">Contact</a></li>
   </ul>
@@ -224,6 +238,32 @@ footer a:hover{color:var(--fg)}
     </div>
   </section>
 
+  <!-- AUX.IO LIVE DEMO -->
+  <section id="aux">
+    <div class="wrap">
+      <div class="sec-label rv">AUX.IO — Talk to an Object</div>
+      <div class="aux-intro rv">
+        <p>A random object from the collection. Grounded in its <em>Obtext</em> — verified institutional metadata. Ask it anything. If it doesn't know, it'll say so.</p>
+      </div>
+      <div class="aux-stage rv" id="auxStage">
+        <div class="loading" id="auxLoader"></div>
+      </div>
+      <div class="aux-chat" id="auxChat" style="display:none">
+        <div class="chat-messages" id="auxMessages"></div>
+        <div class="chat-input-row">
+          <input type="text" id="auxInput" placeholder="Ask me anything..." onkeydown="if(event.key==='Enter')askAux(this.value)" autocomplete="off">
+          <button onclick="askAux(document.getElementById('auxInput').value)">Ask</button>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:20px" id="auxControls" class="rv">
+        <button class="search-chips" style="display:inline-block" onclick="loadAuxObject()">
+          <span style="padding:8px 18px;border:1px solid rgba(232,228,220,0.08);background:transparent;color:var(--dim);font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer">Meet another object</span>
+        </button>
+        <a href="/aux.html" style="display:inline-block;margin-left:12px;padding:8px 18px;border:1px solid rgba(200,169,110,0.2);color:var(--gold);font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none">Open AUX.IO →</a>
+      </div>
+    </div>
+  </section>
+
   <!-- ABOUT -->
   <section id="about">
     <div class="wrap">
@@ -231,7 +271,8 @@ footer a:hover{color:var(--fg)}
       <div class="about-grid">
         <div class="about-text rv">
           <p>ARCHAI™ is <em>sovereign AI infrastructure for cultural heritage</em> — a research toolkit that lets museums run their own semantic search, AI-grounded object conversations, and visitor engagement systems without cloud dependency or subscription costs.</p>
-          <p>Each object speaks in first person through <em>prosopopoeia</em>, grounded in verified institutional metadata with a five-layer hallucination prevention framework. Visitors interact via NFC, mobile, or desktop — and every AI response traces back to the collection record.</p>
+          <p>Each object speaks in first person through <em>prosopopoeia</em>, grounded in verified institutional metadata with a five-layer hallucination prevention framework. Visitors interact via NFC, QR, hyperlink, or Bluetooth beacon — and every AI response traces back to the collection record.</p>
+          <p>The data format powering each conversation is <em>Obtext</em> (Object Context) — a structured record containing identity, physical properties, temporal context, significance, and crucially, constraints — what the object explicitly does not know.</p>
           <p>Developed as part of doctoral research at RMIT University, School of Design. Presented at ISEA2026 Dubai and the 6th Summit on New Media Art Archiving.</p>
         </div>
         <div class="rv">
@@ -239,9 +280,11 @@ footer a:hover{color:var(--fg)}
             <li>Qdrant vector database (on-premises)</li>
             <li>Ollama LLM inference (llama3)</li>
             <li>nomic-embed-text embeddings (768-dim)</li>
-            <li>NFC-to-live-conversation pattern</li>
+            <li>AUX.IO universal access interface</li>
+            <li>Obtext structured data format</li>
+            <li>Five-layer hallucination prevention</li>
             <li>AI-moderated visitor comments</li>
-            <li>Curator semantic search (cross-collection)</li>
+            <li>Conversational collection search</li>
             <li>SQLite persistent storage</li>
             <li>Zero cloud dependencies</li>
             <li>~$3,500 USD total hardware cost</li>
@@ -494,6 +537,95 @@ async function askObject(question) {
   msgs.scrollTop = msgs.scrollHeight;
 }
 
+// ── AUX.IO Random Object ────────────────────────────────────────
+let auxObject = null;
+let auxHistory = [];
+
+async function loadAuxObject() {
+  const stage = document.getElementById('auxStage');
+  const chat = document.getElementById('auxChat');
+  stage.innerHTML = '<div class="loading"></div>';
+  chat.style.display = 'none';
+  auxObject = null;
+  auxHistory = [];
+
+  try {
+    const r = await fetch(API_BASE + '/api/proxy/random-object');
+    const d = await r.json();
+    if (!d.ok) throw new Error(d.error);
+    auxObject = d.object;
+    renderAuxObject(d.object);
+    chat.style.display = 'block';
+    document.getElementById('auxMessages').innerHTML = '';
+    const greeting = buildAuxGreeting(d.object);
+    addAuxMsg('assistant', greeting);
+  } catch (e) {
+    stage.innerHTML = '<div class="no-results">Collection intelligence is offline — check back later</div>';
+  }
+}
+
+function renderAuxObject(obj) {
+  const stage = document.getElementById('auxStage');
+  const instClass = obj.collection === 'archai_met' ? 'inst-met' : obj.collection === 'archai_va' ? 'inst-va' : 'inst-mv';
+  let html = '';
+  if (obj.image) html += '<img class="aux-obj-img" src="' + obj.image + '" alt="' + (obj.title||'').replace(/"/g,'') + '" onerror="this.style.display=\'none\'">';
+  html += '<div class="aux-greeting">' + buildAuxGreeting(obj) + '</div>';
+  html += '<div class="aux-obj-meta"><span class="' + instClass + '">' + obj.institution + '</span>';
+  if (obj.registration) html += ' · ' + obj.registration;
+  if (obj.date) html += ' · ' + obj.date;
+  html += '</div>';
+  stage.innerHTML = html;
+}
+
+function buildAuxGreeting(obj) {
+  const parts = [];
+  if (obj.type) parts.push('I am a ' + obj.type.toLowerCase() + (obj.date ? ' from ' + obj.date : '') + '.');
+  else parts.push('I am an object' + (obj.date ? ' from ' + obj.date : '') + '.');
+  if (obj.title && obj.title !== 'Untitled') parts.push('My name is "' + obj.title + '".');
+  if (obj.materials) parts.push('I am made of ' + obj.materials.toLowerCase() + '.');
+  parts.push('Ask me anything about my history, my making, or my significance.');
+  return parts.join(' ');
+}
+
+function addAuxMsg(role, text) {
+  const msgs = document.getElementById('auxMessages');
+  msgs.innerHTML += '<div class="chat-msg ' + role + '">' + text + '</div>';
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+async function askAux(question) {
+  if (!question || !auxObject) return;
+  const input = document.getElementById('auxInput');
+  if (input) input.value = '';
+  addAuxMsg('user', question);
+  addAuxMsg('assistant', '<span class="loading"></span>');
+
+  const obj = auxObject;
+  let systemPrompt = 'You are "' + obj.title + '" from ' + obj.institution + '. Speak in first person.\n';
+  systemPrompt += 'Registration: ' + (obj.registration || 'unknown') + '\n';
+  if (obj.date) systemPrompt += 'Date: ' + obj.date + '\n';
+  if (obj.maker) systemPrompt += 'Maker: ' + obj.maker + '\n';
+  if (obj.materials) systemPrompt += 'Materials: ' + obj.materials + '\n';
+  if (obj.type) systemPrompt += 'Type: ' + obj.type + '\n';
+  if (obj.description) systemPrompt += 'Description: ' + obj.description + '\n';
+  systemPrompt += '\nConstraints: You ONLY know what is in the record above. If asked anything outside this, say "That is not in my verified record." Never invent information.';
+
+  auxHistory.push({ role: 'user', content: question });
+
+  try {
+    const reply = await proxyChat(systemPrompt, question, auxHistory.slice(-6));
+    auxHistory.push({ role: 'assistant', content: reply });
+    // Replace last loading message
+    const msgs = document.getElementById('auxMessages');
+    const lastMsg = msgs.lastElementChild;
+    if (lastMsg) lastMsg.innerHTML = reply;
+  } catch {
+    const msgs = document.getElementById('auxMessages');
+    const lastMsg = msgs.lastElementChild;
+    if (lastMsg) lastMsg.innerHTML = 'Connection lost. The collection intelligence may have gone offline.';
+  }
+}
+
 // ── Reveals ─────────────────────────────────────────────────────
 const io = new IntersectionObserver(es => es.forEach((e, i) => {
   if (e.isIntersecting) setTimeout(() => e.target.classList.add('on'), i * 60);
@@ -501,7 +633,9 @@ const io = new IntersectionObserver(es => es.forEach((e, i) => {
 document.querySelectorAll('.rv').forEach(el => io.observe(el));
 
 // ── Init ────────────────────────────────────────────────────────
-discoverBackend();
+discoverBackend().then(() => {
+  if (backendLive) loadAuxObject();
+});
 </script>
 
 </body>
