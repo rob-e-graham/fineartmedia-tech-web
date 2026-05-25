@@ -1,0 +1,519 @@
+<!-- Copyright (c) 2026 Rob Graham / FAMTEC — Dual License, see keytec.html#license -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keytec — API Key Wallet for macOS</title>
+<meta name="description" content="Keytec stores your API keys in macOS Keychain, groups them into projects, and injects them at runtime. No .env files. No cloud. No account.">
+<meta name="theme-color" content="#080808">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080808;
+  --fg:#e8e4dc;
+  --dim:#524e48;
+  --green:#b0c87a;
+  --cyan:#8fbcb0;
+  --rule:rgba(232,228,220,0.07);
+  --mono:'DM Mono',monospace;
+  --serif:'Libre Baskerville',Georgia,serif;
+  --sans:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--serif);font-size:16px;line-height:1.7;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:26px 48px;background:linear-gradient(to bottom,rgba(8,8,8,0.7) 0%,transparent 100%)}
+.nav-logo{display:flex;align-items:center;gap:11px;text-decoration:none}
+.nav-wordmark{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;color:rgba(232,228,220,0.5);text-transform:uppercase}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{font-family:var(--mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color 0.25s}
+.nav-links a:hover,.nav-links a.active{color:var(--fg)}
+.nav-links a:focus-visible,.nav-logo:focus-visible{outline:1px solid var(--green);outline-offset:4px}
+
+/* HERO */
+.hero{position:relative;width:100%;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 48px 80px;overflow:hidden}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 20% 60%, rgba(176,200,122,0.07) 0%, transparent 55%),
+    radial-gradient(ellipse at 75% 30%, rgba(143,188,176,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 85%, rgba(176,200,122,0.03) 0%, transparent 40%),
+    var(--bg);
+}
+.hero-content{position:relative;z-index:2;max-width:860px}
+.hero-tag{font-family:var(--mono);font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--green);margin-bottom:14px;opacity:0;animation:fu 0.9s 0.5s forwards}
+.hero-title{font-size:clamp(48px,8vw,112px);font-weight:400;line-height:0.92;letter-spacing:-0.025em;opacity:0;animation:fu 1s 0.7s forwards}
+.hero-title em{color:var(--green);font-style:italic}
+.hero-subtitle{margin-top:20px;font-family:var(--mono);font-size:11px;line-height:1.9;letter-spacing:0.04em;color:rgba(232,228,220,0.5);max-width:600px;opacity:0;animation:fu 1s 0.9s forwards}
+.hero-stats{margin-top:28px;display:flex;flex-wrap:wrap;gap:10px 22px;opacity:0;animation:fu 1s 1.1s forwards}
+.hero-stats .stat{font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;display:flex;align-items:center;gap:6px;color:rgba(232,228,220,0.38)}
+.hero-stats .stat::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green)}
+.hero-panel{position:absolute;top:104px;right:48px;z-index:20;width:min(300px,calc(100vw - 96px));padding:14px 16px;border:1px solid rgba(176,200,122,0.15);background:rgba(8,8,8,0.56);backdrop-filter:blur(8px)}
+.hero-panel p{font-family:var(--mono);font-size:9px;line-height:1.75;letter-spacing:0.05em;color:rgba(232,228,220,0.5)}
+.hero-panel strong{color:var(--green);font-weight:400}
+.hero-panel .panel-label{display:block;margin-bottom:10px;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--green);font-family:var(--mono)}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* MAIN */
+main{position:relative;z-index:10}
+.wrap{max-width:1180px;margin:0 auto;padding:0 48px}
+section{padding:100px 0;border-top:1px solid var(--rule)}
+.sec-label{font-family:var(--mono);font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--green);margin-bottom:48px;display:flex;align-items:center;gap:14px}
+.sec-label::after{content:'';width:50px;height:1px;background:var(--green);opacity:0.28}
+
+/* PROBLEM */
+.problem-grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:72px;align-items:start}
+.problem-text p{font-size:15px;line-height:1.8;color:rgba(232,228,220,0.7);margin-bottom:16px}
+.problem-text em{color:var(--green);font-style:italic}
+.prob-list{list-style:none}
+.prob-list li{font-family:var(--mono);font-size:10px;line-height:2.4;color:rgba(232,228,220,0.45);display:flex;align-items:flex-start;gap:8px}
+.prob-list li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);margin-top:8px;flex-shrink:0}
+
+/* HOW IT WORKS */
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.how-card{padding:32px 28px;border:1px solid var(--rule);background:rgba(255,255,255,0.015)}
+.how-num{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;color:var(--green);margin-bottom:18px}
+.how-card h3{font-size:22px;font-weight:400;margin-bottom:12px;color:var(--fg)}
+.how-card p{font-family:var(--sans);font-size:13px;line-height:1.75;color:rgba(232,228,220,0.55)}
+
+/* TERMINAL DEMO */
+.demo-wrap{max-width:720px}
+.term{background:#050505;border:1px solid rgba(176,200,122,0.12);padding:28px 24px;font-family:var(--mono);font-size:13px;line-height:2;color:rgba(232,228,220,0.5)}
+.term .prompt{color:var(--green)}
+.term .ok{color:#79aa86}
+.term .dim{color:rgba(232,228,220,0.25)}
+.term .cmd{color:var(--fg)}
+.demo-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.demo-chips button{font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border:1px solid rgba(176,200,122,0.25);background:transparent;color:rgba(176,200,122,0.7);padding:6px 12px;cursor:pointer;transition:all 0.2s}
+.demo-chips button:hover{border-color:var(--green);color:var(--green);background:rgba(176,200,122,0.06)}
+.term-cursor{display:inline-block;width:8px;height:14px;background:var(--green);animation:blink 1s step-end infinite;vertical-align:middle;margin-left:2px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* FEATURES */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.feat{padding:28px;border:1px solid var(--rule)}
+.feat-icon{font-family:var(--mono);font-size:20px;margin-bottom:14px;color:var(--green)}
+.feat h3{font-size:15px;font-weight:700;margin-bottom:8px;font-family:var(--sans)}
+.feat p{font-family:var(--sans);font-size:13px;line-height:1.65;color:rgba(232,228,220,0.5)}
+
+/* SHARE */
+.share-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:48px}
+.share-card{padding:24px;border:1px solid var(--rule);background:rgba(255,255,255,0.012)}
+.share-card .sc-num{font-family:var(--mono);font-size:9px;letter-spacing:0.16em;color:var(--green);margin-bottom:12px}
+.share-card h4{font-size:14px;font-weight:700;margin-bottom:8px;font-family:var(--sans)}
+.share-card p{font-family:var(--sans);font-size:12px;line-height:1.6;color:rgba(232,228,220,0.48)}
+
+/* TECH */
+.tech-grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:72px;align-items:start}
+.tech-text p{font-size:15px;line-height:1.8;color:rgba(232,228,220,0.7);margin-bottom:16px}
+.tech-text em{color:var(--green);font-style:italic}
+.code-block{margin-top:22px;background:#050505;border:1px solid rgba(176,200,122,0.12);padding:14px 18px;font-family:var(--mono);font-size:11px;line-height:1.8;color:rgba(176,200,122,0.8);overflow-x:auto}
+.tech-list{list-style:none}
+.tech-list li{font-family:var(--mono);font-size:10px;line-height:2.4;color:rgba(232,228,220,0.45);display:flex;align-items:flex-start;gap:8px}
+.tech-list li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);margin-top:8px;flex-shrink:0}
+
+/* LICENSE */
+.lic-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.lic-card{padding:32px;border:1px solid var(--rule)}
+.lic-card.free{border-color:rgba(176,200,122,0.2)}
+.lic-card.commercial{border-color:rgba(143,188,176,0.2)}
+.lic-tag{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:16px}
+.lic-tag.free-tag{color:var(--green)}
+.lic-tag.comm-tag{color:var(--cyan)}
+.lic-card h3{font-size:22px;font-weight:400;margin-bottom:14px}
+.lic-card p{font-family:var(--sans);font-size:13px;line-height:1.7;color:rgba(232,228,220,0.55);margin-bottom:10px}
+.lic-list{list-style:none;margin-top:14px}
+.lic-list li{font-family:var(--mono);font-size:10px;line-height:2.2;color:rgba(232,228,220,0.45);display:flex;gap:8px;align-items:flex-start}
+.lic-list li::before{content:'';width:5px;height:5px;border-radius:50%;margin-top:8px;flex-shrink:0}
+.lic-card.free .lic-list li::before{background:var(--green)}
+.lic-card.commercial .lic-list li::before{background:var(--cyan)}
+
+/* CTA */
+.cta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.cta-card{display:block;padding:32px;border:1px solid var(--rule);text-decoration:none;transition:border-color 0.25s,background 0.25s}
+.cta-card:hover{border-color:rgba(176,200,122,0.4);background:rgba(176,200,122,0.04)}
+.cta-label{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--green);margin-bottom:12px}
+.cta-card h3{font-size:20px;font-weight:400;margin-bottom:10px;color:var(--fg)}
+.cta-card p{font-family:var(--sans);font-size:13px;line-height:1.65;color:rgba(232,228,220,0.48)}
+
+/* FOOTER */
+footer{padding:48px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+footer p{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;color:var(--dim)}
+footer a{color:var(--dim);text-decoration:none}
+footer a:hover{color:var(--fg)}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(18px);transition:opacity 0.7s ease,transform 0.7s ease}
+.rv.on{opacity:1;transform:none}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav{padding:20px 24px}
+  .nav-links{gap:20px}
+  .hero{padding:0 24px 60px}
+  .hero-panel{display:none}
+  .wrap{padding:0 24px}
+  .problem-grid,.tech-grid,.lic-grid{grid-template-columns:1fr;gap:40px}
+  .how-grid,.feat-grid,.share-grid,.cta-grid{grid-template-columns:1fr}
+  footer{flex-direction:column;align-items:flex-start;padding:32px 24px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">
+    <span class="nav-wordmark">FAMTEC</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/archai.html">ARCHAI</a></li>
+    <li><a href="/safechat.html">SafeChat</a></li>
+    <li><a href="/keytec.html" class="active">Keytec</a></li>
+    <li><a href="https://github.com/rob-e-graham/keytec-api-wallet" target="_blank" rel="noopener">GitHub</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">API Key Management — macOS</div>
+    <h1 class="hero-title">Key<em>tec</em></h1>
+    <p class="hero-subtitle">
+      Store API keys in macOS Keychain. Group them by project.<br>
+      Inject them at runtime. No .env files. No cloud. No account.
+    </p>
+    <div class="hero-stats">
+      <span class="stat">macOS Keychain storage</span>
+      <span class="stat">No plaintext on disk</span>
+      <span class="stat">Project profiles</span>
+      <span class="stat">GitHub Actions sync</span>
+      <span class="stat">Export as .env</span>
+      <span class="stat">Dual licensed</span>
+    </div>
+  </div>
+
+  <div class="hero-panel">
+    <span class="panel-label">Status</span>
+    <p><strong>License:</strong> Dual — free personal, paid commercial</p>
+    <p style="margin-top:4px"><strong>Platform:</strong> macOS (Keychain required)</p>
+    <p style="margin-top:4px"><strong>Interface:</strong> CLI + local web dashboard</p>
+    <p style="margin-top:4px"><strong>Version:</strong> 0.1.0 &middot; 2026</p>
+  </div>
+</div>
+
+<main>
+
+  <!-- PROBLEM -->
+  <section id="problem">
+    <div class="wrap">
+      <div class="sec-label rv">The Problem</div>
+      <div class="problem-grid">
+        <div class="problem-text rv">
+          <p>Every developer has a drawer full of <em>.env files</em>. They get committed by accident. They get emailed. They get copy-pasted into Notion. They sit in plaintext on laptops that get lost, stolen, or handed to contractors.</p>
+          <p>The usual solution — a password manager or secrets vault — solves storage but not the last mile. You still end up typing API keys into terminal windows, copying them into config files, or maintaining a separate secret per project per machine.</p>
+          <p>Keytec solves the whole chain. <em>Store once in the OS Keychain. Attach to a project. Run.</em> The key value is never written to disk, never visible in a log, and never leaves your machine unless you explicitly say so.</p>
+        </div>
+        <div class="rv">
+          <ul class="prob-list">
+            <li>.env files committed to git — happens to every team eventually</li>
+            <li>API keys rotated manually after leaks, killing working deploys</li>
+            <li>Contractors handed .env files over Slack with no expiry</li>
+            <li>Keys duplicated across projects with no central view</li>
+            <li>No way to know which CI/CD secrets are stale or rotated</li>
+            <li>GitHub Actions secrets manually synced by hand, per repo</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="wrap">
+      <div class="sec-label rv">How It Works</div>
+      <div class="how-grid">
+        <div class="how-card rv">
+          <div class="how-num">01 — Store</div>
+          <h3>macOS Keychain</h3>
+          <p>API keys are stored in the operating system keychain using the <code>security</code> CLI. No plaintext file is created. Keys survive reboots, survive app uninstalls, and are protected by your login password and Touch ID.</p>
+        </div>
+        <div class="how-card rv">
+          <div class="how-num">02 — Attach</div>
+          <h3>Project profiles</h3>
+          <p>Profiles group the keys a project needs. <code>openclaw</code> gets Together AI and DeepSeek. <code>aura</code> gets OpenAI and Supabase. The profile stores key names only — never the values.</p>
+        </div>
+        <div class="how-card rv">
+          <div class="how-num">03 — Run</div>
+          <h3>Runtime injection</h3>
+          <p>One command — <code>famtec run openclaw -- npm run dev</code> — fetches every key attached to that profile, injects them as environment variables, and launches the process. Nothing is written. When the process exits, the values are gone.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMO -->
+  <section id="demo">
+    <div class="wrap">
+      <div class="sec-label rv">CLI Demo</div>
+      <div class="demo-wrap rv">
+        <div class="term" id="term-display">
+          <div><span class="prompt">$</span> <span class="cmd">famtec add together</span></div>
+          <div class="ok">✓ TOGETHER_API_KEY saved to macOS Keychain</div>
+          <div style="margin-top:8px"><span class="prompt">$</span> <span class="cmd">famtec profile create openclaw</span></div>
+          <div class="ok">✓ Created profile openclaw</div>
+          <div style="margin-top:8px"><span class="prompt">$</span> <span class="cmd">famtec profile attach openclaw together</span></div>
+          <div class="ok">✓ Attached TOGETHER_API_KEY to openclaw</div>
+          <div style="margin-top:8px"><span class="prompt">$</span> <span class="cmd">famtec run openclaw -- npm run dev</span></div>
+          <div class="ok">✓ Keys injected as env vars</div>
+          <div class="dim">  TOGETHER_API_KEY=sk-••••••••••••••••</div>
+          <div class="dim">  no .env file written</div>
+          <div style="margin-top:8px"><span class="prompt">$</span> <span class="term-cursor"></span></div>
+        </div>
+        <div class="demo-chips">
+          <button onclick="showDemo('add')">famtec add</button>
+          <button onclick="showDemo('list')">famtec list</button>
+          <button onclick="showDemo('run')">famtec run</button>
+          <button onclick="showDemo('share')">famtec share</button>
+          <button onclick="showDemo('github')">GitHub sync</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="wrap">
+      <div class="sec-label rv">Features</div>
+      <div class="feat-grid">
+        <div class="feat rv">
+          <div class="feat-icon">⌨</div>
+          <h3>CLI first</h3>
+          <p>Full command-line interface for every operation. Add keys, create projects, attach, run, export. Scriptable and pipe-friendly.</p>
+        </div>
+        <div class="feat rv">
+          <div class="feat-icon">⬡</div>
+          <h3>Local web dashboard</h3>
+          <p>A local dashboard at <code>127.0.0.1:48741</code> gives you a visual overview of all projects and keys. No account, no internet required.</p>
+        </div>
+        <div class="feat rv">
+          <div class="feat-icon">⎆</div>
+          <h3>Runtime injection</h3>
+          <p>Keys are fetched from Keychain at run time and passed directly to your process as environment variables. Nothing is written to disk.</p>
+        </div>
+        <div class="feat rv">
+          <div class="feat-icon">⇅</div>
+          <h3>GitHub Actions sync</h3>
+          <p>Push a project's keys directly into GitHub Actions Secrets in one command. Uses the <code>gh</code> CLI under the hood.</p>
+        </div>
+        <div class="feat rv">
+          <div class="feat-icon">↓</div>
+          <h3>Export as .env</h3>
+          <p>When you need a .env file — for a contractor, a deploy, a staging environment — export one on demand from the dashboard and delete it after.</p>
+        </div>
+        <div class="feat rv">
+          <div class="feat-icon">◉</div>
+          <h3>Masked always</h3>
+          <p>The dashboard never renders secret values. The CLI masks them in output. Values are only accessible to processes you explicitly run through Keytec.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHARE -->
+  <section id="share">
+    <div class="wrap">
+      <div class="sec-label rv">Sharing Keys</div>
+      <p class="rv" style="font-size:15px;line-height:1.8;color:rgba(232,228,220,0.65);max-width:680px;">When you need to hand keys to a system or a person, Keytec gives you four ways — each appropriate for a different situation.</p>
+      <div class="share-grid">
+        <div class="share-card rv">
+          <div class="sc-num">01</div>
+          <h4>Download .env</h4>
+          <p>Export a project's keys as a .env file. Treat it like a password — send it securely, delete it after use.</p>
+        </div>
+        <div class="share-card rv">
+          <div class="sc-num">02</div>
+          <h4>Copy .env text</h4>
+          <p>Copy KEY=value pairs to clipboard. Paste directly into a terminal session or a secure message.</p>
+        </div>
+        <div class="share-card rv">
+          <div class="sc-num">03</div>
+          <h4>GitHub Actions YAML</h4>
+          <p>Get a ready-to-paste workflow YAML snippet that references the secrets by name — no real values in the file.</p>
+        </div>
+        <div class="share-card rv">
+          <div class="sc-num">04</div>
+          <h4>Push to GitHub Secrets</h4>
+          <p>One CLI command syncs all keys in a project to GitHub Actions Secrets for a given repo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTEGRATE -->
+  <section id="install">
+    <div class="wrap">
+      <div class="sec-label rv">Install</div>
+      <div class="tech-grid">
+        <div class="tech-text rv">
+          <p>Keytec is a <em>Node.js CLI application</em> for macOS. Install it globally from npm or clone the repository and link it locally.</p>
+          <p>The <em>local web dashboard</em> starts automatically and serves on <code>127.0.0.1:48741</code>. All data stays on your machine. There is no telemetry, no analytics, no update check.</p>
+          <div class="code-block">npm install -g keytec-api-wallet
+
+famtec add together
+famtec profile create openclaw
+famtec profile attach openclaw together
+famtec run openclaw -- npm run dev</div>
+        </div>
+        <div class="rv">
+          <ul class="tech-list">
+            <li>Requires macOS (Keychain dependency)</li>
+            <li>Node.js 20 or later</li>
+            <li>No configuration file needed</li>
+            <li>Optional: GitHub CLI for Actions sync</li>
+            <li>Profiles stored in ~/.famtec/profiles.json</li>
+            <li>Keys stored in macOS Keychain service "famtec"</li>
+            <li>Dashboard runs on 127.0.0.1:48741</li>
+            <li>ESM modules, no build step required</li>
+            <li>TypeScript source included</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LICENSE -->
+  <section id="license">
+    <div class="wrap">
+      <div class="sec-label rv">License</div>
+      <div class="lic-grid">
+        <div class="lic-card free rv">
+          <div class="lic-tag free-tag">Community — Free</div>
+          <h3>Personal &amp; open source</h3>
+          <p>Free forever for individuals, hobbyists, students, and open source projects. No time limit, no feature limit.</p>
+          <ul class="lic-list">
+            <li>Personal use on your own machines</li>
+            <li>Open source projects (OSI-approved license)</li>
+            <li>Evaluation and private testing</li>
+            <li>Academic and research use</li>
+          </ul>
+        </div>
+        <div class="lic-card commercial rv">
+          <div class="lic-tag comm-tag">Commercial — Paid</div>
+          <h3>Teams &amp; organisations</h3>
+          <p>A commercial license is required for any business or professional use. Contact for per-seat, per-team, and OEM pricing.</p>
+          <ul class="lic-list">
+            <li>Company or team use (more than one machine)</li>
+            <li>Products or services that bundle Keytec</li>
+            <li>SaaS platforms and hosted offerings</li>
+            <li>Redistribution or resale</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="links">
+    <div class="wrap">
+      <div class="sec-label rv">Get Started</div>
+      <div class="cta-grid rv">
+        <a class="cta-card" href="https://github.com/rob-e-graham/keytec-api-wallet" target="_blank" rel="noopener">
+          <div class="cta-label">Source Code</div>
+          <h3>GitHub Repository</h3>
+          <p>Full source, documentation, CLI reference, and issue tracker.</p>
+        </a>
+        <a class="cta-card" href="mailto:rob@fineartmedia.tech?subject=Keytec%20commercial%20license">
+          <div class="cta-label">Commercial License</div>
+          <h3>Get a License</h3>
+          <p>Per-seat, per-team, and OEM licensing available. Get in touch.</p>
+        </a>
+        <a class="cta-card" href="https://buymeacoffee.com/famtec" target="_blank" rel="noopener">
+          <div class="cta-label">Support</div>
+          <h3>Buy Me a Coffee</h3>
+          <p>Help keep Keytec maintained and the community version free.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Keytec &copy; 2026 Rob Graham / <a href="/">FAMTEC</a> &mdash; Dual License</p>
+  <p><a href="https://github.com/rob-e-graham/keytec-api-wallet" target="_blank">GitHub</a> &middot; <a href="mailto:rob@fineartmedia.tech">rob@fineartmedia.tech</a> &middot; <a href="https://fineartmedia.tech">fineartmedia.tech</a></p>
+</footer>
+
+<script>
+const demos = {
+  add: [
+    ['$', 'famtec add together', null],
+    [null, 'Enter TOGETHER_API_KEY: ••••••••••••••••••••', null],
+    [null, '✓ TOGETHER_API_KEY saved to macOS Keychain', 'ok'],
+    ['$', 'famtec add deepseek', null],
+    [null, 'Enter DEEPSEEK_API_KEY: ••••••••••••••••••••', null],
+    [null, '✓ DEEPSEEK_API_KEY saved to macOS Keychain', 'ok'],
+  ],
+  list: [
+    ['$', 'famtec list', null],
+    [null, 'DEEPSEEK_API_KEY   (openclaw; profile-handle only)', 'dim'],
+    [null, 'OPENAI_API_KEY     (aura; profile-handle only)', 'dim'],
+    [null, 'TOGETHER_API_KEY   (openclaw; profile-handle only)', 'dim'],
+  ],
+  run: [
+    ['$', 'famtec run openclaw -- npm run dev', null],
+    [null, '✓ Keys injected as env vars', 'ok'],
+    [null, '  TOGETHER_API_KEY=sk-••••••••••••••', 'dim'],
+    [null, '  DEEPSEEK_API_KEY=sk-••••••••••••••', 'dim'],
+    [null, '  no .env file written', 'dim'],
+    [null, '', null],
+    [null, '> openclaw@0.1.0 dev', null],
+    [null, '> vite', null],
+  ],
+  share: [
+    ['$', 'famtec env openclaw', null],
+    [null, 'TOGETHER_API_KEY=sk-••••••', 'dim'],
+    [null, 'DEEPSEEK_API_KEY=sk-••••••', 'dim'],
+    [null, '', null],
+    [null, '# or open the dashboard:', 'dim'],
+    ['$', 'open http://127.0.0.1:48741', null],
+    [null, '→ Share tab → Download .env', 'ok'],
+  ],
+  github: [
+    ['$', 'famtec github connect', null],
+    [null, 'Enter GitHub token: ••••••••••••••••', null],
+    [null, '✓ Stored GITHUB_TOKEN in macOS Keychain', 'ok'],
+    ['$', 'famtec github sync openclaw owner/repo', null],
+    [null, '✓ Synced TOGETHER_API_KEY to owner/repo', 'ok'],
+    [null, '✓ Synced DEEPSEEK_API_KEY to owner/repo', 'ok'],
+  ]
+};
+
+function showDemo(key) {
+  const lines = demos[key];
+  const el = document.getElementById('term-display');
+  el.innerHTML = lines.map((line, i) => {
+    const [prefix, text, cls] = line;
+    if (prefix === '$') {
+      return `<div><span class="prompt">$</span> <span class="cmd">${text}</span></div>`;
+    }
+    if (cls === 'ok') return `<div class="ok">${text}</div>`;
+    if (cls === 'dim') return `<div class="dim">${text}</div>`;
+    if (!text) return `<div>&nbsp;</div>`;
+    return `<div>${text}</div>`;
+  }).join('') + `<div><span class="prompt">$</span> <span class="term-cursor"></span></div>`;
+}
+
+// Scroll reveals
+const io = new IntersectionObserver(es => es.forEach((e, i) => {
+  if (e.isIntersecting) setTimeout(() => e.target.classList.add('on'), i * 60);
+}), { threshold: 0.08 });
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
