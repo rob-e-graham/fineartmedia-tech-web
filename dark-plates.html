@@ -1,0 +1,273 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at https://mozilla.org/MPL/2.0/.
+   - Copyright (c) 2026 Rob Graham / FAMTEC -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dark Plates — Autonomous AI Copperplate Engravings</title>
+<meta name="description" content="Dark Plates is an autonomous AI system generating copperplate engravings from Tasmanian endangered species, colonial expedition records, and live cultural signal. Winter solstice festival, Hobart 2026.">
+<meta name="theme-color" content="#080808">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080808;
+  --fg:#e8e4dc;
+  --dim:#524e48;
+  --gold:#c8a96e;
+  --red:#8b1a1a;
+  --rule:rgba(232,228,220,0.07);
+  --mono:'DM Mono',monospace;
+  --serif:'Libre Baskerville',Georgia,serif;
+  --sans:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--serif);font-size:16px;line-height:1.7;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:26px 48px;background:linear-gradient(to bottom,rgba(8,8,8,0.6) 0%,transparent 100%)}
+.nav-logo{display:flex;align-items:center;gap:11px;text-decoration:none}
+.nav-wordmark{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;color:rgba(232,228,220,0.6);text-transform:uppercase}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{font-family:var(--mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color 0.25s}
+.nav-links a:hover,.nav-links a.active{color:var(--fg)}
+
+/* HERO */
+.dp-hero{position:relative;width:100%;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 48px 80px;overflow:hidden}
+.dp-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 40% 50%,rgba(139,26,26,0.08) 0%,transparent 60%),var(--bg)}
+.hero-content{position:relative;z-index:2;max-width:900px}
+.hero-tag{font-family:var(--mono);font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--red);margin-bottom:14px;opacity:0;animation:fu 0.9s 0.5s forwards}
+.hero-title{font-size:clamp(48px,8vw,112px);font-weight:400;line-height:0.92;letter-spacing:-0.025em;opacity:0;animation:fu 1s 0.7s forwards}
+.hero-subtitle{margin-top:20px;font-family:var(--mono);font-size:11px;line-height:1.9;letter-spacing:0.04em;color:rgba(232,228,220,0.5);max-width:640px;opacity:0;animation:fu 1s 0.9s forwards}
+.hero-meta{margin-top:28px;display:flex;flex-wrap:wrap;gap:10px 20px;opacity:0;animation:fu 1s 1.1s forwards}
+.hero-meta .tag{font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;display:flex;align-items:center;gap:6px;color:var(--dim)}
+.hero-meta .tag::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--red)}
+.hero-status{position:absolute;top:104px;right:48px;z-index:20;width:min(280px,calc(100vw - 96px));padding:14px 16px;border:1px solid rgba(139,26,26,0.2);background:rgba(8,8,8,0.56);backdrop-filter:blur(8px)}
+.hero-status p{font-family:var(--mono);font-size:9px;line-height:1.75;letter-spacing:0.05em;color:rgba(232,228,220,0.5)}
+.hero-status strong{color:var(--red);font-weight:500}
+.status-dot{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:4px}
+.status-live{background:#4ade80}
+
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* MAIN */
+main{position:relative;z-index:10}
+.wrap{max-width:1180px;margin:0 auto;padding:0 48px}
+section{padding:100px 0;border-top:1px solid var(--rule)}
+.sec-label{font-family:var(--mono);font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--red);margin-bottom:48px;display:flex;align-items:center;gap:14px}
+.sec-label::after{content:'';width:50px;height:1px;background:var(--red);opacity:0.4}
+
+/* GALLERY */
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;margin-bottom:48px}
+.gallery-item{position:relative;overflow:hidden;aspect-ratio:2/3;background:#0a0a0a}
+.gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform 0.6s ease,opacity 0.4s}
+.gallery-item:hover img{transform:scale(1.03)}
+.gallery-caption{position:absolute;bottom:0;left:0;right:0;padding:16px;background:linear-gradient(transparent,rgba(8,8,8,0.9));font-family:var(--mono);font-size:9px;letter-spacing:0.06em;color:rgba(232,228,220,0.6)}
+.gallery-verdict{font-style:italic;color:rgba(232,228,220,0.4);margin-top:6px;font-size:8px}
+
+/* TEXT SECTIONS */
+.text-block{max-width:680px}
+.text-block h3{font-size:20px;font-weight:400;margin-bottom:20px;letter-spacing:-0.01em}
+.text-block p{color:rgba(232,228,220,0.7);margin-bottom:16px;font-size:15px}
+.text-block p:last-child{margin-bottom:0}
+
+/* SPECS */
+.spec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:36px}
+.spec-item{padding:24px;border:1px solid var(--rule)}
+.spec-item h4{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--red);margin-bottom:12px}
+.spec-item p{font-family:var(--mono);font-size:11px;line-height:1.7;color:rgba(232,228,220,0.6)}
+
+/* LIVE LINK */
+.live-section{text-align:center;padding:120px 48px}
+.live-link{display:inline-block;padding:18px 48px;border:1px solid var(--red);font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--fg);text-decoration:none;transition:background 0.3s,color 0.3s}
+.live-link:hover{background:var(--red);color:var(--fg)}
+.live-note{margin-top:16px;font-family:var(--mono);font-size:8px;letter-spacing:0.08em;color:var(--dim)}
+
+/* FOOTER */
+footer{padding:60px 48px;border-top:1px solid var(--rule);text-align:center}
+footer p{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;color:var(--dim)}
+footer a{color:var(--dim);text-decoration:none;border-bottom:1px solid rgba(82,78,72,0.3)}
+footer a:hover{color:var(--fg)}
+
+/* MOBILE */
+@media(max-width:768px){
+  nav{padding:18px 20px}
+  .nav-links{gap:18px}
+  .dp-hero{padding:0 20px 48px}
+  .hero-status{display:none}
+  .wrap{padding:0 20px}
+  section{padding:60px 0}
+  .gallery-grid{grid-template-columns:1fr 1fr;gap:12px}
+  .live-section{padding:60px 20px}
+}
+@media(max-width:480px){
+  .gallery-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <span class="nav-wordmark">FAMTEC</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/">Studio</a></li>
+    <li><a href="/archai.html">ARCHAI</a></li>
+    <li><a href="/dark-plates.html" class="active">Dark Plates</a></li>
+  </ul>
+</nav>
+
+<header class="dp-hero">
+  <div class="hero-content">
+    <p class="hero-tag">Autonomous AI Artwork</p>
+    <h1 class="hero-title">Dark Plates</h1>
+    <p class="hero-subtitle">An autonomous image-generation system producing copperplate engravings from Tasmanian ecological crisis, colonial expedition records, and live cultural signal. Winter solstice festival, Hobart, Tasmania. June 2026.</p>
+    <div class="hero-meta">
+      <span class="tag">62 Endangered Species</span>
+      <span class="tag">52 Colonial Artworks</span>
+      <span class="tag">50 Cook/Webber Plates</span>
+      <span class="tag">Generative Every 6 Hours</span>
+    </div>
+  </div>
+  <div class="hero-status">
+    <p><span class="status-dot status-live"></span> <strong>Live</strong> — generating plates autonomously</p>
+    <p style="margin-top:6px">Hobart, Tasmania / 11-22 June 2026</p>
+  </div>
+</header>
+
+<main>
+
+<!-- CONCEPT -->
+<section>
+  <div class="wrap">
+    <p class="sec-label">Concept</p>
+    <div class="text-block">
+      <h3>The colonial plate as autonomous critique</h3>
+      <p>Dark Plates generates one copperplate engraving every six hours. No human selects the subject matter. Each plate is assembled from a structured source bank containing Tasmanian endangered and extinct species, native flora, contemporary political issues, festival events, public social media discourse, First Nations cultural context, and colonial voyage expedition artworks.</p>
+      <p>These fragments are combined through a structured prompt and rendered as late-eighteenth-century copperplate engravings: black ink on bone paper with blood-red wash. Deliberate anatomical distortions are driven by the political and social content of each generation cycle.</p>
+      <p>The visual language of colonial scientific classification is applied to the contemporary cultural event that inherited its structures. The technique is precise and clinical. The subject is grotesque, mutated, or structurally impossible. The contrast between calm technique and disturbing content is the operative mechanism.</p>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section>
+  <div class="wrap">
+    <p class="sec-label">Selected Plates</p>
+    <div class="gallery-grid" id="galleryGrid">
+      <!-- Populated dynamically from live API -->
+    </div>
+  </div>
+</section>
+
+<!-- VOICE -->
+<section>
+  <div class="wrap">
+    <p class="sec-label">Voice</p>
+    <div class="text-block">
+      <h3>Dark Plates</h3>
+      <p>The system operates a single LLM voice that writes plate verdicts and responds to visitor chat. It speaks in a register drawn from Van Diemen's Land convict cant and contemporary Australian English. Profanity, when it appears, is historical and earned.</p>
+      <p>Plate verdicts appear as short captions in the register of colonial museum classification. The interactive chat responds to visitor questions about the artwork, the festival, the city, the animals, and the colonial plate system.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TECHNICAL -->
+<section>
+  <div class="wrap">
+    <p class="sec-label">Technical Architecture</p>
+    <div class="spec-grid">
+      <div class="spec-item">
+        <h4>Image Generation</h4>
+        <p>OpenAI gpt-image-1, 1024x1536px. Structured prompts from source bank with exhaustive-cycle random selection (no repeats until all items used).</p>
+      </div>
+      <div class="spec-item">
+        <h4>Voice Generation</h4>
+        <p>OpenAI gpt-4.1-mini for plate verdicts, interactive chat, and exhibition-catalogue titling.</p>
+      </div>
+      <div class="spec-item">
+        <h4>Source Bank</h4>
+        <p>62 animals, 50 plants, 52 colonial Tasmanian artworks, 50 Cook/Webber expedition plates, 50 political issues, 81 social media posts, 50 First Nations references.</p>
+      </div>
+      <div class="spec-item">
+        <h4>Infrastructure</h4>
+        <p>Node.js on Fly.io (Sydney region). Persistent volume storage. Built-in scheduler. Single-page web app with QR-code street distribution.</p>
+      </div>
+      <div class="spec-item">
+        <h4>Distribution</h4>
+        <p>Web, QR code stickers and posters in Hobart during festival period, Instagram permanent archive.</p>
+      </div>
+      <div class="spec-item">
+        <h4>Research Context</h4>
+        <p>RMIT University Design PhD. Supervised by Chris Barker. Part of the ARCHAI project exploring AI and cultural heritage.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE LINK -->
+<section class="live-section" style="border-top:1px solid var(--rule)">
+  <a href="https://artcuntshitcunt.com" target="_blank" rel="noopener" class="live-link">View Live Installation</a>
+  <p class="live-note">Content warning: strong language, confronting imagery, colonial and ecological themes</p>
+</section>
+
+<!-- CREDIT -->
+<section>
+  <div class="wrap">
+    <p class="sec-label">Credit</p>
+    <div class="text-block">
+      <p><strong>Concept and development:</strong> Rob Graham</p>
+      <p><strong>Supervision:</strong> Chris Barker, RMIT University</p>
+      <p><strong>Research context:</strong> RMIT Design PhD (ARCHAI project)</p>
+      <p style="margin-top:24px;font-family:var(--mono);font-size:10px;color:var(--dim);">This work is not commissioned, endorsed, or affiliated with any festival, institution, artist, or organisation referenced within. All names and cultural references are used for critical commentary and artistic purposes only.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>&copy; 2026 Rob Graham / <a href="https://fineartmedia.tech">fineartmedia.tech</a></p>
+</footer>
+
+<script>
+// Load plates from live API
+async function loadGallery() {
+  try {
+    const res = await fetch("https://artcuntshitcunt.com/api/daily-artworks");
+    const data = await res.json();
+    if (!data.ok || !data.artworks?.length) return;
+
+    const grid = document.getElementById("galleryGrid");
+    const plates = data.artworks.slice(0, 12); // Show up to 12
+
+    for (const plate of plates) {
+      const item = document.createElement("div");
+      item.className = "gallery-item";
+
+      const imgSrc = "https://artcuntshitcunt.com/" + plate.file;
+      const verdict = (plate.description || "").replace(/^(ART CUNT|DARK PLATES|GATEKEEPER|THE STAIN|GOD|RED):\s*/i, "");
+
+      item.innerHTML = `
+        <img src="${imgSrc}" alt="${plate.title}" loading="lazy">
+        <div class="gallery-caption">
+          ${plate.title}
+          ${verdict ? `<div class="gallery-verdict">${verdict}</div>` : ""}
+        </div>
+      `;
+      grid.appendChild(item);
+    }
+  } catch (e) {
+    console.log("Gallery load error:", e);
+  }
+}
+loadGallery();
+</script>
+</body>
+</html>
