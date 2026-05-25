@@ -213,7 +213,7 @@ footer a:hover{color:var(--fg)}
 
 <!-- LIVE LINK -->
 <section class="live-section" style="border-top:1px solid var(--rule)">
-  <a href="https://artcuntshitcunt.com" target="_blank" rel="noopener" class="live-link">View Live Installation</a>
+  <a href="https://darkplates.art" target="_blank" rel="noopener" class="live-link">View Live Installation</a>
   <p class="live-note">Content warning: strong language, confronting imagery, colonial and ecological themes</p>
 </section>
 
@@ -240,7 +240,7 @@ footer a:hover{color:var(--fg)}
 // Load plates from live API
 async function loadGallery() {
   try {
-    const res = await fetch("https://artcuntshitcunt.com/api/daily-artworks");
+    const res = await fetch("https://darkplates.art/api/daily-artworks");
     const data = await res.json();
     if (!data.ok || !data.artworks?.length) return;
 
@@ -251,7 +251,7 @@ async function loadGallery() {
       const item = document.createElement("div");
       item.className = "gallery-item";
 
-      const imgSrc = "https://artcuntshitcunt.com/" + plate.file;
+      const imgSrc = "https://darkplates.art/" + plate.file;
       const verdict = (plate.description || "").replace(/^(ART CUNT|DARK PLATES|GATEKEEPER|THE STAIN|GOD|RED):\s*/i, "");
 
       item.innerHTML = `
