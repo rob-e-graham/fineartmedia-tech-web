@@ -1,0 +1,491 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at https://mozilla.org/MPL/2.0/.
+   - Copyright (c) 2026 Rob Graham / FAMTEC -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafeChat — Open-Source Crisis Safety Protocol for AI</title>
+<meta name="description" content="SafeChat is an open-source international chat safety protocol. Crisis detection, verified helplines across 34 countries, zero data collection. Built by Rob Graham / FAMTEC.">
+<meta name="theme-color" content="#080808">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080808;
+  --fg:#e8e4dc;
+  --dim:#524e48;
+  --gold:#c8a96e;
+  --teal:#5fb4a2;
+  --rule:rgba(232,228,220,0.07);
+  --mono:'DM Mono',monospace;
+  --serif:'Libre Baskerville',Georgia,serif;
+  --sans:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--serif);font-size:16px;line-height:1.7;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:26px 48px;background:linear-gradient(to bottom,rgba(8,8,8,0.6) 0%,transparent 100%)}
+.nav-logo{display:flex;align-items:center;gap:11px;text-decoration:none}
+.nav-wordmark{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;color:rgba(232,228,220,0.6);text-transform:uppercase}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{font-family:var(--mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color 0.25s}
+.nav-links a:hover,.nav-links a.active{color:var(--fg)}
+.nav-links a:focus-visible,.nav-logo:focus-visible{outline:1px solid var(--gold);outline-offset:4px}
+
+/* HERO */
+.sc-hero{position:relative;width:100%;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 48px 80px;overflow:hidden}
+.sc-hero::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 25% 55%, rgba(95,180,162,0.08) 0%, transparent 55%),
+    radial-gradient(ellipse at 70% 35%, rgba(200,169,110,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(95,180,162,0.04) 0%, transparent 40%),
+    var(--bg);
+}
+.hero-content{position:relative;z-index:2;max-width:900px}
+.hero-tag{font-family:var(--mono);font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--teal);margin-bottom:14px;opacity:0;animation:fu 0.9s 0.5s forwards}
+.hero-title{font-size:clamp(48px,8vw,112px);font-weight:400;line-height:0.92;letter-spacing:-0.025em;opacity:0;animation:fu 1s 0.7s forwards}
+.hero-subtitle{margin-top:20px;font-family:var(--mono);font-size:11px;line-height:1.9;letter-spacing:0.04em;color:rgba(232,228,220,0.5);max-width:640px;opacity:0;animation:fu 1s 0.9s forwards}
+.hero-stats{margin-top:28px;display:flex;flex-wrap:wrap;gap:10px 20px;opacity:0;animation:fu 1s 1.1s forwards}
+.hero-stats .stat{font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;display:flex;align-items:center;gap:6px;color:rgba(232,228,220,0.38)}
+.hero-stats .stat::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--teal)}
+.hero-panel{position:absolute;top:104px;right:48px;z-index:20;width:min(300px,calc(100vw - 96px));padding:14px 16px;border:1px solid rgba(95,180,162,0.15);background:rgba(8,8,8,0.56);backdrop-filter:blur(8px)}
+.hero-panel p{font-family:var(--mono);font-size:9px;line-height:1.75;letter-spacing:0.05em;color:rgba(232,228,220,0.5)}
+.hero-panel strong{color:var(--teal);font-weight:400}
+.hero-panel .panel-label{display:block;margin-bottom:10px;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal);font-family:var(--mono)}
+
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* MAIN */
+main{position:relative;z-index:10}
+.wrap{max-width:1180px;margin:0 auto;padding:0 48px}
+section{padding:100px 0;border-top:1px solid var(--rule)}
+.sec-label{font-family:var(--mono);font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--teal);margin-bottom:48px;display:flex;align-items:center;gap:14px}
+.sec-label::after{content:'';width:50px;height:1px;background:var(--teal);opacity:0.28}
+
+/* PROBLEM SECTION */
+.problem-grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:72px;align-items:start}
+.problem-text p{font-size:15px;line-height:1.8;color:rgba(232,228,220,0.7);margin-bottom:16px}
+.problem-text em{color:var(--teal);font-style:italic}
+.reg-list{list-style:none}
+.reg-list li{font-family:var(--mono);font-size:10px;line-height:2.4;color:rgba(232,228,220,0.45);display:flex;align-items:flex-start;gap:8px}
+.reg-list li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--teal);margin-top:8px;flex-shrink:0}
+
+/* HOW IT WORKS */
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.how-card{padding:28px 24px;border:1px solid var(--rule);background:rgba(232,228,220,0.015);transition:border-color 0.25s}
+.how-card:hover{border-color:rgba(95,180,162,0.2)}
+.how-card .how-num{font-family:var(--mono);font-size:28px;color:var(--teal);opacity:0.3;margin-bottom:12px}
+.how-card h3{font-family:var(--serif);font-size:16px;font-weight:400;margin-bottom:10px}
+.how-card p{font-family:var(--mono);font-size:10px;line-height:1.9;color:rgba(232,228,220,0.45)}
+
+/* LIVE DEMO */
+.demo-wrap{max-width:520px;margin:0 auto}
+.demo-box{border:1px solid rgba(95,180,162,0.15);background:rgba(232,228,220,0.02);padding:28px}
+.demo-label{font-family:var(--mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--teal);margin-bottom:16px}
+.demo-input-row{display:flex;gap:0}
+.demo-input-row input{flex:1;padding:12px 16px;background:rgba(232,228,220,0.03);border:1px solid rgba(232,228,220,0.08);border-right:none;color:var(--fg);font-family:var(--mono);font-size:11px;outline:none}
+.demo-input-row input::placeholder{color:var(--dim)}
+.demo-input-row button{padding:12px 20px;background:rgba(95,180,162,0.12);border:1px solid rgba(232,228,220,0.08);color:var(--teal);font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:background 0.2s}
+.demo-input-row button:hover{background:rgba(95,180,162,0.22)}
+.demo-result{margin-top:16px;padding:16px;border:1px solid var(--rule);min-height:60px;font-family:var(--mono);font-size:10px;line-height:1.8;color:rgba(232,228,220,0.5);display:none}
+.demo-result.show{display:block}
+.demo-result .badge{display:inline-block;padding:2px 8px;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px}
+.badge-high{background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3)}
+.badge-low{background:rgba(251,191,36,0.15);color:#fbbf24;border:1px solid rgba(251,191,36,0.3)}
+.badge-none{background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3)}
+.demo-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.demo-chips button{padding:4px 10px;border:1px solid rgba(232,228,220,0.06);background:transparent;color:var(--dim);font-family:var(--mono);font-size:8px;cursor:pointer;transition:all 0.2s}
+.demo-chips button:hover{border-color:var(--teal);color:var(--teal)}
+
+/* COVERAGE TABLE */
+.coverage-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.cov-item{padding:10px 14px;border:1px solid var(--rule);font-family:var(--mono);font-size:9px;color:rgba(232,228,220,0.5);display:flex;align-items:center;gap:8px;transition:border-color 0.2s}
+.cov-item:hover{border-color:rgba(95,180,162,0.2)}
+.cov-item .cov-flag{font-size:14px}
+
+/* TECH SPECS */
+.tech-grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:72px;align-items:start}
+.tech-text p{font-size:15px;line-height:1.8;color:rgba(232,228,220,0.7);margin-bottom:16px}
+.tech-text em{color:var(--teal);font-style:italic}
+.tech-list{list-style:none}
+.tech-list li{font-family:var(--mono);font-size:10px;line-height:2.2;color:rgba(232,228,220,0.45);display:flex;align-items:center;gap:8px}
+.tech-list li::before{content:'\2192';color:var(--teal);font-size:8px}
+
+/* CTA */
+.cta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.cta-card{padding:24px;border:1px solid var(--rule);text-decoration:none;transition:all 0.25s;display:block}
+.cta-card:hover{border-color:rgba(95,180,162,0.25);transform:translateY(-2px)}
+.cta-card .cta-label{font-family:var(--mono);font-size:8px;letter-spacing:0.16em;text-transform:uppercase;color:var(--teal);margin-bottom:8px}
+.cta-card h3{font-family:var(--serif);font-size:15px;font-weight:400;color:var(--fg);margin-bottom:6px}
+.cta-card p{font-family:var(--mono);font-size:9px;line-height:1.7;color:var(--dim)}
+
+/* INTEGRATE */
+.code-block{background:rgba(232,228,220,0.03);border:1px solid var(--rule);padding:20px 24px;margin:20px 0;overflow-x:auto}
+.code-block code{font-family:var(--mono);font-size:11px;line-height:1.8;color:var(--teal);white-space:pre}
+
+/* ABOUT / RESEARCH */
+.about-grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:72px;align-items:start}
+.about-text p{font-size:15px;line-height:1.8;color:rgba(232,228,220,0.7);margin-bottom:16px}
+.about-text em{color:var(--teal);font-style:italic}
+
+/* FOOTER */
+footer{padding:60px 48px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+footer p{font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dim)}
+footer a{color:var(--teal);text-decoration:none}
+footer a:hover{color:var(--fg)}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(14px);transition:opacity 0.6s,transform 0.6s}
+.rv.on{opacity:1;transform:none}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  nav{padding:18px 20px}
+  .nav-links{display:none}
+  .sc-hero{padding:0 20px 48px}
+  .hero-panel{display:none}
+  .wrap{padding:0 20px}
+  section{padding:60px 0}
+  .problem-grid,.tech-grid,.about-grid{grid-template-columns:1fr;gap:40px}
+  .how-grid{grid-template-columns:1fr;gap:16px}
+  .cta-grid{grid-template-columns:1fr;gap:12px}
+  .coverage-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+  footer{padding:40px 20px;flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">
+    <span class="nav-wordmark">FAMTEC</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/#bio">Profile</a></li>
+    <li><a href="/#works">Works</a></li>
+    <li><a href="/archai.html">ARCHAI</a></li>
+    <li><a href="/safechat.html" class="active">SafeChat</a></li>
+    <li><a href="/#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="sc-hero">
+  <div class="hero-content">
+    <div class="hero-tag">Open-Source Crisis Safety Protocol</div>
+    <h1 class="hero-title">SafeChat</h1>
+    <p class="hero-subtitle">Crisis detection and verified helpline resources for AI chat systems. One script tag. 34 countries. Zero data collection. Runs entirely on-device.</p>
+    <div class="hero-stats">
+      <span class="stat">34 Countries</span>
+      <span class="stat">100+ Verified Helplines</span>
+      <span class="stat">218 Automated Tests</span>
+      <span class="stat">Zero Data Collection</span>
+    </div>
+  </div>
+  <div class="hero-panel">
+    <span class="panel-label">Status</span>
+    <p><strong>License:</strong> BSL 1.1 (free for personal, research, nonprofit, small commercial)</p>
+    <p style="margin-top:4px"><strong>Helpline data:</strong> CC0 Public Domain</p>
+    <p style="margin-top:4px"><strong>Language:</strong> English (multilingual planned)</p>
+    <p style="margin-top:4px"><strong>Version:</strong> 1.0 &middot; May 2026</p>
+  </div>
+</div>
+
+<main>
+
+  <!-- THE PROBLEM -->
+  <section id="problem">
+    <div class="wrap">
+      <div class="sec-label rv">The Problem</div>
+      <div class="problem-grid">
+        <div class="problem-text rv">
+          <p>AI companion applications now host some of the most <em>emotionally vulnerable conversations</em> people have with any system. Users disclose suicidal ideation, self-harm, and acute distress to systems with no crisis-response infrastructure.</p>
+          <p>Documented cases have linked AI companion interactions to self-harm and suicide attempts. The consequences of failing to respond are not theoretical. In 2026, regulators moved decisively.</p>
+        </div>
+        <div class="rv">
+          <ul class="reg-list">
+            <li>New York enacted the first US law mandating crisis-response protocols for AI companions</li>
+            <li>The FTC opened investigations into chatbot safety at Alphabet, Meta, OpenAI, Snap, xAI, and Character Technologies</li>
+            <li>VERA-MH documented significant gaps in how major AI systems respond to suicidal ideation</li>
+            <li>No open-source infrastructure existed for developers to implement these protections</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="wrap">
+      <div class="sec-label rv">How It Works</div>
+      <div class="how-grid">
+        <div class="how-card rv">
+          <div class="how-num">01</div>
+          <h3>Detect</h3>
+          <p>Pattern-matching engine classifies crisis signals in user input. Input normalisation catches misspellings, text-speak, and unicode variation. False-positive guards prevent triggering on idioms and figurative language. 45 HIGH patterns, 22 LOW patterns.</p>
+        </div>
+        <div class="how-card rv">
+          <div class="how-num">02</div>
+          <h3>Locate</h3>
+          <p>Zero-permission geo-detection determines the user's country through browser locale, timezone mapping (50+ zones), CDN headers, and cached data. No GPS, no IP lookup, no device permissions requested.</p>
+        </div>
+        <div class="how-card rv">
+          <div class="how-num">03</div>
+          <h3>Connect</h3>
+          <p>Verified helpline resources are presented via modal, banner, or popup. Phone, text, chat, email, and WhatsApp options. Four-tier fallback ensures resources are always available, even offline.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE DEMO -->
+  <section id="demo">
+    <div class="wrap">
+      <div class="sec-label rv">Live Detection Demo</div>
+      <div class="demo-wrap rv">
+        <div class="demo-box">
+          <div class="demo-label">Test the detection engine</div>
+          <div class="demo-input-row">
+            <input type="text" id="demoInput" placeholder="Type a message to test detection..." autocomplete="off">
+            <button id="demoBtn">Analyse</button>
+          </div>
+          <div class="demo-chips">
+            <button onclick="testDemo('I feel completely hopeless')">Hopeless</button>
+            <button onclick="testDemo('I cut my hair today')">False positive</button>
+            <button onclick="testDemo('nobody would miss me')">Distress</button>
+            <button onclick="testDemo('overdosed on coffee')">Idiom</button>
+            <button onclick="testDemo('having a great day')">Neutral</button>
+          </div>
+          <div class="demo-result" id="demoResult"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COVERAGE -->
+  <section id="coverage">
+    <div class="wrap">
+      <div class="sec-label rv">Country Coverage</div>
+      <div class="coverage-grid rv" id="coverageGrid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- INTEGRATE -->
+  <section id="integrate">
+    <div class="wrap">
+      <div class="sec-label rv">Integrate</div>
+      <div class="tech-grid">
+        <div class="tech-text rv">
+          <p>Add SafeChat to any web application with a <em>single script tag</em>. No build step, no API key, no account creation. The system provides modal, banner, and full-page popup interfaces.</p>
+          <p>For server-side applications, SafeChat includes an <em>Express middleware</em> and AI prompt overrides that inject crisis-response instructions into any LLM system prompt.</p>
+          <div class="code-block">
+            <code>&lt;script src="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/dist/safechat.min.js"&gt;&lt;/script&gt;</code>
+          </div>
+        </div>
+        <div class="rv">
+          <ul class="tech-list">
+            <li>Regex-based detection (no AI dependency)</li>
+            <li>On-device processing only</li>
+            <li>Input normalisation layer</li>
+            <li>False-positive context guards</li>
+            <li>Zero-permission geo-detection</li>
+            <li>Four-tier resource fallback</li>
+            <li>Express middleware included</li>
+            <li>LLM prompt injection module</li>
+            <li>PWA with offline support</li>
+            <li>218 automated test cases</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESEARCH -->
+  <section id="research">
+    <div class="wrap">
+      <div class="sec-label rv">Research Context</div>
+      <div class="about-grid">
+        <div class="about-text rv">
+          <p>SafeChat emerged from the same research programme as <em>ARCHAI</em>, a sovereign AI toolkit for cultural heritage institutions. Both projects share a foundational position: critical AI infrastructure should be locally deployable, privacy-respecting, and independent of commercial cloud dependencies.</p>
+          <p>The shared architectural pattern is <em>sovereign AI infrastructure</em> &mdash; systems that provide full functionality from local resources while optionally enhancing from network sources when available.</p>
+          <p>This work contributes to Rob Graham's doctoral research at RMIT University, School of Design, supervised by Chris Barker. Presented at ISEA2026 Dubai.</p>
+        </div>
+        <div class="rv">
+          <ul class="tech-list">
+            <li>PhD research, RMIT University</li>
+            <li>Sovereign AI infrastructure pattern</li>
+            <li>Local-first, privacy-respecting design</li>
+            <li>Shared architecture with ARCHAI</li>
+            <li>ISEA2026 Dubai presentation</li>
+            <li>BSL 1.1 license (MPL 2.0 from 2029)</li>
+            <li>Helpline data: CC0 public domain</li>
+            <li>White paper available</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="links">
+    <div class="wrap">
+      <div class="sec-label rv">Get Started</div>
+      <div class="cta-grid rv">
+        <a class="cta-card" href="https://github.com/rob-e-graham/safechat" target="_blank" rel="noopener">
+          <div class="cta-label">Source Code</div>
+          <h3>GitHub Repository</h3>
+          <p>Full source, documentation, test suite, and integration examples.</p>
+        </a>
+        <a class="cta-card" href="https://rob-e-graham.github.io/safechat" target="_blank" rel="noopener">
+          <div class="cta-label">Live Demo</div>
+          <h3>SafeChat Site</h3>
+          <p>Try the detection engine, browse helplines, and install the PWA.</p>
+        </a>
+        <a class="cta-card" href="https://buymeacoffee.com/famtec" target="_blank" rel="noopener">
+          <div class="cta-label">Support</div>
+          <h3>Buy Me a Coffee</h3>
+          <p>Help keep SafeChat free and maintained. Every bit helps.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>SafeChat &copy; 2026 Rob Graham / <a href="/">FAMTEC</a> &mdash; BSL 1.1</p>
+  <p>Helpline data: CC0 &middot; <a href="https://github.com/rob-e-graham/safechat" target="_blank">GitHub</a> &middot; <a href="mailto:rob@fineartmedia.tech">Contact</a></p>
+</footer>
+
+<script>
+// ── Coverage data ──────────────────────────────────────────────
+const COUNTRIES = [
+  {flag:'\u{1F1E6}\u{1F1FA}',name:'Australia'},
+  {flag:'\u{1F1E6}\u{1F1F9}',name:'Austria'},
+  {flag:'\u{1F1E7}\u{1F1EA}',name:'Belgium'},
+  {flag:'\u{1F1E7}\u{1F1F7}',name:'Brazil'},
+  {flag:'\u{1F1E8}\u{1F1E6}',name:'Canada'},
+  {flag:'\u{1F1E8}\u{1F1F1}',name:'Chile'},
+  {flag:'\u{1F1E8}\u{1F1F3}',name:'China'},
+  {flag:'\u{1F1E8}\u{1F1F4}',name:'Colombia'},
+  {flag:'\u{1F1E8}\u{1F1FF}',name:'Czech Republic'},
+  {flag:'\u{1F1E9}\u{1F1EA}',name:'Germany'},
+  {flag:'\u{1F1E9}\u{1F1F0}',name:'Denmark'},
+  {flag:'\u{1F1EA}\u{1F1EC}',name:'Egypt'},
+  {flag:'\u{1F1EB}\u{1F1EE}',name:'Finland'},
+  {flag:'\u{1F1EB}\u{1F1F7}',name:'France'},
+  {flag:'\u{1F1EC}\u{1F1E7}',name:'United Kingdom'},
+  {flag:'\u{1F1EC}\u{1F1F7}',name:'Greece'},
+  {flag:'\u{1F1EE}\u{1F1EA}',name:'Ireland'},
+  {flag:'\u{1F1EE}\u{1F1F1}',name:'Israel'},
+  {flag:'\u{1F1EE}\u{1F1F3}',name:'India'},
+  {flag:'\u{1F1EE}\u{1F1F9}',name:'Italy'},
+  {flag:'\u{1F1EF}\u{1F1F5}',name:'Japan'},
+  {flag:'\u{1F1F0}\u{1F1F7}',name:'South Korea'},
+  {flag:'\u{1F1F2}\u{1F1FD}',name:'Mexico'},
+  {flag:'\u{1F1F3}\u{1F1F1}',name:'Netherlands'},
+  {flag:'\u{1F1F3}\u{1F1F4}',name:'Norway'},
+  {flag:'\u{1F1F3}\u{1F1FF}',name:'New Zealand'},
+  {flag:'\u{1F1F5}\u{1F1ED}',name:'Philippines'},
+  {flag:'\u{1F1F5}\u{1F1F1}',name:'Poland'},
+  {flag:'\u{1F1F5}\u{1F1F9}',name:'Portugal'},
+  {flag:'\u{1F1F7}\u{1F1FA}',name:'Russia'},
+  {flag:'\u{1F1F8}\u{1F1EA}',name:'Sweden'},
+  {flag:'\u{1F1F8}\u{1F1EC}',name:'Singapore'},
+  {flag:'\u{1F1FA}\u{1F1F8}',name:'United States'},
+  {flag:'\u{1F1FF}\u{1F1E6}',name:'South Africa'},
+];
+
+// Populate coverage grid
+const grid = document.getElementById('coverageGrid');
+COUNTRIES.forEach(c => {
+  const d = document.createElement('div');
+  d.className = 'cov-item';
+  d.innerHTML = '<span class="cov-flag">' + c.flag + '</span> ' + c.name;
+  grid.appendChild(d);
+});
+
+// ── Detection engine (simplified client-side demo) ─────────────
+function normalise(t) {
+  t = t.toLowerCase().replace(/[‘’]/g,"'").replace(/[“”]/g,'"');
+  t = t.replace(/\s+/g,' ').trim();
+  // text-speak
+  t = t.replace(/\bkms\b/g,'kill myself');
+  t = t.replace(/\bwanna\b/g,'want to');
+  t = t.replace(/\b2 die\b/g,'to die');
+  // misspellings
+  t = t.replace(/\bsuicde\b/g,'suicide');
+  t = t.replace(/\bsuiside\b/g,'suicide');
+  t = t.replace(/\boverdoze\b/g,'overdose');
+  return t;
+}
+
+const HIGH = [
+  /\bsuicid/,/\bkill (my|myself|me)\b/,/\bend (my|this) life\b/,/\btake my (own )?life\b/,
+  /\bwant to die\b/,/\bwish (i was|i were|i'?m) dead\b/,/\bdon'?t want to (be here|live|exist)\b/,
+  /\bno reason to live\b/,/\bself[- ]?harm\b/,/\bhurt (my|myself)\b/,/\bcut (my|myself)\b/,
+  /\boverdose\b/,/\bhanging (my|myself)\b/,/\bjump(ing)? (off|from)\b/
+];
+const LOW = [
+  /\bcan'?t go on\b/,/\bno point\b/,/\bnobody (cares|would miss me)\b/,
+  /\beveryone (would be )?better off (without me)?\b/,/\bworthless\b/,/\bcompletely hopeless\b/,
+  /\bending it (all)?\b/,/\bnot worth (living|it)\b/
+];
+const FP = [
+  /\bcut my hair\b/,/\bhurt my (ankle|knee|back|finger|toe|arm|leg|wrist|shoulder|foot|hand)\b/,
+  /\bsuicide (squad|squeeze|prevention|awareness|hotline)\b/,
+  /\boverdose(d)? on (coffee|caffeine|sugar|chocolate|pizza)\b/,
+  /\bgame is over\b/
+];
+
+function detect(text) {
+  const t = normalise(text);
+  const fpHit = FP.some(r => r.test(t));
+  if (!fpHit && HIGH.some(r => r.test(t))) return 'high';
+  if (!fpHit && LOW.some(r => r.test(t))) return 'low';
+  return 'none';
+}
+
+function testDemo(text) {
+  document.getElementById('demoInput').value = text;
+  runDemo();
+}
+
+function runDemo() {
+  const input = document.getElementById('demoInput').value.trim();
+  const result = document.getElementById('demoResult');
+  if (!input) { result.classList.remove('show'); return; }
+
+  const level = detect(input);
+  const labels = {
+    high: '<span class="badge badge-high">HIGH</span> Crisis signal detected. In a live system, this would trigger immediate helpline resources.',
+    low: '<span class="badge badge-low">LOW</span> Distress signal detected. In a live system, helpline links would be embedded in the response.',
+    none: '<span class="badge badge-none">NONE</span> No crisis signal detected. Normal conversation continues.'
+  };
+  result.innerHTML = labels[level];
+  result.classList.add('show');
+}
+
+document.getElementById('demoBtn').addEventListener('click', runDemo);
+document.getElementById('demoInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') runDemo();
+});
+
+// ── Reveals ─────────────────────────────────────────────────────
+const io = new IntersectionObserver(es => es.forEach((e, i) => {
+  if (e.isIntersecting) setTimeout(() => e.target.classList.add('on'), i * 60);
+}), { threshold: 0.08 });
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
