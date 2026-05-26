@@ -43,9 +43,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 .hero::before{
   content:'';position:absolute;inset:0;
   background:
-    linear-gradient(to bottom, rgba(8,8,8,0.25) 0%, rgba(8,8,8,0.08) 20%, rgba(8,8,8,0.7) 58%, #080808 90%),
-    radial-gradient(ellipse at 25% 65%, rgba(194,48,40,0.12) 0%, transparent 55%),
-    url('assets/screenshots/darkplates/dark-mofo-spectra.png') center top/cover no-repeat;
+    radial-gradient(ellipse at 60% 18%, rgba(194,48,40,0.10) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 70%, rgba(194,48,40,0.06) 0%, transparent 40%),
+    radial-gradient(circle 350px at 62% 22%, rgba(194,48,40,0.04) 0%, transparent 100%),
+    repeating-linear-gradient(90deg, transparent, transparent 119px, rgba(194,48,40,0.025) 119px, rgba(194,48,40,0.025) 120px),
+    repeating-linear-gradient(0deg, transparent, transparent 119px, rgba(194,48,40,0.025) 119px, rgba(194,48,40,0.025) 120px),
+    linear-gradient(165deg, #080808 0%, #0e0908 30%, #080808 70%);
+}
+.hero::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:45%;
+  background:linear-gradient(to bottom, transparent, #080808);
+  z-index:1;
 }
 .hero-content{position:relative;z-index:2;max-width:860px}
 .hero-tag{font-family:var(--mono);font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--red);margin-bottom:14px;opacity:0;animation:fu 0.9s 0.5s forwards}
