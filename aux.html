@@ -103,7 +103,7 @@ footer a{color:var(--gold);text-decoration:none}
   <h2>What is this?</h2>
   <p>AUX.IO is a live demonstration of ARCHAI™ — sovereign AI infrastructure that lets museum objects speak for themselves using verified institutional data. No hallucination. No cloud APIs. Everything runs on a single Mac Studio in Melbourne.</p>
   <p>Each object answers from its <strong style="color:var(--fg)">Obtext</strong> (Object Context) — a structured data format containing only verified metadata. When you ask something outside its record, it says so.</p>
-  <p>200 objects across three institutions — Museums Victoria, The Metropolitan Museum of Art, and the Victoria and Albert Museum — are currently live and conversational.</p>
+  <p>62 objects with verified images across Museums Victoria and The Metropolitan Museum of Art are currently live and conversational. An additional 138 objects from the Victoria and Albert Museum will come online when their image servers recover.</p>
 
   <h2 style="margin-top:2rem">Obtext format</h2>
   <div class="obtext-block">{
@@ -142,6 +142,8 @@ const API_ENDPOINTS = [
 ];
 
 let API_BASE = null;
+// Fallback manifest — pages with verified working images (MV + MET)
+let PAGES = [2,12,13,17,19,20,21,37,38,41,43,44,46,47,51,52,55,56,58,59,60,61,65,66,70,71,73,77,79,80,83,87,88,96,99,102,109,113,116,118,120,123,125,130,132,135,141,149,154,155,158,162,168,170,175,182,184,185,188,194,195,197];
 
 async function discoverBackend() {
   for (const url of API_ENDPOINTS) {
@@ -153,15 +155,22 @@ async function discoverBackend() {
   return false;
 }
 
+async function loadManifest() {
+  try {
+    const r = await fetch(API_BASE + '/api/aux-manifest', { signal: AbortSignal.timeout(3000) });
+    if (r.ok) { const d = await r.json(); if (d.pages && d.pages.length) PAGES = d.pages; }
+  } catch {}
+}
+
 function setStatus(online) {
   document.getElementById('statusDot').className = 'dot ' + (online ? 'online' : 'offline');
   document.getElementById('statusText').textContent = online
-    ? 'Collection intelligence online — 200 objects across 3 institutions'
+    ? 'Collection intelligence online — ' + PAGES.length + ' objects with verified images'
     : 'Backend offline — the Mac Studio may be sleeping';
 }
 
 function loadRandom() {
-  const n = Math.floor(Math.random() * 200) + 1;
+  const n = PAGES[Math.floor(Math.random() * PAGES.length)];
   const page = 'NFC' + String(n).padStart(3, '0') + '.html';
   const frame = document.getElementById('objectFrame');
   frame.innerHTML = '<iframe src="' + API_BASE + '/aux/' + page + '" allow="microphone"></iframe>';
@@ -170,6 +179,7 @@ function loadRandom() {
 
 (async () => {
   const online = await discoverBackend();
+  if (online) await loadManifest();
   setStatus(online);
   if (online) {
     loadRandom();
