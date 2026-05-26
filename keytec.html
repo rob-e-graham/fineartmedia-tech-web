@@ -141,6 +141,18 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 .cta-card h3{font-size:20px;font-weight:400;margin-bottom:10px;color:var(--fg)}
 .cta-card p{font-family:var(--sans);font-size:13px;line-height:1.65;color:rgba(232,228,220,0.48)}
 
+/* SCREENSHOTS */
+.shots-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.shots-grid.mixed{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.shot{position:relative;border:1px solid var(--rule);overflow:hidden;cursor:pointer;transition:border-color 0.25s}
+.shot:hover{border-color:rgba(176,200,122,0.25)}
+.shot img{width:100%;display:block;filter:brightness(0.88);transition:filter 0.3s,transform 0.5s}
+.shot:hover img{filter:brightness(1);transform:scale(1.02)}
+.shot .shot-cap{padding:10px 14px;font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim)}
+.lightbox{display:none;position:fixed;inset:0;z-index:600;background:rgba(8,8,8,0.94);backdrop-filter:blur(14px);justify-content:center;align-items:center;cursor:pointer}
+.lightbox.open{display:flex}
+.lightbox img{max-width:92vw;max-height:90vh;object-fit:contain}
+
 /* FOOTER */
 footer{padding:48px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
 footer p{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;color:var(--dim)}
@@ -160,6 +172,7 @@ footer a:hover{color:var(--fg)}
   .wrap{padding:0 24px}
   .problem-grid,.tech-grid,.lic-grid{grid-template-columns:1fr;gap:40px}
   .how-grid,.feat-grid,.share-grid,.cta-grid{grid-template-columns:1fr}
+  .shots-grid,.shots-grid.mixed{grid-template-columns:1fr 1fr}
   footer{flex-direction:column;align-items:flex-start;padding:32px 24px}
 }
 </style>
@@ -171,7 +184,8 @@ footer a:hover{color:var(--fg)}
     <span class="nav-wordmark">FAMTEC</span>
   </a>
   <ul class="nav-links">
-    <li><a href="/">Home</a></li>
+    <li><a href="/#bio">Profile</a></li>
+    <li><a href="/#works">Works</a></li>
     <li><a href="/archai.html">ARCHAI™</a></li>
     <li><a href="/dark-plates.html">Dark Plates</a></li>
     <li><a href="/safechat.html">SafeChat</a></li>
@@ -442,7 +456,38 @@ famtec run openclaw -- npm run dev</div>
     </div>
   </section>
 
+  <!-- SCREENSHOTS -->
+  <section id="screenshots">
+    <div class="wrap">
+      <div class="sec-label rv">Screenshots</div>
+      <p class="rv" style="font-size:15px;line-height:1.8;color:rgba(232,228,220,0.55);max-width:680px;margin-bottom:40px;">Desktop dashboard, token management, instruction mode, and mobile view — all running locally on macOS.</p>
+      <div class="shots-grid mixed rv">
+        <div class="shot" onclick="openLightbox(this)">
+          <img src="assets/screenshots/keytec/keytec-dashboard-desktop.png" alt="Keytec desktop dashboard" loading="lazy">
+          <div class="shot-cap">Dashboard — desktop</div>
+        </div>
+        <div class="shot" onclick="openLightbox(this)">
+          <img src="assets/screenshots/keytec/keytec-tokens-desktop.png" alt="Keytec tokens view" loading="lazy">
+          <div class="shot-cap">Tokens — desktop</div>
+        </div>
+        <div class="shot" onclick="openLightbox(this)">
+          <img src="assets/screenshots/keytec/keytec-instruction-mode.png" alt="Keytec instruction mode" loading="lazy">
+          <div class="shot-cap">Instruction mode</div>
+        </div>
+        <div class="shot" onclick="openLightbox(this)">
+          <img src="assets/screenshots/keytec/keytec-mobile-dashboard.png" alt="Keytec mobile dashboard" loading="lazy">
+          <div class="shot-cap">Dashboard — mobile</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </main>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="this.classList.remove('open')">
+  <img id="lightboxImg" src="" alt="">
+</div>
 
 <footer>
   <p>Keytec &copy; 2026 Rob Graham / <a href="/">FAMTEC</a> &mdash; Dual License</p>
@@ -514,6 +559,13 @@ const io = new IntersectionObserver(es => es.forEach((e, i) => {
   if (e.isIntersecting) setTimeout(() => e.target.classList.add('on'), i * 60);
 }), { threshold: 0.08 });
 document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+// Lightbox
+function openLightbox(card) {
+  const src = card.querySelector('img').src;
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightbox').classList.add('open');
+}
 </script>
 
 </body>

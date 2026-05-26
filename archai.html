@@ -132,6 +132,18 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 .tech-list li{font-family:var(--mono);font-size:10px;line-height:2.2;color:rgba(232,228,220,0.45);display:flex;align-items:center;gap:8px}
 .tech-list li::before{content:'→';color:var(--gold);font-size:8px}
 
+/* SCREENSHOTS */
+.shots-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.shots-grid.mixed{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.shot{position:relative;border:1px solid var(--rule);overflow:hidden;cursor:pointer;transition:border-color 0.25s}
+.shot:hover{border-color:rgba(200,169,110,0.25)}
+.shot img{width:100%;display:block;filter:brightness(0.88);transition:filter 0.3s,transform 0.5s}
+.shot:hover img{filter:brightness(1);transform:scale(1.02)}
+.shot .shot-cap{padding:10px 14px;font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim)}
+.lightbox{display:none;position:fixed;inset:0;z-index:600;background:rgba(8,8,8,0.94);backdrop-filter:blur(14px);justify-content:center;align-items:center;cursor:pointer}
+.lightbox.open{display:flex}
+.lightbox img{max-width:92vw;max-height:90vh;object-fit:contain}
+
 /* FOOTER */
 footer{padding:60px 48px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
 footer p{font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dim)}
@@ -170,6 +182,7 @@ footer a:hover{color:var(--fg)}
   .obj-close{right:20px;top:20px}
   .obj-meta-grid{grid-template-columns:1fr}
   .results-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+  .shots-grid,.shots-grid.mixed{grid-template-columns:1fr 1fr}
   footer{padding:40px 20px;flex-direction:column;align-items:flex-start}
 }
 </style>
@@ -186,6 +199,8 @@ footer a:hover{color:var(--fg)}
     <li><a href="/archai.html" class="active">ARCHAI™</a></li>
     <li><a href="/aux.html">AUX.IO</a></li>
     <li><a href="/dark-plates.html">Dark Plates</a></li>
+    <li><a href="/safechat.html">SafeChat</a></li>
+    <li><a href="/keytec.html">Keytec</a></li>
     <li><a href="/#contact">Contact</a></li>
   </ul>
 </nav>
@@ -278,7 +293,46 @@ footer a:hover{color:var(--fg)}
       </div>
     </div>
   </section>
+
+  <!-- SCREENSHOTS -->
+  <section id="screenshots">
+    <div class="wrap">
+      <div class="sec-label rv">App Screenshots</div>
+      <p class="rv" style="font-size:15px;line-height:1.8;color:rgba(232,228,220,0.55);max-width:680px;margin-bottom:40px;">Curator dashboard, mobile visitor views, object conversations, and exhibition management — running on sovereign infrastructure.</p>
+      <div class="shots-grid mixed rv">
+        <div class="shot" onclick="openLightbox(this)">
+          <img src="assets/screenshots/archai/archai-curator-collections-search-v10-6.png" alt="ARCHAI curator collections search" loading="lazy">
+          <div class="shot-cap">Curator — collections search</div>
+        </div>
+        <div class="shot" onclick="openLightbox(this)">
+          <img src="assets/screenshots/archai/archai-object-detail-a-fifth-on-a-maze-v10-6.png" alt="ARCHAI object detail view" loading="lazy">
+          <div class="shot-cap">Object detail — A Fifth on a Maze</div>
+        </div>
+        <div class="shot" onclick="openLightbox(this)">
+          <img src="assets/screenshots/archai/archai-exhibitions-live-dashboard-v10-6.png" alt="ARCHAI exhibitions live dashboard" loading="lazy">
+          <div class="shot-cap">Exhibitions — live dashboard</div>
+        </div>
+        <div class="shot" onclick="openLightbox(this)">
+          <img src="assets/screenshots/archai/archai-vocabulary-thesaurus-v10-6.png" alt="ARCHAI vocabulary and thesaurus" loading="lazy">
+          <div class="shot-cap">Vocabulary &amp; thesaurus</div>
+        </div>
+        <div class="shot" onclick="openLightbox(this)">
+          <img src="assets/screenshots/archai/archai-mobile-object-hero-dream-still-v10-6.png" alt="ARCHAI mobile object view" loading="lazy">
+          <div class="shot-cap">Mobile — object hero</div>
+        </div>
+        <div class="shot" onclick="openLightbox(this)">
+          <img src="assets/screenshots/archai/archai-mobile-object-chat-dream-still-v10-6.png" alt="ARCHAI mobile object chat" loading="lazy">
+          <div class="shot-cap">Mobile — object conversation</div>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="this.classList.remove('open')">
+  <img id="lightboxImg" src="" alt="">
+</div>
 
 <!-- OBJECT DETAIL MODAL -->
 <div class="obj-modal" id="objModal">
@@ -539,6 +593,13 @@ const io = new IntersectionObserver(es => es.forEach((e, i) => {
   if (e.isIntersecting) setTimeout(() => e.target.classList.add('on'), i * 60);
 }), { threshold: 0.08 });
 document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+// ── Lightbox ───────────────────────────────────────────────────
+function openLightbox(card) {
+  const src = card.querySelector('img').src;
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightbox').classList.add('open');
+}
 
 // ── Init ────────────────────────────────────────────────────────
 discoverBackend().then(() => {

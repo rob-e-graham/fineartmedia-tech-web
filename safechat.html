@@ -135,6 +135,17 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 .about-text p{font-size:15px;line-height:1.8;color:rgba(232,228,220,0.7);margin-bottom:16px}
 .about-text em{color:var(--teal);font-style:italic}
 
+/* SCREENSHOTS */
+.shots-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;justify-items:center}
+.shot{position:relative;border:1px solid var(--rule);overflow:hidden;cursor:pointer;transition:border-color 0.25s;max-width:320px}
+.shot:hover{border-color:rgba(95,180,162,0.3)}
+.shot img{width:100%;display:block;filter:brightness(0.88);transition:filter 0.3s,transform 0.5s}
+.shot:hover img{filter:brightness(1);transform:scale(1.02)}
+.shot .shot-cap{padding:10px 14px;font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim)}
+.lightbox{display:none;position:fixed;inset:0;z-index:600;background:rgba(8,8,8,0.94);backdrop-filter:blur(14px);justify-content:center;align-items:center;cursor:pointer}
+.lightbox.open{display:flex}
+.lightbox img{max-width:92vw;max-height:90vh;object-fit:contain}
+
 /* FOOTER */
 footer{padding:60px 48px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
 footer p{font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dim)}
@@ -155,6 +166,7 @@ footer a:hover{color:var(--fg)}
   section{padding:60px 0}
   .problem-grid,.tech-grid,.about-grid{grid-template-columns:1fr;gap:40px}
   .how-grid{grid-template-columns:1fr;gap:16px}
+  .shots-grid{grid-template-columns:1fr 1fr}
   .cta-grid{grid-template-columns:1fr;gap:12px}
   .coverage-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
   footer{padding:40px 20px;flex-direction:column;align-items:flex-start}
@@ -361,7 +373,34 @@ footer a:hover{color:var(--fg)}
     </div>
   </section>
 
+  <!-- SCREENSHOTS -->
+  <section id="screenshots">
+    <div class="wrap">
+      <div class="sec-label rv">App Screenshots</div>
+      <p class="rv" style="font-size:15px;line-height:1.8;color:rgba(232,228,220,0.55);max-width:680px;margin-bottom:40px;">Mobile-first crisis safety — detection, local helplines, and zero-permission operation.</p>
+      <div class="shots-grid rv">
+        <div class="shot" onclick="openLightbox(this)">
+          <img src="assets/screenshots/safechat/homepage-mobile.png" alt="SafeChat — Homepage" loading="lazy">
+          <div class="shot-cap">Homepage — Mobile</div>
+        </div>
+        <div class="shot" onclick="openLightbox(this)">
+          <img src="assets/screenshots/safechat/popup-mobile.png" alt="SafeChat — Helpline Popup" loading="lazy">
+          <div class="shot-cap">Helpline Popup — UK</div>
+        </div>
+        <div class="shot" onclick="openLightbox(this)">
+          <img src="assets/screenshots/safechat/detection-demo.png" alt="SafeChat — Detection Demo" loading="lazy">
+          <div class="shot-cap">Crisis Detection Engine</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </main>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="this.classList.remove('open')">
+  <img id="lightboxImg" src="" alt="">
+</div>
 
 <footer>
   <p>SafeChat &copy; 2026 Rob Graham / <a href="/">FAMTEC</a> &mdash; BSL 1.1</p>
@@ -369,6 +408,13 @@ footer a:hover{color:var(--fg)}
 </footer>
 
 <script>
+// ── Lightbox ──────────────────────────────────────────────────
+function openLightbox(card) {
+  const src = card.querySelector('img').src;
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightbox').classList.add('open');
+}
+
 // ── Coverage data ──────────────────────────────────────────────
 const COUNTRIES = [
   {flag:'\u{1F1E6}\u{1F1FA}',name:'Australia'},
