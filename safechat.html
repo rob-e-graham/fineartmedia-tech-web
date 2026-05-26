@@ -43,10 +43,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 .sc-hero::before{
   content:'';position:absolute;inset:0;
   background:
-    radial-gradient(ellipse at 25% 55%, rgba(95,180,162,0.08) 0%, transparent 55%),
-    radial-gradient(ellipse at 70% 35%, rgba(200,169,110,0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 80%, rgba(95,180,162,0.04) 0%, transparent 40%),
-    var(--bg);
+    linear-gradient(to bottom, rgba(8,8,8,0.25) 0%, rgba(8,8,8,0.08) 20%, rgba(8,8,8,0.7) 58%, #080808 90%),
+    radial-gradient(ellipse at 25% 55%, rgba(95,180,162,0.12) 0%, transparent 55%),
+    url('assets/screenshots/safechat/popup-mobile.png') center top/cover no-repeat;
 }
 .hero-content{position:relative;z-index:2;max-width:900px}
 .hero-tag{font-family:var(--mono);font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--teal);margin-bottom:14px;opacity:0;animation:fu 0.9s 0.5s forwards}
