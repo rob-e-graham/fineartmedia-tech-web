@@ -96,6 +96,7 @@ footer a{color:var(--gold);text-decoration:none}
 
 <div class="controls" id="controls" style="display:none">
   <button class="ctrl-btn primary" onclick="loadRandom()">Meet another object</button>
+  <a class="ctrl-btn" id="browseIndexLink" href="#" target="_blank" rel="noopener">Browse all AUX.IO pages</a>
   <a class="ctrl-btn" href="/archai.html">Search collections</a>
 </div>
 
@@ -103,7 +104,7 @@ footer a{color:var(--gold);text-decoration:none}
   <h2>What is this?</h2>
   <p>AUX.IO is a live demonstration of ARCHAI™ — sovereign AI infrastructure that lets museum objects speak for themselves using verified institutional data. No hallucination. No cloud APIs. Everything runs on a single Mac Studio in Melbourne.</p>
   <p>Each object answers from its <strong style="color:var(--fg)">Obtext</strong> (Object Context) — a structured data format containing only verified metadata. When you ask something outside its record, it says so.</p>
-  <p>62 objects with verified images across Museums Victoria and The Metropolitan Museum of Art are currently live and conversational. Harvesters for the Art Institute of Chicago, Cleveland Museum of Art, Rijksmuseum (Amsterdam), and Europeana (4000+ European institutions) are ready to expand the collection further.</p>
+  <p><span id="liveCountCopy">The live object count is loading</span> across Museums Victoria, The Metropolitan Museum of Art, Victoria and Albert Museum, Art Institute of Chicago, Cleveland Museum of Art, and Rijksmuseum. AUX.IO is now being aligned with the full live ARCHAI collection rather than a small demo subset.</p>
 
   <h2 style="margin-top:2rem">Obtext format</h2>
   <div class="obtext-block">{
@@ -179,6 +180,12 @@ function setStatus(online) {
   document.getElementById('statusText').textContent = online
     ? 'Collection intelligence online — ' + PAGES.length + ' objects with verified images'
     : 'Backend offline — the Mac Studio may be sleeping';
+  const liveCountCopy = document.getElementById('liveCountCopy');
+  if (liveCountCopy) {
+    liveCountCopy.textContent = online
+      ? PAGES.length + ' live object pages are currently conversational'
+      : 'The live object count is unavailable while the backend is offline';
+  }
 }
 
 function loadRandom() {
@@ -186,6 +193,8 @@ function loadRandom() {
   const page = 'NFC' + String(n).padStart(3, '0') + '.html';
   const frame = document.getElementById('objectFrame');
   frame.innerHTML = '<iframe src="' + API_BASE + '/aux/' + page + '" allow="microphone"></iframe>';
+  const browseIndexLink = document.getElementById('browseIndexLink');
+  if (browseIndexLink) browseIndexLink.href = API_BASE + '/aux/index.html';
   document.getElementById('controls').style.display = 'flex';
 }
 
