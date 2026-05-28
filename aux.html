@@ -135,20 +135,32 @@ footer a{color:var(--gold);text-decoration:none}
 </footer>
 
 <script>
-const API_ENDPOINTS = [
-  'https://archai-api.fineartmedia.tech',
-  'http://100.109.26.39:8787',
-  'http://localhost:8787',
-];
+const API_ENDPOINTS = window.location.protocol === 'https:'
+  ? ['https://archai-api.fineartmedia.tech']
+  : [
+      'https://archai-api.fineartmedia.tech',
+      'http://100.109.26.39:8787',
+      'http://localhost:8787',
+    ];
 
 let API_BASE = null;
 // Fallback manifest — pages with verified working images (MV + MET)
 let PAGES = [2,12,13,17,19,20,21,37,38,41,43,44,46,47,51,52,55,56,58,59,60,61,65,66,70,71,73,77,79,80,83,87,88,96,99,102,109,113,116,118,120,123,125,130,132,135,141,149,154,155,158,162,168,170,175,182,184,185,188,194,195,197];
 
+async function fetchWithTimeout(url, timeoutMs = 4000, options = {}) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function discoverBackend() {
   for (const url of API_ENDPOINTS) {
     try {
-      const r = await fetch(url + '/api/health', { signal: AbortSignal.timeout(4000) });
+      const r = await fetchWithTimeout(url + '/api/health', 4000);
       if (r.ok) { API_BASE = url; return true; }
     } catch {}
   }
@@ -157,7 +169,7 @@ async function discoverBackend() {
 
 async function loadManifest() {
   try {
-    const r = await fetch(API_BASE + '/api/aux-manifest', { signal: AbortSignal.timeout(3000) });
+    const r = await fetchWithTimeout(API_BASE + '/api/aux-manifest', 3000);
     if (r.ok) { const d = await r.json(); if (d.pages && d.pages.length) PAGES = d.pages; }
   } catch {}
 }

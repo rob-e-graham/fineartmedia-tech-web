@@ -41,7 +41,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 .nav-links a:focus-visible,.nav-logo:focus-visible{outline:1px solid var(--gold);outline-offset:4px}
 
 /* HERO */
-.archai-hero{position:relative;width:100%;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 48px 80px;overflow:hidden}
+.archai-hero{position:relative;width:100%;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:40px;padding:140px 48px 80px;overflow:hidden}
 .archai-hero::before{
   content:'';position:absolute;inset:0;
   background:
@@ -53,11 +53,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
     linear-gradient(155deg, #080808 0%, #0e0c08 30%, #080808 65%);
 }
 .archai-hero::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:45%;
+  content:'';position:absolute;bottom:0;left:0;right:0;height:60px;
   background:linear-gradient(to bottom, transparent, #080808);
   z-index:1;
 }
-.hero-content{position:relative;z-index:2;max-width:900px}
+.hero-content{position:relative;z-index:2;flex:1;min-width:0;max-width:900px}
 .hero-tag{font-family:var(--mono);font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;opacity:0;animation:fu 0.9s 0.5s forwards}
 .hero-title{font-size:clamp(48px,8vw,112px);font-weight:400;line-height:0.92;letter-spacing:-0.025em;opacity:0;animation:fu 1s 0.7s forwards}
 .hero-title span.tm{font-size:0.35em;vertical-align:super;color:var(--gold);letter-spacing:0}
@@ -68,7 +68,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 .coll-mv::before{background:var(--teal)}
 .coll-met::before{background:var(--met-gold)}
 .coll-va::before{background:var(--va-purple)}
-.hero-status{position:absolute;top:104px;right:48px;z-index:20;width:min(300px,calc(100vw - 96px));padding:14px 16px;border:1px solid rgba(200,169,110,0.12);background:rgba(8,8,8,0.56);backdrop-filter:blur(8px)}
+.hero-status{position:relative;z-index:20;width:280px;flex-shrink:0;padding:14px 16px;border:1px solid rgba(200,169,110,0.12);background:rgba(8,8,8,0.56);backdrop-filter:blur(8px);align-self:flex-end}
 .hero-status p{font-family:var(--mono);font-size:9px;line-height:1.75;letter-spacing:0.05em;color:rgba(232,228,220,0.5)}
 .hero-status strong{color:var(--gold);font-weight:400}
 .hero-status .status-dot{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:4px}
@@ -187,7 +187,7 @@ footer a:hover{color:var(--fg)}
 @media(max-width:768px){
   nav{padding:18px 20px}
   .nav-links{display:none}
-  .archai-hero{padding:0 20px 48px}
+  .archai-hero{padding:100px 20px 48px}
   .hero-status{display:none}
   .wrap{padding:0 20px}
   section{padding:60px 0}
@@ -325,11 +325,13 @@ footer a:hover{color:var(--fg)}
 
 <script>
 // ── Config ──────────────────────────────────────────────────────
-const BACKEND_CANDIDATES = [
-  'https://archai-api.fineartmedia.tech',
-  'http://100.109.26.39:8787',
-  'http://localhost:8787',
-];
+const BACKEND_CANDIDATES = window.location.protocol === 'https:'
+  ? ['https://archai-api.fineartmedia.tech']
+  : [
+      'https://archai-api.fineartmedia.tech',
+      'http://100.109.26.39:8787',
+      'http://localhost:8787',
+    ];
 let API_BASE = '';
 let backendLive = false;
 
@@ -337,10 +339,20 @@ const QDRANT_DIRECT = '';
 const OLLAMA_DIRECT = '';
 
 // ── Backend discovery ───────────────────────────────────────────
+async function fetchWithTimeout(url, timeoutMs = 3000, options = {}) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function discoverBackend() {
   for (const url of BACKEND_CANDIDATES) {
     try {
-      const r = await fetch(url + '/api/health', { signal: AbortSignal.timeout(3000) });
+      const r = await fetchWithTimeout(url + '/api/health', 3000);
       if (r.ok) {
         API_BASE = url;
         backendLive = true;
