@@ -127,6 +127,13 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 /* CHAT */
 .chat-section{border-top:1px solid var(--rule);padding-top:28px;margin-top:28px}
 .chat-label{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.chat-tone-wrap{margin-bottom:16px}
+.chat-tone-label{font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+.chat-tone-buttons{display:flex;flex-wrap:wrap;gap:8px}
+.chat-tone-buttons button{padding:5px 10px;border:1px solid rgba(232,228,220,0.08);background:transparent;color:var(--dim);font-family:var(--mono);font-size:8px;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s}
+.chat-tone-buttons button:hover{border-color:var(--gold);color:var(--gold)}
+.chat-tone-buttons button.active{border-color:rgba(200,169,110,0.45);background:rgba(200,169,110,0.10);color:var(--gold)}
+.chat-tone-note{margin-top:8px;font-family:var(--sans);font-size:12px;line-height:1.5;color:rgba(232,228,220,0.52)}
 .chat-messages{max-height:300px;overflow-y:auto;margin-bottom:16px}
 .chat-msg{margin-bottom:12px;padding:10px 14px;font-family:var(--mono);font-size:11px;line-height:1.7}
 .chat-msg.user{background:rgba(200,169,110,0.08);border-left:2px solid var(--gold);color:rgba(232,228,220,0.8)}
@@ -486,6 +493,71 @@ document.getElementById('searchInput').addEventListener('keydown', e => {
 // ── Object detail ───────────────────────────────────────────────
 let chatHistory = [];
 let currentPayload = null;
+let chatTone = 'factual';
+
+const CHAT_TONES = {
+  factual: {
+    label: 'Factual Friend',
+    note: 'Warm, clear, and grounded in the record.',
+  },
+  third: {
+    label: 'Third Person',
+    note: 'Reads like a museum guide speaking about the object.',
+  },
+  era: {
+    label: 'Voice of its Era',
+    note: 'Lets the object speak with a light historical flavour, without drifting from the record.',
+  }
+};
+
+function renderToneControls() {
+  return '<div class="chat-tone-wrap">' +
+    '<div class="chat-tone-label">Response tone</div>' +
+    '<div class="chat-tone-buttons">' +
+      Object.entries(CHAT_TONES).map(([key, meta]) =>
+        '<button class="' + (chatTone === key ? 'active' : '') + '" onclick="setChatTone(\'' + key + '\')">' + meta.label + '</button>'
+      ).join('') +
+    '</div>' +
+    '<div class="chat-tone-note" id="chatToneNote">' + CHAT_TONES[chatTone].note + '</div>' +
+  '</div>';
+}
+
+function updateToneControls() {
+  const toneButtons = document.querySelectorAll('.chat-tone-buttons button');
+  toneButtons.forEach((btn, index) => {
+    const toneKey = Object.keys(CHAT_TONES)[index];
+    btn.classList.toggle('active', toneKey === chatTone);
+  });
+  const toneNote = document.getElementById('chatToneNote');
+  if (toneNote) toneNote.textContent = CHAT_TONES[chatTone].note;
+}
+
+function setChatTone(tone) {
+  if (!CHAT_TONES[tone]) return;
+  chatTone = tone;
+  updateToneControls();
+}
+
+function buildSystemPrompt(payload) {
+  const title = payload.title || payload.object_name || 'Untitled';
+  const col = payload._source_collection || 'archai_pilot';
+  const institution = getCollectionMeta(col).institution;
+  const metadataBlock = Object.entries(payload)
+    .filter(([k]) => !k.startsWith('_'))
+    .map(([k, v]) => k + ': ' + v)
+    .join('\n');
+
+  const toneInstruction = {
+    factual: 'Speak in first person as the object, but keep the tone clear, friendly, and factual. Use plain contemporary language. Do not invent emotions, experiences, or facts beyond the record.',
+    third: 'Speak in third person as a knowledgeable museum guide describing the object. Do not roleplay as the object itself. Keep the answer accessible, factual, and concise.',
+    era: 'Speak in first person as the object and allow a light sense of historical or period voice when appropriate, but stay understandable to a modern visitor. Do not become theatrical or invent details beyond the record.'
+  }[chatTone];
+
+  return 'You are interpreting "' + title + '", a museum object at ' + institution + '. ' +
+    toneInstruction + '\n' +
+    'Every answer must stay grounded in the verified metadata below. If the record does not support the answer, say so plainly.\n\n' +
+    metadataBlock;
+}
 
 function openObject(payloadStr) {
   const p = JSON.parse(payloadStr);
@@ -523,6 +595,7 @@ function openObject(payloadStr) {
   if (backendLive) {
     html += '<div class="chat-section">';
     html += '<div class="chat-label">Talk to this object</div>';
+    html += renderToneControls();
     html += '<div class="chat-chips">';
     html += '<button onclick="askObject(\'What are you?\')">What are you?</button>';
     html += '<button onclick="askObject(\'When were you made?\')">When were you made?</button>';
@@ -540,6 +613,7 @@ function openObject(payloadStr) {
   document.getElementById('objModalInner').innerHTML = html;
   document.getElementById('objModal').classList.add('open');
   document.body.style.overflow = 'hidden';
+  updateToneControls();
 }
 
 document.getElementById('objClose').addEventListener('click', () => {
@@ -558,12 +632,7 @@ async function askObject(question) {
   msgs.scrollTop = msgs.scrollHeight;
 
   const p = currentPayload;
-  const title = p.title || p.object_name || 'Untitled';
-  const col = p._source_collection || 'archai_pilot';
-  const institution = getCollectionMeta(col).institution;
-
-  const systemPrompt = 'You are "' + title + '", a museum object at ' + institution + '. Speak in first person.\n' +
-    Object.entries(p).filter(([k]) => !k.startsWith('_')).map(([k,v]) => k + ': ' + v).join('\n');
+  const systemPrompt = buildSystemPrompt(p);
 
   try {
     const reply = await proxyChat(systemPrompt, question, chatHistory.slice(-6));
