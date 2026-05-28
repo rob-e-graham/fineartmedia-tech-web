@@ -335,6 +335,20 @@ const BACKEND_CANDIDATES = window.location.protocol === 'https:'
 let API_BASE = '';
 let backendLive = false;
 
+const COLLECTION_META = {
+  archai_pilot: { short: 'MV', className: 'src-mv', institution: 'Museums Victoria' },
+  archai_met: { short: 'Met', className: 'src-met', institution: 'The Metropolitan Museum of Art' },
+  archai_va: { short: 'V&A', className: 'src-va', institution: 'Victoria and Albert Museum' },
+  archai_aic: { short: 'AIC', className: 'src-met', institution: 'Art Institute of Chicago' },
+  archai_cma: { short: 'CMA', className: 'src-met', institution: 'Cleveland Museum of Art' },
+  archai_rijks: { short: 'Rijks', className: 'src-va', institution: 'Rijksmuseum' },
+  archai_europeana: { short: 'Europeana', className: 'src-va', institution: 'Europeana' }
+};
+
+function getCollectionMeta(col) {
+  return COLLECTION_META[col] || COLLECTION_META.archai_pilot;
+}
+
 const QDRANT_DIRECT = '';
 const OLLAMA_DIRECT = '';
 
@@ -439,8 +453,7 @@ async function doSearch(query) {
       const p = r.payload || {};
       const title = p.title || p.object_name || 'Untitled';
       const col = p._source_collection || 'archai_pilot';
-      const colLabel = col === 'archai_met' ? 'Met' : col === 'archai_va' ? 'V&A' : 'MV';
-      const colClass = col === 'archai_met' ? 'src-met' : col === 'archai_va' ? 'src-va' : 'src-mv';
+      const meta = getCollectionMeta(col);
       const img = p.image_url || p.primaryImageSmall || '';
       const date = p.date || p.date_display || p.production_date || '';
       const maker = p.maker || p.artist || p.creator || '';
@@ -451,7 +464,7 @@ async function doSearch(query) {
       if (img) {
         html += '<img src="' + img + '" alt="' + title.replace(/"/g, '') + '" loading="lazy" onerror="this.style.display=\'none\'">';
       }
-      html += '<span class="rc-source ' + colClass + '">' + colLabel + '</span>';
+      html += '<span class="rc-source ' + meta.className + '">' + meta.short + '</span>';
       html += '<div class="rc-body">';
       html += '<div class="rc-title">' + title + '</div>';
       html += '<div class="rc-meta">' + [maker, date, score].filter(Boolean).join(' · ') + '</div>';
@@ -489,7 +502,7 @@ function openObject(payloadStr) {
   const location = p.location || p.gallery || '';
   const reg = p.registration_number || p.accession_number || '';
   const col = p._source_collection || 'archai_pilot';
-  const institution = col === 'archai_met' ? 'The Metropolitan Museum of Art' : col === 'archai_va' ? 'Victoria and Albert Museum' : 'Museums Victoria';
+  const institution = getCollectionMeta(col).institution;
 
   let html = '';
   if (img) html += '<img class="obj-hero-img" src="' + img + '" alt="' + title.replace(/"/g,'') + '" onerror="this.style.display=\'none\'">';
@@ -547,7 +560,7 @@ async function askObject(question) {
   const p = currentPayload;
   const title = p.title || p.object_name || 'Untitled';
   const col = p._source_collection || 'archai_pilot';
-  const institution = col === 'archai_met' ? 'The Metropolitan Museum of Art' : col === 'archai_va' ? 'Victoria and Albert Museum' : 'Museums Victoria';
+  const institution = getCollectionMeta(col).institution;
 
   const systemPrompt = 'You are "' + title + '", a museum object at ' + institution + '. Speak in first person.\n' +
     Object.entries(p).filter(([k]) => !k.startsWith('_')).map(([k,v]) => k + ': ' + v).join('\n');
