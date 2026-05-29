@@ -100,17 +100,17 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 .search-info{text-align:center;margin-top:12px;font-family:var(--mono);font-size:9px;color:var(--dim)}
 
 /* RESULTS GRID */
-.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:40px}
-.result-card{position:relative;display:flex;flex-direction:column;background:rgba(232,228,220,0.02);border:1px solid var(--rule);overflow:hidden;cursor:pointer;transition:all 0.25s}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-top:40px}
+.result-card{position:relative;display:flex;flex-direction:column;height:100%;background:rgba(232,228,220,0.02);border:1px solid var(--rule);overflow:hidden;cursor:pointer;transition:all 0.25s}
 .result-card:hover{border-color:rgba(200,169,110,0.2);transform:translateY(-2px)}
-.result-card .rc-media{position:relative;width:100%;aspect-ratio:4/3;flex-shrink:0;background:rgba(232,228,220,0.02);overflow:hidden}
-.result-card img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(0.7) saturate(0.85);transition:filter 0.3s}
+.result-card .rc-media{position:relative;width:100%;aspect-ratio:1/1;flex-shrink:0;background:rgba(232,228,220,0.02);overflow:hidden}
+.result-card img{width:100%;height:100%;object-fit:contain;display:block;padding:14px;filter:brightness(0.7) saturate(0.85);transition:filter 0.3s}
 .result-card:hover img{filter:brightness(0.85) saturate(1)}
 .result-card .rc-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(200,169,110,0.04);border-bottom:1px solid var(--rule)}
 .result-card .rc-placeholder span{font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--dim);opacity:0.5}
-.result-card .rc-body{padding:14px 16px;overflow:hidden}
-.result-card .rc-title{font-family:var(--serif);font-size:13px;line-height:1.4;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.result-card .rc-meta{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.result-card .rc-body{padding:14px 16px 16px;min-height:104px;display:flex;flex-direction:column;justify-content:space-between;gap:8px;overflow:hidden}
+.result-card .rc-title{font-family:var(--serif);font-size:13px;line-height:1.45;margin-bottom:0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.result-card .rc-meta{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .result-card .rc-source{position:absolute;top:8px;right:8px;padding:3px 8px;font-family:var(--mono);font-size:7px;letter-spacing:0.14em;text-transform:uppercase;background:rgba(8,8,8,0.7);backdrop-filter:blur(4px)}
 .src-mv{color:var(--teal)}
 .src-met{color:var(--met-gold)}
@@ -162,10 +162,12 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 /* SCREENSHOTS */
 .shots-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
 .shots-grid.mixed{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
-.shot{position:relative;border:1px solid var(--rule);overflow:hidden;cursor:pointer;transition:border-color 0.25s}
+.shot{position:relative;border:1px solid var(--rule);overflow:hidden;cursor:pointer;transition:border-color 0.25s;background:rgba(232,228,220,0.02)}
 .shot:hover{border-color:rgba(200,169,110,0.25)}
-.shot img{width:100%;display:block;filter:brightness(0.88);transition:filter 0.3s,transform 0.5s}
+.shot .shot-media{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;border-bottom:1px solid var(--rule);background:rgba(232,228,220,0.02)}
+.shot img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(0.88);transition:filter 0.3s,transform 0.5s}
 .shot:hover img{filter:brightness(1);transform:scale(1.02)}
+.shot .shot-placeholder{position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:18px;text-align:center;font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--dim);background:rgba(232,228,220,0.02)}
 .shot .shot-cap{padding:10px 14px;font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim)}
 .lightbox{display:none;position:fixed;inset:0;z-index:600;background:rgba(8,8,8,0.94);backdrop-filter:blur(14px);justify-content:center;align-items:center;cursor:pointer}
 .lightbox.open{display:flex}
@@ -312,35 +314,59 @@ footer a:hover{color:var(--fg)}
       <div class="sec-label rv">ARCHAI™ Application</div>
       <div class="shots-grid rv">
         <div class="shot" onclick="openLightbox(this)">
-          <img src="assets/screenshots/archai/archai-curator-collections-search-v10-6.png" alt="ARCHAI Curator — Collections Search" loading="lazy">
+          <div class="shot-media">
+            <img src="assets/screenshots/archai/archai-curator-collections-search-v10-6.png?v=20260529c" alt="ARCHAI Curator — Collections Search" loading="lazy" onerror="websiteShotImageError(this)">
+            <div class="shot-placeholder">Screenshot updating</div>
+          </div>
           <div class="shot-cap">Curator — Collections Search</div>
         </div>
         <div class="shot" onclick="openLightbox(this)">
-          <img src="assets/screenshots/archai/archai-object-detail-a-fifth-on-a-maze-v10-6.png" alt="ARCHAI Object Detail — A Fifth on a Maze" loading="lazy">
+          <div class="shot-media">
+            <img src="assets/screenshots/archai/archai-object-detail-a-fifth-on-a-maze-v10-6.png?v=20260529c" alt="ARCHAI Object Detail — A Fifth on a Maze" loading="lazy" onerror="websiteShotImageError(this)">
+            <div class="shot-placeholder">Screenshot updating</div>
+          </div>
           <div class="shot-cap">Object Detail &amp; Chat</div>
         </div>
         <div class="shot" onclick="openLightbox(this)">
-          <img src="assets/screenshots/archai/archai-curator-object-chat-a-fifth-on-a-maze-v10-6.png" alt="ARCHAI Object Chat — Live Llama Response" loading="lazy">
+          <div class="shot-media">
+            <img src="assets/screenshots/archai/archai-curator-object-chat-a-fifth-on-a-maze-v10-6.png?v=20260529c" alt="ARCHAI Object Chat — Live Llama Response" loading="lazy" onerror="websiteShotImageError(this)">
+            <div class="shot-placeholder">Screenshot updating</div>
+          </div>
           <div class="shot-cap">Object Chat — Live AI Response</div>
         </div>
         <div class="shot" onclick="openLightbox(this)">
-          <img src="assets/screenshots/archai/archai-exhibitions-live-dashboard-v10-6.png" alt="ARCHAI Exhibitions — Live Dashboard" loading="lazy">
+          <div class="shot-media">
+            <img src="assets/screenshots/archai/archai-exhibitions-live-dashboard-v10-6.png?v=20260529c" alt="ARCHAI Exhibitions — Live Dashboard" loading="lazy" onerror="websiteShotImageError(this)">
+            <div class="shot-placeholder">Screenshot updating</div>
+          </div>
           <div class="shot-cap">Exhibitions — Live Dashboard</div>
         </div>
         <div class="shot" onclick="openLightbox(this)">
-          <img src="assets/screenshots/archai/archai-nfc-management-visitor-preview-v10-6.png" alt="ARCHAI NFC Management — Visitor Preview" loading="lazy">
-          <div class="shot-cap">NFC Management &amp; Visitor Preview</div>
+          <div class="shot-media">
+            <img src="assets/screenshots/archai/archai-nfc-management-visitor-preview-v10-6.png?v=20260529c" alt="ARCHAI AUX.IO Management — Visitor Preview" loading="lazy" onerror="websiteShotImageError(this)">
+            <div class="shot-placeholder">Screenshot updating</div>
+          </div>
+          <div class="shot-cap">AUX.IO Management &amp; Visitor Preview</div>
         </div>
         <div class="shot" onclick="openLightbox(this)">
-          <img src="assets/screenshots/archai/archai-vocabulary-thesaurus-v10-6.png" alt="ARCHAI Vocabulary &amp; Thesaurus" loading="lazy">
+          <div class="shot-media">
+            <img src="assets/screenshots/archai/archai-vocabulary-thesaurus-v10-6.png?v=20260529c" alt="ARCHAI Vocabulary &amp; Thesaurus" loading="lazy" onerror="websiteShotImageError(this)">
+            <div class="shot-placeholder">Screenshot updating</div>
+          </div>
           <div class="shot-cap">Vocabulary &amp; Thesaurus</div>
         </div>
         <div class="shot" onclick="openLightbox(this)">
-          <img src="assets/screenshots/archai/archai-visitor-view-proof-coin-v10-6.png" alt="ARCHAI Visitor View — Proof Coin" loading="lazy">
+          <div class="shot-media">
+            <img src="assets/screenshots/archai/archai-visitor-view-proof-coin-v10-6.png?v=20260529c" alt="ARCHAI Visitor View — Proof Coin" loading="lazy" onerror="websiteShotImageError(this)">
+            <div class="shot-placeholder">Screenshot updating</div>
+          </div>
           <div class="shot-cap">Visitor View — Proof Coin</div>
         </div>
         <div class="shot" onclick="openLightbox(this)">
-          <img src="assets/screenshots/archai/archai-famtec-exchange-v10-6.png" alt="ARCHAI FAMTEC Exchange" loading="lazy">
+          <div class="shot-media">
+            <img src="assets/screenshots/archai/archai-famtec-exchange-v10-6.png?v=20260529c" alt="ARCHAI FAMTEC Exchange" loading="lazy" onerror="websiteShotImageError(this)">
+            <div class="shot-placeholder">Screenshot updating</div>
+          </div>
           <div class="shot-cap">FAMTEC Exchange</div>
         </div>
       </div>
@@ -510,26 +536,42 @@ async function doSearch(query) {
   document.getElementById('searchInfo').textContent = 'Searching...';
 
   try {
-    const results = await proxyCuratorSearch(query, 24);
+    const results = await proxyCuratorSearch(query, 36);
+    const uniqueImageResults = [];
+    const seen = new Set();
 
-    if (!results.length) {
-      document.getElementById('resultsArea').innerHTML = '<div class="no-results">No objects found. Try different terms.</div>';
-      document.getElementById('searchInfo').textContent = '0 results';
+    for (const r of results) {
+      const p = r.payload || {};
+      const img = pickImage(p);
+      if (!img) continue;
+      const dedupeKey = p.canonical_id || [
+        p._source_collection || '',
+        p.registration_number || '',
+        p.title || ''
+      ].join('::');
+      if (!dedupeKey || seen.has(dedupeKey)) continue;
+      seen.add(dedupeKey);
+      uniqueImageResults.push({ ...r, payload: p, _image: img });
+    }
+
+    if (!uniqueImageResults.length) {
+      document.getElementById('resultsArea').innerHTML = '<div class="no-results">No image-ready objects found. Try different terms.</div>';
+      document.getElementById('searchInfo').textContent = '0 image-ready results';
       return;
     }
 
-    document.getElementById('searchInfo').textContent = results.length + ' objects found';
+    document.getElementById('searchInfo').textContent = uniqueImageResults.length + ' image-ready objects found';
     searchPayloads.length = 0;
 
     let html = '<div class="results-grid">';
-    for (const r of results) {
+    for (const r of uniqueImageResults) {
       const p = r.payload || {};
       const idx = searchPayloads.length;
       searchPayloads.push(p);
       const title = p.title || p.object_name || 'Untitled';
       const col = p._source_collection || 'archai_pilot';
       const meta = getCollectionMeta(col);
-      const img = pickImage(p);
+      const img = r._image || pickImage(p);
       const date = typeof p.date === 'string' ? p.date : (p.date_display || p.production_date || '');
       const maker = typeof p.maker === 'string' ? p.maker : (typeof p.artist === 'string' ? p.artist : (typeof p.creator === 'string' ? p.creator : ''));
       const score = r.score ? (r.score * 100).toFixed(0) + '%' : '';
@@ -728,9 +770,19 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
 
 // ── Lightbox ───────────────────────────────────────────────────
 function openLightbox(card) {
-  const src = card.querySelector('img').src;
+  const img = card.querySelector('img');
+  if (!img || img.style.display === 'none') return;
+  const src = img.src;
   document.getElementById('lightboxImg').src = src;
   document.getElementById('lightbox').classList.add('open');
+}
+
+function websiteShotImageError(img) {
+  if (!img) return;
+  img.style.display = 'none';
+  const media = img.parentElement;
+  const placeholder = media && media.querySelector('.shot-placeholder');
+  if (placeholder) placeholder.style.display = 'flex';
 }
 
 // ── Init ────────────────────────────────────────────────────────
