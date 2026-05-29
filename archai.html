@@ -101,13 +101,16 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 
 /* RESULTS GRID */
 .results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:40px}
-.result-card{position:relative;background:rgba(232,228,220,0.02);border:1px solid var(--rule);overflow:hidden;cursor:pointer;transition:all 0.25s}
+.result-card{position:relative;display:flex;flex-direction:column;background:rgba(232,228,220,0.02);border:1px solid var(--rule);overflow:hidden;cursor:pointer;transition:all 0.25s}
 .result-card:hover{border-color:rgba(200,169,110,0.2);transform:translateY(-2px)}
-.result-card img{width:100%;aspect-ratio:4/3;object-fit:cover;filter:brightness(0.7) saturate(0.85);transition:filter 0.3s}
+.result-card .rc-media{position:relative;width:100%;aspect-ratio:4/3;flex-shrink:0;background:rgba(232,228,220,0.02);overflow:hidden}
+.result-card img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(0.7) saturate(0.85);transition:filter 0.3s}
 .result-card:hover img{filter:brightness(0.85) saturate(1)}
-.result-card .rc-body{padding:14px 16px}
-.result-card .rc-title{font-family:var(--serif);font-size:13px;line-height:1.4;margin-bottom:6px}
-.result-card .rc-meta{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim)}
+.result-card .rc-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(200,169,110,0.04);border-bottom:1px solid var(--rule)}
+.result-card .rc-placeholder span{font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--dim);opacity:0.5}
+.result-card .rc-body{padding:14px 16px;overflow:hidden}
+.result-card .rc-title{font-family:var(--serif);font-size:13px;line-height:1.4;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.result-card .rc-meta{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .result-card .rc-source{position:absolute;top:8px;right:8px;padding:3px 8px;font-family:var(--mono);font-size:7px;letter-spacing:0.14em;text-transform:uppercase;background:rgba(8,8,8,0.7);backdrop-filter:blur(4px)}
 .src-mv{color:var(--teal)}
 .src-met{color:var(--met-gold)}
@@ -303,6 +306,47 @@ footer a:hover{color:var(--fg)}
     </div>
   </section>
 
+  <!-- APP SCREENSHOTS -->
+  <section id="screenshots">
+    <div class="wrap">
+      <div class="sec-label rv">ARCHAI™ Application</div>
+      <div class="shots-grid rv">
+        <div class="shot" onclick="openLightbox(this)">
+          <img src="assets/screenshots/archai/archai-curator-collections-search-v10-6.png" alt="ARCHAI Curator — Collections Search" loading="lazy">
+          <div class="shot-cap">Curator — Collections Search</div>
+        </div>
+        <div class="shot" onclick="openLightbox(this)">
+          <img src="assets/screenshots/archai/archai-object-detail-a-fifth-on-a-maze-v10-6.png" alt="ARCHAI Object Detail — A Fifth on a Maze" loading="lazy">
+          <div class="shot-cap">Object Detail &amp; Chat</div>
+        </div>
+        <div class="shot" onclick="openLightbox(this)">
+          <img src="assets/screenshots/archai/archai-curator-object-chat-a-fifth-on-a-maze-v10-6.png" alt="ARCHAI Object Chat — Live Llama Response" loading="lazy">
+          <div class="shot-cap">Object Chat — Live AI Response</div>
+        </div>
+        <div class="shot" onclick="openLightbox(this)">
+          <img src="assets/screenshots/archai/archai-exhibitions-live-dashboard-v10-6.png" alt="ARCHAI Exhibitions — Live Dashboard" loading="lazy">
+          <div class="shot-cap">Exhibitions — Live Dashboard</div>
+        </div>
+        <div class="shot" onclick="openLightbox(this)">
+          <img src="assets/screenshots/archai/archai-nfc-management-visitor-preview-v10-6.png" alt="ARCHAI NFC Management — Visitor Preview" loading="lazy">
+          <div class="shot-cap">NFC Management &amp; Visitor Preview</div>
+        </div>
+        <div class="shot" onclick="openLightbox(this)">
+          <img src="assets/screenshots/archai/archai-vocabulary-thesaurus-v10-6.png" alt="ARCHAI Vocabulary &amp; Thesaurus" loading="lazy">
+          <div class="shot-cap">Vocabulary &amp; Thesaurus</div>
+        </div>
+        <div class="shot" onclick="openLightbox(this)">
+          <img src="assets/screenshots/archai/archai-visitor-view-proof-coin-v10-6.png" alt="ARCHAI Visitor View — Proof Coin" loading="lazy">
+          <div class="shot-cap">Visitor View — Proof Coin</div>
+        </div>
+        <div class="shot" onclick="openLightbox(this)">
+          <img src="assets/screenshots/archai/archai-famtec-exchange-v10-6.png" alt="ARCHAI FAMTEC Exchange" loading="lazy">
+          <div class="shot-cap">FAMTEC Exchange</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <!-- LIGHTBOX -->
@@ -424,6 +468,36 @@ async function proxyCuratorSearch(query, limit = 20) {
 }
 
 // ── Search ──────────────────────────────────────────────────────
+const searchPayloads = [];
+
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = typeof str === 'string' ? str : '';
+  return d.innerHTML;
+}
+
+function pickImage(payload) {
+  return payload.media_medium
+    || payload.media_large
+    || payload.media_thumbnail
+    || payload.image_url
+    || payload.primaryImageSmall
+    || '';
+}
+
+function archaiCardImageError(img) {
+  if (!img) return;
+  img.style.display = 'none';
+  const wrap = img.parentElement;
+  const placeholder = wrap && wrap.querySelector('.rc-placeholder');
+  if (placeholder) placeholder.style.display = 'flex';
+}
+
+function archaiHeroImageError(img) {
+  if (!img) return;
+  img.style.display = 'none';
+}
+
 async function doSearch(query) {
   if (!query) return;
   if (!backendLive) {
@@ -445,27 +519,34 @@ async function doSearch(query) {
     }
 
     document.getElementById('searchInfo').textContent = results.length + ' objects found';
+    searchPayloads.length = 0;
 
     let html = '<div class="results-grid">';
     for (const r of results) {
       const p = r.payload || {};
+      const idx = searchPayloads.length;
+      searchPayloads.push(p);
       const title = p.title || p.object_name || 'Untitled';
       const col = p._source_collection || 'archai_pilot';
       const meta = getCollectionMeta(col);
-      const img = p.image_url || p.primaryImageSmall || '';
-      const date = p.date || p.date_display || p.production_date || '';
-      const maker = p.maker || p.artist || p.creator || '';
+      const img = pickImage(p);
+      const date = typeof p.date === 'string' ? p.date : (p.date_display || p.production_date || '');
+      const maker = typeof p.maker === 'string' ? p.maker : (typeof p.artist === 'string' ? p.artist : (typeof p.creator === 'string' ? p.creator : ''));
       const score = r.score ? (r.score * 100).toFixed(0) + '%' : '';
-      const id = r.id;
 
-      html += '<div class="result-card" onclick=\'openObject(' + JSON.stringify(JSON.stringify(p)) + ')\' >';
+      html += '<div class="result-card" onclick="openObject(JSON.stringify(searchPayloads[' + idx + ']))">';
+      html += '<div class="rc-media">';
       if (img) {
-        html += '<img src="' + img + '" alt="' + title.replace(/"/g, '') + '" loading="lazy" onerror="this.style.display=\'none\'">';
+        html += '<img src="' + esc(img) + '" alt="' + esc(title) + '" loading="lazy" onerror="archaiCardImageError(this)">';
+        html += '<div class="rc-placeholder" style="display:none"><span>' + esc(meta.short) + '</span></div>';
+      } else {
+        html += '<div class="rc-placeholder"><span>' + esc(meta.short) + '</span></div>';
       }
-      html += '<span class="rc-source ' + meta.className + '">' + meta.short + '</span>';
+      html += '</div>';
+      html += '<span class="rc-source ' + meta.className + '">' + esc(meta.short) + '</span>';
       html += '<div class="rc-body">';
-      html += '<div class="rc-title">' + title + '</div>';
-      html += '<div class="rc-meta">' + [maker, date, score].filter(Boolean).join(' · ') + '</div>';
+      html += '<div class="rc-title">' + esc(title) + '</div>';
+      html += '<div class="rc-meta">' + esc([maker, date, score].filter(Boolean).join(' · ')) + '</div>';
       html += '</div></div>';
     }
     html += '</div>';
@@ -559,7 +640,7 @@ function openObject(payloadStr) {
   const maker = p.maker || p.artist || p.creator || '';
   const date = p.date || p.date_display || p.production_date || '';
   const desc = p.description || p.ai || '';
-  const img = p.image_url || p.primaryImageSmall || '';
+  const img = pickImage(p);
   const type = p.type || p.object_type || p.classification || '';
   const materials = p.materials || p.medium || '';
   const location = p.location || p.gallery || '';
@@ -568,7 +649,7 @@ function openObject(payloadStr) {
   const institution = getCollectionMeta(col).institution;
 
   let html = '';
-  if (img) html += '<img class="obj-hero-img" src="' + img + '" alt="' + title.replace(/"/g,'') + '" onerror="this.style.display=\'none\'">';
+  if (img) html += '<img class="obj-hero-img" src="' + img + '" alt="' + title.replace(/"/g,'') + '" onerror="archaiHeroImageError(this)">';
   html += '<h2 class="obj-title">' + title + '</h2>';
   if (maker) html += '<div class="obj-maker">' + maker + (date ? ' · ' + date : '') + '</div>';
 
