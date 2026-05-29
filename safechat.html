@@ -39,7 +39,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 .nav-links a:focus-visible,.nav-logo:focus-visible{outline:1px solid var(--gold);outline-offset:4px}
 
 /* HERO */
-.sc-hero{position:relative;width:100%;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 48px 80px;overflow:hidden}
+.sc-hero{position:relative;width:100%;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:40px;padding:140px 48px 80px;overflow:hidden}
 .sc-hero::before{
   content:'';position:absolute;inset:0;
   background:
@@ -51,18 +51,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
     linear-gradient(160deg, #080808 0%, #0a0f0e 30%, #080808 70%);
 }
 .sc-hero::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:45%;
+  content:'';position:absolute;bottom:0;left:0;right:0;height:60px;
   background:linear-gradient(to bottom, transparent, #080808);
   z-index:1;
 }
-.hero-content{position:relative;z-index:2;max-width:900px}
+.hero-content{position:relative;z-index:2;flex:1;min-width:0;max-width:900px}
 .hero-tag{font-family:var(--mono);font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--teal);margin-bottom:14px;opacity:0;animation:fu 0.9s 0.5s forwards}
 .hero-title{font-size:clamp(48px,8vw,112px);font-weight:400;line-height:0.92;letter-spacing:-0.025em;opacity:0;animation:fu 1s 0.7s forwards}
 .hero-subtitle{margin-top:20px;font-family:var(--mono);font-size:11px;line-height:1.9;letter-spacing:0.04em;color:rgba(232,228,220,0.5);max-width:640px;opacity:0;animation:fu 1s 0.9s forwards}
 .hero-stats{margin-top:28px;display:flex;flex-wrap:wrap;gap:10px 20px;opacity:0;animation:fu 1s 1.1s forwards}
 .hero-stats .stat{font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;display:flex;align-items:center;gap:6px;color:rgba(232,228,220,0.38)}
 .hero-stats .stat::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--teal)}
-.hero-panel{position:absolute;top:104px;right:48px;z-index:20;width:min(300px,calc(100vw - 96px));padding:14px 16px;border:1px solid rgba(95,180,162,0.15);background:rgba(8,8,8,0.56);backdrop-filter:blur(8px)}
+.hero-panel{position:relative;z-index:20;width:280px;flex-shrink:0;padding:14px 16px;border:1px solid rgba(95,180,162,0.15);background:rgba(8,8,8,0.56);backdrop-filter:blur(8px);align-self:flex-end}
 .hero-panel p{font-family:var(--mono);font-size:9px;line-height:1.75;letter-spacing:0.05em;color:rgba(232,228,220,0.5)}
 .hero-panel strong{color:var(--teal);font-weight:400}
 .hero-panel .panel-label{display:block;margin-bottom:10px;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal);font-family:var(--mono)}
@@ -167,7 +167,7 @@ footer a:hover{color:var(--fg)}
 @media(max-width:768px){
   nav{padding:18px 20px}
   .nav-links{display:none}
-  .sc-hero{padding:0 20px 48px}
+  .sc-hero{padding:100px 20px 48px}
   .hero-panel{display:none}
   .wrap{padding:0 20px}
   section{padding:60px 0}
@@ -383,7 +383,8 @@ footer a:hover{color:var(--fg)}
   <section id="screenshots">
     <div class="wrap">
       <div class="sec-label rv">App Screenshots</div>
-      <p class="rv" style="font-size:15px;line-height:1.8;color:rgba(232,228,220,0.55);max-width:680px;margin-bottom:40px;">Mobile-first crisis safety — detection, local helplines, and zero-permission operation.</p>
+      <p class="rv" style="font-size:15px;line-height:1.8;color:rgba(232,228,220,0.55);max-width:680px;margin-bottom:24px;">Mobile-first crisis safety — detection, local helplines, and zero-permission operation.</p>
+      <p class="rv" style="font-family:var(--mono);font-size:10px;line-height:1.8;color:rgba(232,228,220,0.38);max-width:680px;margin-bottom:40px;">The crisis detection engine is demonstrated live on this page. Only verified current UI captures are shown below.</p>
       <div class="shots-grid rv">
         <div class="shot" onclick="openLightbox(this)">
           <img src="assets/screenshots/safechat/homepage-mobile.png" alt="SafeChat — Homepage" loading="lazy">
@@ -392,10 +393,6 @@ footer a:hover{color:var(--fg)}
         <div class="shot" onclick="openLightbox(this)">
           <img src="assets/screenshots/safechat/popup-mobile.png" alt="SafeChat — Helpline Popup" loading="lazy">
           <div class="shot-cap">Helpline Popup — UK</div>
-        </div>
-        <div class="shot" onclick="openLightbox(this)">
-          <img src="assets/screenshots/safechat/detection-demo.png" alt="SafeChat — Detection Demo" loading="lazy">
-          <div class="shot-cap">Crisis Detection Engine</div>
         </div>
       </div>
     </div>
