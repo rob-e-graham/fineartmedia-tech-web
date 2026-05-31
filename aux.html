@@ -189,7 +189,7 @@ function loadRandom() {
   const n = PAGES[Math.floor(Math.random() * PAGES.length)];
   const page = 'NFC' + String(n).padStart(3, '0') + '.html';
   const frame = document.getElementById('objectFrame');
-  frame.innerHTML = '<iframe src="' + API_BASE + '/aux/' + page + '" allow="microphone"></iframe>';
+  frame.innerHTML = '<iframe src="' + API_BASE + '/aux/' + page + '" allow="microphone; web-share; clipboard-write"></iframe>';
   const browseIndexLink = document.getElementById('browseIndexLink');
   if (browseIndexLink) browseIndexLink.href = API_BASE + '/aux/index.html';
   document.getElementById('controls').style.display = 'flex';
