@@ -230,9 +230,9 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
   gap:10px;
 }
 .curator-source{
-  padding:10px 12px;
   border:1px solid rgba(232,228,220,0.08);
   background:rgba(232,228,220,0.02);
+  overflow:hidden;
 }
 .curator-source.clickable{
   cursor:pointer;
@@ -241,6 +241,24 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 .curator-source.clickable:hover{
   border-color:rgba(200,169,110,0.2);
   transform:translateY(-1px);
+}
+.curator-source-media{
+  width:100%;
+  aspect-ratio:1/1;
+  background:rgba(232,228,220,0.02);
+  border-bottom:1px solid rgba(232,228,220,0.08);
+  overflow:hidden;
+}
+.curator-source-media img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  padding:10px;
+  filter:brightness(0.82);
+}
+.curator-source-body{
+  padding:10px 12px 12px;
 }
 .curator-source-title{
   font-family:var(--serif);
@@ -306,6 +324,50 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 .obj-meta-item .om-label{font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--dim);margin-bottom:2px}
 .obj-meta-item .om-value{font-family:var(--mono);font-size:11px;color:rgba(232,228,220,0.8)}
 .obj-desc{font-size:15px;line-height:1.8;color:rgba(232,228,220,0.7);margin-bottom:32px}
+.obj-record{
+  margin-top:30px;
+  padding-top:24px;
+  border-top:1px solid var(--rule);
+}
+.obj-record-label{
+  font-family:var(--mono);
+  font-size:8px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:14px;
+}
+.obj-record-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px 24px;
+}
+.obj-record-item{
+  padding:10px 0;
+  border-bottom:1px solid rgba(232,228,220,0.06);
+}
+.obj-record-item .or-label{
+  font-family:var(--mono);
+  font-size:8px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--dim);
+  margin-bottom:4px;
+}
+.obj-record-item .or-value{
+  font-family:var(--sans);
+  font-size:13px;
+  line-height:1.65;
+  color:rgba(232,228,220,0.76);
+  word-break:break-word;
+}
+.obj-record-item .or-value a{
+  color:var(--gold);
+  text-decoration:none;
+}
+.obj-record-item .or-value a:hover{
+  color:var(--fg);
+}
 
 /* CHAT */
 .chat-section{border-top:1px solid var(--rule);padding-top:28px;margin-top:28px}
@@ -418,6 +480,7 @@ footer a:hover{color:var(--fg)}
   .obj-modal-inner{margin:60px auto;padding:0 20px 60px}
   .obj-close{right:20px;top:20px}
   .obj-meta-grid{grid-template-columns:1fr}
+  .obj-record-grid{grid-template-columns:1fr}
   .results-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
   .shots-grid,.shots-grid.mixed{grid-template-columns:1fr 1fr}
   footer{padding:40px 20px;flex-direction:column;align-items:flex-start}
@@ -461,49 +524,26 @@ footer a:hover{color:var(--fg)}
 </div>
 
 <main>
-  <!-- COLLECTION INTELLIGENCE -->
-  <section id="intelligence">
-    <div class="wrap">
-      <div class="sec-label rv">Collection Intelligence</div>
-      <div class="ci-wrap rv">
-        <div class="ci-intro">
-          <h3>Talk to the collection</h3>
-          <p>815 objects across six international museums — searchable conversationally. ARCHAI reads the collection graph in real time and responds from the data, not a script.</p>
-        </div>
-        <div class="ci-chips">
-          <button onclick="askCollectionDirect('What ancient Greek objects do you have?')">Ancient Greece</button>
-          <button onclick="askCollectionDirect('Show me paintings from the Rijksmuseum')">Rijksmuseum</button>
-          <button onclick="askCollectionDirect('What objects relate to war or conflict?')">War &amp; conflict</button>
-          <button onclick="askCollectionDirect('What is the oldest object in the collection?')">Oldest object</button>
-          <button onclick="askCollectionDirect('What would a curator find most surprising in this collection?')">Surprise me</button>
-          <button onclick="askCollectionDirect('Compare the Cleveland and Met collections')">Compare museums</button>
-        </div>
-        <div class="ci-messages" id="ciMessages">
-          <div class="chat-msg assistant">I have access to 815 objects across Museums Victoria, the Met, the V&amp;A, the Art Institute of Chicago, the Cleveland Museum of Art, and the Rijksmuseum. Ask me anything — I search semantically, not by keyword.</div>
-        </div>
-        <div class="ci-input-row">
-          <input type="text" id="ciInput" placeholder="Ask anything about the collection..." onkeydown="if(event.key==='Enter')askCollectionDirect(this.value)" autocomplete="off">
-          <button onclick="askCollectionDirect(document.getElementById('ciInput').value)">Ask</button>
-        </div>
-        <div class="ci-note">Sovereign AI · Qwen 2.5 32B running locally · No cloud APIs · All responses grounded in verified institutional data</div>
-      </div>
-    </div>
-  </section>
-
   <!-- SEARCH -->
   <section id="search">
     <div class="wrap">
-      <div class="sec-label rv">Explore Collections</div>
+      <div class="sec-label rv">Search The Collection</div>
       <div class="search-wrap rv">
+        <div class="ci-intro" style="margin-bottom:18px">
+          <h3>Search once, then review the results with ARCHAI</h3>
+          <p>Start with a material, place, period, or theme. ARCHAI returns image-backed objects first, then helps visitors read connections across the results.</p>
+        </div>
         <div class="search-box">
           <input type="text" id="searchInput" placeholder="Search across all collections..." autocomplete="off">
           <button id="searchBtn">Search</button>
         </div>
         <div class="search-chips">
           <button onclick="doSearch('ceramics and pottery')">Ceramics</button>
+          <button onclick="doSearch('ancient Greece')">Ancient Greece</button>
           <button onclick="doSearch('ancient weapons')">Weapons</button>
           <button onclick="doSearch('textile and fabric')">Textiles</button>
           <button onclick="doSearch('gold and silver jewellery')">Jewellery</button>
+          <button onclick="doSearch('war and conflict')">War &amp; conflict</button>
           <button onclick="doSearch('painting landscape')">Paintings</button>
           <button onclick="doSearch('musical instruments')">Instruments</button>
         </div>
@@ -817,9 +857,10 @@ function dedupeCuratorObjects(objects = []) {
   const deduped = [];
   for (const obj of objects) {
     const key = normalizeObjectKey({
-      _source_collection: obj.collection,
-      registration_number: obj.registration,
-      title: obj.title
+      canonical_id: obj.canonical_id,
+      _source_collection: obj._source_collection || obj.collection,
+      registration_number: obj.registration_number || obj.accession_number || obj.registration,
+      title: obj.title || obj.object_name
     });
     if (!key || seen.has(key)) continue;
     seen.add(key);
@@ -828,19 +869,27 @@ function dedupeCuratorObjects(objects = []) {
   return deduped;
 }
 
-function renderCuratorSources(objects = []) {
+function renderCuratorSources(objects = [], label = 'Objects informing this response') {
   const deduped = dedupeCuratorObjects(objects);
   if (!deduped.length) return '';
-  let html = '<div class="curator-sources"><div class="curator-sources-label">Objects ARCHAI is drawing from</div><div class="curator-sources-grid">';
+  let html = '<div class="curator-sources"><div class="curator-sources-label">' + esc(label) + '</div><div class="curator-sources-grid">';
   for (const obj of deduped) {
     const payload = findSearchPayload(obj);
-    const title = obj.title || 'Untitled';
-    const metaBits = [obj.institution, obj.date, obj.registration].filter(Boolean);
+    const title = obj.title || obj.object_name || (payload ? (payload.title || payload.object_name || 'Untitled') : 'Untitled');
+    const image = (payload && pickImage(payload)) || obj.image || '';
+    const institution = obj.institution || (payload ? getCollectionMeta(payload._source_collection || 'archai_pilot').institution : '');
+    const date = obj.date || (payload ? (payload.date || payload.date_display || payload.production_date || '') : '');
+    const registration = obj.registration || obj.registration_number || obj.accession_number || (payload ? (payload.registration_number || payload.accession_number || '') : '');
+    const metaBits = [institution, date, registration].filter(Boolean);
     const encoded = payload ? encodeURIComponent(JSON.stringify(payload)) : '';
     html += '<div class="curator-source' + (payload ? ' clickable' : '') + '"' + (payload ? ' onclick="openObject(decodeURIComponent(this.dataset.payload))" data-payload="' + encoded + '"' : '') + '>';
+    if (image) {
+      html += '<div class="curator-source-media"><img src="' + esc(image) + '" alt="' + esc(title) + '" loading="lazy" onerror="archaiHeroImageError(this)"></div>';
+    }
+    html += '<div class="curator-source-body">';
     html += '<div class="curator-source-title">' + esc(title) + '</div>';
     html += '<div class="curator-source-meta">' + esc(metaBits.join(' · ')) + '</div>';
-    html += '</div>';
+    html += '</div></div>';
   }
   html += '</div></div>';
   return html;
@@ -849,29 +898,31 @@ function renderCuratorSources(objects = []) {
 function renderCuratorPreview() {
   if (!backendLive || !latestSearchQuery || !latestSearchResults.length) return '';
   const uniqueCollections = new Set(latestSearchResults.map((p) => p._source_collection).filter(Boolean)).size;
+  const initialPreviewObjects = latestSearchResults.slice(0, 4);
   return '<div class="curator-preview">' +
     '<div class="curator-preview-head">' +
       '<div>' +
-        '<div class="curator-preview-title">Collection Intelligence</div>' +
-        '<h3>Interrogate these results</h3>' +
-        '<p>You searched for <strong style="color:var(--fg)">' + esc(latestSearchQuery) + '</strong>. Ask ARCHAI what patterns, materials, or historical connections it finds across these objects.</p>' +
+        '<div class="curator-preview-title">Curatorial View</div>' +
+        '<h3>Review these results with ARCHAI</h3>' +
+        '<p>You searched for <strong style="color:var(--fg)">' + esc(latestSearchQuery) + '</strong>. Ask ARCHAI what patterns, materials, or historical connections emerge across these objects.</p>' +
       '</div>' +
       '<div class="curator-preview-meta"><strong>' + latestSearchResults.length + ' objects</strong>' + uniqueCollections + ' collections in view</div>' +
     '</div>' +
     '<div class="curator-preview-chips">' +
-      '<button onclick="askCollection(\'What patterns connect these results?\')">Patterns</button>' +
-      '<button onclick="askCollection(\'What would a curator notice first?\')">Curator eye</button>' +
-      '<button onclick="askCollection(\'Which institutions stand out here?\')">Institutions</button>' +
+      '<button onclick="askCollection(\'What patterns connect these results?\')">Connections</button>' +
+      '<button onclick="askCollection(\'What might a curator notice first?\')">Curatorial note</button>' +
+      '<button onclick="askCollection(\'Which collections stand out here?\')">Collections</button>' +
       '<button onclick="askCollection(\'Where should I look next from this search?\')">Where next?</button>' +
     '</div>' +
+    renderCuratorSources(initialPreviewObjects, 'Preview objects in this search') +
     '<div class="curator-preview-messages" id="curatorMessages">' +
-      '<div class="chat-msg assistant">ARCHAI can see these results. Ask what connects them.</div>' +
+      '<div class="chat-msg assistant">ARCHAI can see these results. Ask what connections, materials, or curatorial themes emerge.</div>' +
     '</div>' +
     '<div class="curator-preview-input">' +
-      '<input type="text" id="curatorInput" placeholder="Ask ARCHAI about this search..." onkeydown="if(event.key===\'Enter\')askCollection(this.value)">' +
+      '<input type="text" id="curatorInput" placeholder="Ask ARCHAI about these results..." onkeydown="if(event.key===\'Enter\')askCollection(this.value)">' +
       '<button onclick="askCollection(document.getElementById(\'curatorInput\').value)">Ask ARCHAI</button>' +
     '</div>' +
-    '<div class="curator-preview-note">ARCHAI responds from the live collection graph, not a generic chatbot prompt.</div>' +
+    '<div class="curator-preview-note">ARCHAI responds from the live collection graph to support curatorial reading, not generic chat.</div>' +
   '</div>';
 }
 
@@ -977,7 +1028,7 @@ async function askCollection(question) {
   if (!msgs) return;
 
   msgs.innerHTML += '<div class="chat-msg user">' + esc(question) + '</div>';
-  const thinkingPhrases = ['Tracing connections', 'Interrogating the collection', 'Looking across institutions', 'Following the semantic thread', 'Consulting the collection intelligence'];
+  const thinkingPhrases = ['Tracing connections', 'Reviewing the collection', 'Looking across institutions', 'Following the semantic thread', 'Preparing a curatorial reading'];
   msgs.innerHTML += '<div class="chat-msg assistant" id="pendingCuratorMsg"><div class="thinking-alive"><div class="thinking-label">' + thinkingPhrases[0] + '</div><div class="thinking-dots"><span></span><span></span><span></span></div></div></div>';
   msgs.scrollTop = msgs.scrollHeight;
 
@@ -1007,53 +1058,6 @@ async function askCollection(question) {
     if (pending) {
       pending.id = '';
       pending.innerHTML = 'ARCHAI could not interrogate the collection right now. Try the object cards below, or ask again in a moment.';
-    }
-  }
-
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-// ── Collection Intelligence (standalone) ────────────────────────
-let ciHistory = [];
-
-async function askCollectionDirect(question) {
-  if (!question) return;
-  const input = document.getElementById('ciInput');
-  if (input) input.value = '';
-
-  const msgs = document.getElementById('ciMessages');
-  if (!msgs) return;
-
-  msgs.innerHTML += '<div class="chat-msg user">' + esc(question) + '</div>';
-  const thinkingPhrases = ['Searching the collection', 'Consulting the catalogue', 'Tracing connections across institutions', 'Following the semantic thread', 'Gathering what I know'];
-  msgs.innerHTML += '<div class="chat-msg assistant" id="pendingCiMsg"><div class="thinking-alive"><div class="thinking-label">' + thinkingPhrases[0] + '</div><div class="thinking-dots"><span></span><span></span><span></span></div></div></div>';
-  msgs.scrollTop = msgs.scrollHeight;
-
-  let phraseIdx = 0;
-  const thinkInterval = setInterval(() => {
-    phraseIdx = (phraseIdx + 1) % thinkingPhrases.length;
-    const lbl = document.querySelector('#pendingCiMsg .thinking-label');
-    if (lbl) lbl.textContent = thinkingPhrases[phraseIdx];
-  }, 2200);
-
-  try {
-    const data = await proxyCuratorConverse(question, ciHistory.slice(-6));
-    clearInterval(thinkInterval);
-    ciHistory.push({ role: 'user', content: question });
-    ciHistory.push({ role: 'assistant', content: data.message || '' });
-
-    const pending = document.getElementById('pendingCiMsg');
-    if (pending) {
-      const replyText = data.message || 'I could not find a response.';
-      pending.id = '';
-      pending.innerHTML = esc(replyText).replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>') + renderCuratorSources(data.objects || []);
-    }
-  } catch (e) {
-    clearInterval(thinkInterval);
-    const pending = document.getElementById('pendingCiMsg');
-    if (pending) {
-      pending.id = '';
-      pending.innerHTML = 'ARCHAI could not respond right now. The collection intelligence requires the backend to be running.';
     }
   }
 
@@ -1129,6 +1133,65 @@ function buildSystemPrompt(payload) {
     metadataBlock;
 }
 
+function titleCaseField(key) {
+  return key
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (m) => m.toUpperCase());
+}
+
+function formatMetadataValue(value) {
+  if (Array.isArray(value)) {
+    return value.map((item) => typeof item === 'string' ? item : JSON.stringify(item)).join(' · ');
+  }
+  if (value && typeof value === 'object') {
+    return Object.entries(value)
+      .map(([k, v]) => titleCaseField(k) + ': ' + v)
+      .join(' · ');
+  }
+  return String(value);
+}
+
+function renderFullRecord(payload) {
+  const excluded = new Set([
+    'title', 'object_name', 'maker', 'artist', 'creator', 'date', 'date_display', 'production_date',
+    'description', 'ai', 'image_url', 'primaryImageSmall', 'media_medium', 'media_large', 'media_thumbnail'
+  ]);
+  const preferredOrder = [
+    'registration_number', 'accession_number', 'type', 'object_type', 'classification', 'materials', 'medium',
+    'culture', 'place', 'location', 'gallery', 'department', 'collection', 'dimensions', 'credit_line',
+    'provenance', 'inscription', 'technique', 'period', 'source_url'
+  ];
+
+  const added = new Set();
+  const rows = [];
+
+  function maybePush(key, value) {
+    if (!key || excluded.has(key) || key.startsWith('_') || value == null || value === '') return;
+    const formatted = formatMetadataValue(value).trim();
+    if (!formatted || formatted === '[object Object]') return;
+    rows.push(
+      '<div class="obj-record-item">' +
+        '<div class="or-label">' + esc(titleCaseField(key)) + '</div>' +
+        '<div class="or-value">' + (
+          /^https?:\/\//.test(formatted)
+            ? '<a href="' + esc(formatted) + '" target="_blank" rel="noopener">View source record ↗</a>'
+            : esc(formatted)
+        ) + '</div>' +
+      '</div>'
+    );
+    added.add(key);
+  }
+
+  for (const key of preferredOrder) maybePush(key, payload[key]);
+  for (const [key, value] of Object.entries(payload)) {
+    if (added.has(key)) continue;
+    maybePush(key, value);
+  }
+
+  if (!rows.length) return '';
+  return '<div class="obj-record"><div class="obj-record-label">Full object record</div><div class="obj-record-grid">' + rows.join('') + '</div></div>';
+}
+
 function openObject(payloadStr) {
   const p = JSON.parse(payloadStr);
   currentPayload = p;
@@ -1160,6 +1223,7 @@ function openObject(payloadStr) {
   html += '</div>';
 
   if (desc) html += '<div class="obj-desc">' + desc.substring(0, 600) + (desc.length > 600 ? '...' : '') + '</div>';
+  html += renderFullRecord(p);
 
   // Chat section
   if (backendLive) {
