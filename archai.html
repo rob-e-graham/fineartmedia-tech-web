@@ -211,6 +211,33 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
   text-transform:uppercase;
   color:var(--dim);
 }
+.curator-visitor-link{
+  margin-top:18px;
+  padding-top:16px;
+  border-top:1px solid rgba(232,228,220,0.08);
+}
+.curator-visitor-link p{
+  margin:0 0 12px;
+  font-family:var(--sans);
+  font-size:13px;
+  line-height:1.6;
+  color:rgba(232,228,220,0.62);
+}
+.curator-visitor-link a{
+  display:inline-block;
+  padding:8px 16px;
+  border:1px solid rgba(200,169,110,0.2);
+  color:var(--gold);
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  text-decoration:none;
+}
+.curator-visitor-link a:hover{
+  color:var(--fg);
+  border-color:var(--gold);
+}
 .curator-sources{
   margin-top:16px;
   padding-top:16px;
@@ -581,10 +608,6 @@ footer a:hover{color:var(--fg)}
           </ul>
         </div>
       </div>
-      <div class="archai-link-panel rv">
-        <p>AUX.IO is the public visitor layer of ARCHAI. It turns collection records into object pages that can be opened by QR, NFC, hyperlink, or beacon without exposing the full curatorial interface.</p>
-        <a href="/aux.html">Open AUX.IO visitor pages →</a>
-      </div>
     </div>
   </section>
 
@@ -924,6 +947,10 @@ function renderCuratorPreview() {
       '<button onclick="askCollection(document.getElementById(\'curatorInput\').value)">Ask ARCHAI</button>' +
     '</div>' +
     '<div class="curator-preview-note">ARCHAI responds from the live collection graph to support curatorial reading, not generic chat.</div>' +
+    '<div class="curator-visitor-link">' +
+      '<p>Prefer the public-facing object pages? Switch to visitor view and explore the same collection through AUX.IO.</p>' +
+      '<a href="/aux.html">Open AUX.IO visitor view →</a>' +
+    '</div>' +
   '</div>';
 }
 
