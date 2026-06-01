@@ -88,14 +88,14 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 .sec-label::after{content:'';width:50px;height:1px;background:var(--gold);opacity:0.28}
 
 /* SEARCH */
-.search-wrap{max-width:680px;margin:0 auto 60px}
+.search-wrap{max-width:980px;margin:0 auto 60px}
 .search-box{display:flex;gap:0;border:1px solid rgba(232,228,220,0.12);background:rgba(232,228,220,0.03)}
 .search-box input{flex:1;padding:14px 18px;background:transparent;border:none;color:var(--fg);font-family:var(--mono);font-size:12px;letter-spacing:0.04em;outline:none}
 .search-box input::placeholder{color:var(--dim)}
 .search-box button{padding:14px 24px;background:rgba(200,169,110,0.12);border:none;border-left:1px solid rgba(232,228,220,0.08);color:var(--gold);font-family:var(--mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background 0.2s}
 .search-box button:hover{background:rgba(200,169,110,0.22)}
-.search-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center}
-.search-chips button{padding:6px 14px;border:1px solid rgba(232,228,220,0.08);background:transparent;color:var(--dim);font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.2s}
+.search-chips{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+.search-chips button{width:100%;padding:10px 14px;border:1px solid rgba(232,228,220,0.08);background:transparent;color:var(--dim);font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;text-align:center}
 .search-chips button:hover{border-color:var(--gold);color:var(--gold)}
 .search-info{text-align:center;margin-top:12px;font-family:var(--mono);font-size:9px;color:var(--dim)}
 
@@ -476,6 +476,7 @@ footer a:hover{color:var(--fg)}
   .curator-preview-input input{border-right:1px solid rgba(232,228,220,0.08);border-bottom:none}
   .curator-preview-input button{width:100%}
   .curator-sources-grid{grid-template-columns:1fr}
+  .search-chips{grid-template-columns:repeat(2,minmax(0,1fr))}
   .about-grid{grid-template-columns:1fr;gap:40px}
   .obj-modal-inner{margin:60px auto;padding:0 20px 60px}
   .obj-close{right:20px;top:20px}
@@ -539,13 +540,13 @@ footer a:hover{color:var(--fg)}
         </div>
         <div class="search-chips">
           <button onclick="doSearch('ceramics and pottery')">Ceramics</button>
-          <button onclick="doSearch('ancient Greece')">Ancient Greece</button>
-          <button onclick="doSearch('ancient weapons')">Weapons</button>
+          <button onclick="doSearch('ancient Greece classical antiquity')">Ancient worlds</button>
+          <button onclick="doSearch('technology machine device media')">Technology</button>
           <button onclick="doSearch('textile and fabric')">Textiles</button>
           <button onclick="doSearch('gold and silver jewellery')">Jewellery</button>
-          <button onclick="doSearch('war and conflict')">War &amp; conflict</button>
-          <button onclick="doSearch('painting landscape')">Paintings</button>
-          <button onclick="doSearch('musical instruments')">Instruments</button>
+          <button onclick="doSearch('painting landscape portrait')">Paintings</button>
+          <button onclick="doSearch('sculpture bronze stone figure')">Sculpture</button>
+          <button onclick="doSearch('photography print camera')">Photography</button>
         </div>
         <div class="search-info" id="searchInfo"></div>
       </div>
