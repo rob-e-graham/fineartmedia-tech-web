@@ -257,6 +257,24 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
   color:var(--dim);
 }
 
+/* COLLECTION INTELLIGENCE */
+.ci-wrap{max-width:720px}
+.ci-intro h3{font-size:clamp(20px,3vw,28px);font-weight:400;margin-bottom:10px}
+.ci-intro p{font-size:14px;line-height:1.7;color:rgba(232,228,220,0.6);margin-bottom:20px}
+.ci-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.ci-chips button{padding:6px 14px;border:1px solid rgba(200,169,110,0.15);background:transparent;color:var(--dim);font-family:var(--mono);font-size:9px;letter-spacing:0.06em;cursor:pointer;transition:all 0.2s}
+.ci-chips button:hover{border-color:var(--gold);color:var(--gold)}
+.ci-messages{max-height:400px;overflow-y:auto;margin-bottom:16px;padding:4px 0}
+.ci-messages .chat-msg{margin-bottom:12px;padding:10px 14px;font-family:var(--mono);font-size:11px;line-height:1.7}
+.ci-messages .chat-msg.user{background:rgba(200,169,110,0.08);border-left:2px solid var(--gold);color:rgba(232,228,220,0.8)}
+.ci-messages .chat-msg.assistant{background:rgba(232,228,220,0.03);border-left:2px solid var(--dim);color:rgba(232,228,220,0.7)}
+.ci-input-row{display:flex;gap:0}
+.ci-input-row input{flex:1;padding:12px 16px;background:rgba(232,228,220,0.03);border:1px solid rgba(232,228,220,0.08);border-right:none;color:var(--fg);font-family:var(--mono);font-size:11px;letter-spacing:0.04em;outline:none}
+.ci-input-row input::placeholder{color:var(--dim)}
+.ci-input-row button{padding:12px 22px;background:rgba(200,169,110,0.12);border:1px solid rgba(232,228,220,0.08);color:var(--gold);font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:background 0.2s}
+.ci-input-row button:hover{background:rgba(200,169,110,0.22)}
+.ci-note{margin-top:12px;font-family:var(--mono);font-size:8px;letter-spacing:0.08em;color:var(--dim);opacity:0.6}
+
 /* RESULTS GRID */
 .results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-top:40px}
 .result-card{position:relative;display:flex;flex-direction:column;height:100%;background:rgba(232,228,220,0.02);border:1px solid var(--rule);overflow:hidden;cursor:pointer;transition:all 0.25s}
@@ -442,6 +460,34 @@ footer a:hover{color:var(--fg)}
 </div>
 
 <main>
+  <!-- COLLECTION INTELLIGENCE -->
+  <section id="intelligence">
+    <div class="wrap">
+      <div class="sec-label rv">Collection Intelligence</div>
+      <div class="ci-wrap rv">
+        <div class="ci-intro">
+          <h3>Talk to the collection</h3>
+          <p>Ask ARCHAI anything about 815 objects across six international museums. It searches the live collection graph semantically and responds conversationally — not from a script, but from the data itself.</p>
+        </div>
+        <div class="ci-chips">
+          <button onclick="askCollectionDirect('What ancient Greek objects do you have?')">Greek objects</button>
+          <button onclick="askCollectionDirect('Show me paintings from the Rijksmuseum')">Rijksmuseum paintings</button>
+          <button onclick="askCollectionDirect('What objects relate to war or conflict?')">War &amp; conflict</button>
+          <button onclick="askCollectionDirect('What is the oldest object in the collection?')">Oldest object</button>
+          <button onclick="askCollectionDirect('What would a curator find most interesting?')">Curator picks</button>
+        </div>
+        <div class="ci-messages" id="ciMessages">
+          <div class="chat-msg assistant">815 objects. Six museums. Ask me anything about the collection.</div>
+        </div>
+        <div class="ci-input-row">
+          <input type="text" id="ciInput" placeholder="Ask ARCHAI about the collection..." onkeydown="if(event.key==='Enter')askCollectionDirect(this.value)" autocomplete="off">
+          <button onclick="askCollectionDirect(document.getElementById('ciInput').value)">Ask</button>
+        </div>
+        <div class="ci-note">Powered by Qwen 2.5 32B running locally · Zero cloud dependency · Responses grounded in verified collection data</div>
+      </div>
+    </div>
+  </section>
+
   <!-- SEARCH -->
   <section id="search">
     <div class="wrap">
@@ -692,16 +738,23 @@ async function proxyCuratorSearch(query, limit = 20) {
 }
 
 async function proxyCuratorConverse(message, history = []) {
-  const r = await fetch(API_BASE + '/api/proxy/curator/converse', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message, history }),
-  });
-  const d = await r.json();
-  if (!r.ok || !d.ok) {
-    throw new Error(d.error || 'Curator mode unavailable');
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 120000); // 2 min for curator (32B model)
+  try {
+    const r = await fetch(API_BASE + '/api/proxy/curator/converse', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, history }),
+      signal: controller.signal,
+    });
+    const d = await r.json();
+    if (!r.ok || !d.ok) {
+      throw new Error(d.error || 'Curator mode unavailable');
+    }
+    return d;
+  } finally {
+    clearTimeout(timer);
   }
-  return d;
 }
 
 // ── Search ──────────────────────────────────────────────────────
@@ -952,6 +1005,53 @@ async function askCollection(question) {
     if (pending) {
       pending.id = '';
       pending.innerHTML = 'ARCHAI could not interrogate the collection right now. Try the object cards below, or ask again in a moment.';
+    }
+  }
+
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// ── Collection Intelligence (standalone) ────────────────────────
+let ciHistory = [];
+
+async function askCollectionDirect(question) {
+  if (!question) return;
+  const input = document.getElementById('ciInput');
+  if (input) input.value = '';
+
+  const msgs = document.getElementById('ciMessages');
+  if (!msgs) return;
+
+  msgs.innerHTML += '<div class="chat-msg user">' + esc(question) + '</div>';
+  const thinkingPhrases = ['Searching the collection', 'Consulting the catalogue', 'Tracing connections across institutions', 'Following the semantic thread', 'Gathering what I know'];
+  msgs.innerHTML += '<div class="chat-msg assistant" id="pendingCiMsg"><div class="thinking-alive"><div class="thinking-label">' + thinkingPhrases[0] + '</div><div class="thinking-dots"><span></span><span></span><span></span></div></div></div>';
+  msgs.scrollTop = msgs.scrollHeight;
+
+  let phraseIdx = 0;
+  const thinkInterval = setInterval(() => {
+    phraseIdx = (phraseIdx + 1) % thinkingPhrases.length;
+    const lbl = document.querySelector('#pendingCiMsg .thinking-label');
+    if (lbl) lbl.textContent = thinkingPhrases[phraseIdx];
+  }, 2200);
+
+  try {
+    const data = await proxyCuratorConverse(question, ciHistory.slice(-6));
+    clearInterval(thinkInterval);
+    ciHistory.push({ role: 'user', content: question });
+    ciHistory.push({ role: 'assistant', content: data.message || '' });
+
+    const pending = document.getElementById('pendingCiMsg');
+    if (pending) {
+      const replyText = data.message || 'I could not find a response.';
+      pending.id = '';
+      pending.innerHTML = esc(replyText).replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>') + renderCuratorSources(data.objects || []);
+    }
+  } catch (e) {
+    clearInterval(thinkInterval);
+    const pending = document.getElementById('pendingCiMsg');
+    if (pending) {
+      pending.id = '';
+      pending.innerHTML = 'ARCHAI could not respond right now. The collection intelligence requires the backend to be running.';
     }
   }
 
