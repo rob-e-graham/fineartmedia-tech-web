@@ -99,6 +99,164 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 .search-chips button:hover{border-color:var(--gold);color:var(--gold)}
 .search-info{text-align:center;margin-top:12px;font-family:var(--mono);font-size:9px;color:var(--dim)}
 
+.curator-preview{
+  margin:28px 0 36px;
+  padding:22px 24px;
+  border:1px solid rgba(200,169,110,0.16);
+  background:rgba(200,169,110,0.04);
+}
+.curator-preview-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:18px;
+  margin-bottom:14px;
+}
+.curator-preview-title{
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:10px;
+}
+.curator-preview h3{
+  font-size:24px;
+  font-weight:400;
+  line-height:1.2;
+  margin:0;
+}
+.curator-preview p{
+  font-family:var(--sans);
+  font-size:14px;
+  line-height:1.7;
+  color:rgba(232,228,220,0.62);
+}
+.curator-preview-meta{
+  flex-shrink:0;
+  min-width:160px;
+  text-align:right;
+  font-family:var(--mono);
+  font-size:8px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--dim);
+}
+.curator-preview-meta strong{
+  display:block;
+  color:var(--gold);
+  font-size:16px;
+  letter-spacing:0;
+  text-transform:none;
+  margin-bottom:6px;
+}
+.curator-preview-chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:16px 0 14px;
+}
+.curator-preview-chips button{
+  padding:6px 12px;
+  border:1px solid rgba(232,228,220,0.08);
+  background:transparent;
+  color:var(--dim);
+  font-family:var(--mono);
+  font-size:8px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.curator-preview-chips button:hover{
+  border-color:var(--gold);
+  color:var(--gold);
+}
+.curator-preview-messages{
+  max-height:340px;
+  overflow-y:auto;
+  margin:0 0 16px;
+}
+.curator-preview-input{
+  display:flex;
+  gap:0;
+}
+.curator-preview-input input{
+  flex:1;
+  padding:12px 14px;
+  background:rgba(232,228,220,0.03);
+  border:1px solid rgba(232,228,220,0.08);
+  border-right:none;
+  color:var(--fg);
+  font-family:var(--mono);
+  font-size:11px;
+  outline:none;
+}
+.curator-preview-input button{
+  padding:12px 18px;
+  background:rgba(200,169,110,0.12);
+  border:1px solid rgba(232,228,220,0.08);
+  color:var(--gold);
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+.curator-preview-note{
+  margin-top:10px;
+  font-family:var(--mono);
+  font-size:8px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--dim);
+}
+.curator-sources{
+  margin-top:16px;
+  padding-top:16px;
+  border-top:1px solid rgba(232,228,220,0.08);
+}
+.curator-sources-label{
+  font-family:var(--mono);
+  font-size:8px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--dim);
+  margin-bottom:10px;
+}
+.curator-sources-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:10px;
+}
+.curator-source{
+  padding:10px 12px;
+  border:1px solid rgba(232,228,220,0.08);
+  background:rgba(232,228,220,0.02);
+}
+.curator-source.clickable{
+  cursor:pointer;
+  transition:border-color 0.2s, transform 0.2s;
+}
+.curator-source.clickable:hover{
+  border-color:rgba(200,169,110,0.2);
+  transform:translateY(-1px);
+}
+.curator-source-title{
+  font-family:var(--serif);
+  font-size:13px;
+  line-height:1.4;
+  color:var(--fg);
+  margin-bottom:6px;
+}
+.curator-source-meta{
+  font-family:var(--mono);
+  font-size:8px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--dim);
+}
+
 /* RESULTS GRID */
 .results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-top:40px}
 .result-card{position:relative;display:flex;flex-direction:column;height:100%;background:rgba(232,228,220,0.02);border:1px solid var(--rule);overflow:hidden;cursor:pointer;transition:all 0.25s}
@@ -230,6 +388,13 @@ footer a:hover{color:var(--fg)}
   .hero-status{display:none}
   .wrap{padding:0 20px}
   section{padding:60px 0}
+  .curator-preview{padding:18px 16px}
+  .curator-preview-head{flex-direction:column}
+  .curator-preview-meta{text-align:left;min-width:0}
+  .curator-preview-input{flex-direction:column}
+  .curator-preview-input input{border-right:1px solid rgba(232,228,220,0.08);border-bottom:none}
+  .curator-preview-input button{width:100%}
+  .curator-sources-grid{grid-template-columns:1fr}
   .about-grid{grid-template-columns:1fr;gap:40px}
   .obj-modal-inner{margin:60px auto;padding:0 20px 60px}
   .obj-close{right:20px;top:20px}
@@ -526,8 +691,24 @@ async function proxyCuratorSearch(query, limit = 20) {
   return d.results || [];
 }
 
+async function proxyCuratorConverse(message, history = []) {
+  const r = await fetch(API_BASE + '/api/proxy/curator/converse', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message, history }),
+  });
+  const d = await r.json();
+  if (!r.ok || !d.ok) {
+    throw new Error(d.error || 'Curator mode unavailable');
+  }
+  return d;
+}
+
 // ── Search ──────────────────────────────────────────────────────
 const searchPayloads = [];
+let latestSearchQuery = '';
+let latestSearchResults = [];
+let curatorHistory = [];
 
 function esc(str) {
   const d = document.createElement('div');
@@ -555,6 +736,121 @@ function archaiCardImageError(img) {
 function archaiHeroImageError(img) {
   if (!img) return;
   img.style.display = 'none';
+}
+
+function normalizeObjectKey(payload = {}) {
+  return payload.canonical_id
+    || [
+      payload._source_collection || payload.collection || '',
+      payload.registration_number || payload.accession_number || payload.registration || '',
+      payload.title || payload.object_name || ''
+    ].join('::');
+}
+
+function findSearchPayload(match = {}) {
+  const key = normalizeObjectKey(match);
+  return latestSearchResults.find((payload) => normalizeObjectKey(payload) === key)
+    || latestSearchResults.find((payload) =>
+      (payload.registration_number || payload.accession_number || '') &&
+      (payload.registration_number || payload.accession_number || '') === (match.registration || '')
+    )
+    || null;
+}
+
+function dedupeCuratorObjects(objects = []) {
+  const seen = new Set();
+  const deduped = [];
+  for (const obj of objects) {
+    const key = normalizeObjectKey({
+      _source_collection: obj.collection,
+      registration_number: obj.registration,
+      title: obj.title
+    });
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    deduped.push(obj);
+  }
+  return deduped;
+}
+
+function renderCuratorSources(objects = []) {
+  const deduped = dedupeCuratorObjects(objects);
+  if (!deduped.length) return '';
+  let html = '<div class="curator-sources"><div class="curator-sources-label">Objects ARCHAI is drawing from</div><div class="curator-sources-grid">';
+  for (const obj of deduped) {
+    const payload = findSearchPayload(obj);
+    const title = obj.title || 'Untitled';
+    const metaBits = [obj.institution, obj.date, obj.registration].filter(Boolean);
+    const encoded = payload ? encodeURIComponent(JSON.stringify(payload)) : '';
+    html += '<div class="curator-source' + (payload ? ' clickable' : '') + '"' + (payload ? ' onclick="openObject(decodeURIComponent(this.dataset.payload))" data-payload="' + encoded + '"' : '') + '>';
+    html += '<div class="curator-source-title">' + esc(title) + '</div>';
+    html += '<div class="curator-source-meta">' + esc(metaBits.join(' · ')) + '</div>';
+    html += '</div>';
+  }
+  html += '</div></div>';
+  return html;
+}
+
+function renderCuratorPreview() {
+  if (!backendLive || !latestSearchQuery || !latestSearchResults.length) return '';
+  const uniqueCollections = new Set(latestSearchResults.map((p) => p._source_collection).filter(Boolean)).size;
+  return '<div class="curator-preview">' +
+    '<div class="curator-preview-head">' +
+      '<div>' +
+        '<div class="curator-preview-title">Taste of curator mode</div>' +
+        '<h3>Interrogate this search with ARCHAI</h3>' +
+        '<p>You have searched for <strong style="color:var(--fg)">' + esc(latestSearchQuery) + '</strong>. Ask ARCHAI what patterns, materials, institutions, or historical links it notices across these results.</p>' +
+      '</div>' +
+      '<div class="curator-preview-meta"><strong>' + latestSearchResults.length + ' objects</strong>' + uniqueCollections + ' collections in view</div>' +
+    '</div>' +
+    '<div class="curator-preview-chips">' +
+      '<button onclick="askCollection(\'What patterns connect these results?\')">Patterns</button>' +
+      '<button onclick="askCollection(\'What would a curator notice first?\')">Curator eye</button>' +
+      '<button onclick="askCollection(\'Which institutions stand out here?\')">Institutions</button>' +
+      '<button onclick="askCollection(\'Where should I look next from this search?\')">Where next?</button>' +
+    '</div>' +
+    '<div class="curator-preview-messages" id="curatorMessages">' +
+      '<div class="chat-msg assistant">Search the collection, then ask ARCHAI to connect the dots for you. This is a public-facing preview of curator mode rather than the full internal interface.</div>' +
+    '</div>' +
+    '<div class="curator-preview-input">' +
+      '<input type="text" id="curatorInput" placeholder="Ask ARCHAI about this search..." onkeydown="if(event.key===\'Enter\')askCollection(this.value)">' +
+      '<button onclick="askCollection(document.getElementById(\'curatorInput\').value)">Ask ARCHAI</button>' +
+    '</div>' +
+    '<div class="curator-preview-note">ARCHAI responds from the live collection graph, not a generic chatbot prompt.</div>' +
+  '</div>';
+}
+
+function renderResultsGrid(results) {
+  let html = '<div class="results-grid">';
+  for (const r of results) {
+    const p = r.payload || {};
+    const idx = searchPayloads.length;
+    searchPayloads.push(p);
+    const title = p.title || p.object_name || 'Untitled';
+    const col = p._source_collection || 'archai_pilot';
+    const meta = getCollectionMeta(col);
+    const img = r._image || pickImage(p);
+    const date = typeof p.date === 'string' ? p.date : (p.date_display || p.production_date || '');
+    const maker = typeof p.maker === 'string' ? p.maker : (typeof p.artist === 'string' ? p.artist : (typeof p.creator === 'string' ? p.creator : ''));
+    const score = r.score ? (r.score * 100).toFixed(0) + '%' : '';
+
+    html += '<div class="result-card" onclick="openObject(JSON.stringify(searchPayloads[' + idx + ']))">';
+    html += '<div class="rc-media">';
+    if (img) {
+      html += '<img src="' + esc(img) + '" alt="' + esc(title) + '" loading="lazy" onerror="archaiCardImageError(this)">';
+      html += '<div class="rc-placeholder" style="display:none"><span>' + esc(meta.short) + '</span></div>';
+    } else {
+      html += '<div class="rc-placeholder"><span>' + esc(meta.short) + '</span></div>';
+    }
+    html += '</div>';
+    html += '<span class="rc-source ' + meta.className + '">' + esc(meta.short) + '</span>';
+    html += '<div class="rc-body">';
+    html += '<div class="rc-title">' + esc(title) + '</div>';
+    html += '<div class="rc-meta">' + esc([maker, date, score].filter(Boolean).join(' · ')) + '</div>';
+    html += '</div></div>';
+  }
+  html += '</div>';
+  return html;
 }
 
 async function doSearch(query) {
@@ -588,6 +884,9 @@ async function doSearch(query) {
     }
 
     if (!uniqueImageResults.length) {
+      latestSearchQuery = query;
+      latestSearchResults = [];
+      curatorHistory = [];
       document.getElementById('resultsArea').innerHTML = '<div class="no-results">No image-ready objects found. Try different terms.</div>';
       document.getElementById('searchInfo').textContent = '0 image-ready results';
       return;
@@ -595,38 +894,15 @@ async function doSearch(query) {
 
     document.getElementById('searchInfo').textContent = uniqueImageResults.length + ' image-ready objects found';
     searchPayloads.length = 0;
+    latestSearchQuery = query;
+    latestSearchResults = uniqueImageResults.map((r) => r.payload || {});
+    curatorHistory = [];
 
-    let html = '<div class="results-grid">';
-    for (const r of uniqueImageResults) {
-      const p = r.payload || {};
-      const idx = searchPayloads.length;
-      searchPayloads.push(p);
-      const title = p.title || p.object_name || 'Untitled';
-      const col = p._source_collection || 'archai_pilot';
-      const meta = getCollectionMeta(col);
-      const img = r._image || pickImage(p);
-      const date = typeof p.date === 'string' ? p.date : (p.date_display || p.production_date || '');
-      const maker = typeof p.maker === 'string' ? p.maker : (typeof p.artist === 'string' ? p.artist : (typeof p.creator === 'string' ? p.creator : ''));
-      const score = r.score ? (r.score * 100).toFixed(0) + '%' : '';
-
-      html += '<div class="result-card" onclick="openObject(JSON.stringify(searchPayloads[' + idx + ']))">';
-      html += '<div class="rc-media">';
-      if (img) {
-        html += '<img src="' + esc(img) + '" alt="' + esc(title) + '" loading="lazy" onerror="archaiCardImageError(this)">';
-        html += '<div class="rc-placeholder" style="display:none"><span>' + esc(meta.short) + '</span></div>';
-      } else {
-        html += '<div class="rc-placeholder"><span>' + esc(meta.short) + '</span></div>';
-      }
-      html += '</div>';
-      html += '<span class="rc-source ' + meta.className + '">' + esc(meta.short) + '</span>';
-      html += '<div class="rc-body">';
-      html += '<div class="rc-title">' + esc(title) + '</div>';
-      html += '<div class="rc-meta">' + esc([maker, date, score].filter(Boolean).join(' · ')) + '</div>';
-      html += '</div></div>';
-    }
-    html += '</div>';
+    let html = renderCuratorPreview();
+    html += renderResultsGrid(uniqueImageResults);
     document.getElementById('resultsArea').innerHTML = html;
   } catch (e) {
+    latestSearchResults = [];
     document.getElementById('resultsArea').innerHTML = '<div class="no-results">Search failed — check backend connection</div>';
     document.getElementById('searchInfo').textContent = 'Error';
   }
@@ -636,6 +912,51 @@ document.getElementById('searchBtn').addEventListener('click', () => doSearch(do
 document.getElementById('searchInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') doSearch(e.target.value);
 });
+
+async function askCollection(question) {
+  if (!question || !latestSearchQuery) return;
+  const input = document.getElementById('curatorInput');
+  if (input) input.value = '';
+
+  const msgs = document.getElementById('curatorMessages');
+  if (!msgs) return;
+
+  msgs.innerHTML += '<div class="chat-msg user">' + esc(question) + '</div>';
+  const thinkingPhrases = ['Tracing connections', 'Interrogating the collection', 'Looking across institutions', 'Following the semantic thread', 'Consulting the collection intelligence'];
+  msgs.innerHTML += '<div class="chat-msg assistant" id="pendingCuratorMsg"><div class="thinking-alive"><div class="thinking-label">' + thinkingPhrases[0] + '</div><div class="thinking-dots"><span></span><span></span><span></span></div></div></div>';
+  msgs.scrollTop = msgs.scrollHeight;
+
+  let phraseIdx = 0;
+  const thinkInterval = setInterval(() => {
+    phraseIdx = (phraseIdx + 1) % thinkingPhrases.length;
+    const lbl = document.querySelector('#pendingCuratorMsg .thinking-label');
+    if (lbl) lbl.textContent = thinkingPhrases[phraseIdx];
+  }, 2200);
+
+  const contextualQuestion = 'The visitor searched for "' + latestSearchQuery + '". Respond to this follow-up in relation to that search: ' + question;
+
+  try {
+    const reply = await proxyCuratorConverse(contextualQuestion, curatorHistory.slice(-6));
+    clearInterval(thinkInterval);
+    curatorHistory.push({ role: 'user', content: contextualQuestion });
+    curatorHistory.push({ role: 'assistant', content: reply.message });
+
+    const pending = document.getElementById('pendingCuratorMsg');
+    if (pending) {
+      pending.id = '';
+      pending.innerHTML = esc(reply.message).replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>') + renderCuratorSources(reply.objects || []);
+    }
+  } catch {
+    clearInterval(thinkInterval);
+    const pending = document.getElementById('pendingCuratorMsg');
+    if (pending) {
+      pending.id = '';
+      pending.innerHTML = 'ARCHAI could not interrogate the collection right now. Try the object cards below, or ask again in a moment.';
+    }
+  }
+
+  msgs.scrollTop = msgs.scrollHeight;
+}
 
 // ── Object detail ───────────────────────────────────────────────
 let chatHistory = [];
