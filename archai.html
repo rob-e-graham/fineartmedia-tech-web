@@ -172,47 +172,6 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
   border-color:var(--gold);
   color:var(--gold);
 }
-.curator-role-wrap{
-  margin:16px 0 12px;
-}
-.curator-role-label{
-  font-family:var(--mono);
-  font-size:8px;
-  letter-spacing:0.12em;
-  text-transform:uppercase;
-  color:var(--dim);
-  margin-bottom:8px;
-}
-.curator-role-buttons{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-}
-.curator-role-buttons button{
-  padding:7px 12px;
-  border:1px solid rgba(232,228,220,0.08);
-  background:transparent;
-  color:var(--dim);
-  font-family:var(--mono);
-  font-size:8px;
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  cursor:pointer;
-  transition:all 0.2s;
-}
-.curator-role-buttons button.active,
-.curator-role-buttons button:hover{
-  border-color:rgba(200,169,110,0.32);
-  color:var(--gold);
-  background:rgba(200,169,110,0.07);
-}
-.curator-role-note{
-  margin-top:8px;
-  font-family:var(--sans);
-  font-size:13px;
-  line-height:1.55;
-  color:rgba(232,228,220,0.62);
-}
 .curator-preview-messages{
   max-height:340px;
   overflow-y:auto;
@@ -251,33 +210,6 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
   letter-spacing:0.1em;
   text-transform:uppercase;
   color:var(--dim);
-}
-.curator-visitor-link{
-  margin-top:18px;
-  padding-top:16px;
-  border-top:1px solid rgba(232,228,220,0.08);
-}
-.curator-visitor-link p{
-  margin:0 0 12px;
-  font-family:var(--sans);
-  font-size:13px;
-  line-height:1.6;
-  color:rgba(232,228,220,0.62);
-}
-.curator-visitor-link a{
-  display:inline-block;
-  padding:8px 16px;
-  border:1px solid rgba(200,169,110,0.2);
-  color:var(--gold);
-  font-family:var(--mono);
-  font-size:9px;
-  letter-spacing:0.12em;
-  text-transform:uppercase;
-  text-decoration:none;
-}
-.curator-visitor-link a:hover{
-  color:var(--fg);
-  border-color:var(--gold);
 }
 .curator-sources{
   margin-top:16px;
@@ -596,25 +528,19 @@ footer a:hover{color:var(--fg)}
   <!-- SEARCH -->
   <section id="search">
     <div class="wrap">
-      <div class="sec-label rv">Search The Collection</div>
+      <div class="sec-label rv">Explore the Collection</div>
       <div class="search-wrap rv">
-        <div class="ci-intro" style="margin-bottom:18px">
-          <h3>Search once, then review the results with ARCHAI</h3>
-          <p>Start with a material, place, period, or theme. ARCHAI returns image-backed objects first, then helps visitors read connections across the results.</p>
-        </div>
         <div class="search-box">
-          <input type="text" id="searchInput" placeholder="Search across all collections..." autocomplete="off">
+          <input type="text" id="searchInput" placeholder="Search 815 objects across six museums..." autocomplete="off">
           <button id="searchBtn">Search</button>
         </div>
         <div class="search-chips">
           <button onclick="doSearch('ceramics and pottery')">Ceramics</button>
           <button onclick="doSearch('ancient Greece classical antiquity')">Ancient worlds</button>
-          <button onclick="doSearch('technology machine device media')">Technology</button>
-          <button onclick="doSearch('textile and fabric')">Textiles</button>
-          <button onclick="doSearch('gold and silver jewellery')">Jewellery</button>
           <button onclick="doSearch('painting landscape portrait')">Paintings</button>
+          <button onclick="doSearch('gold and silver jewellery')">Jewellery</button>
           <button onclick="doSearch('sculpture bronze stone figure')">Sculpture</button>
-          <button onclick="doSearch('photography print camera')">Photography</button>
+          <button onclick="doSearch('textile and fabric')">Textiles</button>
         </div>
         <div class="search-info" id="searchInfo"></div>
       </div>
@@ -873,73 +799,6 @@ const searchPayloads = [];
 let latestSearchQuery = '';
 let latestSearchResults = [];
 let curatorHistory = [];
-let curatorRole = 'curator';
-
-const CURATOR_ROLES = {
-  curator: {
-    label: 'Curator',
-    note: 'Frames themes, interpretation, comparison, and exhibition context.',
-    instruction: 'Respond in a curatorial register. Focus on interpretation, themes, historical connections, and why the grouping matters.',
-    starter: 'ARCHAI is using the Curator lens. Ask about interpretation, themes, relationships between works, or how a grouping might read in an exhibition.',
-    placeholder: 'Ask ARCHAI about themes, interpretation, or exhibition connections...',
-    prompts: [
-      { label: 'Themes', question: 'What themes connect these results?' },
-      { label: 'First reading', question: 'What might a curator notice first?' },
-      { label: 'Comparisons', question: 'Which objects would be strongest to compare side by side?' },
-      { label: 'Spatial view', question: 'How might these objects relate in a gallery or map-based visitor journey?' }
-    ]
-  },
-  collections: {
-    label: 'Collections',
-    note: 'Focuses on record quality, provenance, object type, materials, and registration context.',
-    instruction: 'Respond in a collections-management register. Prioritise record clarity, provenance, registration context, materials, object type, and collection distinctions.',
-    starter: 'ARCHAI is using the Collections lens. Ask about registration context, provenance, materials, or what needs checking in the record.',
-    placeholder: 'Ask about provenance, registration, materials, or record clarity...',
-    prompts: [
-      { label: 'Provenance', question: 'What provenance or ownership patterns stand out here?' },
-      { label: 'Records', question: 'What collection-record details would staff want to verify first?' },
-      { label: 'Materials', question: 'What materials or object types are most prominent in these results?' },
-      { label: 'Gaps', question: 'What metadata gaps or inconsistencies might need attention?' }
-    ]
-  },
-  av: {
-    label: 'Audio / Spatial',
-    note: 'Considers display context, media, wayfinding, visitor flow, and spatial interpretation.',
-    instruction: 'Respond in an exhibition-technology register. Focus on display context, visitor flow, media potential, spatial awareness, and installation relevance where the record supports it.',
-    starter: 'ARCHAI is using the Audio / Spatial lens. Ask about display conditions, visitor flow, media potential, or how objects could relate to a mapped journey.',
-    placeholder: 'Ask about display context, visitor flow, audio/media use, or spatial relationships...',
-    prompts: [
-      { label: 'Display', question: 'What display or interpretation cues stand out for these objects?' },
-      { label: 'Spatial view', question: 'How might these objects relate in a gallery or map-based visitor journey?' },
-      { label: 'Media cues', question: 'Which of these objects lend themselves to audio, screen-based, or mediated interpretation?' },
-      { label: 'Wayfinding', question: 'How could these results support visitor wayfinding or spatial storytelling?' }
-    ]
-  },
-  volunteer: {
-    label: 'Visitor Guide',
-    note: 'Keeps the reading clear, welcoming, and useful for public-facing interpretation.',
-    instruction: 'Respond in a visitor-guide register. Use clear public-facing language, emphasise memorable details, and avoid jargon.',
-    starter: 'ARCHAI is using the Visitor Guide lens. Ask for clear talking points, memorable details, or visitor-friendly ways into the collection.',
-    placeholder: 'Ask for clear talking points, memorable details, or visitor-friendly summaries...',
-    prompts: [
-      { label: 'Talking points', question: 'What are the clearest talking points for a visitor-facing guide?' },
-      { label: 'Memorable details', question: 'Which memorable details or stories stand out in these results?' },
-      { label: 'Plain language', question: 'How would you explain this group in simple visitor-friendly language?' },
-      { label: 'Where next?', question: 'Where should a visitor look next from this search?' }
-    ]
-  }
-};
-
-function getCurrentCuratorRoleMeta() {
-  return CURATOR_ROLES[curatorRole] || CURATOR_ROLES.curator;
-}
-
-function renderCuratorPromptButtons() {
-  const roleMeta = getCurrentCuratorRoleMeta();
-  return roleMeta.prompts.map((prompt) =>
-    '<button onclick="askCollection(\'' + esc(prompt.question).replace(/&#39;/g, "\\'") + '\')">' + esc(prompt.label) + '</button>'
-  ).join('');
-}
 
 function esc(str) {
   const d = document.createElement('div');
@@ -1034,66 +893,27 @@ function renderCuratorSources(objects = [], label = 'Objects informing this resp
 function renderCuratorPreview() {
   if (!backendLive || !latestSearchQuery || !latestSearchResults.length) return '';
   const uniqueCollections = new Set(latestSearchResults.map((p) => p._source_collection).filter(Boolean)).size;
-  const initialPreviewObjects = latestSearchResults.slice(0, 4);
-  const roleMeta = getCurrentCuratorRoleMeta();
   return '<div class="curator-preview">' +
     '<div class="curator-preview-head">' +
       '<div>' +
-        '<div class="curator-preview-title">Curatorial View</div>' +
-        '<h3>Review these results with ARCHAI</h3>' +
-        '<p>You searched for <strong style="color:var(--fg)">' + esc(latestSearchQuery) + '</strong>. Choose a museum role, then ask ARCHAI what patterns, materials, spatial relationships, or historical connections emerge across these objects.</p>' +
+        '<h3>Ask ARCHAI about these results</h3>' +
+        '<p>' + latestSearchResults.length + ' objects across ' + uniqueCollections + ' collections for <strong style="color:var(--fg)">' + esc(latestSearchQuery) + '</strong></p>' +
       '</div>' +
-      '<div class="curator-preview-meta"><strong>' + latestSearchResults.length + ' objects</strong>' + uniqueCollections + ' collections in view</div>' +
     '</div>' +
-    '<div class="curator-role-wrap">' +
-      '<div class="curator-role-label">Role Lens</div>' +
-      '<div class="curator-role-buttons">' +
-        Object.entries(CURATOR_ROLES).map(([key, meta]) =>
-          '<button class="' + (curatorRole === key ? 'active' : '') + '" onclick="setCuratorRole(\'' + key + '\')">' + meta.label + '</button>'
-        ).join('') +
-      '</div>' +
-      '<div class="curator-role-note" id="curatorRoleNote">' + roleMeta.note + '</div>' +
+    '<div class="curator-preview-chips">' +
+      '<button onclick="askCollection(\'What connects these objects?\')">Connections</button>' +
+      '<button onclick="askCollection(\'What would a curator notice first?\')">Curator eye</button>' +
+      '<button onclick="askCollection(\'Which works belong together in an exhibition?\')">Exhibition</button>' +
+      '<button onclick="askCollection(\'How could a visitor move through this group?\')">Visitor path</button>' +
     '</div>' +
-    '<div class="curator-preview-chips" id="curatorPromptChips">' +
-      renderCuratorPromptButtons() +
-    '</div>' +
-    renderCuratorSources(initialPreviewObjects, 'Preview objects in this search') +
     '<div class="curator-preview-messages" id="curatorMessages">' +
-      '<div class="chat-msg assistant" id="curatorStarterMessage">' + esc(roleMeta.starter) + '</div>' +
+      '<div class="chat-msg assistant">I can see these results. Ask me what connects them.</div>' +
     '</div>' +
     '<div class="curator-preview-input">' +
-      '<input type="text" id="curatorInput" placeholder="' + esc(roleMeta.placeholder) + '" onkeydown="if(event.key===\'Enter\')askCollection(this.value)">' +
-      '<button onclick="askCollection(document.getElementById(\'curatorInput\').value)">Ask ARCHAI</button>' +
-    '</div>' +
-    '<div class="curator-preview-note">ARCHAI responds from the live collection graph to support curatorial reading, not generic chat.</div>' +
-    '<div class="curator-visitor-link">' +
-      '<p>Prefer the public-facing object pages? Switch to visitor view and explore the same collection through AUX.IO.</p>' +
-      '<a href="/aux.html">Open AUX.IO visitor view →</a>' +
+      '<input type="text" id="curatorInput" placeholder="Ask ARCHAI about this search..." onkeydown="if(event.key===\'Enter\')askCollection(this.value)">' +
+      '<button onclick="askCollection(document.getElementById(\'curatorInput\').value)">Ask</button>' +
     '</div>' +
   '</div>';
-}
-
-function updateCuratorRoleControls() {
-  const roleMeta = getCurrentCuratorRoleMeta();
-  const buttons = document.querySelectorAll('.curator-role-buttons button');
-  buttons.forEach((btn, index) => {
-    const roleKey = Object.keys(CURATOR_ROLES)[index];
-    btn.classList.toggle('active', roleKey === curatorRole);
-  });
-  const roleNote = document.getElementById('curatorRoleNote');
-  if (roleNote) roleNote.textContent = roleMeta.note;
-  const promptChips = document.getElementById('curatorPromptChips');
-  if (promptChips) promptChips.innerHTML = renderCuratorPromptButtons();
-  const input = document.getElementById('curatorInput');
-  if (input) input.placeholder = roleMeta.placeholder;
-  const starter = document.getElementById('curatorStarterMessage');
-  if (starter && curatorHistory.length === 0) starter.textContent = roleMeta.starter;
-}
-
-function setCuratorRole(role) {
-  if (!CURATOR_ROLES[role]) return;
-  curatorRole = role;
-  updateCuratorRoleControls();
 }
 
 function renderResultsGrid(results) {
@@ -1210,9 +1030,7 @@ async function askCollection(question) {
   }, 2200);
 
   const contextualQuestion =
-    'The user is viewing results for "' + latestSearchQuery + '". ' +
-    CURATOR_ROLES[curatorRole].instruction + ' ' +
-    'Respond to this follow-up in relation to that search: ' + question;
+    'The visitor searched for "' + latestSearchQuery + '". Respond to this follow-up: ' + question;
 
   try {
     const reply = await proxyCuratorConverse(contextualQuestion, curatorHistory.slice(-6));
