@@ -150,28 +150,6 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
   text-transform:none;
   margin-bottom:6px;
 }
-.curator-preview-chips{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin:16px 0 14px;
-}
-.curator-preview-chips button{
-  padding:6px 12px;
-  border:1px solid rgba(232,228,220,0.08);
-  background:transparent;
-  color:var(--dim);
-  font-family:var(--mono);
-  font-size:8px;
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  cursor:pointer;
-  transition:all 0.2s;
-}
-.curator-preview-chips button:hover{
-  border-color:var(--gold);
-  color:var(--gold);
-}
 .curator-preview-messages{
   max-height:340px;
   overflow-y:auto;
@@ -528,8 +506,12 @@ footer a:hover{color:var(--fg)}
   <!-- SEARCH -->
   <section id="search">
     <div class="wrap">
-      <div class="sec-label rv">Explore the Collection</div>
+      <div class="sec-label rv">Search the Collection</div>
       <div class="search-wrap rv">
+        <div class="ci-intro" style="margin-bottom:18px">
+          <h3>Search first, then ask ARCHAI what the results suggest</h3>
+          <p>Start with a material, place, period, or theme. ARCHAI returns image-backed objects, then offers a curatorial reading grounded in the collection records.</p>
+        </div>
         <div class="search-box">
           <input type="text" id="searchInput" placeholder="Search 815 objects across six museums..." autocomplete="off">
           <button id="searchBtn">Search</button>
@@ -799,6 +781,69 @@ const searchPayloads = [];
 let latestSearchQuery = '';
 let latestSearchResults = [];
 let curatorHistory = [];
+let curatorLens = 'curatorial';
+
+const CURATOR_LENSES = {
+  curatorial: {
+    label: 'Curatorial',
+    note: 'Reads the result set through themes, interpretation, and relationships between works.',
+    starter: 'Curatorial lens selected. Ask about themes, significance, or what this group suggests as a body of work.',
+    placeholder: 'Ask about themes, interpretation, or why these works belong together...',
+    instruction: 'Respond in a curatorial register grounded in the collection records. Focus on themes, interpretation, significance, and relationships between works.'
+  },
+  collections: {
+    label: 'Collections',
+    note: 'Focuses on provenance, materials, object type, metadata clarity, and record quality.',
+    starter: 'Collections lens selected. Ask about provenance, materials, registration context, or what the records make clear.',
+    placeholder: 'Ask about provenance, materials, registration context, or metadata gaps...',
+    instruction: 'Respond in a collections-management register grounded in the collection records. Focus on provenance, materials, object type, metadata clarity, and record quality.'
+  },
+  exhibition: {
+    label: 'Exhibition',
+    note: 'Focuses on grouping, display logic, narrative flow, and how the results could work in a gallery.',
+    starter: 'Exhibition lens selected. Ask how these works might be grouped, staged, or interpreted in an exhibition setting.',
+    placeholder: 'Ask how these works could be grouped, displayed, sequenced, or interpreted in a gallery...',
+    instruction: 'Respond in an exhibition-planning register grounded in the collection records. Focus on grouping, display logic, narrative flow, spatial relationships, and visitor movement.'
+  },
+  visitor: {
+    label: 'Visitor Guide',
+    note: 'Keeps the answer clear, public-facing, and useful for interpretation or guided conversation.',
+    starter: 'Visitor lens selected. Ask for a clear public-facing reading of the result set in accessible language.',
+    placeholder: 'Ask for a clear public-facing summary, talking points, or visitor-friendly interpretation...',
+    instruction: 'Respond in a visitor-facing museum register grounded in the collection records. Use clear language and focus on interpretation, access, and memorable points.'
+  }
+};
+
+function getCurrentCuratorLensMeta() {
+  return CURATOR_LENSES[curatorLens] || CURATOR_LENSES.curatorial;
+}
+
+function renderCuratorLensButtons() {
+  return Object.entries(CURATOR_LENSES).map(([key, meta]) =>
+    '<button class="' + (curatorLens === key ? 'active' : '') + '" onclick="setCuratorLens(\'' + key + '\')">' + esc(meta.label) + '</button>'
+  ).join('');
+}
+
+function updateCuratorLensControls() {
+  const lensMeta = getCurrentCuratorLensMeta();
+  const buttons = document.querySelectorAll('#curatorLensButtons button');
+  buttons.forEach((btn, index) => {
+    const lensKey = Object.keys(CURATOR_LENSES)[index];
+    btn.classList.toggle('active', lensKey === curatorLens);
+  });
+  const note = document.getElementById('curatorLensNote');
+  if (note) note.textContent = lensMeta.note;
+  const input = document.getElementById('curatorInput');
+  if (input) input.placeholder = lensMeta.placeholder;
+  const starter = document.getElementById('curatorStarterMessage');
+  if (starter && curatorHistory.length === 0) starter.textContent = lensMeta.starter;
+}
+
+function setCuratorLens(lens) {
+  if (!CURATOR_LENSES[lens]) return;
+  curatorLens = lens;
+  updateCuratorLensControls();
+}
 
 function esc(str) {
   const d = document.createElement('div');
@@ -893,24 +938,27 @@ function renderCuratorSources(objects = [], label = 'Objects informing this resp
 function renderCuratorPreview() {
   if (!backendLive || !latestSearchQuery || !latestSearchResults.length) return '';
   const uniqueCollections = new Set(latestSearchResults.map((p) => p._source_collection).filter(Boolean)).size;
+  const lensMeta = getCurrentCuratorLensMeta();
   return '<div class="curator-preview">' +
     '<div class="curator-preview-head">' +
       '<div>' +
-        '<h3>Ask ARCHAI about these results</h3>' +
-        '<p>' + latestSearchResults.length + ' objects across ' + uniqueCollections + ' collections for <strong style="color:var(--fg)">' + esc(latestSearchQuery) + '</strong></p>' +
+        '<div class="chat-label">Talk to this collection</div>' +
+        '<h3>Ask ARCHAI to interpret these results</h3>' +
+        '<p>Showing ' + latestSearchResults.length + ' objects across ' + uniqueCollections + ' collections for <strong style="color:var(--fg)">' + esc(latestSearchQuery) + '</strong></p>' +
       '</div>' +
     '</div>' +
-    '<div class="curator-preview-chips">' +
-      '<button onclick="askCollection(\'What connects these objects?\')">Connections</button>' +
-      '<button onclick="askCollection(\'What would a curator notice first?\')">Curator eye</button>' +
-      '<button onclick="askCollection(\'Which works belong together in an exhibition?\')">Exhibition</button>' +
-      '<button onclick="askCollection(\'How could a visitor move through this group?\')">Visitor path</button>' +
+    '<div class="chat-tone-wrap">' +
+      '<div class="chat-tone-label">Response tone</div>' +
+      '<div class="chat-tone-buttons" id="curatorLensButtons">' +
+        renderCuratorLensButtons() +
+      '</div>' +
+      '<div class="chat-tone-note" id="curatorLensNote">' + esc(lensMeta.note) + '</div>' +
     '</div>' +
     '<div class="curator-preview-messages" id="curatorMessages">' +
-      '<div class="chat-msg assistant">I can see these results. Ask me what connects them.</div>' +
+      '<div class="chat-msg assistant" id="curatorStarterMessage">' + esc(lensMeta.starter) + '</div>' +
     '</div>' +
     '<div class="curator-preview-input">' +
-      '<input type="text" id="curatorInput" placeholder="Ask ARCHAI about this search..." onkeydown="if(event.key===\'Enter\')askCollection(this.value)">' +
+      '<input type="text" id="curatorInput" placeholder="' + esc(lensMeta.placeholder) + '" onkeydown="if(event.key===\'Enter\')askCollection(this.value)">' +
       '<button onclick="askCollection(document.getElementById(\'curatorInput\').value)">Ask</button>' +
     '</div>' +
   '</div>';
@@ -1029,13 +1077,17 @@ async function askCollection(question) {
     if (lbl) lbl.textContent = thinkingPhrases[phraseIdx];
   }, 2200);
 
+  const lensMeta = getCurrentCuratorLensMeta();
   const contextualQuestion =
-    'The visitor searched for "' + latestSearchQuery + '". Respond to this follow-up: ' + question;
+    'Search: "' + latestSearchQuery + '". ' +
+    'Use the ' + lensMeta.label + ' lens. ' +
+    lensMeta.instruction + ' ' +
+    'Question: ' + question;
 
   try {
-    const reply = await proxyCuratorConverse(contextualQuestion, curatorHistory.slice(-6));
+    const reply = await proxyCuratorConverse(contextualQuestion, curatorHistory.slice(-4));
     clearInterval(thinkInterval);
-    curatorHistory.push({ role: 'user', content: contextualQuestion });
+    curatorHistory.push({ role: 'user', content: question });
     curatorHistory.push({ role: 'assistant', content: reply.message });
 
     const pending = document.getElementById('pendingCuratorMsg');
