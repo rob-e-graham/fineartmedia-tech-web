@@ -2,6 +2,14 @@
 
 Static site for `fineartmedia.tech`.
 
+## Research & development status
+
+The projects presented on this site are active research and development systems: working prototypes, public demos, and open-source tools developed through FAMTEC and Rob Graham's doctoral research at RMIT University.
+
+FAMTEC is open to funded research partnerships, institutional pilot testing, accessibility evaluation, software development support, grant collaborations, and feedback from museums, galleries, universities, public-interest technology groups, and aligned funders.
+
+For research, funding, or testing enquiries: `rob@fineartmedia.tech`
+
 Primary deploy file:
 
 - `index.html`

@@ -139,6 +139,22 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 .proj-status{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);display:flex;align-items:center;gap:6px}
 .proj-status .dot{width:6px;height:6px;border-radius:50%}
 .proj-status .dot.live{background:#4ade80}
+.research-note{
+  border:1px solid var(--rule);
+  background:rgba(232,228,220,0.018);
+  padding:34px;
+  max-width:920px;
+}
+.research-note p{
+  font-size:17px;
+  line-height:1.78;
+  color:rgba(232,228,220,0.74);
+  margin-bottom:16px;
+}
+.research-note p:last-child{margin-bottom:0}
+.research-note em{color:var(--gold);font-style:italic}
+.research-note a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(200,169,110,0.28)}
+.research-note a:hover{border-color:var(--gold)}
 
 /* FULL-BLEED */
 .bleed{width:100%;height:58vh;overflow:hidden;position:relative;background:#0b0b0b}
@@ -367,22 +383,34 @@ footer p{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.12em;col
   <div class="proj-grid rv on">
     <a href="/archai.html" class="proj-card">
       <span class="proj-tag">Sovereign AI · PhD Research</span>
-      <h3>ARCHAI™</h3>
+      <h3>ARCHAI</h3>
       <p>Sovereign semantic heritage infrastructure for museums. Multi-collection search, grounded object conversation, and 815 live objects across Museums Victoria, The Met, V&amp;A, Art Institute of Chicago, Cleveland Museum of Art, and Rijksmuseum.</p>
-      <span class="proj-status"><span class="dot live"></span>Live demo</span>
+      <span class="proj-status"><span class="dot live"></span>Working prototype · open to partners</span>
     </a>
     <a href="/safechat.html" class="proj-card">
       <span class="proj-tag">Open Source · AI Safety</span>
       <h3>SafeChat</h3>
       <p>Crisis detection and verified helpline resources for AI chat systems. One script tag. 34 countries. 67 verified helplines. 420 automated tests. Zero data collection. Runs entirely on-device.</p>
-      <span class="proj-status"><span class="dot live"></span>Released — BSL 1.1</span>
+      <span class="proj-status"><span class="dot live"></span>Released · testing partners welcome</span>
     </a>
     <a href="/keytec.html" class="proj-card">
       <span class="proj-tag">Developer Tools · macOS</span>
       <h3>Keytec</h3>
       <p>API key management for macOS. Store keys in Keychain. Group by project. Inject at runtime. No .env files. No cloud. No account. CLI + local web dashboard with GitHub Actions sync.</p>
-      <span class="proj-status"><span class="dot live"></span>v0.1.0 — Dual licensed</span>
+      <span class="proj-status"><span class="dot live"></span>Early release · open to review</span>
     </a>
+  </div>
+</section>
+</div>
+
+<!-- RESEARCH SUPPORT -->
+<div class="wrap">
+<section id="research-support">
+  <p class="sec-label">Research, Funding &amp; Testing</p>
+  <div class="research-note rv on">
+    <p>These projects are <em>active research and development systems</em>: working prototypes, public demos, and open-source tools being tested through FAMTEC and doctoral research at RMIT University.</p>
+    <p>I am open to funded research partnerships, institutional pilot testing, accessibility evaluation, software development support, grant collaborations, and feedback from museums, galleries, universities, public-interest technology groups, and aligned funders.</p>
+    <p>For research, funding, or testing enquiries, contact <a href="mailto:rob@fineartmedia.tech">rob@fineartmedia.tech</a>.</p>
   </div>
 </section>
 </div>
@@ -688,7 +716,7 @@ footer p{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.12em;col
 <div class="wrap">
 <section id="contact" style="padding-bottom:120px">
   <p class="sec-label">Contact</p>
-  <h2 class="contact-heading rv on">If you're building something that needs to work <em>in the room</em>, let's talk.</h2>
+  <h2 class="contact-heading rv on">Research partners, pilot sites, funders, and collaborators are welcome.</h2>
   <div class="contact-row rv on">
     <a href="mailto:rob@fineartmedia.tech" class="c-link">
       <span class="lbl">Email</span><span class="val">rob@fineartmedia.tech</span><span class="arr">→</span>
