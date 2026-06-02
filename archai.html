@@ -877,22 +877,22 @@ let curatorRole = 'curator';
 const CURATOR_ROLES = {
   curator: {
     label: 'Curator',
-    note: 'Highlights themes, interpretation, comparisons, and curatorial framing.',
-    instruction: 'Respond like a supportive curator. Focus on interpretation, themes, historical connections, and why the grouping matters.',
-    starter: 'ARCHAI is in Curator lens. Ask about interpretation, themes, relationships between works, or how a grouping might read in an exhibition.',
+    note: 'Frames themes, interpretation, comparison, and exhibition context.',
+    instruction: 'Respond in a curatorial register. Focus on interpretation, themes, historical connections, and why the grouping matters.',
+    starter: 'ARCHAI is using the Curator lens. Ask about interpretation, themes, relationships between works, or how a grouping might read in an exhibition.',
     placeholder: 'Ask ARCHAI about themes, interpretation, or exhibition connections...',
     prompts: [
       { label: 'Themes', question: 'What themes connect these results?' },
-      { label: 'Curatorial note', question: 'What might a curator notice first?' },
+      { label: 'First reading', question: 'What might a curator notice first?' },
       { label: 'Comparisons', question: 'Which objects would be strongest to compare side by side?' },
       { label: 'Spatial view', question: 'How might these objects relate in a gallery or map-based visitor journey?' }
     ]
   },
   collections: {
     label: 'Collections',
-    note: 'Prioritises registration, provenance, object type, and collection-record usefulness.',
-    instruction: 'Respond like a collections staff member. Prioritise record clarity, provenance, registration context, materials, object type, and collection distinctions.',
-    starter: 'ARCHAI is in Collections lens. Ask about registration context, provenance, materials, or what needs checking in the record.',
+    note: 'Focuses on record quality, provenance, object type, materials, and registration context.',
+    instruction: 'Respond in a collections-management register. Prioritise record clarity, provenance, registration context, materials, object type, and collection distinctions.',
+    starter: 'ARCHAI is using the Collections lens. Ask about registration context, provenance, materials, or what needs checking in the record.',
     placeholder: 'Ask about provenance, registration, materials, or record clarity...',
     prompts: [
       { label: 'Provenance', question: 'What provenance or ownership patterns stand out here?' },
@@ -902,27 +902,27 @@ const CURATOR_ROLES = {
     ]
   },
   av: {
-    label: 'AV / Spatial',
-    note: 'Looks for display, media, movement, and spatial or installation potential.',
-    instruction: 'Respond like an audiovisual or exhibition technician. Focus on display context, visitor flow, media potential, spatial awareness, and installation relevance where the record supports it.',
-    starter: 'ARCHAI is in AV / Spatial lens. Ask about display conditions, visitor flow, media potential, or how objects could relate to a mapped journey.',
-    placeholder: 'Ask about display context, visitor flow, media use, or spatial relationships...',
+    label: 'Audio / Spatial',
+    note: 'Considers display context, media, wayfinding, visitor flow, and spatial interpretation.',
+    instruction: 'Respond in an exhibition-technology register. Focus on display context, visitor flow, media potential, spatial awareness, and installation relevance where the record supports it.',
+    starter: 'ARCHAI is using the Audio / Spatial lens. Ask about display conditions, visitor flow, media potential, or how objects could relate to a mapped journey.',
+    placeholder: 'Ask about display context, visitor flow, audio/media use, or spatial relationships...',
     prompts: [
       { label: 'Display', question: 'What display or interpretation cues stand out for these objects?' },
       { label: 'Spatial view', question: 'How might these objects relate in a gallery or map-based visitor journey?' },
-      { label: 'Media cues', question: 'Which of these objects lend themselves to mediated or screen-based interpretation?' },
+      { label: 'Media cues', question: 'Which of these objects lend themselves to audio, screen-based, or mediated interpretation?' },
       { label: 'Wayfinding', question: 'How could these results support visitor wayfinding or spatial storytelling?' }
     ]
   },
   volunteer: {
-    label: 'Volunteer',
-    note: 'Keeps the reading clear, welcoming, and useful for public-facing conversations.',
-    instruction: 'Respond like a well-briefed volunteer guide. Use clear visitor-friendly language, emphasise memorable facts, and avoid jargon.',
-    starter: 'ARCHAI is in Volunteer lens. Ask for simple talking points, memorable facts, or visitor-friendly ways into the collection.',
-    placeholder: 'Ask for clear talking points, memorable facts, or visitor-friendly summaries...',
+    label: 'Visitor Guide',
+    note: 'Keeps the reading clear, welcoming, and useful for public-facing interpretation.',
+    instruction: 'Respond in a visitor-guide register. Use clear public-facing language, emphasise memorable details, and avoid jargon.',
+    starter: 'ARCHAI is using the Visitor Guide lens. Ask for clear talking points, memorable details, or visitor-friendly ways into the collection.',
+    placeholder: 'Ask for clear talking points, memorable details, or visitor-friendly summaries...',
     prompts: [
       { label: 'Talking points', question: 'What are the clearest talking points for a visitor-facing guide?' },
-      { label: 'Memorable facts', question: 'Which memorable facts or stories stand out in these results?' },
+      { label: 'Memorable details', question: 'Which memorable details or stories stand out in these results?' },
       { label: 'Plain language', question: 'How would you explain this group in simple visitor-friendly language?' },
       { label: 'Where next?', question: 'Where should a visitor look next from this search?' }
     ]
