@@ -23,6 +23,8 @@
   --aic-coral:#d28c72;
   --cma-green:#8ebf95;
   --rijks-blue:#7ea7d6;
+  --eu-blue:#749cd6;
+  --akl-mint:#7cc4ac;
   --rule:rgba(232,228,220,0.07);
   --mono:'DM Mono',monospace;
   --serif:'Libre Baskerville',Georgia,serif;
@@ -71,6 +73,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 .coll-aic::before{background:var(--aic-coral)}
 .coll-cma::before{background:var(--cma-green)}
 .coll-rijks::before{background:var(--rijks-blue)}
+.coll-eu::before{background:var(--eu-blue)}
+.coll-akl::before{background:var(--akl-mint)}
 .hero-status{position:relative;z-index:20;width:280px;flex-shrink:0;padding:14px 16px;border:1px solid rgba(200,169,110,0.12);background:rgba(8,8,8,0.56);backdrop-filter:blur(8px);align-self:flex-end}
 .hero-status p{font-family:var(--mono);font-size:9px;line-height:1.75;letter-spacing:0.05em;color:rgba(232,228,220,0.5)}
 .hero-status strong{color:var(--gold);font-weight:400}
@@ -288,6 +292,8 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 .src-mv{color:var(--teal)}
 .src-met{color:var(--met-gold)}
 .src-va{color:var(--va-purple)}
+.src-eu{color:var(--eu-blue)}
+.src-akl{color:var(--akl-mint)}
 
 /* OBJECT DETAIL MODAL */
 .obj-modal{display:none;position:fixed;inset:0;z-index:500;background:rgba(8,8,8,0.92);backdrop-filter:blur(12px);overflow-y:auto}
@@ -495,12 +501,14 @@ footer a:hover{color:var(--fg)}
       <span class="coll coll-aic">Art Institute of Chicago</span>
       <span class="coll coll-cma">Cleveland Museum of Art</span>
       <span class="coll coll-rijks">Rijksmuseum</span>
+      <span class="coll coll-eu">Europeana</span>
+      <span class="coll coll-akl">Auckland Museum</span>
     </div>
   </div>
   <div class="hero-status" id="statusPanel">
     <p><span class="status-dot status-off" id="statusDot"></span> <strong>Backend:</strong> <span id="statusText">Checking...</span></p>
     <p style="margin-top:6px"><strong>Mode:</strong> <span id="modeText">—</span></p>
-    <p style="margin-top:6px"><strong>Build:</strong> <span id="buildText">v10.9</span></p>
+    <p style="margin-top:6px"><strong>Build:</strong> <span id="buildText">v11.0</span></p>
   </div>
 </div>
 
@@ -512,10 +520,10 @@ footer a:hover{color:var(--fg)}
       <div class="search-wrap rv">
         <div class="ci-intro" style="margin-bottom:18px">
           <h3>Search first, then ask ARCHAI what the results suggest</h3>
-          <p>Start with a material, place, period, or theme. ARCHAI returns image-backed objects, then offers a curatorial reading grounded in the collection records.</p>
+          <p>Start with a material, place, period, or theme. ARCHAI returns image-backed objects from the live collection stack, then offers a curatorial reading grounded in the source records.</p>
         </div>
         <div class="search-box">
-          <input type="text" id="searchInput" placeholder="Search 815 objects across six museums..." autocomplete="off">
+          <input type="text" id="searchInput" placeholder="Search 1085 objects across eight live collections..." autocomplete="off">
           <button id="searchBtn">Search</button>
         </div>
         <div class="search-chips">
@@ -525,6 +533,8 @@ footer a:hover{color:var(--fg)}
           <button onclick="doSearch('gold and silver jewellery')">Jewellery</button>
           <button onclick="doSearch('sculpture bronze stone figure')">Sculpture</button>
           <button onclick="doSearch('textile and fabric')">Textiles</button>
+          <button onclick="doSearch('photography documentary image print')">Photography</button>
+          <button onclick="doSearch('technology communication device broadcast screen instrument')">Technology</button>
         </div>
         <div class="search-info" id="searchInfo"></div>
       </div>
@@ -587,7 +597,7 @@ footer a:hover{color:var(--fg)}
         </div>
         <div class="shot" onclick="openLightbox(this)">
           <div class="shot-media">
-            <img src="assets/screenshots/archai/archai-curator-object-chat-a-fifth-on-a-maze-v10-6.png?v=20260529c" alt="ARCHAI Object Chat — Live Llama Response" loading="lazy" onerror="websiteShotImageError(this)">
+            <img src="assets/screenshots/archai/archai-curator-object-chat-a-fifth-on-a-maze-v10-6.png?v=20260529c" alt="ARCHAI Object Chat — Live AI Response" loading="lazy" onerror="websiteShotImageError(this)">
             <div class="shot-placeholder">Screenshot updating</div>
           </div>
           <div class="shot-cap">Object Chat — Live AI Response</div>
@@ -668,7 +678,8 @@ const COLLECTION_META = {
   archai_aic: { short: 'AIC', className: 'src-met', institution: 'Art Institute of Chicago' },
   archai_cma: { short: 'CMA', className: 'src-met', institution: 'Cleveland Museum of Art' },
   archai_rijks: { short: 'Rijks', className: 'src-va', institution: 'Rijksmuseum' },
-  archai_europeana: { short: 'Europeana', className: 'src-va', institution: 'Europeana' }
+  archai_europeana: { short: 'EU', className: 'src-eu', institution: 'Europeana' },
+  archai_auckland: { short: 'AKL', className: 'src-akl', institution: 'Auckland Museum' }
 };
 
 function getCollectionMeta(col) {
@@ -694,11 +705,12 @@ async function discoverBackend() {
     try {
       const r = await fetchWithTimeout(url + '/api/health', 3000);
       if (r.ok) {
+        const health = await r.json();
         API_BASE = url;
         backendLive = true;
         document.getElementById('statusDot').className = 'status-dot status-live';
         document.getElementById('statusText').textContent = 'Connected';
-        document.getElementById('modeText').textContent = 'Full AI (search + chat)';
+        applyLiveStats(health);
         console.log('ARCHAI backend:', url);
         return;
       }
@@ -708,6 +720,26 @@ async function discoverBackend() {
   document.getElementById('statusText').textContent = 'Offline';
   document.getElementById('modeText').textContent = 'Static browsing only';
   console.log('ARCHAI: no backend found, static mode');
+}
+
+function applyLiveStats(health) {
+  const liveCounts = health?.integrations?.qdrant?.liveCounts || {};
+  const sourceCollections = Object.keys(liveCounts).filter(key => key !== 'archai_curator');
+  const objectCount = health?.counts?.collectionObjects || 1085;
+  const collectionCount = sourceCollections.length || 8;
+  const searchInput = document.getElementById('searchInput');
+  const searchInfo = document.getElementById('searchInfo');
+  const modeText = document.getElementById('modeText');
+
+  if (searchInput) {
+    searchInput.placeholder = `Search ${objectCount} objects across ${collectionCount} live collections...`;
+  }
+  if (searchInfo) {
+    searchInfo.textContent = `${objectCount} live objects across ${collectionCount} collections`;
+  }
+  if (modeText) {
+    modeText.textContent = `Full AI · ${collectionCount} collections live`;
+  }
 }
 
 // ── Proxy fetch helpers ─────────────────────────────────────────

@@ -2,6 +2,15 @@
 
 Static site for `fineartmedia.tech`.
 
+## ARCHAI wrapper
+
+`/archai.html` is the public-facing ARCHAI wrapper and demo surface. It should stay aligned with the main ARCHAI app repository for:
+
+- active build/version messaging
+- live object and collection counts
+- current participating institutions
+- AUX.IO visitor-path language
+
 ## Research & development status
 
 The projects presented on this site are active research and development systems: working prototypes, public demos, and open-source tools developed through FAMTEC and Rob Graham's doctoral research at RMIT University.
