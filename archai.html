@@ -380,6 +380,9 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 .about-grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:72px;align-items:start}
 .about-text p{font-size:15px;line-height:1.8;color:rgba(232,228,220,0.7);margin-bottom:16px}
 .about-text em{color:var(--gold);font-style:italic}
+.rights-note{margin-top:26px;padding:18px 20px;border:1px solid rgba(200,169,110,0.14);background:rgba(200,169,110,0.04)}
+.rights-note h4{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.rights-note p{margin:0;font-family:var(--sans);font-size:14px;line-height:1.7;color:rgba(232,228,220,0.66)}
 .tech-list{list-style:none}
 .tech-list li{font-family:var(--mono);font-size:10px;line-height:2.2;color:rgba(232,228,220,0.45);display:flex;align-items:center;gap:8px}
 .tech-list li::before{content:'→';color:var(--gold);font-size:8px}
@@ -506,6 +509,8 @@ footer a:hover{color:var(--fg)}
       <span class="coll coll-eu">Europeana</span>
       <span class="coll coll-akl">Auckland Museum</span>
       <span class="coll coll-akl">Te Papa Tongarewa</span>
+      <span class="coll coll-met">M+, Hong Kong</span>
+      <span class="coll coll-aic">Brasiliana Museus</span>
     </div>
   </div>
   <div class="hero-status" id="statusPanel">
@@ -526,7 +531,7 @@ footer a:hover{color:var(--fg)}
           <p>Start with a material, place, period, or theme. ARCHAI returns image-backed objects from the live collection stack, then reads connections, patterns, and curatorial possibilities directly from the source records.</p>
         </div>
         <div class="search-box">
-          <input type="text" id="searchInput" placeholder="Search 1205 objects across nine live collections..." autocomplete="off">
+          <input type="text" id="searchInput" placeholder="Search 1400+ objects across eleven live collections..." autocomplete="off">
           <button id="searchBtn">Search</button>
         </div>
         <div class="search-chips">
@@ -557,11 +562,15 @@ footer a:hover{color:var(--fg)}
           <p>The data format powering each conversation is <em>Obtext</em> (Object Context) — a structured record containing identity, physical properties, temporal context, significance, and crucially, constraints — what the object explicitly does not know.</p>
           <p>ARCHAI remains an active research prototype. FAMTEC is open to funded research partnerships, institutional pilots, accessibility testing, collection-data collaborations, development support, and evaluation with museum, gallery, archive, and university teams.</p>
           <p>Developed as part of doctoral research at RMIT University, School of Design. Presented at ISEA2026 Dubai and the 6th Summit on New Media Art Archiving.</p>
+          <div class="rights-note">
+            <h4>Sources &amp; Rights</h4>
+            <p>ARCHAI demonstrates collection material sourced from public museum records, open metadata, or institution-supplied media with item-level rights preserved. Open-access objects remain marked as such, mixed-rights records retain their source attribution and licence context, and all institutional names, trademarks, and collection records remain the property of their respective owners.</p>
+          </div>
         </div>
         <div class="rv">
           <ul class="tech-list">
             <li>Qdrant vector database (on-premises)</li>
-            <li>Ollama LLM inference (Qwen 2.5 32B)</li>
+            <li>Ollama local inference (Qwen 2.5 stack)</li>
             <li>nomic-embed-text embeddings (768-dim)</li>
             <li>AUX.IO universal access interface</li>
             <li>Accessibility layer with TTS/STT in development</li>
@@ -660,6 +669,7 @@ footer a:hover{color:var(--fg)}
 <footer>
   <p>ARCHAI &copy; 2026 Rob Graham / <a href="/">FAMTEC</a> — All rights reserved</p>
   <p>Research prototype · open to funded pilots and testing partners · <a href="https://github.com/rob-e-graham/archai" target="_blank">GitHub</a></p>
+  <p>Collection material is shown from public records, open metadata, or source-authorised media with item-level rights preserved.</p>
 </footer>
 
 <script>
@@ -729,8 +739,8 @@ async function discoverBackend() {
 function applyLiveStats(health) {
   const liveCounts = health?.integrations?.qdrant?.liveCounts || {};
   const sourceCollections = Object.keys(liveCounts).filter(key => key !== 'archai_curator');
-  const objectCount = health?.counts?.collectionObjects || 1205;
-  const collectionCount = sourceCollections.length || 9;
+  const objectCount = health?.counts?.collectionObjects || 1445;
+  const collectionCount = sourceCollections.length || 11;
   const searchInput = document.getElementById('searchInput');
   const searchInfo = document.getElementById('searchInfo');
   const modeText = document.getElementById('modeText');
