@@ -805,12 +805,12 @@ const CURATOR_LENSES = {
     placeholder: 'Ask how these works could be grouped, displayed, sequenced, or interpreted in a gallery...',
     instruction: 'Respond in an exhibition-planning register grounded in the collection records. Focus on grouping, display logic, narrative flow, spatial relationships, and visitor movement.'
   },
-  visitor: {
-    label: 'Visitor Guide',
-    note: 'Keeps the answer clear, public-facing, and useful for interpretation or guided conversation.',
-    starter: 'Visitor lens selected. Ask for a clear public-facing reading of the result set in accessible language.',
-    placeholder: 'Ask for a clear public-facing summary, talking points, or visitor-friendly interpretation...',
-    instruction: 'Respond in a visitor-facing museum register grounded in the collection records. Use clear language and focus on interpretation, access, and memorable points.'
+  interpretation: {
+    label: 'Interpretation',
+    note: 'Keeps the answer clear, public-facing, and useful for labels, tours, or interpretive writing.',
+    starter: 'Interpretation lens selected. Ask for a clear public-facing reading of the result set in accessible museum language.',
+    placeholder: 'Ask for interpretive text, public-facing summaries, or clear museum talking points...',
+    instruction: 'Respond in a museum-interpretation register grounded in the collection records. Use clear language and focus on interpretation, access, and memorable points.'
   }
 };
 
@@ -1110,42 +1110,46 @@ async function askCollection(question) {
 // ── Object detail ───────────────────────────────────────────────
 let chatHistory = [];
 let currentPayload = null;
-let chatTone = 'factual';
+let chatTone = 'curatorial';
 
 const CHAT_TONES = {
-  factual: {
-    label: 'Factual Friend',
-    note: 'Warm, clear, and grounded in the record.',
+  curatorial: {
+    label: 'Curatorial',
+    note: 'Focuses on significance, themes, and relationships around the object.',
   },
-  third: {
-    label: 'Third Person',
-    note: 'Reads like a museum guide speaking about the object.',
+  collections: {
+    label: 'Collections',
+    note: 'Focuses on materials, provenance, record clarity, and collection detail.',
   },
-  era: {
-    label: 'Voice of its Era',
-    note: 'Lets the object speak with a light historical flavour, without drifting from the record.',
+  exhibition: {
+    label: 'Exhibition',
+    note: 'Focuses on display logic, grouping, interpretation devices, and gallery context.',
+  },
+  interpretation: {
+    label: 'Interpretation',
+    note: 'Keeps the reading clear, accessible, and useful for public-facing museum communication.',
   }
 };
 
 function renderToneControls() {
   return '<div class="chat-tone-wrap">' +
     '<div class="chat-tone-label">Response tone</div>' +
-    '<div class="chat-tone-buttons">' +
+    '<div class="chat-tone-buttons" id="objectToneButtons">' +
       Object.entries(CHAT_TONES).map(([key, meta]) =>
         '<button class="' + (chatTone === key ? 'active' : '') + '" onclick="setChatTone(\'' + key + '\')">' + meta.label + '</button>'
       ).join('') +
     '</div>' +
-    '<div class="chat-tone-note" id="chatToneNote">' + CHAT_TONES[chatTone].note + '</div>' +
+    '<div class="chat-tone-note" id="objectToneNote">' + CHAT_TONES[chatTone].note + '</div>' +
   '</div>';
 }
 
 function updateToneControls() {
-  const toneButtons = document.querySelectorAll('.chat-tone-buttons button');
+  const toneButtons = document.querySelectorAll('#objectToneButtons button');
   toneButtons.forEach((btn, index) => {
     const toneKey = Object.keys(CHAT_TONES)[index];
     btn.classList.toggle('active', toneKey === chatTone);
   });
-  const toneNote = document.getElementById('chatToneNote');
+  const toneNote = document.getElementById('objectToneNote');
   if (toneNote) toneNote.textContent = CHAT_TONES[chatTone].note;
 }
 
@@ -1165,9 +1169,10 @@ function buildSystemPrompt(payload) {
     .join('\n');
 
   const toneInstruction = {
-    factual: 'Speak in first person as the object, but keep the tone clear, friendly, and factual. Use plain contemporary language. Do not invent emotions, experiences, or facts beyond the record.',
-    third: 'Speak in third person as a knowledgeable museum guide describing the object. Do not roleplay as the object itself. Keep the answer accessible, factual, and concise.',
-    era: 'Speak in first person as the object and allow a light sense of historical or period voice when appropriate, but stay understandable to a modern visitor. Do not become theatrical or invent details beyond the record.'
+    curatorial: 'Respond in a curatorial register about the object. Focus on significance, interpretation, themes, and relationships to broader collection or art-historical contexts. Do not roleplay as the object.',
+    collections: 'Respond in a collections-management register about the object. Focus on materials, provenance, object type, record clarity, metadata gaps, and collection detail. Do not roleplay as the object.',
+    exhibition: 'Respond in an exhibition-planning register about the object. Focus on display logic, grouping, visitor encounter, interpretive devices, and gallery context. Do not roleplay as the object.',
+    interpretation: 'Respond in a museum-interpretation register about the object. Use clear public-facing language while staying grounded in the record. Focus on accessible explanation, label-style clarity, and memorable points. Do not roleplay as the object.'
   }[chatTone];
 
   return 'You are interpreting "' + title + '", a museum object at ' + institution + '. ' +
@@ -1239,6 +1244,7 @@ function openObject(payloadStr) {
   const p = JSON.parse(payloadStr);
   currentPayload = p;
   chatHistory = [];
+  if (CHAT_TONES[curatorLens]) chatTone = curatorLens;
 
   const title = p.title || p.object_name || 'Untitled';
   const maker = p.maker || p.artist || p.creator || '';
@@ -1271,17 +1277,17 @@ function openObject(payloadStr) {
   // Chat section
   if (backendLive) {
     html += '<div class="chat-section">';
-    html += '<div class="chat-label">Talk to this object</div>';
+    html += '<div class="chat-label">Review this object</div>';
     html += renderToneControls();
     html += '<div class="chat-chips">';
-    html += '<button onclick="askObject(\'What are you?\')">What are you?</button>';
-    html += '<button onclick="askObject(\'When were you made?\')">When were you made?</button>';
-    html += '<button onclick="askObject(\'What are you made of?\')">What are you made of?</button>';
-    html += '<button onclick="askObject(\'Tell me about your history\')">Your history</button>';
+    html += '<button onclick="askObject(\'What stands out in the collection record for this object?\')">Collection record</button>';
+    html += '<button onclick="askObject(\'What can you tell me about the materials, making, or physical characteristics of this object?\')">Materials &amp; making</button>';
+    html += '<button onclick="askObject(\'What seems curatorially significant about this object?\')">Curatorial significance</button>';
+    html += '<button onclick="askObject(\'How might this object be interpreted or positioned in an exhibition?\')">Exhibition context</button>';
     html += '</div>';
     html += '<div class="chat-messages" id="chatMessages"></div>';
     html += '<div class="chat-input-row">';
-    html += '<input type="text" id="chatInput" placeholder="Ask me anything..." onkeydown="if(event.key===\'Enter\')askObject(this.value)">';
+    html += '<input type="text" id="chatInput" placeholder="Ask about record detail, materials, significance, or exhibition context..." onkeydown="if(event.key===\'Enter\')askObject(this.value)">';
     html += '<button onclick="askObject(document.getElementById(\'chatInput\').value)">Ask</button>';
     html += '</div>';
     html += '</div>';
