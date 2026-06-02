@@ -541,14 +541,14 @@ footer a:hover{color:var(--fg)}
           <button id="searchBtn">Search</button>
         </div>
         <div class="search-chips">
-          <button onclick="doSearch('ceramics and pottery')">Ceramics</button>
-          <button onclick="doSearch('ancient Greece classical antiquity')">Ancient worlds</button>
-          <button onclick="doSearch('painting landscape portrait')">Paintings</button>
-          <button onclick="doSearch('gold and silver jewellery')">Jewellery</button>
-          <button onclick="doSearch('sculpture bronze stone figure')">Sculpture</button>
-          <button onclick="doSearch('textile and fabric')">Textiles</button>
-          <button onclick="doSearch('photography documentary image print')">Photography</button>
-          <button onclick="doSearch('technology communication device broadcast screen instrument')">Technology</button>
+          <button onclick="doSearch('ceramics vessel bowl plate porcelain earthenware')">Ceramics</button>
+          <button onclick="doSearch('ancient world classical antiquity ritual object archaeology')">Ancient worlds</button>
+          <button onclick="doSearch('painting portrait landscape icon canvas panel')">Paintings</button>
+          <button onclick="doSearch('jewellery ornament gold silver bead adornment')">Jewellery</button>
+          <button onclick="doSearch('sculpture carved figure bronze stone wood')">Sculpture</button>
+          <button onclick="doSearch('textiles weaving embroidery cloth garment costume tapa')">Textiles</button>
+          <button onclick="doSearch('photography photograph print documentary portrait')">Photography</button>
+          <button onclick="doSearch('technology communication media machine radio television instrument')">Technology</button>
         </div>
         <div class="search-info" id="searchInfo"></div>
       </div>
@@ -834,8 +834,10 @@ async function proxyCuratorConverse(message, history = []) {
 const searchPayloads = [];
 let latestSearchQuery = '';
 let latestSearchResults = [];
+let latestSearchWasCapped = false;
 let curatorHistory = [];
 let curatorLens = 'curatorial';
+const CURATOR_SEARCH_LIMIT = 50;
 
 const CURATOR_LENSES = {
   curatorial: {
@@ -1078,11 +1080,18 @@ function refreshVisibleResultSummary() {
   if (!area || !info) return;
   const cards = Array.from(area.querySelectorAll('.result-card'));
   const visibleCards = cards.length;
-  info.textContent = visibleCards ? visibleCards + ' image-ready objects found' : '0 image-ready results';
+  info.textContent = !visibleCards
+    ? '0 image-ready results'
+    : latestSearchWasCapped
+      ? 'Showing top ' + visibleCards + ' image-ready matches'
+      : visibleCards + ' image-ready objects found';
   const previewMeta = area.querySelector('.curator-preview-head p');
   if (previewMeta && latestSearchQuery && visibleCards) {
     const visibleCollections = new Set(cards.map(card => card.querySelector('.rc-source')?.textContent?.trim()).filter(Boolean)).size;
-    previewMeta.innerHTML = 'Showing ' + visibleCards + ' objects across ' + visibleCollections + ' collections for <strong style="color:var(--fg)">' + esc(latestSearchQuery) + '</strong>';
+    const resultLead = latestSearchWasCapped
+      ? 'Showing the top ' + visibleCards + ' ranked objects'
+      : 'Showing ' + visibleCards + ' objects';
+    previewMeta.innerHTML = resultLead + ' across ' + visibleCollections + ' collections for <strong style="color:var(--fg)">' + esc(latestSearchQuery) + '</strong>';
   }
   if (!visibleCards && !area.querySelector('.no-results')) {
     area.innerHTML = '<div class="no-results">No image-ready objects found. Try different terms.</div>';
@@ -1173,12 +1182,15 @@ function renderCuratorPreview() {
   if (!backendLive || !latestSearchQuery || !latestSearchResults.length) return '';
   const uniqueCollections = new Set(latestSearchResults.map((p) => p._source_collection).filter(Boolean)).size;
   const lensMeta = getCurrentCuratorLensMeta();
+  const resultLead = latestSearchWasCapped
+    ? 'Showing the top ' + latestSearchResults.length + ' ranked objects'
+    : 'Showing ' + latestSearchResults.length + ' objects';
   return '<div class="curator-preview">' +
     '<div class="curator-preview-head">' +
       '<div>' +
         '<div class="chat-label">Talk to this collection</div>' +
         '<h3>Ask ARCHAI to interpret these results</h3>' +
-        '<p>Showing ' + latestSearchResults.length + ' objects across ' + uniqueCollections + ' collections for <strong style="color:var(--fg)">' + esc(latestSearchQuery) + '</strong></p>' +
+        '<p>' + resultLead + ' across ' + uniqueCollections + ' collections for <strong style="color:var(--fg)">' + esc(latestSearchQuery) + '</strong></p>' +
       '</div>' +
     '</div>' +
     '<div class="chat-tone-wrap">' +
@@ -1267,9 +1279,10 @@ async function doSearch(query) {
   document.getElementById('searchInfo').textContent = 'Searching...';
 
   try {
-    const results = await proxyCuratorSearch(query, 36);
+    const results = await proxyCuratorSearch(query, CURATOR_SEARCH_LIMIT);
     const uniqueImageResults = [];
     const seen = new Set();
+    latestSearchWasCapped = results.length >= CURATOR_SEARCH_LIMIT;
 
     for (const r of results) {
       const p = r.payload || {};
@@ -1288,13 +1301,16 @@ async function doSearch(query) {
     if (!uniqueImageResults.length) {
       latestSearchQuery = query;
       latestSearchResults = [];
+      latestSearchWasCapped = false;
       curatorHistory = [];
       document.getElementById('resultsArea').innerHTML = '<div class="no-results">No image-ready objects found. Try different terms.</div>';
       document.getElementById('searchInfo').textContent = '0 image-ready results';
       return;
     }
 
-    document.getElementById('searchInfo').textContent = uniqueImageResults.length + ' image-ready objects found';
+    document.getElementById('searchInfo').textContent = latestSearchWasCapped
+      ? 'Showing top ' + uniqueImageResults.length + ' image-ready matches'
+      : uniqueImageResults.length + ' image-ready objects found';
     searchPayloads.length = 0;
     latestSearchQuery = query;
     latestSearchResults = uniqueImageResults.map((r) => r.payload || {});
@@ -1306,6 +1322,7 @@ async function doSearch(query) {
     document.getElementById('resultsArea').innerHTML = html;
   } catch (e) {
     latestSearchResults = [];
+    latestSearchWasCapped = false;
     document.getElementById('resultsArea').innerHTML = '<div class="no-results">Search failed — check backend connection</div>';
     document.getElementById('searchInfo').textContent = 'Error';
   }
