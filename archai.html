@@ -505,12 +505,13 @@ footer a:hover{color:var(--fg)}
       <span class="coll coll-rijks">Rijksmuseum</span>
       <span class="coll coll-eu">Europeana</span>
       <span class="coll coll-akl">Auckland Museum</span>
+      <span class="coll coll-akl">Te Papa Tongarewa</span>
     </div>
   </div>
   <div class="hero-status" id="statusPanel">
     <p><span class="status-dot status-off" id="statusDot"></span> <strong>Backend:</strong> <span id="statusText">Checking...</span></p>
     <p style="margin-top:6px"><strong>Mode:</strong> <span id="modeText">—</span></p>
-    <p style="margin-top:6px"><strong>Build:</strong> <span id="buildText">v11.0</span></p>
+    <p style="margin-top:6px"><strong>Build:</strong> <span id="buildText">v11.1</span></p>
   </div>
 </div>
 
@@ -525,7 +526,7 @@ footer a:hover{color:var(--fg)}
           <p>Start with a material, place, period, or theme. ARCHAI returns image-backed objects from the live collection stack, then reads connections, patterns, and curatorial possibilities directly from the source records.</p>
         </div>
         <div class="search-box">
-          <input type="text" id="searchInput" placeholder="Search 1085 objects across eight live collections..." autocomplete="off">
+          <input type="text" id="searchInput" placeholder="Search 1205 objects across nine live collections..." autocomplete="off">
           <button id="searchBtn">Search</button>
         </div>
         <div class="search-chips">
@@ -681,7 +682,8 @@ const COLLECTION_META = {
   archai_cma: { short: 'CMA', className: 'src-met', institution: 'Cleveland Museum of Art' },
   archai_rijks: { short: 'Rijks', className: 'src-va', institution: 'Rijksmuseum' },
   archai_europeana: { short: 'EU', className: 'src-eu', institution: 'Europeana' },
-  archai_auckland: { short: 'AKL', className: 'src-akl', institution: 'Auckland Museum' }
+  archai_auckland: { short: 'AKL', className: 'src-akl', institution: 'Auckland Museum' },
+  archai_tepapa: { short: 'TP', className: 'src-akl', institution: 'Te Papa Tongarewa' }
 };
 
 function getCollectionMeta(col) {
@@ -727,8 +729,8 @@ async function discoverBackend() {
 function applyLiveStats(health) {
   const liveCounts = health?.integrations?.qdrant?.liveCounts || {};
   const sourceCollections = Object.keys(liveCounts).filter(key => key !== 'archai_curator');
-  const objectCount = health?.counts?.collectionObjects || 1085;
-  const collectionCount = sourceCollections.length || 8;
+  const objectCount = health?.counts?.collectionObjects || 1205;
+  const collectionCount = sourceCollections.length || 9;
   const searchInput = document.getElementById('searchInput');
   const searchInfo = document.getElementById('searchInfo');
   const modeText = document.getElementById('modeText');

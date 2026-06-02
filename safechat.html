@@ -111,6 +111,21 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 .demo-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
 .demo-chips button{padding:4px 10px;border:1px solid rgba(232,228,220,0.06);background:transparent;color:var(--dim);font-family:var(--mono);font-size:8px;cursor:pointer;transition:all 0.2s}
 .demo-chips button:hover{border-color:var(--teal);color:var(--teal)}
+.demo-result .demo-hint{display:block;margin-top:8px;color:rgba(232,228,220,0.32);font-size:9px}
+
+/* PHONE PWA POPUP OVERLAY */
+.pwa-overlay{position:fixed;inset:0;z-index:700;display:none;align-items:center;justify-content:center;background:rgba(8,8,8,0.86);backdrop-filter:blur(10px);padding:24px;opacity:0;transition:opacity 0.3s}
+.pwa-overlay.open{display:flex;opacity:1}
+.pwa-stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:18px}
+.pwa-caption{font-family:var(--mono);font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--teal);text-align:center}
+.pwa-phone{position:relative;width:330px;max-width:86vw;height:680px;max-height:78vh;background:#000;border-radius:42px;padding:12px;box-shadow:0 0 0 2px rgba(95,180,162,0.25),0 30px 80px rgba(0,0,0,0.7);transform:translateY(16px) scale(0.98);transition:transform 0.35s cubic-bezier(0.16,1,0.3,1)}
+.pwa-overlay.open .pwa-phone{transform:translateY(0) scale(1)}
+.pwa-notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:120px;height:26px;background:#000;border-radius:0 0 16px 16px;z-index:2}
+.pwa-screen{width:100%;height:100%;border-radius:32px;overflow:hidden;background:#0b0b0b}
+.pwa-screen iframe{width:100%;height:100%;border:0;display:block}
+.pwa-close{position:absolute;top:-14px;right:-14px;z-index:3;width:36px;height:36px;border-radius:50%;background:#111;border:1px solid rgba(232,228,220,0.18);color:var(--fg);font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.pwa-close:hover{border-color:var(--teal);color:var(--teal)}
+@media(max-width:520px){.pwa-phone{width:300px;height:620px;border-radius:36px}}
 
 /* COVERAGE TABLE */
 .coverage-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
@@ -538,13 +553,45 @@ function runDemo() {
 
   const level = detect(input);
   const labels = {
-    high: '<span class="badge badge-high">HIGH</span> Crisis signal detected. In a live system, this would trigger immediate helpline resources.',
-    low: '<span class="badge badge-low">LOW</span> Distress signal detected. In a live system, helpline links would be embedded in the response.',
+    high: '<span class="badge badge-high">HIGH</span> Crisis signal detected — opening live support.<span class="demo-hint">This is the real PWA an end user receives. No data left the page.</span>',
+    low: '<span class="badge badge-low">LOW</span> Distress signal detected. In a live system, helpline links would be embedded in the response.<span class="demo-hint">Tap “Show support resources” to preview the full popup.</span>',
     none: '<span class="badge badge-none">NONE</span> No crisis signal detected. Normal conversation continues.'
   };
   result.innerHTML = labels[level];
+  if (level === 'low') {
+    result.innerHTML += '<div style="margin-top:12px"><button onclick="openPwaPopup()" style="padding:8px 14px;background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.3);color:#fbbf24;font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer">Show support resources</button></div>';
+  }
   result.classList.add('show');
+
+  if (level === 'high') {
+    setTimeout(openPwaPopup, 550);
+  }
 }
+
+// ── Live PWA popup ──────────────────────────────────────────────
+function openPwaPopup() {
+  const overlay = document.getElementById('pwaOverlay');
+  const frame = document.getElementById('pwaFrame');
+  if (!frame.dataset.loaded) {
+    frame.src = 'https://rob-e-graham.github.io/safechat/app/popup.html';
+    frame.dataset.loaded = '1';
+  }
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePwaPopup() {
+  document.getElementById('pwaOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('pwaClose').addEventListener('click', closePwaPopup);
+document.getElementById('pwaOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closePwaPopup();
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closePwaPopup();
+});
 
 document.getElementById('demoBtn').addEventListener('click', runDemo);
 document.getElementById('demoInput').addEventListener('keydown', function(e) {
@@ -557,6 +604,20 @@ const io = new IntersectionObserver(es => es.forEach((e, i) => {
 }), { threshold: 0.08 });
 document.querySelectorAll('.rv').forEach(el => io.observe(el));
 </script>
+
+<!-- PHONE PWA POPUP — triggered by crisis detection in the demo -->
+<div class="pwa-overlay" id="pwaOverlay" role="dialog" aria-modal="true" aria-label="SafeChat crisis support">
+  <div class="pwa-stage">
+    <div class="pwa-caption">This is what a user sees — live SafeChat PWA</div>
+    <div class="pwa-phone">
+      <div class="pwa-notch"></div>
+      <button class="pwa-close" id="pwaClose" aria-label="Close">&times;</button>
+      <div class="pwa-screen">
+        <iframe id="pwaFrame" title="SafeChat crisis support" loading="lazy" src="about:blank"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
