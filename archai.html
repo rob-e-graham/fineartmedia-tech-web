@@ -172,6 +172,47 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
   border-color:var(--gold);
   color:var(--gold);
 }
+.curator-role-wrap{
+  margin:16px 0 12px;
+}
+.curator-role-label{
+  font-family:var(--mono);
+  font-size:8px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--dim);
+  margin-bottom:8px;
+}
+.curator-role-buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.curator-role-buttons button{
+  padding:7px 12px;
+  border:1px solid rgba(232,228,220,0.08);
+  background:transparent;
+  color:var(--dim);
+  font-family:var(--mono);
+  font-size:8px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.curator-role-buttons button.active,
+.curator-role-buttons button:hover{
+  border-color:rgba(200,169,110,0.32);
+  color:var(--gold);
+  background:rgba(200,169,110,0.07);
+}
+.curator-role-note{
+  margin-top:8px;
+  font-family:var(--sans);
+  font-size:13px;
+  line-height:1.55;
+  color:rgba(232,228,220,0.62);
+}
 .curator-preview-messages{
   max-height:340px;
   overflow-y:auto;
@@ -535,7 +576,7 @@ footer a:hover{color:var(--fg)}
   <div class="hero-content">
     <div class="hero-tag">Sovereign Semantic Heritage AI</div>
     <h1 class="hero-title">ARCHAI</h1>
-    <p class="hero-subtitle">Objects that speak for themselves. Semantic search across museum collections, AI-grounded conversations with cultural heritage, and sovereign infrastructure that keeps institutional knowledge where it belongs.</p>
+    <p class="hero-subtitle">Objects that speak for themselves. Semantic search across museum collections, AI-grounded conversations with cultural heritage, maps and spatial awareness, and sovereign infrastructure that keeps institutional knowledge where it belongs.</p>
     <div class="hero-collections">
       <span class="coll coll-mv">Museums Victoria</span>
       <span class="coll coll-met">The Metropolitan Museum of Art</span>
@@ -587,8 +628,8 @@ footer a:hover{color:var(--fg)}
       <div class="sec-label rv">About ARCHAI</div>
       <div class="about-grid">
         <div class="about-text rv">
-          <p>ARCHAI is <em>sovereign AI infrastructure for cultural heritage</em> — a research toolkit that lets museums run their own semantic search, AI-grounded object conversations, and visitor engagement systems without cloud dependency or subscription costs.</p>
-          <p>Each object speaks in first person through <em>prosopopoeia</em>, grounded in verified institutional metadata with a five-layer hallucination prevention framework. Visitors interact via AUX.IO through NFC, QR, hyperlink, or Bluetooth beacon — and every AI response traces back to the collection record.</p>
+          <p>ARCHAI is <em>sovereign AI infrastructure for cultural heritage</em> — a research toolkit that lets museums run their own semantic search, AI-grounded object conversations, spatial interpretation, and visitor engagement systems without cloud dependency or subscription costs.</p>
+          <p>Each object speaks in first person through <em>prosopopoeia</em>, grounded in verified institutional metadata with a five-layer hallucination prevention framework. Visitors interact via AUX.IO through NFC, QR, hyperlink, Bluetooth beacon, map, or location-aware exhibition trigger — and every AI response traces back to the collection record.</p>
           <p>The data format powering each conversation is <em>Obtext</em> (Object Context) — a structured record containing identity, physical properties, temporal context, significance, and crucially, constraints — what the object explicitly does not know.</p>
           <p>Developed as part of doctoral research at RMIT University, School of Design. Presented at ISEA2026 Dubai and the 6th Summit on New Media Art Archiving.</p>
         </div>
@@ -598,6 +639,7 @@ footer a:hover{color:var(--fg)}
             <li>Ollama LLM inference (Qwen 2.5 32B)</li>
             <li>nomic-embed-text embeddings (768-dim)</li>
             <li>AUX.IO universal access interface</li>
+            <li>Maps and spatial interpretation layer</li>
             <li>Obtext structured data format</li>
             <li>Five-layer hallucination prevention</li>
             <li>AI-moderated visitor comments</li>
@@ -828,6 +870,30 @@ const searchPayloads = [];
 let latestSearchQuery = '';
 let latestSearchResults = [];
 let curatorHistory = [];
+let curatorRole = 'curator';
+
+const CURATOR_ROLES = {
+  curator: {
+    label: 'Curator',
+    note: 'Highlights themes, interpretation, comparisons, and curatorial framing.',
+    instruction: 'Respond like a supportive curator. Focus on interpretation, themes, historical connections, and why the grouping matters.'
+  },
+  collections: {
+    label: 'Collections',
+    note: 'Prioritises registration, provenance, object type, and collection-record usefulness.',
+    instruction: 'Respond like a collections staff member. Prioritise record clarity, provenance, registration context, materials, object type, and collection distinctions.'
+  },
+  av: {
+    label: 'AV',
+    note: 'Looks for display, media, movement, and spatial or installation potential.',
+    instruction: 'Respond like an audiovisual or exhibition technician. Focus on display context, visitor flow, media potential, spatial awareness, and installation relevance where the record supports it.'
+  },
+  volunteer: {
+    label: 'Volunteer',
+    note: 'Keeps the reading clear, welcoming, and useful for public-facing conversations.',
+    instruction: 'Respond like a well-briefed volunteer guide. Use clear visitor-friendly language, emphasise memorable facts, and avoid jargon.'
+  }
+};
 
 function esc(str) {
   const d = document.createElement('div');
@@ -928,19 +994,28 @@ function renderCuratorPreview() {
       '<div>' +
         '<div class="curator-preview-title">Curatorial View</div>' +
         '<h3>Review these results with ARCHAI</h3>' +
-        '<p>You searched for <strong style="color:var(--fg)">' + esc(latestSearchQuery) + '</strong>. Ask ARCHAI what patterns, materials, or historical connections emerge across these objects.</p>' +
+        '<p>You searched for <strong style="color:var(--fg)">' + esc(latestSearchQuery) + '</strong>. Choose a museum role, then ask ARCHAI what patterns, materials, spatial relationships, or historical connections emerge across these objects.</p>' +
       '</div>' +
       '<div class="curator-preview-meta"><strong>' + latestSearchResults.length + ' objects</strong>' + uniqueCollections + ' collections in view</div>' +
+    '</div>' +
+    '<div class="curator-role-wrap">' +
+      '<div class="curator-role-label">Role Lens</div>' +
+      '<div class="curator-role-buttons">' +
+        Object.entries(CURATOR_ROLES).map(([key, meta]) =>
+          '<button class="' + (curatorRole === key ? 'active' : '') + '" onclick="setCuratorRole(\'' + key + '\')">' + meta.label + '</button>'
+        ).join('') +
+      '</div>' +
+      '<div class="curator-role-note" id="curatorRoleNote">' + CURATOR_ROLES[curatorRole].note + '</div>' +
     '</div>' +
     '<div class="curator-preview-chips">' +
       '<button onclick="askCollection(\'What patterns connect these results?\')">Connections</button>' +
       '<button onclick="askCollection(\'What might a curator notice first?\')">Curatorial note</button>' +
       '<button onclick="askCollection(\'Which collections stand out here?\')">Collections</button>' +
-      '<button onclick="askCollection(\'Where should I look next from this search?\')">Where next?</button>' +
+      '<button onclick="askCollection(\'How might these objects relate in a gallery or map-based visitor journey?\')">Spatial view</button>' +
     '</div>' +
     renderCuratorSources(initialPreviewObjects, 'Preview objects in this search') +
     '<div class="curator-preview-messages" id="curatorMessages">' +
-      '<div class="chat-msg assistant">ARCHAI can see these results. Ask what connections, materials, or curatorial themes emerge.</div>' +
+      '<div class="chat-msg assistant">ARCHAI can see these results. Ask what connections, materials, spatial relationships, or curatorial themes emerge.</div>' +
     '</div>' +
     '<div class="curator-preview-input">' +
       '<input type="text" id="curatorInput" placeholder="Ask ARCHAI about these results..." onkeydown="if(event.key===\'Enter\')askCollection(this.value)">' +
@@ -952,6 +1027,22 @@ function renderCuratorPreview() {
       '<a href="/aux.html">Open AUX.IO visitor view →</a>' +
     '</div>' +
   '</div>';
+}
+
+function updateCuratorRoleControls() {
+  const buttons = document.querySelectorAll('.curator-role-buttons button');
+  buttons.forEach((btn, index) => {
+    const roleKey = Object.keys(CURATOR_ROLES)[index];
+    btn.classList.toggle('active', roleKey === curatorRole);
+  });
+  const roleNote = document.getElementById('curatorRoleNote');
+  if (roleNote) roleNote.textContent = CURATOR_ROLES[curatorRole].note;
+}
+
+function setCuratorRole(role) {
+  if (!CURATOR_ROLES[role]) return;
+  curatorRole = role;
+  updateCuratorRoleControls();
 }
 
 function renderResultsGrid(results) {
@@ -1067,7 +1158,10 @@ async function askCollection(question) {
     if (lbl) lbl.textContent = thinkingPhrases[phraseIdx];
   }, 2200);
 
-  const contextualQuestion = 'The visitor searched for "' + latestSearchQuery + '". Respond to this follow-up in relation to that search: ' + question;
+  const contextualQuestion =
+    'The user is viewing results for "' + latestSearchQuery + '". ' +
+    CURATOR_ROLES[curatorRole].instruction + ' ' +
+    'Respond to this follow-up in relation to that search: ' + question;
 
   try {
     const reply = await proxyCuratorConverse(contextualQuestion, curatorHistory.slice(-6));
@@ -1085,7 +1179,7 @@ async function askCollection(question) {
     const pending = document.getElementById('pendingCuratorMsg');
     if (pending) {
       pending.id = '';
-      pending.innerHTML = 'ARCHAI could not interrogate the collection right now. Try the object cards below, or ask again in a moment.';
+      pending.innerHTML = 'ARCHAI could not review the collection right now. Try the object cards below, or ask again in a moment.';
     }
   }
 
