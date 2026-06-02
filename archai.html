@@ -414,6 +414,7 @@ footer a:hover{color:var(--fg)}
 
 .archai-link-panel{margin-top:28px;padding:18px 20px;border:1px solid rgba(200,169,110,0.16);background:rgba(200,169,110,0.04)}
 .archai-link-panel p{font-family:var(--sans);font-size:14px;line-height:1.7;color:rgba(232,228,220,0.6);margin:0 0 14px}
+.archai-link-actions{display:flex;flex-wrap:wrap;gap:10px}
 .archai-link-panel a{display:inline-block;padding:8px 16px;border:1px solid rgba(200,169,110,0.2);color:var(--gold);font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none}
 .archai-link-panel a:hover{color:var(--fg);border-color:var(--gold)}
 
@@ -499,6 +500,7 @@ footer a:hover{color:var(--fg)}
   <div class="hero-status" id="statusPanel">
     <p><span class="status-dot status-off" id="statusDot"></span> <strong>Backend:</strong> <span id="statusText">Checking...</span></p>
     <p style="margin-top:6px"><strong>Mode:</strong> <span id="modeText">—</span></p>
+    <p style="margin-top:6px"><strong>Build:</strong> <span id="buildText">v10.9</span></p>
   </div>
 </div>
 
@@ -964,6 +966,25 @@ function renderCuratorPreview() {
   '</div>';
 }
 
+function getAuxEntryUrl() {
+  if (window.location.protocol === 'file:') {
+    return new URL('aux.html', window.location.href).href;
+  }
+  if (window.location.hostname === 'fineartmedia.tech') {
+    return '/aux';
+  }
+  return '/aux.html';
+}
+
+function renderAuxLinkPanel() {
+  return '<div class="archai-link-panel">' +
+    '<p>Prefer the public-facing visitor path? AUX.IO is the lighter exhibition-facing layer for object conversations, accessibility, wayfinding, and mobile interpretation.</p>' +
+    '<div class="archai-link-actions">' +
+      '<a href="' + esc(getAuxEntryUrl()) + '" target="_blank" rel="noopener">Open AUX.IO Visitor View</a>' +
+    '</div>' +
+  '</div>';
+}
+
 function renderResultsGrid(results) {
   let html = '<div class="results-grid">';
   for (const r of results) {
@@ -1043,6 +1064,7 @@ async function doSearch(query) {
     curatorHistory = [];
 
     let html = renderCuratorPreview();
+    html += renderAuxLinkPanel();
     html += renderResultsGrid(uniqueImageResults);
     document.getElementById('resultsArea').innerHTML = html;
   } catch (e) {
