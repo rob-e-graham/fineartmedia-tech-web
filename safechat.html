@@ -445,6 +445,20 @@ footer a:hover{color:var(--fg)}
   <p>Helpline data: CC0 &middot; <a href="https://github.com/rob-e-graham/safechat" target="_blank">GitHub</a> &middot; <a href="mailto:rob@fineartmedia.tech">Contact</a></p>
 </footer>
 
+<!-- PHONE PWA POPUP — triggered by crisis detection in the demo -->
+<div class="pwa-overlay" id="pwaOverlay" role="dialog" aria-modal="true" aria-label="SafeChat crisis support">
+  <div class="pwa-stage">
+    <div class="pwa-caption">This is what a user sees — live SafeChat PWA</div>
+    <div class="pwa-phone">
+      <div class="pwa-notch"></div>
+      <button class="pwa-close" id="pwaClose" aria-label="Close">&times;</button>
+      <div class="pwa-screen">
+        <iframe id="pwaFrame" title="SafeChat crisis support" loading="lazy" src="about:blank"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── Lightbox ──────────────────────────────────────────────────
 function openLightbox(card) {
@@ -585,8 +599,10 @@ function closePwaPopup() {
   document.body.style.overflow = '';
 }
 
-document.getElementById('pwaClose').addEventListener('click', closePwaPopup);
-document.getElementById('pwaOverlay').addEventListener('click', function(e) {
+var pwaCloseEl = document.getElementById('pwaClose');
+if (pwaCloseEl) pwaCloseEl.addEventListener('click', closePwaPopup);
+var pwaOverlayEl = document.getElementById('pwaOverlay');
+if (pwaOverlayEl) pwaOverlayEl.addEventListener('click', function(e) {
   if (e.target === this) closePwaPopup();
 });
 document.addEventListener('keydown', function(e) {
@@ -604,20 +620,6 @@ const io = new IntersectionObserver(es => es.forEach((e, i) => {
 }), { threshold: 0.08 });
 document.querySelectorAll('.rv').forEach(el => io.observe(el));
 </script>
-
-<!-- PHONE PWA POPUP — triggered by crisis detection in the demo -->
-<div class="pwa-overlay" id="pwaOverlay" role="dialog" aria-modal="true" aria-label="SafeChat crisis support">
-  <div class="pwa-stage">
-    <div class="pwa-caption">This is what a user sees — live SafeChat PWA</div>
-    <div class="pwa-phone">
-      <div class="pwa-notch"></div>
-      <button class="pwa-close" id="pwaClose" aria-label="Close">&times;</button>
-      <div class="pwa-screen">
-        <iframe id="pwaFrame" title="SafeChat crisis support" loading="lazy" src="about:blank"></iframe>
-      </div>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>
