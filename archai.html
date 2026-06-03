@@ -67,6 +67,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 .hero-tag{font-family:var(--mono);font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;opacity:0;animation:fu 0.9s 0.5s forwards}
 .hero-title{font-size:clamp(48px,8vw,112px);font-weight:400;line-height:0.92;letter-spacing:-0.025em;opacity:0;animation:fu 1s 0.7s forwards}
 .hero-subtitle{margin-top:20px;font-family:var(--mono);font-size:11px;line-height:1.9;letter-spacing:0.04em;color:rgba(232,228,220,0.5);max-width:640px;opacity:0;animation:fu 1s 0.9s forwards}
+.hero-demo-note{margin-top:18px;max-width:760px;padding:12px 14px;border:1px solid rgba(200,169,110,0.14);background:rgba(200,169,110,0.05);font-family:var(--mono);font-size:9px;line-height:1.8;letter-spacing:0.05em;color:rgba(232,228,220,0.62);opacity:0;animation:fu 1s 1s forwards}
+.hero-demo-note strong{color:var(--gold);font-weight:400}
 .hero-collections{margin-top:28px;display:flex;flex-wrap:wrap;gap:10px 20px;opacity:0;animation:fu 1s 1.1s forwards}
 .hero-collections .coll{font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;display:flex;align-items:center;gap:6px}
 .hero-collections .coll::before{content:'';width:6px;height:6px;border-radius:50%}
@@ -505,6 +507,7 @@ footer a:hover{color:var(--fg)}
     <div class="hero-tag">Sovereign Semantic Heritage AI</div>
     <h1 class="hero-title">ARCHAI</h1>
     <p class="hero-subtitle">Objects that speak for themselves. Semantic search across museum collections, AI-grounded conversations with cultural heritage, maps and spatial awareness, and sovereign infrastructure that keeps institutional knowledge where it belongs.</p>
+    <p class="hero-demo-note"><strong>Public demo:</strong> this website shows a simplified ARCHAI interface for collection search, interpretation, and AUX.IO access. The full app includes additional curatorial, collections, exhibition, infrastructure, and publishing workflows not shown here.</p>
     <div class="hero-collections">
       <span class="coll coll-mv">Museums Victoria</span>
       <span class="coll coll-met">The Met, NYC</span>
@@ -521,7 +524,7 @@ footer a:hover{color:var(--fg)}
   </div>
   <div class="hero-status" id="statusPanel">
     <p><span class="status-dot status-off" id="statusDot"></span> <strong>Backend:</strong> <span id="statusText">Checking...</span></p>
-    <p style="margin-top:6px"><strong>Mode:</strong> <span id="modeText">—</span></p>
+    <p style="margin-top:6px"><strong>Mode:</strong> <span id="modeText">Public demo</span></p>
     <p style="margin-top:6px"><strong>Build:</strong> <span id="buildText">v11.1</span></p>
   </div>
 </div>
@@ -534,7 +537,7 @@ footer a:hover{color:var(--fg)}
       <div class="search-wrap rv">
         <div class="ci-intro" style="margin-bottom:18px">
           <h3>Search the collection, then ask ARCHAI what the results reveal</h3>
-          <p>Start with a material, place, period, or theme. ARCHAI returns image-backed objects from the live collection stack, then reads connections, patterns, and curatorial possibilities directly from the source records.</p>
+          <p>Start with a material, place, period, or theme. This public demo returns image-backed objects from the live collection stack, then reads connections, patterns, and curatorial possibilities directly from the source records.</p>
         </div>
         <div class="search-box">
           <input type="text" id="searchInput" placeholder="Search 1400+ objects across eleven live collections..." autocomplete="off">
@@ -566,7 +569,7 @@ footer a:hover{color:var(--fg)}
           <p>Each object speaks in first person through <em>prosopopoeia</em>, grounded in verified institutional metadata with a five-layer hallucination prevention framework. Visitors interact via AUX.IO through NFC, QR, hyperlink, Bluetooth beacon, map, or location-aware exhibition trigger — and every AI response traces back to the collection record.</p>
           <p>AUX.IO is also being developed as an accessibility layer for collections, with text-to-speech and speech-to-text pathways in progress so the interface can eventually speak and listen as well as display.</p>
           <p>The data format powering each conversation is <em>Obtext</em> (Object Context) — a structured record containing identity, physical properties, temporal context, significance, and crucially, constraints — what the object explicitly does not know.</p>
-          <p>ARCHAI remains an active research prototype. FAMTEC is open to funded research partnerships, institutional pilots, accessibility testing, collection-data collaborations, development support, and evaluation with museum, gallery, archive, and university teams.</p>
+          <p>ARCHAI remains an active research prototype. This website is a public-facing demo layer rather than the full operational app. FAMTEC is open to funded research partnerships, institutional pilots, accessibility testing, collection-data collaborations, development support, and evaluation with museum, gallery, archive, and university teams, and looks forward to collaborating, growing, learning, researching, and testing with partners across the wider GLAM sector.</p>
           <p>Developed as part of doctoral research at RMIT University, School of Design. Presented at ISEA2026 Dubai and the 6th Summit on New Media Art Archiving.</p>
           <div class="rights-note">
             <h4>Sources &amp; Rights</h4>
@@ -758,7 +761,7 @@ function applyLiveStats(health) {
     searchInfo.textContent = `${objectCount} live objects across ${collectionCount} collections`;
   }
   if (modeText) {
-    modeText.textContent = `Full AI · ${collectionCount} collections live`;
+    modeText.textContent = `Public demo · ${collectionCount} collections live`;
   }
 }
 
