@@ -709,6 +709,50 @@ function getCollectionMeta(col) {
   return COLLECTION_META[col] || COLLECTION_META.archai_pilot;
 }
 
+function getObjectRightsInfo(payload = {}) {
+  const licence = String(payload?.licence || '').trim();
+  const mediaRightsTitle = String(payload?.media_rights_title || '').trim();
+  const rightsMode = String(payload?.media_rights_mode || '').trim();
+  const rightsNotes = Array.isArray(payload?.rights_notes)
+    ? payload.rights_notes.filter(Boolean).join(' · ')
+    : String(payload?.rights_notes || '').trim();
+  const combined = [licence, mediaRightsTitle, rightsMode, rightsNotes].filter(Boolean).join(' · ');
+  const normalized = combined.toLowerCase();
+  const detailParts = [];
+  if (licence) detailParts.push(licence);
+  if (mediaRightsTitle && mediaRightsTitle !== licence) detailParts.push(mediaRightsTitle);
+  if (rightsMode === 'api_preview_only') detailParts.push('API preview only');
+  const detail = detailParts.join(' · ') || rightsNotes || 'Source rights not yet specified';
+
+  let status = 'Check source';
+  let guidance = 'Review the source record and item-level rights before reuse.';
+  let color = 'rgba(232,228,220,0.72)';
+
+  if (/all rights reserved|rights reserved|in copyright|http:\/\/rightsstatements\.org\/vocab\/inc|api_preview_only/.test(normalized)) {
+    status = 'Restricted';
+    guidance = 'Do not reuse the media without permission from the rights holder or source institution.';
+    color = 'var(--aic-coral)';
+  } else if (/cc by-nc|by-nc|non-commercial|metadata cc by|cc0 metadata|m\+ api service non-commercial/.test(normalized)) {
+    status = 'Restricted / mixed';
+    guidance = 'Metadata may be open, but media reuse is limited, non-commercial, or preview-only.';
+    color = 'var(--mplus-amber)';
+  } else if (/cc by-sa|by-sa/.test(normalized)) {
+    status = 'Share alike';
+    guidance = 'Reusable with attribution, and derivative use should keep the same licence terms.';
+    color = 'var(--va-purple)';
+  } else if (/cc by|creative commons attribution|© auckland museum cc by/.test(normalized)) {
+    status = 'Attribution required';
+    guidance = 'Reusable with attribution to the source institution and creator where required.';
+    color = 'var(--gold)';
+  } else if (/cc0|public domain|public domain mark|dom[ií]nio p[úu]blico|no known copyright restrictions|open access/.test(normalized)) {
+    status = 'Open access';
+    guidance = 'Appears reusable under open-access or public-domain terms.';
+    color = 'var(--teal)';
+  }
+
+  return { status, guidance, detail, color };
+}
+
 const QDRANT_DIRECT = '';
 const OLLAMA_DIRECT = '';
 
@@ -1160,15 +1204,17 @@ function renderCuratorSources(objects = [], label = 'Objects informing this resp
   if (!deduped.length) return '';
   let html = '<div class="curator-sources"><div class="curator-sources-label">' + esc(label) + '</div><div class="curator-sources-grid">';
   for (const obj of deduped) {
-    const payload = findSearchPayload(obj);
-    const title = obj.title || obj.object_name || (payload ? (payload.title || payload.object_name || 'Untitled') : 'Untitled');
-    const image = (payload && pickImage(payload)) || obj.image || '';
-    const institution = obj.institution || (payload ? getCollectionMeta(payload._source_collection || 'archai_pilot').institution : '');
-    const date = obj.date || (payload ? (payload.date || payload.date_display || payload.production_date || '') : '');
-    const registration = obj.registration || obj.registration_number || obj.accession_number || (payload ? (payload.registration_number || payload.accession_number || '') : '');
+    // Prefer the full search-grid payload if we have it; otherwise open the
+    // chat-cited object directly (the backend now sends enough to render detail).
+    const payload = findSearchPayload(obj) || obj;
+    const title = obj.title || obj.object_name || payload.title || payload.object_name || 'Untitled';
+    const image = (pickImage(payload)) || obj.image || '';
+    const institution = obj.institution || (payload._source_collection ? getCollectionMeta(payload._source_collection).institution : '');
+    const date = obj.date || payload.date || payload.date_display || payload.production_date || '';
+    const registration = obj.registration || obj.registration_number || obj.accession_number || payload.registration_number || payload.accession_number || '';
     const metaBits = [institution, date, registration].filter(Boolean);
-    const encoded = payload ? encodeURIComponent(JSON.stringify(payload)) : '';
-    html += '<div class="curator-source' + (payload ? ' clickable' : '') + '"' + (payload ? ' onclick="openObject(decodeURIComponent(this.dataset.payload))" data-payload="' + encoded + '"' : '') + '>';
+    const encoded = encodeURIComponent(JSON.stringify(payload));
+    html += '<div class="curator-source clickable" onclick="openObject(decodeURIComponent(this.dataset.payload))" data-payload="' + encoded + '">';
     if (image) {
       html += '<div class="curator-source-media"><img src="' + esc(image) + '" alt="' + esc(title) + '" loading="lazy" onload="archaiHeroImageLoad(this)" onerror="archaiHeroImageError(this)"></div>';
     }
@@ -1247,6 +1293,11 @@ function renderResultsGrid(results) {
     const cleanMaker = /^(unknown|untitled)$/i.test(String(maker || '').trim()) ? '' : maker;
     const score = r.score ? 'Match ' + (r.score * 100).toFixed(0) + '%' : '';
     const cues = getResultMatchCues(latestSearchQuery || '', p, 3);
+    const rights = getObjectRightsInfo(p);
+    const cueTags = [
+      '<span class="rc-cue" style="border-color:' + rights.color + ';color:' + rights.color + '">Legal: ' + esc(rights.status) + '</span>'
+    ];
+    if (cues.length) cueTags.push(...cues.map(cue => '<span class="rc-cue">' + esc(cue) + '</span>'));
 
     html += '<div class="result-card" onclick="openObject(JSON.stringify(searchPayloads[' + idx + ']))">';
     html += '<div class="rc-media">';
@@ -1261,9 +1312,7 @@ function renderResultsGrid(results) {
     html += '<div class="rc-body">';
     html += '<div class="rc-title">' + esc(title) + '</div>';
     html += '<div class="rc-meta">' + esc([cleanMaker, date, score].filter(Boolean).join(' · ')) + '</div>';
-    if (cues.length) {
-      html += '<div class="rc-cues">' + cues.map(cue => '<span class="rc-cue">' + esc(cue) + '</span>').join('') + '</div>';
-    }
+    html += '<div class="rc-cues">' + cueTags.join('') + '</div>';
     html += '</div></div>';
   }
   html += '</div>';
@@ -1536,6 +1585,7 @@ function openObject(payloadStr) {
   const reg = p.registration_number || p.accession_number || '';
   const col = p._source_collection || 'archai_pilot';
   const institution = getCollectionMeta(col).institution;
+  const rights = getObjectRightsInfo(p);
 
   let html = '';
   if (img) html += '<img class="obj-hero-img" src="' + img + '" alt="' + title.replace(/"/g,'') + '" onload="archaiHeroImageLoad(this)" onerror="archaiHeroImageError(this)">';
@@ -1548,9 +1598,14 @@ function openObject(payloadStr) {
   if (location) html += '<div class="obj-meta-item"><div class="om-label">Location</div><div class="om-value">' + location + '</div></div>';
   if (reg) html += '<div class="obj-meta-item"><div class="om-label">Registration</div><div class="om-value">' + reg + '</div></div>';
   html += '<div class="obj-meta-item"><div class="om-label">Institution</div><div class="om-value">' + institution + '</div></div>';
+  html += '<div class="obj-meta-item"><div class="om-label">Legal status</div><div class="om-value" style="color:' + rights.color + ';">' + esc(rights.status) + '</div></div>';
   html += '</div>';
 
   if (desc) html += '<div class="obj-desc">' + desc.substring(0, 600) + (desc.length > 600 ? '...' : '') + '</div>';
+  html += '<div class="rights-note" style="margin-top:0;margin-bottom:28px;">' +
+    '<h4>Legal status</h4>' +
+    '<p><strong style="color:' + rights.color + ';font-weight:400;">' + esc(rights.status) + '</strong> — ' + esc(rights.guidance) + '<br><span style="opacity:0.86">Licence / rights: ' + esc(rights.detail) + '</span></p>' +
+  '</div>';
   html += renderFullRecord(p);
 
   // Chat section
