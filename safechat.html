@@ -7,8 +7,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SafeChat — Open-Source Crisis Safety Protocol for AI</title>
-<meta name="description" content="SafeChat is an open-source international chat safety protocol. Crisis detection, verified helplines across 34 countries, zero data collection. Built by Rob Graham / FAMTEC.">
+<title>SafeChat — Source-Available Crisis Safety Protocol for AI</title>
+<meta name="description" content="SafeChat is a source-available international chat safety protocol. Crisis detection, verified helplines across 34 countries, zero data collection. Built by Rob Graham / FAMTEC.">
 <meta name="theme-color" content="#080808">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -233,13 +233,13 @@ footer a:hover{color:var(--fg)}
 <!-- HERO -->
 <div class="sc-hero">
   <div class="hero-content">
-    <div class="hero-tag">Open-Source Crisis Safety Protocol</div>
+    <div class="hero-tag">Source-Available Crisis Safety Protocol</div>
     <h1 class="hero-title">SafeChat</h1>
     <p class="hero-subtitle">Crisis detection and verified helpline resources for AI chat systems. One script tag. 34 countries. Zero data collection. Runs entirely on-device.</p>
     <div class="hero-stats">
       <span class="stat">34 Countries</span>
-      <span class="stat">67 Verified Helplines</span>
-      <span class="stat">424 Automated Tests</span>
+      <span class="stat">66 Verified Helplines</span>
+      <span class="stat">601 Automated Tests</span>
       <span class="stat">Zero Data Collection</span>
     </div>
   </div>
@@ -248,7 +248,7 @@ footer a:hover{color:var(--fg)}
     <p><strong>License:</strong> BSL 1.1 (free for personal, research, nonprofit, small commercial)</p>
     <p style="margin-top:4px"><strong>Helpline data:</strong> CC0 Public Domain</p>
     <p style="margin-top:4px"><strong>Language:</strong> English (multilingual planned)</p>
-    <p style="margin-top:4px"><strong>Version:</strong> 1.0 &middot; May 2026</p>
+    <p style="margin-top:4px"><strong>Version:</strong> 1.3.0 &middot; June 2026</p>
   </div>
 </div>
 
@@ -283,7 +283,7 @@ footer a:hover{color:var(--fg)}
         <div class="how-card rv">
           <div class="how-num">01</div>
           <h3>Detect</h3>
-          <p>Pattern-matching engine classifies crisis signals in user input. Input normalisation catches misspellings, text-speak, and unicode variation. False-positive guards prevent triggering on idioms and figurative language. 45 HIGH patterns, 22 LOW patterns.</p>
+          <p>Pattern-matching engine classifies crisis signals in user input. Input normalisation catches misspellings, text-speak, and unicode variation. False-positive guards prevent triggering on idioms and figurative language. 48 HIGH, 43 LOW, and 35 subtle accumulation patterns.</p>
         </div>
         <div class="how-card rv">
           <div class="how-num">02</div>
@@ -294,6 +294,11 @@ footer a:hover{color:var(--fg)}
           <div class="how-num">03</div>
           <h3>Connect</h3>
           <p>Verified helpline resources are presented via modal, banner, or popup. Phone, text, chat, email, and WhatsApp options. Four-tier fallback ensures resources are always available, even offline.</p>
+        </div>
+        <div class="how-card rv">
+          <div class="how-num">04</div>
+          <h3>Verify (Optional)</h3>
+          <p>Optional local ML tiers add a second opinion: a semantic embedding layer (~25 MB, runs on phones and offline PWAs) catches metaphorical distress, and local clinical classifiers can cross-check on desktop or server. ML can confirm or escalate a detection, never downgrade it.</p>
         </div>
       </div>
     </div>
@@ -342,7 +347,7 @@ footer a:hover{color:var(--fg)}
           <p>Add SafeChat to any web application with a <em>single script tag</em>. No build step, no API key, no account creation. The system provides modal, banner, and full-page popup interfaces.</p>
           <p>For server-side applications, SafeChat includes an <em>Express middleware</em> and AI prompt overrides that inject crisis-response instructions into any LLM system prompt.</p>
           <div class="code-block">
-            <code>&lt;script src="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/dist/safechat.min.js"&gt;&lt;/script&gt;</code>
+            <code>&lt;script src="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/src/browser.js"&gt;&lt;/script&gt;</code>
           </div>
         </div>
         <div class="rv">
@@ -356,7 +361,8 @@ footer a:hover{color:var(--fg)}
             <li>Express middleware included</li>
             <li>LLM prompt injection module</li>
             <li>PWA with offline support</li>
-            <li>424 automated test cases</li>
+            <li>601 automated test cases</li>
+            <li>Optional ML tiers (embeddings, local classifiers)</li>
           </ul>
         </div>
       </div>
@@ -372,7 +378,7 @@ footer a:hover{color:var(--fg)}
           <p>SafeChat emerged from the same research programme as <em>ARCHAI</em>, a sovereign AI toolkit for cultural heritage institutions. Both projects share a foundational position: critical AI infrastructure should be locally deployable, privacy-respecting, and independent of commercial cloud dependencies.</p>
           <p>The shared architectural pattern is <em>sovereign AI infrastructure</em> &mdash; systems that provide full functionality from local resources while optionally enhancing from network sources when available.</p>
           <p>SafeChat is public and usable now, but remains open to further research, testing, localisation, accessibility review, crisis-care expert feedback, independent safety evaluation, and funding support for continued development.</p>
-          <p>This work contributes to Rob Graham's doctoral research at RMIT University, School of Design, supervised by Chris Barker. Presented at ISEA2026 Dubai.</p>
+          <p>This work contributes to Rob Graham's doctoral research at RMIT University, School of Design. Presented at ISEA2026 Dubai.</p>
         </div>
         <div class="rv">
           <ul class="tech-list">
