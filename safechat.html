@@ -235,11 +235,11 @@ footer a:hover{color:var(--fg)}
   <div class="hero-content">
     <div class="hero-tag">Source-Available Crisis Safety Protocol</div>
     <h1 class="hero-title">SafeChat</h1>
-    <p class="hero-subtitle">Crisis detection and verified helpline resources for AI chat systems. One script tag. 34 countries. Zero data collection. Runs entirely on-device.</p>
+    <p class="hero-subtitle">Crisis detection and maintained helpline resources for AI chat systems. One script tag. 34 countries. Zero data collection. Runs entirely on-device.</p>
     <div class="hero-stats">
       <span class="stat">34 Countries</span>
-      <span class="stat">66 Verified Helplines</span>
-      <span class="stat">601 Automated Tests</span>
+      <span class="stat">67 Resource Records</span>
+      <span class="stat">647 Automated Tests</span>
       <span class="stat">Zero Data Collection</span>
     </div>
   </div>
@@ -268,7 +268,7 @@ footer a:hover{color:var(--fg)}
             <li>New York enacted the first US law mandating crisis-response protocols for AI companions</li>
             <li>The FTC opened investigations into chatbot safety at Alphabet, Meta, OpenAI, Snap, xAI, and Character Technologies</li>
             <li>VERA-MH documented significant gaps in how major AI systems respond to suicidal ideation</li>
-            <li>No open-source infrastructure existed for developers to implement these protections</li>
+            <li>Developers need deployable safety infrastructure that can operate without collecting vulnerable conversations</li>
           </ul>
         </div>
       </div>
@@ -283,7 +283,7 @@ footer a:hover{color:var(--fg)}
         <div class="how-card rv">
           <div class="how-num">01</div>
           <h3>Detect</h3>
-          <p>Pattern-matching engine classifies crisis signals in user input. Input normalisation catches misspellings, text-speak, and unicode variation. False-positive guards prevent triggering on idioms and figurative language. 48 HIGH, 43 LOW, and 35 subtle accumulation patterns.</p>
+          <p>Pattern-matching engine classifies crisis signals in user input. Input normalisation catches misspellings, text-speak, and unicode variation. False-positive guards prevent triggering on idioms and figurative language. 53 HIGH, 43 LOW, and 45 contextual accumulation patterns, plus 32 reviewed source-linked signals including VERA-MH public risk-presentation families.</p>
         </div>
         <div class="how-card rv">
           <div class="how-num">02</div>
@@ -361,7 +361,7 @@ footer a:hover{color:var(--fg)}
             <li>Express middleware included</li>
             <li>LLM prompt injection module</li>
             <li>PWA with offline support</li>
-            <li>601 automated test cases</li>
+            <li>647 automated test cases</li>
             <li>Optional ML tiers (embeddings, local classifiers)</li>
           </ul>
         </div>
@@ -465,6 +465,7 @@ footer a:hover{color:var(--fg)}
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/src/browser.js"></script>
 <script>
 // ── Lightbox ──────────────────────────────────────────────────
 function openLightbox(card) {
@@ -538,11 +539,13 @@ function normalise(t) {
 const HIGH = [
   /\bsuicid/,/\bkill (my|myself|me)\b/,/\bend (my|this) life\b/,/\btake my (own )?life\b/,
   /\bwant to die\b/,/\bwish (i was|i were|i'?m) dead\b/,/\bdon'?t want to (be here|live|exist)\b/,
+  /\bcan'?t keep myself safe\b/,
   /\bno reason to live\b/,/\bself[- ]?harm\b/,/\bhurt (my|myself)\b/,/\bcut (my|myself)\b/,
   /\boverdose\b/,/\bhanging (my|myself)\b/,/\bjump(ing)? (off|from)\b/
 ];
 const LOW = [
   /\bcan'?t go on\b/,/\bno point\b/,/\bnobody (cares|would miss me)\b/,
+  /\b(?:go to sleep|fall asleep) and never wake up\b/,
   /\beveryone (would be )?better off (without me)?\b/,/\bworthless\b/,/\bcompletely hopeless\b/,
   /\bending it (all)?\b/,/\bnot worth (living|it)\b/
 ];
@@ -554,6 +557,10 @@ const FP = [
 ];
 
 function detect(text) {
+  if (window.Safechat && typeof window.Safechat.detect === 'function') {
+    const current = window.Safechat.detect(text).level;
+    if (current !== 'none') return current;
+  }
   const t = normalise(text);
   const fpHit = FP.some(r => r.test(t));
   if (!fpHit && HIGH.some(r => r.test(t))) return 'high';
