@@ -101,7 +101,7 @@ footer a{color:var(--gold);text-decoration:none}
   <h2>What is this?</h2>
   <p>AUX.IO is a live demonstration of ARCHAI™ — sovereign AI infrastructure that lets museum objects speak for themselves using verified institutional data. No hallucination. No cloud APIs. Everything runs on a single Mac Studio in Melbourne.</p>
   <p>Each object answers from its <strong style="color:var(--fg)">Obtext</strong> (Object Context) — a structured data format containing only verified metadata. When you ask something outside its record, it says so.</p>
-  <p><span id="liveCountCopy">The live object count is loading</span> across Museums Victoria, The Metropolitan Museum of Art, Victoria and Albert Museum, Art Institute of Chicago, Cleveland Museum of Art, and Rijksmuseum. AUX.IO is now being aligned with the full live ARCHAI collection rather than a small demo subset.</p>
+  <p><span id="liveCountCopy">The live object count is loading</span> across eleven institutions on five continents — Museums Victoria, The Metropolitan Museum of Art, Victoria and Albert Museum, Art Institute of Chicago, Cleveland Museum of Art, Rijksmuseum, Europeana, Auckland Museum, Te Papa Tongarewa, M+ (Hong Kong), and Brasiliana Museus. Every object carries an explicit open licence — no rights-restricted media is shown.</p>
 
   <h2 style="margin-top:2rem">Obtext format</h2>
   <div class="obtext-block">{
@@ -142,8 +142,8 @@ const API_ENDPOINTS = window.location.protocol === 'https:'
     ];
 
 let API_BASE = null;
-// Fallback manifest — all 681 pages have verified images
-let PAGES = Array.from({length: 681}, (_, i) => i + 1);
+// Fallback manifest — verified-image pages
+let PAGES = Array.from({length: 1519}, (_, i) => i + 1);
 
 async function fetchWithTimeout(url, timeoutMs = 4000, options = {}) {
   const controller = new AbortController();
