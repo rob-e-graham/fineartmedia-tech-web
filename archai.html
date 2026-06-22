@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ARCHAI — Sovereign Semantic Heritage AI</title>
-<meta name="description" content="ARCHAI is sovereign AI infrastructure for museums and cultural heritage institutions. Search collections, talk to objects, explore connections.">
+<meta name="description" content="ARCHAI is sovereign semantic infrastructure for cultural heritage: 3,147 connected records across 19 museum, heritage, public-art, and cultural-data sources.">
 <meta name="theme-color" content="#080808">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -69,8 +69,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 .hero-subtitle{margin-top:20px;font-family:var(--mono);font-size:11px;line-height:1.9;letter-spacing:0.04em;color:rgba(232,228,220,0.5);max-width:640px;opacity:0;animation:fu 1s 0.9s forwards}
 .hero-demo-note{margin-top:18px;max-width:760px;padding:12px 14px;border:1px solid rgba(200,169,110,0.14);background:rgba(200,169,110,0.05);font-family:var(--mono);font-size:9px;line-height:1.8;letter-spacing:0.05em;color:rgba(232,228,220,0.62);opacity:0;animation:fu 1s 1s forwards}
 .hero-demo-note strong{color:var(--gold);font-weight:400}
-.hero-collections{margin-top:28px;display:flex;flex-wrap:wrap;gap:10px 20px;opacity:0;animation:fu 1s 1.1s forwards}
-.hero-collections .coll{font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.hero-sources{margin-top:28px;max-width:900px;opacity:0;animation:fu 1s 1.1s forwards}
+.hero-sources-label{font-family:var(--mono);font-size:8px;line-height:1.7;letter-spacing:0.16em;text-transform:uppercase;color:rgba(232,228,220,0.38);margin-bottom:12px}
+.hero-collections{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px 16px}
+.hero-collections .coll{font-family:var(--mono);font-size:8px;line-height:1.45;letter-spacing:0.1em;text-transform:uppercase;display:flex;align-items:flex-start;gap:7px;min-width:0}
 .hero-collections .coll::before{content:'';width:6px;height:6px;border-radius:50%}
 .coll-mv::before{background:var(--teal)}
 .coll-met::before{background:var(--met-gold)}
@@ -83,6 +85,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 .coll-tp::before{background:var(--tepapa-teal)}
 .coll-mplus::before{background:var(--mplus-amber)}
 .coll-br::before{background:var(--brasil-copper)}
+.coll-si::before{background:var(--teal)}
+.coll-tate::before{background:var(--met-gold)}
+.coll-street::before{background:var(--aic-coral)}
+.coll-getty::before{background:var(--brasil-copper)}
+.coll-wellcome::before{background:var(--akl-mint)}
+.coll-qagoma::before{background:var(--va-purple)}
+.coll-rawg::before{background:var(--eu-blue)}
+.coll-nga::before{background:var(--cma-green)}
 .hero-status{position:relative;z-index:20;width:280px;flex-shrink:0;padding:14px 16px;border:1px solid rgba(200,169,110,0.12);background:rgba(8,8,8,0.56);backdrop-filter:blur(8px);align-self:flex-end}
 .hero-status p{font-family:var(--mono);font-size:9px;line-height:1.75;letter-spacing:0.05em;color:rgba(232,228,220,0.5)}
 .hero-status strong{color:var(--gold);font-weight:400}
@@ -464,6 +474,7 @@ footer a:hover{color:var(--fg)}
   .nav-links::-webkit-scrollbar{display:none}
   .nav-links a{display:block;white-space:nowrap;padding:10px 16px 2px 0;font-size:10px}
   .archai-hero{padding:132px 20px 48px}
+  .hero-collections{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}
   .hero-status{display:none}
   .wrap{padding:0 20px}
   section{padding:60px 0}
@@ -484,6 +495,7 @@ footer a:hover{color:var(--fg)}
   .shots-grid,.shots-grid.mixed{grid-template-columns:1fr 1fr}
   footer{padding:40px 20px;flex-direction:column;align-items:flex-start}
 }
+@media(max-width:330px){.hero-collections{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -506,26 +518,37 @@ footer a:hover{color:var(--fg)}
   <div class="hero-content">
     <div class="hero-tag">Sovereign Semantic Heritage AI</div>
     <h1 class="hero-title">ARCHAI</h1>
-    <p class="hero-subtitle">Objects that speak for themselves. Semantic search across museum collections, AI-grounded conversations with cultural heritage, maps and spatial awareness, and sovereign infrastructure that keeps institutional knowledge where it belongs.</p>
-    <p class="hero-demo-note"><strong>Public demo:</strong> this website shows a simplified ARCHAI interface for collection search, interpretation, and AUX.IO access. The full app includes additional curatorial, collections, exhibition, infrastructure, and publishing workflows not shown here.</p>
-    <div class="hero-collections">
-      <span class="coll coll-mv">Museums Victoria</span>
-      <span class="coll coll-met">The Met, NYC</span>
-      <span class="coll coll-va">V&amp;A, London</span>
-      <span class="coll coll-aic">Art Institute of Chicago</span>
-      <span class="coll coll-cma">Cleveland Museum of Art</span>
-      <span class="coll coll-rijks">Rijksmuseum</span>
-      <span class="coll coll-eu">Europeana</span>
-      <span class="coll coll-akl">Auckland Museum</span>
-      <span class="coll coll-tp">Te Papa Tongarewa</span>
-      <span class="coll coll-mplus">M+, Hong Kong</span>
-      <span class="coll coll-br">Brasiliana Museus</span>
+    <p class="hero-subtitle">Search, compare, and interpret cultural records across institutions. ARCHAI adds a sovereign semantic layer above collection systems, while AUX.IO carries rights-aware interpretation into galleries, maps, and mobile access.</p>
+    <p class="hero-demo-note"><strong>Public research demo:</strong> 3,147 staff-searchable records are connected across 19 sources. This website presents a simplified, image-first interface; the full ARCHAI app also works with metadata-only and rights-held records, alongside curatorial, collections, accessibility, infrastructure, and publishing workflows.</p>
+    <div class="hero-sources">
+      <div class="hero-sources-label">19 connected research sources · public/open records do not imply institutional endorsement</div>
+      <div class="hero-collections">
+        <span class="coll coll-mv">Museums Victoria</span>
+        <span class="coll coll-met">The Metropolitan Museum of Art</span>
+        <span class="coll coll-va">Victoria and Albert Museum</span>
+        <span class="coll coll-aic">Art Institute of Chicago</span>
+        <span class="coll coll-cma">Cleveland Museum of Art</span>
+        <span class="coll coll-rijks">Rijksmuseum</span>
+        <span class="coll coll-eu">Europeana</span>
+        <span class="coll coll-akl">Auckland Museum</span>
+        <span class="coll coll-tp">Te Papa Tongarewa</span>
+        <span class="coll coll-mplus">M+, Hong Kong</span>
+        <span class="coll coll-br">Brasiliana Museus</span>
+        <span class="coll coll-si">Smithsonian Institution</span>
+        <span class="coll coll-tate">Tate</span>
+        <span class="coll coll-street">Municipal Public Art Data</span>
+        <span class="coll coll-getty">J. Paul Getty Museum</span>
+        <span class="coll coll-wellcome">Wellcome Collection</span>
+        <span class="coll coll-qagoma">QAGOMA</span>
+        <span class="coll coll-rawg">RAWG Video Games Database</span>
+        <span class="coll coll-nga">National Gallery of Art</span>
+      </div>
     </div>
   </div>
   <div class="hero-status" id="statusPanel">
     <p><span class="status-dot status-off" id="statusDot"></span> <strong>Backend:</strong> <span id="statusText">Checking...</span></p>
     <p style="margin-top:6px"><strong>Mode:</strong> <span id="modeText">Public demo</span></p>
-    <p style="margin-top:6px"><strong>Build:</strong> <span id="buildText">v11.1</span></p>
+    <p style="margin-top:6px"><strong>Build:</strong> <span id="buildText">v11.6</span></p>
   </div>
 </div>
 
@@ -536,11 +559,11 @@ footer a:hover{color:var(--fg)}
       <div class="sec-label rv">Search the Collection</div>
       <div class="search-wrap rv">
         <div class="ci-intro" style="margin-bottom:18px">
-          <h3>Search the collection, then ask ARCHAI what the results reveal</h3>
-          <p>Start with a material, place, period, or theme. This public demo returns image-backed objects from the live collection stack, then reads connections, patterns, and curatorial possibilities directly from the source records.</p>
+          <h3>Search connected collections, then review the results with ARCHAI</h3>
+          <p>Start with a material, place, period, technology, or theme. The public demo prioritises working, rights-aware images and lets you examine relationships across their source records. The staff app can also interrogate metadata-only material that is deliberately not shown here.</p>
         </div>
         <div class="search-box">
-          <input type="text" id="searchInput" placeholder="Search 1400+ objects across eleven live collections..." autocomplete="off">
+          <input type="text" id="searchInput" placeholder="Search 3,147 records across 19 connected sources..." autocomplete="off">
           <button id="searchBtn">Search</button>
         </div>
         <div class="search-chips">
@@ -565,15 +588,15 @@ footer a:hover{color:var(--fg)}
       <div class="sec-label rv">About ARCHAI</div>
       <div class="about-grid">
         <div class="about-text rv">
-          <p>ARCHAI is <em>sovereign AI infrastructure for cultural heritage</em> — a research toolkit that lets museums run their own semantic search, AI-grounded object conversations, spatial interpretation, accessibility support, and visitor engagement systems without cloud dependency or subscription costs.</p>
-          <p>Each object speaks in first person through <em>prosopopoeia</em>, grounded in verified institutional metadata with a five-layer hallucination prevention framework. Visitors interact via AUX.IO through NFC, QR, hyperlink, Bluetooth beacon, map, or location-aware exhibition trigger — and every AI response traces back to the collection record.</p>
-          <p>AUX.IO is also being developed as an accessibility layer for collections, with text-to-speech and speech-to-text pathways in progress so the interface can eventually speak and listen as well as display.</p>
+          <p>ARCHAI is an <em>open-source, sovereign semantic interface for cultural heritage</em> — an active research toolkit designed to sit above existing CMS and DAMS infrastructure. Institutions can run semantic search, grounded collection interpretation, spatial tools, accessibility support, and visitor engagement on their own network and under their own governance.</p>
+          <p>The current research corpus contains 3,147 records across 19 connected museum, heritage, public-art, and cultural-data sources. Staff can search the complete metadata layer; public interfaces use a separate rights and media-health gate so a connected record is not automatically treated as reusable visitor media.</p>
+          <p>AUX.IO offers optional factual, third-person, and era-informed interpretation modes through NFC, QR, hyperlink, map, or location-aware exhibition triggers. Text-to-speech and speech-to-text are now working prototype pathways, with further accessibility and multilingual testing in development.</p>
           <p>The data format powering each conversation is <em>Obtext</em> (Object Context) — a structured record containing identity, physical properties, temporal context, significance, and crucially, constraints — what the object explicitly does not know.</p>
           <p>ARCHAI remains an active research prototype. This website is a public-facing demo layer rather than the full operational app. FAMTEC is open to funded research partnerships, institutional pilots, accessibility testing, collection-data collaborations, development support, and evaluation with museum, gallery, archive, and university teams, and looks forward to collaborating, growing, learning, researching, and testing with partners across the wider GLAM sector.</p>
           <p>Developed as part of doctoral research at RMIT University, School of Design. Presented at ISEA2026 Dubai and the 6th Summit on New Media Art Archiving.</p>
           <div class="rights-note">
             <h4>Sources &amp; Rights</h4>
-            <p>ARCHAI demonstrates collection material sourced from public museum records, open metadata, or institution-supplied media with item-level rights preserved. Open-access objects remain marked as such, mixed-rights records retain their source attribution and licence context, and all institutional names, trademarks, and collection records remain the property of their respective owners.</p>
+            <p>ARCHAI currently connects 19 independently governed sources through public records, open metadata, open APIs, or source-authorised display media. The staff layer contains 3,147 records; the public AUX.IO layer publishes 1,380 image-backed pages that passed the current availability and rights gates. Every object retains its source, attribution, and legal status. Institutional inclusion does not imply partnership or endorsement.</p>
           </div>
         </div>
         <div class="rv">
@@ -588,6 +611,9 @@ footer a:hover{color:var(--fg)}
             <li>Five-layer hallucination prevention</li>
             <li>AI-moderated visitor comments</li>
             <li>Conversational collection search</li>
+            <li>19 connected source collections · 3,147 records</li>
+            <li>1,380 rights-gated AUX.IO visitor pages</li>
+            <li>QR poster, sticker &amp; postcard tools on 440 cleared records</li>
             <li>SQLite persistent storage</li>
             <li>Zero cloud dependencies</li>
             <li>~$3,500 USD semantic layer (Mac Studio)</li>
@@ -678,7 +704,7 @@ footer a:hover{color:var(--fg)}
 <footer>
   <p>ARCHAI &copy; 2026 Rob Graham / <a href="/">FAMTEC</a> — All rights reserved</p>
   <p>Research prototype · open to funded pilots and testing partners · <a href="https://github.com/rob-e-graham/archai" target="_blank">GitHub</a></p>
-  <p>Collection material is shown from public records, open metadata, or source-authorised media with item-level rights preserved.</p>
+  <p>3,147 connected records across 19 sources · 1,380 rights-gated AUX.IO pages · source inclusion does not imply endorsement.</p>
 </footer>
 
 <script>
@@ -702,7 +728,17 @@ const COLLECTION_META = {
   archai_rijks: { short: 'Rijks', className: 'src-va', institution: 'Rijksmuseum' },
   archai_europeana: { short: 'EU', className: 'src-eu', institution: 'Europeana' },
   archai_auckland: { short: 'AKL', className: 'src-akl', institution: 'Auckland Museum' },
-  archai_tepapa: { short: 'TP', className: 'src-akl', institution: 'Te Papa Tongarewa' }
+  archai_tepapa: { short: 'TP', className: 'src-akl', institution: 'Te Papa Tongarewa' },
+  archai_mplus: { short: 'M+', className: 'src-met', institution: 'M+, Hong Kong' },
+  archai_brasiliana: { short: 'BR', className: 'src-met', institution: 'Brasiliana Museus' },
+  archai_smithsonian: { short: 'SI', className: 'src-mv', institution: 'Smithsonian Institution' },
+  archai_tate: { short: 'Tate', className: 'src-met', institution: 'Tate' },
+  archai_streetart: { short: 'Street', className: 'src-aic', institution: 'Municipal Public Art Data' },
+  archai_getty: { short: 'Getty', className: 'src-met', institution: 'J. Paul Getty Museum' },
+  archai_wellcome: { short: 'Well', className: 'src-akl', institution: 'Wellcome Collection' },
+  archai_qagoma: { short: 'QAG', className: 'src-va', institution: 'QAGOMA' },
+  archai_rawg: { short: 'RAWG', className: 'src-eu', institution: 'RAWG Video Games Database' },
+  archai_nga: { short: 'NGA', className: 'src-cma', institution: 'National Gallery of Art, Washington' }
 };
 
 function getCollectionMeta(col) {
@@ -740,11 +776,15 @@ function getObjectRightsInfo(payload = {}) {
     status = 'Share alike';
     guidance = 'Reusable with attribution, and derivative use should keep the same licence terms.';
     color = 'var(--va-purple)';
-  } else if (/cc by|creativecommons\.org\/licenses\/by\/|creative commons attribution|© auckland museum cc by/.test(normalized)) {
+  } else if (/cc by|creativecommons\.org\/licenses\/by\/|creative commons attribution|© auckland museum cc by|open government licen[cs]e/.test(normalized)) {
     status = 'Attribution required';
     guidance = 'Reusable with attribution to the source institution and creator where required.';
     color = 'var(--gold)';
-  } else if (/cc0|creativecommons\.org\/publicdomain\/zero|creativecommons\.org\/publicdomain\/mark|public domain|public domain mark|rightsstatements\.org\/vocab\/noc|dom[ií]nio p[úu]blico|no known copyright restrictions|open access/.test(normalized)) {
+  } else if (/free with attribution|active link to rawg\.io/.test(normalized)) {
+    status = 'API display with attribution';
+    guidance = 'Display is permitted with an active source link; downloadable redistribution is not granted.';
+    color = 'var(--gold)';
+  } else if (/cc0|creativecommons\.org\/publicdomain\/zero|creativecommons\.org\/publicdomain\/mark|public domain|public domain mark|rightsstatements\.org\/vocab\/noc|dom[ií]nio p[úu]blico|no known copyright restrictions/.test(normalized)) {
     status = 'Open access';
     guidance = 'Appears reusable under open-access or public-domain terms.';
     color = 'var(--teal)';
@@ -791,9 +831,11 @@ async function discoverBackend() {
 
 function applyLiveStats(health) {
   const liveCounts = health?.integrations?.qdrant?.liveCounts || {};
-  const sourceCollections = Object.keys(liveCounts).filter(key => key !== 'archai_curator');
-  const objectCount = health?.counts?.collectionObjects || 1445;
-  const collectionCount = sourceCollections.length || 11;
+  const sourceCollections = Object.entries(liveCounts)
+    .filter(([key, count]) => !['archai_curator', 'archai_objects'].includes(key) && Number(count) > 0)
+    .map(([key]) => key);
+  const objectCount = health?.counts?.collectionObjects || 3147;
+  const collectionCount = sourceCollections.length || 19;
   const searchInput = document.getElementById('searchInput');
   const searchInfo = document.getElementById('searchInfo');
   const modeText = document.getElementById('modeText');
@@ -1097,6 +1139,9 @@ function getResultMatchCues(query, payload, max = 3) {
 }
 
 function pickImage(payload) {
+  if (payload.media_available === false) return '';
+  if (payload.media_public_display_allowed === false) return '';
+  if (['tate', 'getty'].includes(String(payload.source || '').toLowerCase())) return '';
   return payload.media_medium
     || payload.media_large
     || payload.media_thumbnail

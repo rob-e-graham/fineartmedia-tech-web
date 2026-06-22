@@ -11,6 +11,8 @@ Static site for `fineartmedia.tech`.
 - current participating institutions
 - AUX.IO visitor-path language
 
+Current ARCHAI website baseline: `v11.6`, `3,147` staff-searchable records across `19` connected sources, and `1,380` rights-gated AUX.IO visitor pages. Source inclusion describes the public/open research corpus and does not imply institutional partnership or endorsement.
+
 ## Research & development status
 
 The projects presented on this site are active research and development systems: working prototypes, public demos, and open-source tools developed through FAMTEC and Rob Graham's doctoral research at RMIT University.
