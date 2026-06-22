@@ -99,9 +99,9 @@ footer a{color:var(--gold);text-decoration:none}
 
 <section class="info-section">
   <h2>What is this?</h2>
-  <p>AUX.IO is a live demonstration of ARCHAI™ — sovereign AI infrastructure that lets museum objects speak for themselves using verified institutional data. No hallucination. No cloud APIs. Everything runs on a single Mac Studio in Melbourne.</p>
+  <p>AUX.IO is the visitor-facing demonstration of ARCHAI — sovereign AI infrastructure that supports conversations with cultural objects using verified source data. Responses are grounded in the available record and designed to acknowledge uncertainty. Local inference runs on a single Mac Studio in Melbourne.</p>
   <p>Each object answers from its <strong style="color:var(--fg)">Obtext</strong> (Object Context) — a structured data format containing only verified metadata. When you ask something outside its record, it says so.</p>
-  <p><span id="liveCountCopy">The live object count is loading</span> across eleven institutions on five continents — Museums Victoria, The Metropolitan Museum of Art, Victoria and Albert Museum, Art Institute of Chicago, Cleveland Museum of Art, Rijksmuseum, Europeana, Auckland Museum, Te Papa Tongarewa, M+ (Hong Kong), and Brasiliana Museus. Every object carries an explicit open licence — no rights-restricted media is shown.</p>
+  <p><span id="liveCountCopy">The live object count is loading</span> from the wider ARCHAI research corpus of 19 connected museum, heritage, public-art, and cultural-data sources. Published AUX.IO pages pass the current media-availability and rights gates; every page retains its source, attribution, and item-level legal status. Source inclusion does not imply institutional partnership or endorsement.</p>
 
   <h2 style="margin-top:2rem">Obtext format</h2>
   <div class="obtext-block">{
@@ -127,7 +127,7 @@ footer a{color:var(--gold);text-decoration:none}
 </section>
 
 <footer>
-  <p>ARCHAI™ — PhD Research, RMIT University (Design)</p>
+  <p>ARCHAI — PhD Research, RMIT University (Design)</p>
   <p style="margin-top:0.5rem"><a href="/archai.html">Full Project</a> · <a href="https://github.com/rob-e-graham/archai">GitHub</a> · <a href="/">FAMTEC</a></p>
   <p style="margin-top:0.5rem">&copy; 2026 Rob Graham / FAMTEC. All rights reserved.</p>
 </footer>
@@ -175,7 +175,7 @@ async function loadManifest() {
 function setStatus(online) {
   document.getElementById('statusDot').className = 'dot ' + (online ? 'online' : 'offline');
   document.getElementById('statusText').textContent = online
-    ? 'Collection intelligence online — ' + PAGES.length + ' objects with verified images'
+    ? 'Collection intelligence online — ' + PAGES.length + ' objects with rights-gated images'
     : 'Backend offline — the Mac Studio may be sleeping';
   const liveCountCopy = document.getElementById('liveCountCopy');
   if (liveCountCopy) {
