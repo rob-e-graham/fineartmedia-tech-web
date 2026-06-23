@@ -473,6 +473,15 @@ footer a:hover{color:var(--fg)}
 
 /* NO RESULTS */
 .no-results{text-align:center;padding:60px 0;font-family:var(--mono);font-size:11px;color:var(--dim)}
+.metadata-only-panel{margin-top:34px;padding:24px;border:1px solid rgba(115,198,182,0.18);background:rgba(115,198,182,0.035)}
+.metadata-only-panel h3{font-family:var(--serif);font-size:24px;font-weight:400;margin:0 0 8px;color:var(--fg)}
+.metadata-only-panel p{font-size:14px;line-height:1.75;color:rgba(232,228,220,0.62);margin:0 0 18px}
+.metadata-only-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:18px}
+.metadata-only-card{padding:16px;border:1px solid rgba(232,228,220,0.08);background:rgba(8,8,8,0.26)}
+.metadata-only-title{font-family:var(--serif);font-size:15px;line-height:1.45;color:var(--fg);margin-bottom:8px}
+.metadata-only-meta{font-family:var(--mono);font-size:8px;line-height:1.7;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim)}
+.metadata-only-card a{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal);text-decoration:none}
+.metadata-only-card a:hover{color:var(--fg)}
 
 /* LOADING */
 .loading{text-align:center;padding:40px 0}
@@ -694,7 +703,7 @@ footer a:hover{color:var(--fg)}
                 <button onclick="surpriseAuxDemo()">Surprise me</button>
               </div>
               <div class="aux-demo-facts">
-                <div class="aux-demo-fact"><span>Published visitor pages</span><strong>1,380 rights-gated objects</strong></div>
+                <div class="aux-demo-fact"><span>Published visitor pages</span><strong>1,519 rights-gated objects</strong></div>
                 <div class="aux-demo-fact"><span>Print workflow</span><strong>440 QR-ready records</strong></div>
                 <div class="aux-demo-fact"><span>Access modes</span><strong>Text, voice, mobile, map-ready</strong></div>
                 <div class="aux-demo-fact"><span>Institutional use</span><strong>Editable for local collection records</strong></div>
@@ -721,7 +730,7 @@ footer a:hover{color:var(--fg)}
           <p>Developed as part of doctoral research at RMIT University, School of Design. Presented at ISEA2026 Dubai and the 6th Summit on New Media Art Archiving.</p>
           <div class="rights-note">
             <h4>Sources &amp; Rights</h4>
-            <p>ARCHAI currently connects 19 independently governed sources through public records, open metadata, open APIs, or source-authorised display media. The staff layer contains 3,147 records; the public AUX.IO layer publishes 1,380 image-backed pages that passed the current availability and rights gates. Every object retains its source, attribution, and legal status. Institutional inclusion does not imply partnership or endorsement.</p>
+            <p>ARCHAI currently connects 19 independently governed sources through public records, open metadata, open APIs, or source-authorised display media. The staff layer contains 3,147 records; the public AUX.IO layer publishes 1,519 image-backed pages that passed the current availability and rights gates. Every object retains its source, attribution, and legal status. Institutional inclusion does not imply partnership or endorsement.</p>
           </div>
         </div>
         <div class="rv">
@@ -737,7 +746,7 @@ footer a:hover{color:var(--fg)}
             <li>AI-moderated visitor comments</li>
             <li>Conversational collection search</li>
             <li>19 connected source collections · 3,147 records</li>
-            <li>1,380 rights-gated AUX.IO visitor pages</li>
+            <li>1,519 rights-gated AUX.IO visitor pages</li>
             <li>QR poster, sticker &amp; postcard tools on 440 cleared records</li>
             <li>SQLite persistent storage</li>
             <li>Zero cloud dependencies</li>
@@ -829,7 +838,7 @@ footer a:hover{color:var(--fg)}
 <footer>
   <p>ARCHAI &copy; 2026 Rob Graham / <a href="/">FAMTEC</a> — All rights reserved</p>
   <p>Research prototype · open to funded pilots and testing partners · <a href="https://github.com/rob-e-graham/archai" target="_blank">GitHub</a></p>
-  <p>3,147 connected records across 19 sources · 1,380 rights-gated AUX.IO pages · source inclusion does not imply endorsement.</p>
+  <p>3,147 connected records across 19 sources · 1,519 rights-gated AUX.IO pages · source inclusion does not imply endorsement.</p>
 </footer>
 
 <script>
@@ -1796,6 +1805,36 @@ function renderResultsGrid(results) {
   return html;
 }
 
+function renderMetadataOnlyResults(results, sourceName) {
+  const shown = results.slice(0, 12);
+  let html = '<div class="metadata-only-panel">';
+  html += '<h3>Metadata available, public images withheld</h3>';
+  html += '<p>' + esc(sourceName) + ' is live in ARCHAI, but these records do not currently include public-display image rights. We can search the metadata and preserve source links while we review artist and photographer media permissions.</p>';
+  if (!shown.length) {
+    html += '<div class="no-results">No metadata records returned for this query.</div>';
+  } else {
+    html += '<div class="metadata-only-grid">';
+    for (const r of shown) {
+      const p = r.payload || {};
+      const title = p.title || p.object_name || 'Untitled';
+      const maker = p.artist || p.maker || p.creator || '';
+      const place = p.location || p.place_of_origin || p.source_institution || '';
+      const date = p.date_range || p.date || p.date_display || p.production_date || '';
+      const meta = [maker, place, date].filter(Boolean).join(' / ');
+      const sourceUrl = p.source_url || p.object_url || p.url || '';
+      html += '<div class="metadata-only-card">';
+      html += '<div class="metadata-only-title">' + esc(title) + '</div>';
+      html += '<div class="metadata-only-meta">' + esc(meta || 'Metadata-only record') + '</div>';
+      html += '<div class="metadata-only-meta">' + esc(p.media_rights_basis || 'Item-level media rights pending review') + '</div>';
+      if (sourceUrl) html += '<a href="' + esc(sourceUrl) + '" target="_blank" rel="noopener">Source record</a>';
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
 async function doSearch(query) {
   if (!query) return;
   if (!backendLive) {
@@ -1831,12 +1870,14 @@ async function doSearch(query) {
 
     if (!uniqueImageResults.length) {
       latestSearchQuery = query;
-      latestSearchResults = [];
+      latestSearchResults = results.map((r) => r.payload || {});
       latestSearchWasCapped = false;
       curatorHistory = [];
       const sourceName = selectedCollection === 'all' ? 'the connected sources' : getCollectionMeta(selectedCollection).institution;
-      document.getElementById('resultsArea').innerHTML = '<div class="no-results">No public, image-ready objects were found in ' + esc(sourceName) + ' for this query. The source may still be available in staff metadata search.</div>';
-      document.getElementById('searchInfo').textContent = '0 public image-ready results';
+      document.getElementById('resultsArea').innerHTML = renderMetadataOnlyResults(results, sourceName);
+      document.getElementById('searchInfo').textContent = results.length
+        ? results.length + ' metadata-only records found in ' + sourceName
+        : '0 public image-ready results';
       return;
     }
 
