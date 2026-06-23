@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ARCHAI — Sovereign Semantic Heritage AI</title>
-<meta name="description" content="ARCHAI is sovereign semantic infrastructure for cultural heritage: 3,147 connected records across 19 museum, heritage, public-art, and cultural-data sources.">
+<meta name="description" content="ARCHAI is sovereign semantic infrastructure for cultural heritage: a 21-source research network with 3,147 indexed pilot records across museum, heritage, public-art, library, archive, and open-knowledge sources.">
 <meta name="theme-color" content="#080808">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -93,6 +93,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 .coll-qagoma::before{background:var(--va-purple)}
 .coll-rawg::before{background:var(--eu-blue)}
 .coll-nga::before{background:var(--cma-green)}
+.coll-loc::before{background:var(--rijks-blue)}
+.coll-wiki::before{background:var(--gold)}
 .hero-status{position:relative;z-index:20;width:280px;flex-shrink:0;padding:14px 16px;border:1px solid rgba(200,169,110,0.12);background:rgba(8,8,8,0.56);backdrop-filter:blur(8px);align-self:flex-end}
 .hero-status p{font-family:var(--mono);font-size:9px;line-height:1.75;letter-spacing:0.05em;color:rgba(232,228,220,0.5)}
 .hero-status strong{color:var(--gold);font-weight:400}
@@ -116,8 +118,8 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 .search-box input::placeholder{color:var(--dim)}
 .search-box button{padding:14px 24px;background:rgba(200,169,110,0.12);border:none;border-left:1px solid rgba(232,228,220,0.08);color:var(--gold);font-family:var(--mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background 0.2s}
 .search-box button:hover{background:rgba(200,169,110,0.22)}
-.search-chips{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
-.search-chips button{width:100%;padding:10px 14px;border:1px solid rgba(232,228,220,0.08);background:transparent;color:var(--dim);font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;text-align:center}
+.search-chips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px}
+.search-chips button{width:100%;min-height:40px;padding:10px 14px;border:1px solid rgba(232,228,220,0.08);background:transparent;color:var(--dim);font-family:var(--mono);font-size:8px;line-height:1.45;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;text-align:center}
 .search-chips button:hover{border-color:var(--gold);color:var(--gold)}
 .search-info{text-align:center;margin-top:12px;font-family:var(--mono);font-size:9px;color:var(--dim)}
 
@@ -302,6 +304,8 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 .demo-conversation-chips button{padding:7px 11px;border:1px solid rgba(232,228,220,.1);background:transparent;color:var(--dim);font-family:var(--mono);font-size:8px;cursor:pointer}
 .demo-conversation-chips button:hover{color:var(--gold);border-color:rgba(200,169,110,.35)}
 .demo-audio{margin-top:12px;padding:12px;border:1px solid rgba(143,188,176,.14);background:rgba(143,188,176,.025)}
+.demo-audio-copy{margin-bottom:11px;font-family:var(--mono);font-size:8px;line-height:1.7;letter-spacing:.1em;text-transform:uppercase;color:rgba(232,228,220,.5)}
+.demo-audio-copy strong{color:var(--teal);font-weight:400}
 .demo-audio-top{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
 .demo-audio-select{flex:1;min-width:210px;padding:9px 10px;border:1px solid rgba(232,228,220,.12);background:#0c0c0c;color:rgba(232,228,220,.72);font-family:var(--mono);font-size:9px}
 .demo-audio-status{display:flex;align-items:center;gap:8px;margin-top:9px;font-family:var(--mono);font-size:8px;line-height:1.55;color:var(--dim)}
@@ -583,9 +587,9 @@ footer a:hover{color:var(--fg)}
     <div class="hero-tag">Sovereign Semantic Heritage AI</div>
     <h1 class="hero-title">ARCHAI</h1>
     <p class="hero-subtitle">Search, compare, and interpret cultural records across institutions. ARCHAI adds a sovereign semantic layer above collection systems, while AUX.IO carries rights-aware interpretation into galleries, maps, and mobile access.</p>
-    <p class="hero-demo-note"><strong>Public research demo:</strong> 3,147 staff-searchable records are connected across 19 sources. This website presents a simplified, image-first interface; the full ARCHAI app also works with metadata-only and rights-held records, alongside curatorial, collections, accessibility, infrastructure, and publishing workflows.</p>
+    <p class="hero-demo-note"><strong>Public research demo:</strong> ARCHAI is now framed as a 21-source research network. The current indexed pilot contains 3,147 staff-searchable records across 19 live sources, including municipal public-art material for murals, street art, civic commissions, and social-practice records, with Library of Congress and Wikimedia Commons / Wikidata added as the next library, archive, and open-knowledge connectors. This website presents a simplified, image-first interface; the full ARCHAI app also works with metadata-only and rights-held records, alongside curatorial, collections, accessibility, infrastructure, and publishing workflows.</p>
     <div class="hero-sources">
-      <div class="hero-sources-label">19 connected research sources · public/open records do not imply institutional endorsement</div>
+      <div class="hero-sources-label">21-source research network · 19 indexed live sources · public/open records do not imply institutional endorsement</div>
       <div class="hero-collections">
         <span class="coll coll-mv">Museums Victoria</span>
         <span class="coll coll-met">The Metropolitan Museum of Art</span>
@@ -606,6 +610,8 @@ footer a:hover{color:var(--fg)}
         <span class="coll coll-qagoma">QAGOMA</span>
         <span class="coll coll-rawg">RAWG Video Games Database</span>
         <span class="coll coll-nga">National Gallery of Art</span>
+        <span class="coll coll-loc">Library of Congress</span>
+        <span class="coll coll-wiki">Wikimedia Commons / Wikidata</span>
       </div>
     </div>
   </div>
@@ -634,30 +640,34 @@ footer a:hover{color:var(--fg)}
           <div class="source-filter">
             <div class="source-filter-head">
               <span>Collection scope</span>
-              <span>Swipe or scroll to review all 19 sources</span>
+              <span>Swipe or scroll to review all 19 indexed sources</span>
             </div>
             <div class="source-tabs" id="sourceTabs" aria-label="Filter search by collection"></div>
           </div>
           <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search 3,147 records across 19 connected sources..." autocomplete="off">
+            <input type="text" id="searchInput" placeholder="Search 3,147 indexed records across 19 live sources..." autocomplete="off">
             <button id="searchBtn">Search</button>
           </div>
           <div class="search-chips">
-            <button onclick="doSearch('ceramics vessel bowl plate porcelain earthenware')">Ceramics</button>
-            <button onclick="doSearch('ancient world classical antiquity ritual object archaeology')">Ancient worlds</button>
-            <button onclick="doSearch('painting portrait landscape icon canvas panel')">Paintings</button>
-            <button onclick="doSearch('jewellery ornament gold silver bead adornment')">Jewellery</button>
-            <button onclick="doSearch('sculpture carved figure bronze stone wood')">Sculpture</button>
-            <button onclick="doSearch('textiles weaving embroidery cloth garment costume tapa')">Textiles</button>
-            <button onclick="doSearch('photography photograph print documentary portrait')">Photography</button>
-            <button onclick="doSearch('technology communication media machine radio television instrument')">Technology</button>
+            <button onclick="doSearch('painting drawing print work on paper portrait landscape canvas panel')">Paintings &amp; Works on Paper</button>
+            <button onclick="doSearch('sculpture installation carved figure bronze stone wood spatial object')">Sculpture &amp; Installation</button>
+            <button onclick="doSearch('photography photograph print negative documentary portrait camera image')">Photography</button>
+            <button onclick="doSearch('decorative arts design furniture vessel object glass metalwork jewellery')">Decorative Arts &amp; Design</button>
+            <button onclick="doSearch('textiles dress weaving embroidery cloth garment costume tapa fashion')">Textiles &amp; Dress</button>
+            <button onclick="doSearch('ceramics glass vessel bowl plate porcelain earthenware glaze')">Ceramics &amp; Glass</button>
+            <button onclick="doSearch('time based media art video film sound performance installation moving image')">Time-Based &amp; Media Art</button>
+            <button onclick="doSearch('digital art new media software game interactive screen technology')">Digital Art &amp; New Media</button>
+            <button onclick="doSearch('indigenous first nations aboriginal torres strait maori native community cultural material')">Indigenous &amp; First Nations</button>
+            <button onclick="doSearch('folk craft vernacular handmade regional tradition material culture')">Folk, Craft &amp; Vernacular</button>
+            <button onclick="doSearch('street art mural graffiti paste up stencil public art social practice civic urban wall community')">Street Art, Public Art &amp; Social Practice</button>
+            <button onclick="doSearch('archaeology ancient worlds antiquity ritual classical material culture')">Archaeology &amp; Ancient Worlds</button>
           </div>
           <div class="search-info" id="searchInfo"></div>
         </div>
 
         <div class="demo-panel" id="demoConversationPanel" role="tabpanel" aria-labelledby="demoConversationTab" hidden>
           <h3>Talk to the connected collection</h3>
-          <p class="demo-panel-intro">Ask a question across the connected records. Choose a staff lens to shape how ARCHAI reads the material, then type or dictate your question. Responses are grounded in source metadata and do not represent the views of the contributing institutions.</p>
+          <p class="demo-panel-intro">Ask a question across the connected records. Choose a staff lens to shape how ARCHAI reads the material, then type, dictate, or listen back to the response through the browser audio interface. Responses are grounded in source metadata and do not represent the views of the contributing institutions.</p>
           <div class="chat-tone-wrap">
             <div class="chat-tone-label">Response lens</div>
             <div class="chat-tone-buttons" id="demoConversationLensButtons"></div>
@@ -667,6 +677,7 @@ footer a:hover{color:var(--fg)}
             <button onclick="setDemoConversationQuestion('Compare how different institutions describe related objects.')">Compare institutions</button>
             <button onclick="setDemoConversationQuestion('Find an unexpected connection across the collection.')">Unexpected connection</button>
             <button onclick="setDemoConversationQuestion('What might be missing or unclear in these records?')">Record gaps</button>
+            <button onclick="setDemoConversationQuestion('How do street art and public art records connect civic space, authorship, and community memory?')">Street &amp; civic art</button>
             <button onclick="setDemoConversationQuestion('How does technology shape cultural memory in these collections?')">Technology &amp; memory</button>
           </div>
           <div class="demo-conversation-messages" id="demoConversationMessages" aria-live="polite">
@@ -677,6 +688,7 @@ footer a:hover{color:var(--fg)}
             <button id="demoConversationAsk">Ask ARCHAI</button>
           </div>
           <div class="demo-audio">
+            <div class="demo-audio-copy">Audio interface · microphone questions, spoken replies, and <strong class="voice-language-count">detecting browser languages</strong></div>
             <div class="demo-audio-top">
               <button class="demo-audio-btn" id="demoVoiceStart">Start voice question</button>
               <button class="demo-audio-btn" id="demoVoiceStop" disabled>Stop listening</button>
@@ -723,14 +735,14 @@ footer a:hover{color:var(--fg)}
       <div class="about-grid">
         <div class="about-text rv">
           <p>ARCHAI is an <em>open-source, sovereign semantic interface for cultural heritage</em> — an active research toolkit designed to sit above existing CMS and DAMS infrastructure. Institutions can run semantic search, grounded collection interpretation, spatial tools, accessibility support, and visitor engagement on their own network and under their own governance.</p>
-          <p>The current research corpus contains 3,147 records across 19 connected museum, heritage, public-art, and cultural-data sources. Staff can search the complete metadata layer; public interfaces use a separate rights and media-health gate so a connected record is not automatically treated as reusable visitor media.</p>
-          <p>AUX.IO offers optional factual, third-person, and era-informed interpretation modes through NFC, QR, hyperlink, map, or location-aware exhibition triggers. Text-to-speech and speech-to-text are now working prototype pathways, with further accessibility and multilingual testing in development.</p>
+          <p>The current research corpus contains 3,147 records across 19 indexed museum, heritage, public-art, and cultural-data sources. Its public-art layer gives the demo a place for street art, murals, civic commissions, precinct works, and social-practice records alongside museum and archive material. The wider source network now adds Library of Congress and Wikimedia Commons / Wikidata as next-step connectors, bringing library, archive, civic-memory, open-media, and linked-data context into the ARCHAI ecology. Staff can search the complete metadata layer; public interfaces use a separate rights and media-health gate so a connected record is not automatically treated as reusable visitor media.</p>
+          <p>AUX.IO offers optional factual, third-person, and era-informed interpretation modes through NFC, QR, hyperlink, map, or location-aware exhibition triggers. The working audio interface supports microphone questions and spoken replies through browser speech services, opening the prototype to <span class="voice-language-count">detected browser languages</span> on supported devices, with further accessibility and multilingual testing in development.</p>
           <p>The data format powering each conversation is <em>Obtext</em> (Object Context) — a structured record containing identity, physical properties, temporal context, significance, and crucially, constraints — what the object explicitly does not know.</p>
           <p>ARCHAI remains an active research prototype. This website is a public-facing demo layer rather than the full operational app. FAMTEC is open to funded research partnerships, institutional pilots, accessibility testing, collection-data collaborations, development support, and evaluation with museum, gallery, archive, and university teams, and looks forward to collaborating, growing, learning, researching, and testing with partners across the wider GLAM sector.</p>
           <p>Developed as part of doctoral research at RMIT University, School of Design. Presented at ISEA2026 Dubai and the 6th Summit on New Media Art Archiving.</p>
           <div class="rights-note">
             <h4>Sources &amp; Rights</h4>
-            <p>ARCHAI currently connects 19 independently governed sources through public records, open metadata, open APIs, or source-authorised display media. The staff layer contains 3,147 records; the public AUX.IO layer publishes 1,519 image-backed pages that passed the current availability and rights gates. Every object retains its source, attribution, and legal status. Institutional inclusion does not imply partnership or endorsement.</p>
+            <p>ARCHAI is presented as a 21-source research network: 19 indexed live sources plus Library of Congress and Wikimedia Commons / Wikidata as onboarding connectors. The staff layer currently contains 3,147 indexed records; the public AUX.IO layer publishes 1,519 image-backed pages that passed the current availability and rights gates. Every object retains its source, attribution, and legal status. Institutional or platform inclusion does not imply partnership or endorsement.</p>
           </div>
         </div>
         <div class="rv">
@@ -739,15 +751,15 @@ footer a:hover{color:var(--fg)}
             <li>Ollama local inference (Qwen 2.5 stack)</li>
             <li>nomic-embed-text embeddings (768-dim)</li>
             <li>AUX.IO universal access interface</li>
-            <li>Accessibility layer with TTS/STT in development</li>
+            <li>Working TTS/STT audio interface · <span class="voice-language-count">detecting browser languages</span></li>
             <li>Maps and spatial interpretation layer</li>
             <li>Obtext structured data format</li>
             <li>Five-layer hallucination prevention</li>
             <li>AI-moderated visitor comments</li>
             <li>Conversational collection search</li>
-            <li>19 connected source collections · 3,147 records</li>
+            <li>21-source network · 19 indexed live sources · 3,147 records</li>
             <li>1,519 rights-gated AUX.IO visitor pages</li>
-            <li>QR poster, sticker &amp; postcard tools on 440 cleared records</li>
+            <li>Designed QR poster, access sticker &amp; visitor postcard outputs on 440 cleared records</li>
             <li>SQLite persistent storage</li>
             <li>Zero cloud dependencies</li>
             <li>~$3,500 USD semantic layer (Mac Studio)</li>
@@ -838,7 +850,7 @@ footer a:hover{color:var(--fg)}
 <footer>
   <p>ARCHAI &copy; 2026 Rob Graham / <a href="/">FAMTEC</a> — All rights reserved</p>
   <p>Research prototype · open to funded pilots and testing partners · <a href="https://github.com/rob-e-graham/archai" target="_blank">GitHub</a></p>
-  <p>3,147 connected records across 19 sources · 1,519 rights-gated AUX.IO pages · source inclusion does not imply endorsement.</p>
+  <p>21-source research network · 3,147 indexed records across 19 live sources · 1,519 rights-gated AUX.IO pages · source inclusion does not imply endorsement.</p>
 </footer>
 
 <script>
@@ -1331,9 +1343,24 @@ function getPreferredDemoVoice(voices) {
 
 function populateDemoVoices() {
   const select = document.getElementById('demoVoiceSelect');
-  if (!select || !('speechSynthesis' in window)) return;
+  const languageCounts = document.querySelectorAll('.voice-language-count');
+  const setLanguageCountText = (text) => languageCounts.forEach((el) => { el.textContent = text; });
+  if (!('speechSynthesis' in window)) {
+    setLanguageCountText('typed access where browser audio is unavailable');
+    return;
+  }
+  if (!select) return;
   const previous = select.value;
   const voices = window.speechSynthesis.getVoices();
+  const spokenLocales = new Set(voices.map((voice) => String(voice.lang || '').trim()).filter(Boolean));
+  const spokenLanguages = new Set([...spokenLocales].map((lang) => lang.split('-')[0].toLowerCase()).filter(Boolean));
+  if (spokenLocales.size) {
+    const languageLabel = spokenLanguages.size === 1 ? 'language' : 'languages';
+    const localeLabel = spokenLocales.size === 1 ? 'voice locale' : 'voice locales';
+    setLanguageCountText(spokenLanguages.size + ' ' + languageLabel + ' / ' + spokenLocales.size + ' ' + localeLabel);
+  } else {
+    setLanguageCountText('browser voice languages loading');
+  }
   select.innerHTML = '<option value="">ARCHAI neutral (automatic)</option>' + voices.map((voice) =>
     '<option value="' + esc(voice.voiceURI) + '">' + esc(voice.name + ' · ' + voice.lang) + '</option>'
   ).join('');
