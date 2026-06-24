@@ -322,10 +322,7 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 .demo-audio-dot.live{background:var(--teal);border-color:var(--teal);box-shadow:0 0 0 6px rgba(99,195,176,.08);animation:demoVoicePulse 1.2s ease-out infinite}
 .demo-audio-dot.error{background:var(--aic-coral);border-color:var(--aic-coral)}
 @keyframes demoVoicePulse{0%{box-shadow:0 0 0 0 rgba(99,195,176,.25)}100%{box-shadow:0 0 0 10px rgba(99,195,176,0)}}
-.aux-demo-grid{display:grid;grid-template-columns:minmax(260px,360px) minmax(0,1fr);gap:28px;align-items:start}
-.aux-demo-phone{position:relative;width:100%;aspect-ratio:9/16;max-height:620px;border:1px solid rgba(143,188,176,.28);border-radius:28px;padding:10px;background:#050606;box-shadow:0 20px 60px rgba(0,0,0,.4);overflow:hidden}
-.aux-demo-phone::before{content:'';position:absolute;top:10px;left:50%;transform:translateX(-50%);width:64px;height:5px;border-radius:8px;background:rgba(232,228,220,.12);z-index:2}
-.aux-demo-phone iframe{width:100%;height:100%;border:0;border-radius:20px;background:#080808}
+.aux-demo-grid{max-width:680px}
 .aux-demo-copy{padding-top:12px}
 .aux-demo-copy h3{font-size:clamp(27px,4vw,43px)}
 .aux-demo-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
@@ -561,8 +558,7 @@ footer a:hover{color:var(--fg)}
   .demo-conversation-input{flex-direction:column}
   .demo-conversation-input input{border-right:1px solid rgba(232,228,220,.12);border-bottom:0}
   .demo-audio-select{width:100%;min-width:0}
-  .aux-demo-grid{grid-template-columns:1fr}
-  .aux-demo-phone{max-width:360px;margin:0 auto}
+  .aux-demo-grid{max-width:none}
   .about-grid{grid-template-columns:1fr;gap:40px}
   .obj-modal-inner{margin:60px auto;padding:0 20px 60px}
   .obj-close{right:20px;top:20px}
@@ -719,9 +715,6 @@ footer a:hover{color:var(--fg)}
 
         <div class="demo-panel" id="demoAuxPanel" role="tabpanel" aria-labelledby="demoAuxTab" hidden>
           <div class="aux-demo-grid">
-            <div class="aux-demo-phone">
-              <iframe id="auxDemoFrame" title="AUX.IO visitor preview" allow="microphone; web-share; clipboard-write" loading="lazy"></iframe>
-            </div>
             <div class="aux-demo-copy">
               <h3>AUX.IO turns a collection record into a mobile visitor encounter</h3>
               <p class="demo-panel-intro">Open an object through QR, NFC, hyperlink, map, or spatial trigger. Visitors can read, ask, listen, share, and follow related objects while the source record, attribution, and legal status remain visible.</p>
@@ -1795,17 +1788,12 @@ function getAuxRandomUrl() {
 }
 
 function activateAuxDemo() {
-  const frame = document.getElementById('auxDemoFrame');
   const openLink = document.getElementById('auxDemoOpen');
-  const entryUrl = getAuxEntryUrl();
-  if (openLink) openLink.href = entryUrl;
-  if (frame && !frame.getAttribute('src')) frame.src = entryUrl;
+  if (openLink) openLink.href = getAuxEntryUrl();
 }
 
 function surpriseAuxDemo() {
-  const frame = document.getElementById('auxDemoFrame');
-  const url = getAuxRandomUrl() + '?t=' + Date.now();
-  if (frame) frame.src = url;
+  window.open(getAuxRandomUrl() + '?t=' + Date.now(), '_blank', 'noopener');
 }
 
 function renderAuxLinkPanel() {
