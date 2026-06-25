@@ -309,6 +309,7 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 .demo-conversation-input input{flex:1;min-width:0;padding:14px 16px;background:rgba(232,228,220,.025);border:1px solid rgba(232,228,220,.12);border-right:0;color:var(--fg);font-family:var(--mono);font-size:11px;outline:none}
 .demo-conversation-input button,.demo-audio-btn{padding:12px 17px;border:1px solid rgba(232,228,220,.12);background:rgba(200,169,110,.1);color:var(--gold);font-family:var(--mono);font-size:8px;letter-spacing:.11em;text-transform:uppercase;cursor:pointer}
 .demo-conversation-input button:disabled,.demo-audio-btn:disabled{opacity:.35;cursor:not-allowed}
+.demo-audio-btn.active{border-color:rgba(143,188,176,.45);color:var(--teal);background:rgba(143,188,176,.08)}
 .demo-conversation-chips{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 17px}
 .demo-conversation-chips button{padding:7px 11px;border:1px solid rgba(232,228,220,.1);background:transparent;color:var(--dim);font-family:var(--mono);font-size:8px;cursor:pointer}
 .demo-conversation-chips button:hover{color:var(--gold);border-color:rgba(200,169,110,.35)}
@@ -319,12 +320,23 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 .demo-audio-select{flex:1;min-width:210px;padding:9px 10px;border:1px solid rgba(232,228,220,.12);background:#0c0c0c;color:rgba(232,228,220,.72);font-family:var(--mono);font-size:9px}
 .demo-audio-status{display:flex;align-items:center;gap:8px;margin-top:9px;font-family:var(--mono);font-size:8px;line-height:1.55;color:var(--dim)}
 .demo-audio-dot{width:8px;height:8px;border:1px solid rgba(143,188,176,.35);border-radius:50%;background:rgba(255,255,255,.05);flex:0 0 auto}
-.demo-audio-dot.live{background:var(--teal);border-color:var(--teal);box-shadow:0 0 0 6px rgba(99,195,176,.08);animation:demoVoicePulse 1.2s ease-out infinite}
+.demo-audio-dot.live,.demo-audio-dot.pending{background:var(--teal);border-color:var(--teal);box-shadow:0 0 0 6px rgba(99,195,176,.08);animation:demoVoicePulse 1.2s ease-out infinite}
+.demo-audio-dot.pending{background:rgba(200,169,110,.9);border-color:rgba(200,169,110,.9)}
 .demo-audio-dot.error{background:var(--aic-coral);border-color:var(--aic-coral)}
 @keyframes demoVoicePulse{0%{box-shadow:0 0 0 0 rgba(99,195,176,.25)}100%{box-shadow:0 0 0 10px rgba(99,195,176,0)}}
-.aux-demo-grid{max-width:680px}
-.aux-demo-copy{padding-top:12px}
-.aux-demo-copy h3{font-size:clamp(27px,4vw,43px)}
+.aux-demo-grid{display:grid;grid-template-columns:minmax(360px,.92fr) minmax(420px,1.08fr);gap:34px;align-items:stretch}
+.aux-flow{display:flex;flex-direction:column;justify-content:center;min-height:420px;padding:34px 30px;border:1px solid rgba(143,188,176,.18);background:linear-gradient(135deg,rgba(143,188,176,.055),rgba(200,169,110,.025));box-shadow:inset 0 0 0 1px rgba(232,228,220,.025)}
+.aux-flow-step{display:flex;gap:17px;position:relative;padding-bottom:30px}
+.aux-flow-step:last-child{padding-bottom:0}
+.aux-flow-step::before{content:'';position:absolute;left:22px;top:49px;bottom:0;width:1px;background:rgba(200,169,110,.25)}
+.aux-flow-step:last-child::before{display:none}
+.aux-flow-ic{flex:none;width:45px;height:45px;border-radius:50%;border:1px solid rgba(200,169,110,.4);display:flex;align-items:center;justify-content:center;color:var(--gold);background:rgba(200,169,110,.05)}
+.aux-flow-ic svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.aux-flow-tx{padding-top:6px}
+.aux-flow-tx h4{font-family:var(--serif);font-weight:400;font-size:clamp(20px,2vw,25px);color:var(--fg);margin:0 0 7px;line-height:1.12}
+.aux-flow-tx p{font-family:var(--mono);font-size:10.5px;line-height:1.65;color:#9b948b;letter-spacing:.02em;margin:0;max-width:360px}
+.aux-demo-copy{display:flex;flex-direction:column;justify-content:center;padding:8px 8px 8px 0}
+.aux-demo-copy h3{font-size:clamp(35px,4.8vw,67px);max-width:900px}
 .aux-demo-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
 .aux-demo-actions button,.aux-demo-actions a{padding:11px 15px;border:1px solid rgba(143,188,176,.25);background:rgba(143,188,176,.05);color:var(--teal);font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;cursor:pointer}
 .aux-demo-facts{margin-top:25px;border-top:1px solid rgba(232,228,220,.08)}
@@ -558,7 +570,9 @@ footer a:hover{color:var(--fg)}
   .demo-conversation-input{flex-direction:column}
   .demo-conversation-input input{border-right:1px solid rgba(232,228,220,.12);border-bottom:0}
   .demo-audio-select{width:100%;min-width:0}
-  .aux-demo-grid{max-width:none}
+  .aux-demo-grid{grid-template-columns:1fr}
+  .aux-flow{min-height:0;padding:24px 18px}
+  .aux-demo-copy{padding:0}
   .about-grid{grid-template-columns:1fr;gap:40px}
   .obj-modal-inner{margin:60px auto;padding:0 20px 60px}
   .obj-close{right:20px;top:20px}
@@ -715,6 +729,20 @@ footer a:hover{color:var(--fg)}
 
         <div class="demo-panel" id="demoAuxPanel" role="tabpanel" aria-labelledby="demoAuxTab" hidden>
           <div class="aux-demo-grid">
+            <div class="aux-flow" aria-label="How AUX.IO works">
+              <div class="aux-flow-step">
+                <div class="aux-flow-ic"><svg viewBox="0 0 24 24"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/><circle cx="12" cy="12" r="2.4"/></svg></div>
+                <div class="aux-flow-tx"><h4>Tap or scan an object</h4><p>QR · NFC · hyperlink · map · spatial trigger</p></div>
+              </div>
+              <div class="aux-flow-step">
+                <div class="aux-flow-ic"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12z"/></svg></div>
+                <div class="aux-flow-tx"><h4>It answers from its own record</h4><p>Grounded in Obtext — no invented facts. Source, attribution &amp; legal status stay visible.</p></div>
+              </div>
+              <div class="aux-flow-step">
+                <div class="aux-flow-ic"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.4"/><circle cx="18" cy="6" r="2.4"/><circle cx="18" cy="18" r="2.4"/><path d="M8.1 10.9 15.9 7.1M8.1 13.1l7.8 3.8"/></svg></div>
+                <div class="aux-flow-tx"><h4>Read, ask, listen &amp; share</h4><p>and follow related objects across the collection.</p></div>
+              </div>
+            </div>
             <div class="aux-demo-copy">
               <h3>AUX.IO turns a collection record into a mobile visitor encounter</h3>
               <p class="demo-panel-intro">Open an object through QR, NFC, hyperlink, map, or spatial trigger. Visitors can read, ask, listen, share, and follow related objects while the source record, attribution, and legal status remain visible.</p>
@@ -723,7 +751,7 @@ footer a:hover{color:var(--fg)}
                 <button onclick="surpriseAuxDemo()">Surprise me</button>
               </div>
               <div class="aux-demo-facts">
-                <div class="aux-demo-fact"><span>Published visitor pages</span><strong>1,519 rights-gated objects</strong></div>
+                <div class="aux-demo-fact"><span>Published visitor pages</span><strong>1,522 rights-gated objects</strong></div>
                 <div class="aux-demo-fact"><span>Print workflow</span><strong>440 QR-ready records</strong></div>
                 <div class="aux-demo-fact"><span>Access modes</span><strong>Text, voice, mobile, map-ready</strong></div>
                 <div class="aux-demo-fact"><span>Institutional use</span><strong>Editable for local collection records</strong></div>
@@ -747,10 +775,10 @@ footer a:hover{color:var(--fg)}
           <p>AUX.IO offers optional factual, third-person, and era-informed interpretation modes through NFC, QR, hyperlink, map, or location-aware exhibition triggers. The working audio interface supports microphone questions and spoken replies through browser speech services, opening the prototype to <span class="voice-language-count">detected browser languages</span> on supported devices, with further accessibility and multilingual testing in development.</p>
           <p>The data format powering each conversation is <em>Obtext</em> (Object Context) — a structured record containing identity, physical properties, temporal context, significance, and crucially, constraints — what the object explicitly does not know.</p>
           <p>ARCHAI remains an active research prototype. This website is a public-facing demo layer rather than the full operational app. FAMTEC is open to funded research partnerships, institutional pilots, accessibility testing, collection-data collaborations, development support, and evaluation with museum, gallery, archive, and university teams, and looks forward to collaborating, growing, learning, researching, and testing with partners across the wider GLAM sector.</p>
-          <p>Developed as part of doctoral research at RMIT University, School of Design. Presented at ISEA2026 Dubai and the 6th Summit on New Media Art Archiving.</p>
+          <p>Developed as part of doctoral research at RMIT University, School of Design. The research paper was accepted for the 6th Summit on New Media Art Archiving (ISEA2026 Dubai).</p>
           <div class="rights-note">
             <h4>Sources &amp; Rights</h4>
-            <p>ARCHAI is presented as a 24-source research network: 19 indexed live sources plus Library of Congress, Wikimedia Commons / Wikidata, Trove / National Library of Australia, Digital Public Library of America, and Internet Archive as onboarding connectors. The staff layer currently contains 3,147 indexed records; the public AUX.IO layer publishes 1,519 image-backed pages that passed the current availability and rights gates. Every object retains its source, attribution, and legal status. Institutional or platform inclusion does not imply partnership or endorsement.</p>
+            <p>ARCHAI is presented as a 24-source research network: 19 indexed live sources plus Library of Congress, Wikimedia Commons / Wikidata, Trove / National Library of Australia, Digital Public Library of America, and Internet Archive as onboarding connectors. The staff layer currently contains 3,147 indexed records; the public AUX.IO layer publishes 1,522 image-backed pages that passed the current availability and rights gates. Every object retains its source, attribution, and legal status. Institutional or platform inclusion does not imply partnership or endorsement.</p>
           </div>
         </div>
         <div class="rv">
@@ -766,7 +794,7 @@ footer a:hover{color:var(--fg)}
             <li>AI-moderated visitor comments</li>
             <li>Conversational collection search</li>
             <li>24-source network · 19 indexed live sources · 3,147 records</li>
-            <li>1,519 rights-gated AUX.IO visitor pages</li>
+            <li>1,522 rights-gated AUX.IO visitor pages</li>
             <li>Designed QR poster, access sticker &amp; visitor postcard outputs on 440 cleared records</li>
             <li>SQLite persistent storage</li>
             <li>Zero cloud dependencies</li>
@@ -858,7 +886,7 @@ footer a:hover{color:var(--fg)}
 <footer>
   <p>ARCHAI &copy; 2026 Rob Graham / <a href="/">FAMTEC</a> — All rights reserved</p>
   <p>Research prototype · open to funded pilots and testing partners · <a href="https://github.com/rob-e-graham/archai" target="_blank">GitHub</a></p>
-  <p>24-source research network · 3,147 indexed records across 19 live sources · 1,519 rights-gated AUX.IO pages · source inclusion does not imply endorsement.</p>
+  <p>24-source research network · 3,147 indexed records across 19 live sources · 1,522 rights-gated AUX.IO pages · source inclusion does not imply endorsement.</p>
 </footer>
 
 <script>
@@ -918,6 +946,36 @@ let demoLastReply = '';
 let demoRecognition = null;
 let demoListening = false;
 let demoVoiceHadError = false;
+let demoVoiceShouldAutoAsk = false;
+const DEMO_LEGACY_VOICE_PATTERNS = [
+  /zarvox/i,
+  /trinoids/i,
+  /boing/i,
+  /bubbles/i,
+  /cellos/i,
+  /bells/i,
+  /organ/i,
+  /whisper/i,
+  /novelty/i,
+  /bad news/i,
+  /good news/i
+];
+const DEMO_NEUTRAL_VOICE_PATTERNS = [
+  /samantha/i,
+  /daniel/i,
+  /karen/i,
+  /moira/i,
+  /tessa/i,
+  /veena/i,
+  /rishi/i,
+  /siri/i,
+  /google/i,
+  /microsoft/i,
+  /natural/i,
+  /neural/i,
+  /enhanced/i,
+  /premium/i
+];
 
 function renderCollectionTabs() {
   const tabs = document.getElementById('sourceTabs');
@@ -1260,7 +1318,11 @@ function updateDemoVoiceUI(status, state = '') {
   const silence = document.getElementById('demoVoiceSilence');
   if (dot) dot.className = 'demo-audio-dot' + (state ? ' ' + state : '');
   if (statusEl && status) statusEl.textContent = status;
-  if (start) start.disabled = demoListening;
+  if (start) {
+    start.disabled = demoListening;
+    start.classList.toggle('active', !!demoListening);
+    start.textContent = demoListening ? 'Listening...' : 'Start voice question';
+  }
   if (stop) stop.disabled = !demoListening;
   if (read) read.disabled = !demoLastReply || !('speechSynthesis' in window);
   if (silence) silence.disabled = !('speechSynthesis' in window) || !window.speechSynthesis.speaking;
@@ -1282,7 +1344,8 @@ function ensureDemoRecognition() {
   demoRecognition.onstart = () => {
     demoListening = true;
     demoVoiceHadError = false;
-    updateDemoVoiceUI('Listening now. Speak naturally, then review the question before sending.', 'live');
+    demoVoiceShouldAutoAsk = true;
+    updateDemoVoiceUI('Listening now. Speak naturally, then press Stop or pause when finished.', 'live');
   };
   demoRecognition.onresult = (event) => {
     let transcript = '';
@@ -1296,6 +1359,7 @@ function ensureDemoRecognition() {
   demoRecognition.onerror = (event) => {
     demoListening = false;
     demoVoiceHadError = true;
+    demoVoiceShouldAutoAsk = false;
     const messages = {
       'not-allowed': 'Microphone access was blocked. Allow it in the browser site settings, then try again.',
       'service-not-allowed': 'Speech recognition is unavailable in this browser or network context.',
@@ -1313,8 +1377,16 @@ function ensureDemoRecognition() {
     }
     const input = document.getElementById('demoConversationInput');
     if (input && input.value.trim()) {
-      updateDemoVoiceUI('Ready. Review the question, then press Ask ARCHAI.');
+      const capturedQuestion = input.value.trim();
+      if (demoVoiceShouldAutoAsk) {
+        demoVoiceShouldAutoAsk = false;
+        updateDemoVoiceUI('Question captured. Asking ARCHAI...', 'pending');
+        askDemoConversation(capturedQuestion);
+      } else {
+        updateDemoVoiceUI('Ready. Review the question, then press Ask ARCHAI.');
+      }
     } else {
+      demoVoiceShouldAutoAsk = false;
       updateDemoVoiceUI('Listening stopped. Press Start voice question to try again.');
     }
   };
@@ -1327,15 +1399,20 @@ function startDemoVoice() {
     updateDemoVoiceUI('Speech recognition is not supported here. You can still type a question and have the reply read aloud.', 'error');
     return;
   }
+  updateDemoVoiceUI('Starting microphone…', 'live');
   try {
     recognition.start();
   } catch {
+    demoVoiceShouldAutoAsk = false;
     updateDemoVoiceUI('Voice input is already starting. Wait for the listening indicator.', 'live');
   }
 }
 
 function stopDemoVoice() {
-  if (demoRecognition && demoListening) demoRecognition.stop();
+  if (demoRecognition && demoListening) {
+    updateDemoVoiceUI('Stopping microphone. Sending captured question...', 'pending');
+    demoRecognition.stop();
+  }
 }
 
 function getPreferredDemoVoice(voices) {
@@ -1344,16 +1421,23 @@ function getPreferredDemoVoice(voices) {
     const selected = voices.find((voice) => voice.voiceURI === selectedUri);
     if (selected) return selected;
   }
+  const target = (document.documentElement.lang || navigator.language || 'en-AU').toLowerCase();
+  const targetBase = target.split('-')[0];
   return [...voices].sort((a, b) => {
     const score = (voice) => {
-      const name = voice.name.toLowerCase();
-      const lang = voice.lang.toLowerCase();
+      const name = `${voice.name || ''} ${voice.voiceURI || ''}`;
+      const lang = (voice.lang || '').toLowerCase();
       let value = 0;
-      if (/en-au|en-nz|en-gb/.test(lang)) value += 5;
-      else if (lang.startsWith('en')) value += 3;
-      if (/enhanced|premium|natural|neural/.test(name)) value += 4;
-      if (/novelty|whisper|organ|bells|zarvox/.test(name)) value -= 8;
-      if (voice.localService) value += 1;
+      if (lang === target) value += 80;
+      else if (lang.startsWith(`${targetBase}-`)) value += 60;
+      else if (lang.startsWith(targetBase)) value += 40;
+      DEMO_NEUTRAL_VOICE_PATTERNS.forEach((pattern, index) => {
+        if (pattern.test(name)) value += Math.max(30 - index * 4, 8);
+      });
+      if (/male|female|man|woman|boy|girl/i.test(name)) value -= 8;
+      if (DEMO_LEGACY_VOICE_PATTERNS.some(pattern => pattern.test(name))) value -= 80;
+      if (voice.default) value += 4;
+      if (voice.localService) value += 2;
       return value;
     };
     return score(b) - score(a);
@@ -1384,6 +1468,8 @@ function populateDemoVoices() {
     '<option value="' + esc(voice.voiceURI) + '">' + esc(voice.name + ' · ' + voice.lang) + '</option>'
   ).join('');
   if ([...select.options].some((option) => option.value === previous)) select.value = previous;
+  const preferred = getPreferredDemoVoice(voices);
+  if (preferred && !previous) updateDemoVoiceUI('ARCHAI neutral voice ready: ' + preferred.name + '.');
 }
 
 function readDemoReply() {
@@ -1401,6 +1487,7 @@ function readDemoReply() {
   utterance.onend = () => updateDemoVoiceUI('Reply finished. You can ask another question.');
   utterance.onerror = () => updateDemoVoiceUI('The browser could not read this reply aloud.', 'error');
   window.speechSynthesis.speak(utterance);
+  updateDemoVoiceUI('Starting speech playback…', 'live');
 }
 
 function stopDemoSpeech() {
