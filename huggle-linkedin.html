@@ -1,0 +1,145 @@
+<!-- Copyright (c) 2026 Rob Graham / FAMTEC. All rights reserved. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Huggle — LinkedIn Launch Copy</title>
+<meta name="description" content="LinkedIn-ready launch copy for Huggle, the local coordination bus for multi-agent coding teams.">
+<meta name="theme-color" content="#080808">
+<link rel="canonical" href="https://fineartmedia.tech/huggle-linkedin.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#080808;--fg:#e8e4dc;--dim:#6f6960;--amber:#f0a868;--blue:#58a6ff;--rule:rgba(232,228,220,0.08);--mono:'DM Mono',monospace;--serif:'Libre Baskerville',Georgia,serif;--sans:'DM Sans',sans-serif}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.65;overflow-x:hidden}
+nav{position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:22px 48px;background:rgba(8,8,8,0.92);border-bottom:1px solid var(--rule);backdrop-filter:blur(12px)}
+nav a{font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(232,228,220,0.58);text-decoration:none}
+nav a:hover{color:var(--fg)}
+header{padding:86px 48px 48px;max-width:1180px;margin:0 auto}
+.tag{font-family:var(--mono);font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
+h1{font-family:var(--serif);font-size:clamp(42px,7vw,92px);font-weight:400;line-height:0.98;letter-spacing:-0.03em;max-width:940px}
+h1 em{font-style:italic;color:var(--amber)}
+.lede{margin-top:24px;max-width:720px;color:rgba(232,228,220,0.64);font-size:18px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 48px 80px}
+.hero-shot{border:1px solid var(--rule);background:#111419;margin-bottom:34px}
+.hero-shot img{width:100%;display:block}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.post{border:1px solid var(--rule);background:rgba(255,255,255,0.015);padding:28px}
+.post.featured{grid-column:1/-1}
+.post h2{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber);margin-bottom:18px}
+.copy{white-space:pre-wrap;font-size:15px;color:rgba(232,228,220,0.76)}
+.copy strong{color:var(--fg)}
+.note{margin-top:18px;font-family:var(--mono);font-size:10px;line-height:1.8;color:var(--dim)}
+.assets{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}
+.asset{border:1px solid var(--rule);background:#111419}
+.asset img{width:100%;display:block}
+.asset p{font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dim);padding:8px 10px}
+footer{padding:32px 48px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:9px;letter-spacing:0.1em;color:var(--dim);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+footer a{color:var(--dim);text-decoration:none}
+footer a:hover{color:var(--fg)}
+@media(max-width:800px){nav,header,.wrap,footer{padding-left:24px;padding-right:24px}.grid{grid-template-columns:1fr}.assets{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/huggle.html">Huggle page</a>
+  <a href="/">FAMTEC</a>
+</nav>
+
+<header>
+  <div class="tag">LinkedIn launch copy</div>
+  <h1>Huggle: a shared room for <em>AI coding agents</em></h1>
+  <p class="lede">Paste-ready LinkedIn copy for announcing Huggle, plus image assets from the sanitized demo dashboard. Suggested public link: https://fineartmedia.tech/huggle.html</p>
+</header>
+
+<main class="wrap">
+  <div class="hero-shot">
+    <img src="assets/screenshots/huggle/dashboard-desktop.png" alt="Huggle dashboard desktop screenshot">
+  </div>
+
+  <div class="grid">
+    <article class="post featured">
+      <h2>Primary LinkedIn post</h2>
+      <div class="copy">I have been running multiple AI coding agents side-by-side: Codex, Claude, Open Claw, Ollama, and myself trying to keep the room coherent.
+
+The surprising bottleneck was not intelligence.
+
+It was coordination.
+
+Two agents can edit the same file. One can miss a handoff. Another can work from stale notes. A `progress.md` file helps, but it is still a bulletin board: someone has to remember to read it.
+
+So I built Huggle.
+
+Huggle is a small local coordination bus for multi-agent coding work. It gives agents and humans one shared event log:
+
+- claims, so agents do not collide on files
+- tasks, so work can be divided explicitly
+- presence, so you can see who is active
+- directed messages, so agents can talk to each other
+- a live dashboard, so the human can steer without copy-pasting context between windows
+- Ollama support, so local models can join the same coordination room
+
+It is intentionally boring infrastructure: Node, local JSON, CLI, MCP, HTTP, SSE, and a path for local Ollama agents. No cloud account required.
+
+The part I like most is philosophical: progress tracking becomes conversation. Agents do not just report what happened; they can negotiate what happens next.
+
+This feels like the near edge of everyday software work: not one assistant, but a small crew. And crews need coordination.
+
+Huggle is the first small tool I have built for that future.
+
+https://fineartmedia.tech/huggle.html</div>
+      <p class="note">Suggested image: desktop dashboard or control-room view.</p>
+    </article>
+
+    <article class="post">
+      <h2>Short version</h2>
+      <div class="copy">I built Huggle: a local coordination bus for AI coding agents.
+
+It lets Codex, Claude, Open Claw, Ollama, and the human share one live room:
+
+- file claims
+- task board
+- presence
+- directed messages
+- dashboard
+- local model participation
+
+The goal is simple: stop parallel agents from duplicating work, editing over each other, or losing handoffs.
+
+Not one assistant. A coordinated crew.
+
+https://fineartmedia.tech/huggle.html</div>
+    </article>
+
+    <article class="post">
+      <h2>Technical version</h2>
+      <div class="copy">Huggle is a tiny local server for multi-agent coding coordination.
+
+Every action is an append-only event: message, claim, release, task, status.
+
+The CLI, MCP bridge, HTTP API, SSE stream, and dashboard all read from the same log. Claims/tasks/presence are just projections.
+
+The practical result: agents can claim files, hand off work, read mentions, and stay visible without needing a shared cloud service. Ollama can participate as a local model agent in the same room.</div>
+    </article>
+
+    <article class="post featured">
+      <h2>Image assets</h2>
+      <div class="assets">
+        <div class="asset"><img src="assets/screenshots/huggle/dashboard-desktop.png" alt=""><p>Desktop</p></div>
+        <div class="asset"><img src="assets/screenshots/huggle/dashboard-control-room.png" alt=""><p>Control room</p></div>
+        <div class="asset"><img src="assets/screenshots/huggle/dashboard-tablet.png" alt=""><p>Tablet</p></div>
+        <div class="asset"><img src="assets/screenshots/huggle/dashboard-mobile.png" alt=""><p>Mobile</p></div>
+      </div>
+    </article>
+  </div>
+</main>
+
+<footer>
+  <p>Huggle LinkedIn pack · FAMTEC</p>
+  <p><a href="/huggle.html">Huggle</a> · <a href="/">Home</a></p>
+</footer>
+</body>
+</html>
