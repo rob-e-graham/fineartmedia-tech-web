@@ -397,9 +397,9 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 .obj-meta-item .om-value{font-family:var(--mono);font-size:11px;color:rgba(232,228,220,0.8)}
 .obj-desc{font-size:15px;line-height:1.8;color:rgba(232,228,220,0.7);margin-bottom:32px}
 .obj-record{
-  margin-top:30px;
-  padding-top:24px;
-  border-top:1px solid var(--rule);
+  margin-top:0;
+  padding-top:0;
+  border-top:0;
 }
 .obj-record-label{
   font-family:var(--mono);
@@ -439,6 +439,52 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 }
 .obj-record-item .or-value a:hover{
   color:var(--fg);
+}
+.obj-panel{
+  margin-top:22px;
+  border-top:1px solid var(--rule);
+}
+.obj-panel-summary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:16px 0;
+  list-style:none;
+  cursor:pointer;
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--gold);
+}
+.obj-panel-summary::-webkit-details-marker{display:none}
+.obj-panel-summary::after{
+  content:'+';
+  color:var(--dim);
+  font-size:14px;
+  letter-spacing:0;
+}
+.obj-panel[open] .obj-panel-summary::after{content:'−'}
+.obj-panel-body{padding-bottom:22px}
+.obj-image-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:-18px 0 28px;
+}
+.obj-image-actions button,
+.obj-image-actions a{
+  padding:7px 11px;
+  border:1px solid rgba(143,188,176,0.28);
+  background:rgba(143,188,176,0.035);
+  color:var(--teal);
+  font-family:var(--mono);
+  font-size:8px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  text-decoration:none;
+  cursor:pointer;
 }
 
 /* CHAT */
@@ -748,6 +794,7 @@ footer a:hover{color:var(--fg)}
               <p class="demo-panel-intro">Open an object through QR, NFC, hyperlink, map, or spatial trigger. Visitors can read, ask, listen, zoom into IIIF source images where available, share, and follow related objects while the source record, attribution, and legal status remain visible.</p>
               <div class="aux-demo-actions">
                 <a id="auxDemoOpen" href="aux.html" target="_blank" rel="noopener">Open AUX.IO</a>
+                <a href="app.html" target="_blank" rel="noopener">Open full app WIP</a>
                 <button onclick="surpriseAuxDemo()">Surprise me</button>
               </div>
               <div class="aux-demo-facts">
@@ -2227,7 +2274,13 @@ function renderFullRecord(payload) {
   }
 
   if (!rows.length) return '';
-  return '<div class="obj-record"><div class="obj-record-label">Full object record</div><div class="obj-record-grid">' + rows.join('') + '</div></div>';
+  return '<details class="obj-panel"><summary class="obj-panel-summary"><span>Full object record</span></summary><div class="obj-panel-body"><div class="obj-record"><div class="obj-record-grid">' + rows.join('') + '</div></div></div></details>';
+}
+
+function openImageInNewTab() {
+  if (!currentPayload) return;
+  const src = currentPayload.media_large || currentPayload.media_medium || pickImage(currentPayload);
+  if (src) window.open(src, '_blank', 'noopener');
 }
 
 function openObject(payloadStr) {
@@ -2251,6 +2304,13 @@ function openObject(payloadStr) {
 
   let html = '';
   if (img) html += '<img class="obj-hero-img" src="' + img + '" alt="' + title.replace(/"/g,'') + '" onload="archaiHeroImageLoad(this)" onerror="archaiHeroImageError(this)">';
+  const iiifImage = p.media_large || p.media_medium || img;
+  if (iiifImage) {
+    html += '<div class="obj-image-actions">';
+    html += '<a href="' + esc(iiifImage) + '" target="_blank" rel="noopener">Open source image</a>';
+    if (p.media_iiif_available || p.media_iiif_info_url) html += '<button onclick="openImageInNewTab()">Look closer</button>';
+    html += '</div>';
+  }
   html += '<h2 class="obj-title">' + title + '</h2>';
   if (maker) html += '<div class="obj-maker">' + maker + (date ? ' · ' + date : '') + '</div>';
 
@@ -2260,15 +2320,9 @@ function openObject(payloadStr) {
   if (location) html += '<div class="obj-meta-item"><div class="om-label">Location</div><div class="om-value">' + location + '</div></div>';
   if (reg) html += '<div class="obj-meta-item"><div class="om-label">Registration</div><div class="om-value">' + reg + '</div></div>';
   html += '<div class="obj-meta-item"><div class="om-label">Institution</div><div class="om-value">' + institution + '</div></div>';
-  html += '<div class="obj-meta-item"><div class="om-label">Legal status</div><div class="om-value" style="color:' + rights.color + ';">' + esc(rights.status) + '</div></div>';
   html += '</div>';
 
   if (desc) html += '<div class="obj-desc">' + desc.substring(0, 600) + (desc.length > 600 ? '...' : '') + '</div>';
-  html += '<div class="rights-note" style="margin-top:0;margin-bottom:28px;">' +
-    '<h4>Legal status</h4>' +
-    '<p><strong style="color:' + rights.color + ';font-weight:400;">' + esc(rights.status) + '</strong> — ' + esc(rights.guidance) + '<br><span style="opacity:0.86">Licence / rights: ' + esc(rights.detail) + '</span></p>' +
-  '</div>';
-  html += renderFullRecord(p);
 
   // Chat section
   if (backendLive) {
@@ -2288,6 +2342,14 @@ function openObject(payloadStr) {
     html += '</div>';
     html += '</div>';
   }
+
+  html += '<details class="obj-panel"><summary class="obj-panel-summary"><span>Legal status / source use</span></summary><div class="obj-panel-body">';
+  html += '<div class="rights-note" style="margin-top:0;">' +
+    '<h4>Legal status</h4>' +
+    '<p><strong style="color:' + rights.color + ';font-weight:400;">' + esc(rights.status) + '</strong> — ' + esc(rights.guidance) + '<br><span style="opacity:0.86">Licence / rights: ' + esc(rights.detail) + '</span></p>' +
+  '</div>';
+  html += '</div></details>';
+  html += renderFullRecord(p);
 
   document.getElementById('objModalInner').innerHTML = html;
   document.getElementById('objModal').classList.add('open');

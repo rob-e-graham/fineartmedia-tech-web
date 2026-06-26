@@ -11,7 +11,13 @@ Static site for `fineartmedia.tech`.
 - current participating institutions
 - AUX.IO visitor-path language
 
-Current ARCHAI website baseline: `v11.6`, `3,147` staff-searchable records across `19` connected sources, and `1,380` rights-gated AUX.IO visitor pages. Source inclusion describes the public/open research corpus and does not imply institutional partnership or endorsement.
+Current ARCHAI website baseline: `v11.6`, `3,147` staff-searchable records across `19` connected sources, and `1,522` rights-gated AUX.IO visitor pages. Source inclusion describes the public/open research corpus and does not imply institutional partnership or endorsement.
+
+Current ARCHAI routes:
+
+- `/archai.html` — public-facing ARCHAI narrative and simplified demo interface.
+- `/aux.html` — AUX.IO visitor-interface entry point.
+- `/app.html` — WIP full ARCHAI app shell, wired to `https://archai-api.fineartmedia.tech` for live backend behaviour where available.
 
 ## Research & development status
 
