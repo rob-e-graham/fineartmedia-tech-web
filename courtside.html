@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Courtside Help - Australian Family Court Support</title>
+<meta name="description" content="Courtside Help is a free Australian family court information and support web app, with printable QR poster, card and sticker downloads for public support locations.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#080808">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080808;
+  --fg:#f2eee7;
+  --dim:#7c756c;
+  --blue:#0b5fff;
+  --red:#e51b2b;
+  --green:#26b37a;
+  --rule:rgba(242,238,231,0.09);
+  --mono:'DM Mono',monospace;
+  --serif:'Libre Baskerville',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--serif);font-size:16px;line-height:1.7;overflow-x:hidden}
+a{color:inherit}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:26px 48px;background:linear-gradient(to bottom,rgba(8,8,8,0.92) 0%,rgba(8,8,8,0.55) 70%,transparent 100%)}
+.nav-logo{display:flex;align-items:center;gap:11px;text-decoration:none}
+.nav-wordmark{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;color:rgba(242,238,231,0.6);text-transform:uppercase}
+.nav-links{display:flex;gap:34px;list-style:none}
+.nav-links a{font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(242,238,231,0.55);text-decoration:none;transition:color 0.25s}
+.nav-links a:hover,.nav-links a.active{color:var(--fg)}
+.nav-links a:focus-visible,.nav-logo:focus-visible,.btn:focus-visible,.download-card:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
+.hero{position:relative;min-height:100vh;display:flex;align-items:flex-end;padding:150px 48px 80px;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(145deg,#080808 0%,#111827 34%,#080808 70%),radial-gradient(circle at 78% 30%,rgba(11,95,255,0.28),transparent 36%);opacity:1}
+.hero::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 119px,rgba(255,255,255,0.025) 119px,rgba(255,255,255,0.025) 120px),linear-gradient(to top,rgba(8,8,8,0.76),transparent 45%)}
+.hero-content{position:relative;z-index:2;max-width:980px}
+.hero-tag{font-family:var(--mono);font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--green);margin-bottom:18px}
+.hero-title{font-size:clamp(52px,9vw,126px);font-weight:400;line-height:0.92;letter-spacing:-0.03em}
+.hero-title em{color:var(--blue);font-style:italic}
+.hero-subtitle{max-width:760px;margin-top:24px;font-family:var(--sans);font-size:clamp(18px,2vw,26px);font-weight:700;line-height:1.35;color:rgba(242,238,231,0.85)}
+.hero-note{max-width:680px;margin-top:18px;font-family:var(--mono);font-size:11px;line-height:1.75;color:rgba(242,238,231,0.58)}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:13px 20px;border:1px solid var(--rule);background:rgba(255,255,255,0.04);font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:0.13em;text-transform:uppercase;text-decoration:none;color:var(--fg);transition:transform 0.2s,border-color 0.2s,background 0.2s}
+.btn:hover{transform:translateY(-2px);border-color:rgba(11,95,255,0.55);background:rgba(11,95,255,0.12)}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:white}
+.btn.alert{background:var(--red);border-color:var(--red);color:white}
+.wrap{max-width:1180px;margin:0 auto;padding:0 48px}
+section{padding:96px 0;border-top:1px solid var(--rule)}
+.sec-label{font-family:var(--mono);font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--green);margin-bottom:42px;display:flex;align-items:center;gap:14px}
+.sec-label::after{content:'';width:50px;height:1px;background:var(--green);opacity:0.35}
+.intro-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:72px;align-items:start}
+.intro-text p{font-family:var(--sans);font-size:17px;line-height:1.75;color:rgba(242,238,231,0.72);margin-bottom:18px}
+.intro-text em{color:var(--green);font-style:normal;font-weight:800}
+.plain-list{list-style:none;border:1px solid var(--rule);background:rgba(255,255,255,0.018)}
+.plain-list li{padding:17px 18px;border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:11px;line-height:1.7;color:rgba(242,238,231,0.6)}
+.plain-list li:last-child{border-bottom:none}
+.plain-list strong{display:block;margin-bottom:3px;color:var(--fg);font-family:var(--sans);font-size:15px}
+.demo-frame{border:1px solid rgba(11,95,255,0.28);background:#05070c;padding:14px;box-shadow:0 24px 80px rgba(0,0,0,0.34)}
+.phone{width:360px;max-width:100%;height:740px;margin:0 auto;border:10px solid #050505;border-radius:42px;overflow:hidden;background:#0a0a0f;box-shadow:0 0 0 1px rgba(255,255,255,0.08)}
+.phone iframe{width:100%;height:100%;border:0;display:block;background:#0a0a0f}
+.download-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.download-card{display:block;text-decoration:none;border:1px solid var(--rule);background:rgba(255,255,255,0.018);transition:transform 0.22s,border-color 0.22s,background 0.22s}
+.download-card:hover{transform:translateY(-3px);border-color:rgba(11,95,255,0.45);background:rgba(11,95,255,0.06)}
+.download-card img{width:100%;aspect-ratio:1/1.35;object-fit:cover;object-position:top;border-bottom:1px solid var(--rule);background:#fff}
+.download-card.card img,.download-card.sticker img{aspect-ratio:1.3/1;object-fit:contain;padding:16px}
+.download-body{padding:20px}
+.download-body span{display:block;margin-bottom:8px;font-family:var(--mono);font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--green)}
+.download-body h3{font-size:22px;font-weight:400;margin-bottom:8px}
+.download-body p{font-family:var(--sans);font-size:14px;line-height:1.6;color:rgba(242,238,231,0.58)}
+.warning{padding:24px;border:2px solid var(--red);background:rgba(229,27,43,0.08);font-family:var(--sans);font-size:17px;font-weight:700;line-height:1.55}
+.warning strong{color:#fff}
+.cta-band{display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center;padding:32px;border:1px solid rgba(11,95,255,0.32);background:rgba(11,95,255,0.09)}
+.cta-band h2{font-size:34px;font-weight:400;line-height:1.2}
+.cta-band p{font-family:var(--sans);font-size:15px;color:rgba(242,238,231,0.65);margin-top:8px}
+footer{padding:48px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+footer p{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;color:var(--dim)}
+footer a{color:var(--dim);text-decoration:none}
+footer a:hover{color:var(--fg)}
+@media(max-width:900px){
+  nav{padding:18px 20px;align-items:flex-start;flex-wrap:wrap;gap:12px;background:rgba(8,8,8,0.94)}
+  .nav-links{width:100%;gap:0;overflow-x:auto;padding-top:8px;border-top:1px solid var(--rule)}
+  .nav-links a{display:block;white-space:nowrap;padding:10px 16px 2px 0}
+  .hero{min-height:auto;padding:132px 20px 54px}
+  .wrap{padding:0 20px}
+  section{padding:64px 0}
+  .intro-grid,.download-grid,.cta-band{grid-template-columns:1fr;gap:28px}
+  .phone{height:640px}
+  footer{padding:32px 20px;align-items:flex-start;flex-direction:column}
+}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/">
+    <span class="nav-wordmark">FAMTEC</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/#bio">Profile</a></li>
+    <li><a href="/#projects">Projects</a></li>
+    <li><a href="/archai.html">ARCHAI</a></li>
+    <li><a href="/safechat.html">SafeChat</a></li>
+    <li><a href="/courtside.html" class="active">Courtside</a></li>
+    <li><a href="/huggle.html">Huggle</a></li>
+    <li><a href="/#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<header class="hero">
+  <div class="hero-content">
+    <p class="hero-tag">Free Australian family court information</p>
+    <h1 class="hero-title">Courtside <em>Help</em></h1>
+    <p class="hero-subtitle">A mobile-first support guide for people under pressure in Australian family court and separation systems.</p>
+    <p class="hero-note">Courtside Help gives plain-language steps, support contacts, youth information and community pathways. It is an information resource, not legal advice, and it is designed to be usable when someone is stressed.</p>
+    <div class="hero-actions">
+      <a class="btn primary" href="/courtside/">Open Web App</a>
+      <a class="btn" href="#downloads">Download Print Pack</a>
+      <a class="btn alert" href="tel:000">Emergency 000</a>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+<section>
+  <p class="sec-label">What It Does</p>
+  <div class="intro-grid">
+    <div class="intro-text">
+      <p><em>Courtside Help</em> is built for the moment when legal systems, family conflict, safety fears and paperwork all arrive at once.</p>
+      <p>The first release is Australia-only so people do not have to choose between countries or decode irrelevant information while they are in crisis. The interface keeps the language plain, the support pathways visible, and the disclaimers clear.</p>
+      <p>It can be shared as a web app, QR poster, wallet card, sticker, or front-desk handout in courts, police stations, emergency services, community legal centres and family support services.</p>
+    </div>
+    <ul class="plain-list">
+      <li><strong>Australia-only first release</strong> Keeps the experience focused for Australian services and court language.</li>
+      <li><strong>Immediate support contacts</strong> Crisis, legal, family violence, youth and community pathways.</li>
+      <li><strong>Plain-language stages</strong> Helps users orient themselves around forms, hearings, orders and next steps.</li>
+      <li><strong>No account required</strong> Opens in a browser and collects no personal story before helping.</li>
+    </ul>
+  </div>
+</section>
+</div>
+
+<div class="wrap">
+<section>
+  <p class="sec-label">Live App</p>
+  <div class="intro-grid">
+    <div>
+      <div class="warning"><strong>Important:</strong> Courtside Help is general information only and not legal advice. If someone is in immediate danger in Australia, call 000.</div>
+      <div class="hero-actions">
+        <a class="btn primary" href="/courtside/">Launch Live Demo</a>
+        <a class="btn" href="https://github.com/rob-e-graham/courtside" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+      </div>
+    </div>
+    <div class="demo-frame">
+      <div class="phone">
+        <iframe src="/courtside/" title="Courtside Help live app preview"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<div class="wrap">
+<section id="downloads">
+  <p class="sec-label">Print Pack</p>
+  <div class="download-grid">
+    <a class="download-card" href="/assets/courtside/courtside-help-poster.pdf" download>
+      <img src="/assets/courtside/courtside-help-poster.png" alt="Courtside Help A4 poster preview">
+      <div class="download-body">
+        <span>A4 PDF</span>
+        <h3>Poster</h3>
+        <p>Large, high-contrast QR poster with GET FREE HELP NOW and 000 emergency warning.</p>
+      </div>
+    </a>
+    <a class="download-card card" href="/assets/courtside/courtside-help-card.pdf" download>
+      <img src="/assets/courtside/courtside-help-card.png" alt="Courtside Help card preview">
+      <div class="download-body">
+        <span>Card PDF</span>
+        <h3>Counter Card</h3>
+        <p>Smaller print format for desks, waiting rooms, court support desks and handouts.</p>
+      </div>
+    </a>
+    <a class="download-card sticker" href="/assets/courtside/courtside-help-sticker.png" download>
+      <img src="/assets/courtside/courtside-help-sticker.png" alt="Courtside Help sticker preview">
+      <div class="download-body">
+        <span>PNG</span>
+        <h3>Sticker</h3>
+        <p>Square QR version for stickers, social posts, noticeboards and quick sharing.</p>
+      </div>
+    </a>
+  </div>
+</section>
+</div>
+
+<div class="wrap">
+<section>
+  <div class="cta-band">
+    <div>
+      <h2>Share the web app or print the QR pack.</h2>
+      <p>Use it where someone might need a calm next step before they know who to call.</p>
+    </div>
+    <a class="btn primary" href="/courtside/">Open Courtside Help</a>
+  </div>
+</section>
+</div>
+</main>
+
+<footer>
+  <p>© 2026 FAMTEC - Fine Art Media Technology</p>
+  <p><a href="/">fineartmedia.tech</a> · <a href="https://github.com/rob-e-graham/courtside" target="_blank" rel="noopener noreferrer">Courtside on GitHub</a></p>
+</footer>
+</body>
+</html>
