@@ -486,6 +486,17 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
   text-decoration:none;
   cursor:pointer;
 }
+.obj-staff-actions{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 20px}
+.obj-staff-actions button{padding:8px 12px;border:1px solid rgba(143,188,176,0.28);background:rgba(143,188,176,0.035);color:var(--teal);font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer}
+.obj-action-status{font-family:var(--mono);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);align-self:center}
+.obj-project-panel{margin:0 0 24px;padding:16px 18px;border:1px solid rgba(232,228,220,.08);background:rgba(232,228,220,.025)}
+.obj-project-panel h4{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.obj-project-panel p{font-family:var(--sans);font-size:13px;line-height:1.7;color:rgba(232,228,220,.58);margin:0 0 12px}
+.obj-project-list{display:flex;flex-direction:column;gap:8px}
+.obj-project-item{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid rgba(232,228,220,.06)}
+.obj-project-title{font-family:var(--serif);font-size:14px;color:var(--fg)}
+.obj-project-meta{font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-top:3px}
+.obj-project-panel button{padding:5px 9px;border:1px solid rgba(232,228,220,.1);background:transparent;color:var(--dim);font-family:var(--mono);font-size:8px;text-transform:uppercase;cursor:pointer}
 
 /* CHAT */
 .chat-section{border-top:1px solid var(--rule);padding-top:28px;margin-top:28px}
@@ -2324,6 +2335,14 @@ function openObject(payloadStr) {
 
   if (desc) html += '<div class="obj-desc">' + desc.substring(0, 600) + (desc.length > 600 ? '...' : '') + '</div>';
 
+  html += '<div class="obj-staff-actions">';
+  html += '<button onclick="shareDemoObject()">Share / copy</button>';
+  html += '<button onclick="saveDemoObjectToProject()">Save to project</button>';
+  html += '<button onclick="readDemoObjectSummary()">Read summary</button>';
+  html += '<span class="obj-action-status" id="objActionStatus"></span>';
+  html += '</div>';
+  html += '<div id="objProjectPanel"></div>';
+
   // Chat section
   if (backendLive) {
     html += '<div class="chat-section">';
@@ -2354,6 +2373,7 @@ function openObject(payloadStr) {
   document.getElementById('objModalInner').innerHTML = html;
   document.getElementById('objModal').classList.add('open');
   document.body.style.overflow = 'hidden';
+  renderDemoProjectPanel();
   updateToneControls();
 }
 
@@ -2361,6 +2381,137 @@ document.getElementById('objClose').addEventListener('click', () => {
   document.getElementById('objModal').classList.remove('open');
   document.body.style.overflow = '';
 });
+
+const DEMO_PROJECT_KEY = 'archai.websiteProject.v1';
+
+function objectActionStatus(message) {
+  const el = document.getElementById('objActionStatus');
+  if (!el) return;
+  el.textContent = message || '';
+  if (message) setTimeout(() => { if (el.textContent === message) el.textContent = ''; }, 2600);
+}
+
+function readDemoProject() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(DEMO_PROJECT_KEY) || '{}');
+    return { title: parsed.title || 'Demo object list', objects: Array.isArray(parsed.objects) ? parsed.objects : [] };
+  } catch {
+    return { title: 'Demo object list', objects: [] };
+  }
+}
+
+function writeDemoProject(project) {
+  localStorage.setItem(DEMO_PROJECT_KEY, JSON.stringify(project));
+}
+
+function demoObjectRecord() {
+  if (!currentPayload) return null;
+  const p = currentPayload;
+  const col = p._source_collection || 'archai_pilot';
+  return {
+    id: p.canonical_id || p.object_id || p.registration_number || p.accession_number || p.title || 'object',
+    title: p.title || p.object_name || 'Untitled',
+    institution: getCollectionMeta(col).institution,
+    registration: p.registration_number || p.accession_number || '',
+    source_url: p.source_url || '',
+    rights: getObjectRightsInfo(p).status,
+  };
+}
+
+function copyDemoText(text, message) {
+  if (navigator.clipboard?.writeText) {
+    navigator.clipboard.writeText(text).then(() => objectActionStatus(message || 'Copied'));
+    return;
+  }
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand('copy');
+  textarea.remove();
+  objectActionStatus(message || 'Copied');
+}
+
+function shareDemoObject() {
+  const record = demoObjectRecord();
+  if (!record) return;
+  const url = record.source_url || location.href;
+  const text = `${record.title}\n${record.institution}${record.registration ? ' · ' + record.registration : ''}\n${url}`;
+  if (navigator.share) {
+    navigator.share({ title: record.title, text, url })
+      .then(() => objectActionStatus('Shared'))
+      .catch(() => copyDemoText(text, 'Copied share text'));
+  } else {
+    copyDemoText(text, 'Copied share text');
+  }
+}
+
+function saveDemoObjectToProject() {
+  const record = demoObjectRecord();
+  if (!record) return;
+  const project = readDemoProject();
+  const idx = project.objects.findIndex(item => item.id === record.id);
+  if (idx >= 0) project.objects[idx] = record;
+  else project.objects.push(record);
+  project.updated = new Date().toISOString();
+  writeDemoProject(project);
+  renderDemoProjectPanel();
+  objectActionStatus(idx >= 0 ? 'Project item updated' : 'Saved to project');
+}
+
+function removeDemoProjectObject(id) {
+  const project = readDemoProject();
+  project.objects = project.objects.filter(item => item.id !== id);
+  project.updated = new Date().toISOString();
+  writeDemoProject(project);
+  renderDemoProjectPanel();
+}
+
+function copyDemoProjectList() {
+  const project = readDemoProject();
+  const lines = project.objects.map((item, index) => `${index + 1}. ${item.title} — ${item.institution}${item.registration ? ' · ' + item.registration : ''}${item.source_url ? '\n   ' + item.source_url : ''}`);
+  copyDemoText(`${project.title}\n\n${lines.join('\n') || 'No objects saved yet.'}`, 'Project copied');
+}
+
+function renderDemoProjectPanel() {
+  const target = document.getElementById('objProjectPanel');
+  if (!target) return;
+  const project = readDemoProject();
+  const count = project.objects.length;
+  target.innerHTML = '<div class="obj-project-panel">' +
+    '<h4>Project list / selected objects</h4>' +
+    '<p>Save objects into a temporary staff list for exhibition thinking, research batches, interpretation drafts, or collection review. This demo list is stored only in your browser.</p>' +
+    '<div class="obj-project-list">' +
+      (count ? project.objects.map(item =>
+        '<div class="obj-project-item"><div><div class="obj-project-title">' + esc(item.title) + '</div><div class="obj-project-meta">' + esc(item.institution) + (item.registration ? ' · ' + esc(item.registration) : '') + (item.rights ? ' · ' + esc(item.rights) : '') + '</div></div><button onclick="removeDemoProjectObject(\'' + String(item.id).replace(/'/g, "\\'") + '\')">Remove</button></div>'
+      ).join('') : '<p>No objects saved yet.</p>') +
+    '</div>' +
+    '<div style="margin-top:12px"><button onclick="copyDemoProjectList()" ' + (count ? '' : 'disabled') + '>Copy list</button></div>' +
+  '</div>';
+}
+
+function readDemoObjectSummary() {
+  if (!currentPayload || !('speechSynthesis' in window)) {
+    objectActionStatus('Speech unavailable');
+    return;
+  }
+  const p = currentPayload;
+  const record = demoObjectRecord();
+  const desc = p.description || p.ai || '';
+  const utterance = new SpeechSynthesisUtterance(`${record.title}. ${record.institution}. ${desc ? desc.substring(0, 420) : 'No description is available in the demo record.'}`);
+  const voice = getPreferredDemoVoice(window.speechSynthesis.getVoices());
+  if (voice) {
+    utterance.voice = voice;
+    utterance.lang = voice.lang;
+  }
+  utterance.rate = 0.96;
+  utterance.pitch = 1;
+  utterance.onstart = () => objectActionStatus('Reading summary');
+  utterance.onend = () => objectActionStatus('Summary finished');
+  utterance.onerror = () => objectActionStatus('Speech failed');
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
+}
 
 async function askObject(question) {
   if (!question || !currentPayload) return;
