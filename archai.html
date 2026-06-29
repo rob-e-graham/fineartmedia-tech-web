@@ -323,6 +323,9 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
 .demo-audio-dot.live,.demo-audio-dot.pending{background:var(--teal);border-color:var(--teal);box-shadow:0 0 0 6px rgba(99,195,176,.08);animation:demoVoicePulse 1.2s ease-out infinite}
 .demo-audio-dot.pending{background:rgba(200,169,110,.9);border-color:rgba(200,169,110,.9)}
 .demo-audio-dot.error{background:var(--aic-coral);border-color:var(--aic-coral)}
+.demo-wip-callout{margin-top:14px;padding:13px 14px;border:1px solid rgba(200,169,110,.18);background:rgba(200,169,110,.035);display:flex;gap:12px;justify-content:space-between;align-items:center}
+.demo-wip-callout p{margin:0;font-family:var(--mono);font-size:8px;line-height:1.7;letter-spacing:.08em;text-transform:uppercase;color:rgba(232,228,220,.52)}
+.demo-wip-callout a{padding:10px 14px;border:1px solid rgba(200,169,110,.32);color:var(--gold);font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;white-space:nowrap}
 @keyframes demoVoicePulse{0%{box-shadow:0 0 0 0 rgba(99,195,176,.25)}100%{box-shadow:0 0 0 10px rgba(99,195,176,0)}}
 .aux-demo-grid{display:grid;grid-template-columns:minmax(360px,.92fr) minmax(420px,1.08fr);gap:34px;align-items:stretch}
 .aux-flow{display:flex;flex-direction:column;justify-content:center;min-height:420px;padding:34px 30px;border:1px solid rgba(143,188,176,.18);background:linear-gradient(135deg,rgba(143,188,176,.055),rgba(200,169,110,.025));box-shadow:inset 0 0 0 1px rgba(232,228,220,.025)}
@@ -627,6 +630,8 @@ footer a:hover{color:var(--fg)}
   .demo-conversation-input{flex-direction:column}
   .demo-conversation-input input{border-right:1px solid rgba(232,228,220,.12);border-bottom:0}
   .demo-audio-select{width:100%;min-width:0}
+  .demo-wip-callout{display:block}
+  .demo-wip-callout a{display:inline-block;margin-top:10px}
   .aux-demo-grid{grid-template-columns:1fr}
   .aux-flow{min-height:0;padding:24px 18px}
   .aux-demo-copy{padding:0}
@@ -782,6 +787,10 @@ footer a:hover{color:var(--fg)}
             </div>
             <div class="demo-audio-status"><span class="demo-audio-dot" id="demoVoiceDot"></span><span id="demoVoiceStatus">Voice is optional. Your browser will ask for microphone access when listening begins.</span></div>
           </div>
+          <div class="demo-wip-callout">
+            <p>Need the full staff test build? Open the draft app with curatorial search, AUX.IO management, vocabulary tools, and source-pipeline controls.</p>
+            <a href="app.html" target="_blank" rel="noopener">Open full app WIP</a>
+          </div>
         </div>
 
         <div class="demo-panel" id="demoAuxPanel" role="tabpanel" aria-labelledby="demoAuxTab" hidden>
@@ -805,11 +814,10 @@ footer a:hover{color:var(--fg)}
               <p class="demo-panel-intro">Open an object through QR, NFC, hyperlink, map, or spatial trigger. Visitors can read, ask, listen, zoom into IIIF source images where available, share, and follow related objects while the source record, attribution, and legal status remain visible.</p>
               <div class="aux-demo-actions">
                 <a id="auxDemoOpen" href="aux.html" target="_blank" rel="noopener">Open AUX.IO</a>
-                <a href="app.html" target="_blank" rel="noopener">Open full app WIP</a>
                 <button onclick="surpriseAuxDemo()">Surprise me</button>
               </div>
               <div class="aux-demo-facts">
-                <div class="aux-demo-fact"><span>Published visitor pages</span><strong>1,522 rights-gated objects</strong></div>
+                <div class="aux-demo-fact"><span>Published visitor pages</span><strong>1,402 rights-gated objects</strong></div>
                 <div class="aux-demo-fact"><span>Print workflow</span><strong>440 QR-ready records</strong></div>
                 <div class="aux-demo-fact"><span>Access modes</span><strong>Text, voice, mobile, map, IIIF zoom</strong></div>
                 <div class="aux-demo-fact"><span>Institutional use</span><strong>Editable for local collection records</strong></div>
@@ -836,7 +844,7 @@ footer a:hover{color:var(--fg)}
           <p>Developed as part of doctoral research at RMIT University, School of Design. The research paper was accepted for the 6th Summit on New Media Art Archiving (ISEA2026 Dubai).</p>
           <div class="rights-note">
             <h4>Sources &amp; Rights</h4>
-            <p>ARCHAI is presented as a 24-source research network: 19 indexed live sources plus Library of Congress, Wikimedia Commons / Wikidata, Trove / National Library of Australia, Digital Public Library of America, and Internet Archive as onboarding connectors. The staff layer currently contains 3,147 indexed records; the public AUX.IO layer publishes 1,522 image-backed pages that passed the current availability and rights gates. Every object retains its source, attribution, and legal status. Institutional or platform inclusion does not imply partnership or endorsement.</p>
+            <p>ARCHAI is presented as a 24-source research network: 19 indexed live sources plus Library of Congress, Wikimedia Commons / Wikidata, Trove / National Library of Australia, Digital Public Library of America, and Internet Archive as onboarding connectors. The staff layer currently contains 3,147 indexed records; the public AUX.IO layer publishes 1,402 image-backed pages that passed the current availability and rights gates. Every object retains its source, attribution, and legal status. Institutional or platform inclusion does not imply partnership or endorsement.</p>
           </div>
         </div>
         <div class="rv">
@@ -852,7 +860,7 @@ footer a:hover{color:var(--fg)}
             <li>AI-moderated visitor comments</li>
             <li>Conversational collection search</li>
             <li>24-source network · 19 indexed live sources · 3,147 records</li>
-            <li>1,522 rights-gated AUX.IO visitor pages</li>
+            <li>1,402 rights-gated AUX.IO visitor pages</li>
             <li>Designed QR poster, access sticker &amp; visitor postcard outputs on 440 cleared records</li>
             <li>SQLite persistent storage</li>
             <li>Zero cloud dependencies</li>
@@ -944,7 +952,7 @@ footer a:hover{color:var(--fg)}
 <footer>
   <p>ARCHAI &copy; 2026 Rob Graham / <a href="/">FAMTEC</a> — All rights reserved</p>
   <p>Research prototype · open to funded pilots and testing partners · <a href="https://github.com/rob-e-graham/archai" target="_blank">GitHub</a></p>
-  <p>24-source research network · 3,147 indexed records across 19 live sources · 1,522 rights-gated AUX.IO pages · source inclusion does not imply endorsement.</p>
+  <p>24-source research network · 3,147 indexed records across 19 live sources · 1,402 rights-gated AUX.IO pages · source inclusion does not imply endorsement.</p>
 </footer>
 
 <script>

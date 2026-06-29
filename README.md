@@ -11,7 +11,7 @@ Static site for `fineartmedia.tech`.
 - current participating institutions
 - AUX.IO visitor-path language
 
-Current ARCHAI website baseline: `v11.6.2`, `3,147+` staff-searchable records across `19` connected sources, and `1,402` rights-gated AUX.IO visitor pages. Auckland Museum remains staff-searchable, but its public AUX.IO images are currently held because the source endpoint is returning placeholder media. Source inclusion describes the public/open research corpus and does not imply institutional partnership or endorsement.
+Current ARCHAI website baseline: `v11.6.3`, `3,147+` staff-searchable records across `19` connected sources, and `1,402` rights-gated AUX.IO visitor pages. Auckland Museum remains staff-searchable, but its public AUX.IO images are currently held because the source endpoint is returning placeholder media. Source inclusion describes the public/open research corpus and does not imply institutional partnership or endorsement.
 
 Current ARCHAI routes:
 
