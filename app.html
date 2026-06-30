@@ -36,7 +36,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
 .header-meta{font-family:var(--mono);font-size:0.62rem;color:var(--text3);text-align:right;line-height:2;}
 .header-meta b{color:var(--text2);}
 .header-links{display:flex;gap:8px;margin-top:4px;justify-content:flex-end;}
-.header-link{font-family:var(--mono);font-size:0.52rem;padding:3px 8px;border:1px solid var(--border2);color:var(--text3);text-decoration:none;text-transform:uppercase;letter-spacing:1px;transition:all 0.12s;}
+.header-link{font-family:var(--mono);font-size:0.52rem;padding:3px 8px;border:1px solid var(--border2);color:var(--text3);text-decoration:none;text-transform:uppercase;letter-spacing:1px;transition:all 0.12s;background:transparent;cursor:pointer;}
 .header-link:hover{border-color:var(--accent);color:var(--accent);}
 .role-select-wrap{display:flex;align-items:center;gap:8px;margin-top:6px;justify-content:flex-end;}
 .role-select-label{font-family:var(--mono);font-size:0.52rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);}
@@ -61,6 +61,23 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
 .infra-name{color:var(--text3);text-transform:uppercase;letter-spacing:1px;font-size:0.56rem;flex:0 0 auto;}
 .infra-val{color:var(--text2);margin-left:auto;font-size:0.58rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right;}
+.wip-banner{display:flex;gap:12px;align-items:flex-start;border-bottom:1px solid rgba(207,177,107,0.24);background:linear-gradient(90deg,rgba(207,177,107,0.08),rgba(124,196,172,0.03));padding:10px 24px;font-family:var(--mono);font-size:0.58rem;line-height:1.6;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;}
+.wip-banner strong{color:var(--accent2);font-weight:700;}
+.wip-banner button{margin-left:auto;white-space:nowrap;}
+.training-overlay{position:fixed;inset:0;z-index:3000;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.78);backdrop-filter:blur(16px);padding:28px;}
+.training-overlay.open{display:flex;}
+.training-modal{width:min(980px,94vw);max-height:88vh;overflow:auto;border:1px solid var(--border2);background:linear-gradient(180deg,rgba(18,18,16,0.98),rgba(8,8,7,0.98));box-shadow:0 24px 80px rgba(0,0,0,0.65);}
+.training-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;padding:24px 28px;border-bottom:1px solid var(--border);}
+.training-kicker{font-family:var(--mono);font-size:0.56rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent2);margin-bottom:8px;}
+.training-title{font-family:var(--serif);font-size:1.8rem;color:var(--text);}
+.training-close{font-family:var(--mono);font-size:0.55rem;text-transform:uppercase;letter-spacing:0.12em;border:1px solid var(--border2);padding:9px 12px;color:var(--text3);cursor:pointer;}
+.training-body{padding:24px 28px 30px;}
+.training-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+.training-card{border:1px solid var(--border);background:rgba(255,255,255,0.018);padding:16px;}
+.training-card h4{margin:0 0 8px;font-family:var(--serif);font-size:1rem;color:var(--text);}
+.training-card p{margin:0;font-size:0.72rem;line-height:1.75;color:var(--text2);}
+.training-card code{font-family:var(--mono);font-size:0.62rem;color:var(--accent);}
+@media(max-width:760px){.training-grid{grid-template-columns:1fr}.wip-banner{display:block}.wip-banner button{margin-top:8px}}
 
 /* TABS */
 .tabs{display:flex;border-bottom:1px solid var(--border);padding:0 48px;background:var(--bg);position:sticky;top:73px;z-index:100;overflow-x:auto;}
@@ -193,10 +210,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
 .nfc-fchip{font-family:var(--mono);font-size:0.54rem;padding:3px 7px;border:1px solid var(--border2);color:var(--text3);cursor:pointer;transition:all 0.12s;text-transform:uppercase;letter-spacing:1px;}
 .nfc-fchip:hover{border-color:var(--nfc);color:var(--nfc);}
 .nfc-fchip.active{border-color:var(--nfc);color:var(--nfc);background:rgba(126,207,207,0.07);}
+.nfc-workset-note{font-family:var(--mono);font-size:0.54rem;line-height:1.65;color:var(--text3);border:1px solid rgba(126,207,207,0.18);background:rgba(126,207,207,0.035);padding:8px 9px;margin-bottom:10px;letter-spacing:0.04em;}
+.nfc-workset-note strong{color:var(--nfc);font-weight:700;}
 .nfc-card{padding:11px 13px;border:1px solid var(--border);margin-bottom:6px;cursor:pointer;transition:all 0.15s;position:relative;}
 .nfc-card:hover{border-color:var(--border2);background:var(--surface);}
 .nfc-card.active{border-color:var(--nfc);background:rgba(126,207,207,0.05);}
 .nfc-card.unassigned{opacity:0.55;}
+.nfc-card.unassigned .nfc-object-name{color:var(--nfc);font-family:var(--mono);font-size:0.62rem;text-transform:uppercase;letter-spacing:0.12em;}
 .nfc-card-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:4px;}
 .nfc-code{font-family:var(--mono);font-size:0.72rem;color:var(--nfc);letter-spacing:2px;text-transform:uppercase;}
 .nfc-status-badge{font-family:var(--mono);font-size:0.5rem;padding:2px 6px;border:1px solid currentColor;text-transform:uppercase;letter-spacing:1px;}
@@ -259,6 +279,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
 .aux-textarea{min-height:72px;resize:vertical;font-family:var(--serif);font-style:italic;font-size:0.84rem;line-height:1.55;}
 .aux-input:focus,.aux-select:focus,.aux-textarea:focus{border-color:var(--nfc);}
 .aux-helper{font-family:var(--mono);font-size:0.54rem;line-height:1.6;color:var(--text3);margin-top:7px;}
+.aux-step-note{font-family:var(--mono);font-size:0.6rem;line-height:1.75;color:var(--text2);border:1px dashed rgba(126,207,207,0.34);background:rgba(126,207,207,0.045);padding:12px;margin-bottom:12px;}
+.aux-step-note strong{color:var(--nfc);text-transform:uppercase;letter-spacing:0.12em;font-size:0.52rem;display:block;margin-bottom:5px;}
 .aux-pill-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px;}
 .aux-mini-pill{font-family:var(--mono);font-size:0.5rem;padding:3px 7px;border:1px solid rgba(126,207,207,0.24);color:var(--nfc);text-transform:uppercase;letter-spacing:1px;}
 @media(max-width:900px){.aux-field-grid{grid-template-columns:1fr}}
@@ -428,6 +450,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
 .od-meta-item{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);padding:8px 10px;}
 .od-meta-key{font-family:var(--mono);font-size:0.49rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text3);margin-bottom:3px;}
 .od-meta-val{font-size:0.66rem;color:var(--text1);word-break:break-word;}
+.od-action-strip{margin-top:14px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+.od-action-strip .btn{font-size:0.55rem;}
+.od-action-status{font-family:var(--mono);font-size:0.52rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent2);min-height:1em;padding:7px 2px;}
 .od-description-wrap{padding:22px 36px;border-bottom:1px solid var(--border);}
 .od-detail-block{border-bottom:1px solid var(--border);}
 .od-detail-block summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 36px;cursor:pointer;list-style:none;font-family:var(--mono);font-size:0.58rem;letter-spacing:1.8px;text-transform:uppercase;color:var(--accent);}
@@ -488,6 +513,17 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
 .od-rel-title{font-family:var(--serif);font-size:0.82rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;}
 .od-rel-meta{font-family:var(--mono);font-size:0.5rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
 .od-rel-score{font-family:var(--mono);font-size:0.5rem;color:var(--accent);}
+.od-project-wrap{padding:0 36px 22px;}
+.od-project-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px;}
+.od-project-title{font-family:var(--serif);font-size:1rem;color:var(--text);}
+.od-project-note{font-size:0.72rem;color:var(--text3);line-height:1.6;max-width:760px;}
+.od-project-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;}
+.od-project-list{border:1px solid var(--border);background:rgba(255,255,255,0.015);}
+.od-project-item{display:grid;grid-template-columns:1fr auto;gap:12px;padding:10px 12px;border-bottom:1px solid var(--border);}
+.od-project-item:last-child{border-bottom:0;}
+.od-project-item-title{font-family:var(--serif);font-size:0.9rem;color:var(--text);}
+.od-project-item-meta{font-family:var(--mono);font-size:0.5rem;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-top:3px;}
+.od-project-empty{font-family:var(--mono);font-size:0.58rem;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;padding:14px;}
 .od-back-btn{font-family:var(--mono);font-size:0.56rem;color:var(--text3);cursor:pointer;padding:12px 36px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;transition:color 0.12s;}
 .od-back-btn:hover{color:var(--accent);}
 
@@ -610,12 +646,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
     </div>
   </div>
   <div>
-    <div class="header-meta"><b id="clockDisplay">—</b><br><span>Build v11.6 · 19 connected collections · rights-aware media · AUX.IO working set</span></div>
+    <div class="header-meta"><b id="clockDisplay">—</b><br><span>Build v11.6.5 · 19 connected collections · rights-aware media · AUX.IO setup bench</span></div>
     <div class="header-links">
       <a class="header-link" href="http://localhost:11434" target="_blank">Ollama LLM</a>
       <a class="header-link" href="http://localhost:8055/admin" target="_blank">Directus CMS</a>
       <a class="header-link" href="http://localhost:6333/dashboard" target="_blank">Qdrant</a>
       <a class="header-link" href="https://github.com/rob-e-graham/archai" target="_blank">GitHub</a>
+      <button class="header-link" type="button" onclick="openTrainingOverlay()">Training Mode</button>
     </div>
     <div class="role-select-wrap">
       <span class="role-select-label">Role</span>
@@ -642,6 +679,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
   <div class="infra-item compact"><div class="dot dot-ok"></div><span class="infra-name">Collections</span><span class="infra-val" id="collectionVal">Loading…</span></div>
   <div class="infra-item"><div class="dot dot-idle" id="metDot"></div><span class="infra-name">US APIs</span><span class="infra-val" id="metVal">—</span></div>
   <div class="infra-item"><div class="dot dot-idle" id="vaDot"></div><span class="infra-name">EU APIs</span><span class="infra-val" id="vaVal">—</span></div>
+</div>
+
+<div class="wip-banner">
+  <div><strong>Draft institutional demo / WIP.</strong> Testing the ARCHAI semantic layer, staff collection search, AUX.IO publishing, voice/audio access, rights-aware media, IIIF viewing, and CMS/DAMS connector workflows before partner deployment.</div>
+  <button class="header-link" type="button" onclick="openTrainingOverlay()">How to test</button>
 </div>
 
 <!-- TABS -->
@@ -893,6 +935,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
         <div class="nfc-fchip" onclick="nfcFilter(this,'draft')">Draft</div>
         <div class="nfc-fchip" onclick="nfcFilter(this,'unassigned')">Unassigned</div>
       </div>
+      <div class="nfc-workset-note" id="nfcWorksetNote">Loading AUX.IO workset…</div>
       <div id="nfcList"></div>
     </div>
     <div class="nfc-editor-col" id="nfcEditor">
@@ -1053,7 +1096,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
         <div id="od-title" class="od-title">—</div>
         <div id="od-sub" class="od-sub">—</div>
         <div id="od-meta-grid" class="od-meta-grid"></div>
-        <div style="margin-top:14px;display:flex;gap:6px;flex-wrap:wrap;" id="od-source-links"></div>
+        <div class="od-action-strip" id="od-source-links"></div>
       </div>
     </div>
 
@@ -1121,6 +1164,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
       </div>
     </div>
 
+    <details class="od-detail-block" id="od-project-detail" open>
+      <summary>Project List / Selected Objects</summary>
+      <div class="od-project-wrap" id="od-project-panel">
+        <div class="od-project-empty">No objects saved yet.</div>
+      </div>
+    </details>
+
     <details class="od-detail-block">
       <summary>Full Metadata Record — Qdrant Payload</summary>
       <div class="od-full-meta-wrap">
@@ -1146,10 +1196,30 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
   </div>
 </div>
 
+<div class="training-overlay" id="trainingOverlay" role="dialog" aria-modal="true" aria-labelledby="trainingTitle">
+  <div class="training-modal">
+    <div class="training-head">
+      <div>
+        <div class="training-kicker">Draft demo guide</div>
+        <div class="training-title" id="trainingTitle">Testing ARCHAI as an institutional toolkit</div>
+      </div>
+      <button class="training-close" type="button" onclick="closeTrainingOverlay()">Close</button>
+    </div>
+    <div class="training-body">
+      <div class="training-grid">
+        <div class="training-card"><h4>1. Search the collection</h4><p>Use <code>Converse</code> for semantic questions across the database, <code>Classic Search</code> for direct matching, and image/colour modes as developing test lanes. Metadata-only records stay searchable, while public views require safer media and rights gates.</p></div>
+        <div class="training-card"><h4>2. Review an object</h4><p>Open any object and switch between Curatorial, Collections, Exhibition, and Interpretation lenses. These are staff-facing response modes, not visitor questions: they shape how ARCHAI reads the same record.</p></div>
+        <div class="training-card"><h4>3. Build AUX.IO pages</h4><p>In AUX.IO Management, select or create an object, assign it to a QR/NFC/spatial trigger, choose visibility options, preview the phone page, then publish. Production should save these edits in Directus or the institution's CMS/DAMS layer.</p></div>
+        <div class="training-card"><h4>4. Use vocabulary tools</h4><p>The thesaurus layer helps staff standardise terms, map local language to AAT/LCSH/TGN-style vocabularies, and flag culturally sensitive terminology before it becomes public interpretation.</p></div>
+        <div class="training-card"><h4>5. Connect CMS and DAMS</h4><p>The harvester layer is the next institutional-testing focus: custom connectors for APIs, CMS, DAMS, spreadsheets, IIIF manifests, and local media stores while preserving source records separately from interpretation.</p></div>
+        <div class="training-card"><h4>6. Current boundaries</h4><p>Nodel/exhibition ops and FAMTEC Exchange remain prototype modules. The strongest current lanes are collection search, object review, AUX.IO publishing, rights/media gating, IIIF viewing, and browser voice access.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 window.ARCHAI_API_BASE = window.ARCHAI_API_BASE || 'https://archai-api.fineartmedia.tech';
-</script>
-<script>
 // ═══════════════════════════════════════════════════════════════════
 // ARCHAI™ v11.6 — Multi-Collection · Backend-Aware · Live LLM Chat
 // Collection objects loaded from Qdrant. Comments and curator vectors via backend APIs.
@@ -1174,6 +1244,20 @@ const USE_PROXY = Boolean(API_BASE);
 // so object/visitor chat always runs through the qwen + personality + SafeChat
 // proxy instead of falling back to raw local Ollama (llama3).
 const BACKEND_BASE = IS_LOCAL ? 'http://localhost:8787' : (window.ARCHAI_API_BASE || API_BASE || '');
+
+function openTrainingOverlay() {
+  const overlay = document.getElementById('trainingOverlay');
+  if (overlay) overlay.classList.add('open');
+}
+
+function closeTrainingOverlay() {
+  const overlay = document.getElementById('trainingOverlay');
+  if (overlay) overlay.classList.remove('open');
+}
+
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') closeTrainingOverlay();
+});
 
 function qdrantFetch(path, options) {
   if (USE_PROXY) {
@@ -1246,6 +1330,22 @@ const nfcVisibility = {};
 
 const CURATOR_SEARCH_LIMIT = 50;
 const AUX_IO_MANAGEMENT_LIMIT = 120;
+const AUX_IO_PRELOADED_COUNT = 10;
+const AUX_IO_EMPTY_SLOT_COUNT = AUX_IO_MANAGEMENT_LIMIT - AUX_IO_PRELOADED_COUNT;
+const AUX_IO_DEMO_SEED_TERMS = [
+  'disco elysium',
+  'pentiment',
+  'dwarf fortress',
+  'crucified ecorche',
+  'interior of the base of the human skull',
+  'aseroe rubra',
+  'crocodile whistle',
+  'bass ophicleide',
+  'black figure hydria theseus',
+  'jef aerosol warhol basquiat twiggy',
+  'photographie lunaire tycho',
+  'old father thames'
+];
 const SEARCH_STOPWORDS = new Set([
   'the', 'and', 'for', 'with', 'from', 'into', 'about', 'across', 'through',
   'this', 'that', 'these', 'those', 'what', 'which', 'where', 'when', 'your',
@@ -2306,6 +2406,8 @@ function getObjectRightsInfo(payload = {}) {
 function normalizeSearchText(value = '') {
   return String(value || '')
     .toLowerCase()
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
     .replace(/&/g, ' and ')
     .replace(/<[^>]+>/g, ' ')
     .replace(/[^\p{L}\p{N}\s-]+/gu, ' ')
@@ -2437,22 +2539,44 @@ function getResultMatchCues(query, payload, max = 3) {
   return cues;
 }
 
+function isAucklandPayload(payload = {}) {
+  const source = String(payload._source_collection || payload.source_collection || payload.source || payload.collection || '').toLowerCase();
+  const institution = String(payload.source_institution || payload.institution || payload.museum_location || '').toLowerCase();
+  return source.includes('auckland') || institution.includes('auckland museum');
+}
+
+function upgradeAucklandImageUrl(url = '') {
+  const raw = String(url || '').trim();
+  if (!raw) return '';
+  const secure = raw.replace(/^http:\/\//, 'https://');
+  const match = secure.match(/https:\/\/api\.aucklandmuseum\.com\/id\/media\/v\/(\d+)/i);
+  if (match) return `https://api.aucklandmuseum.com/id/media/v/${match[1]}/full/800,/0/default.jpg`;
+  return secure;
+}
+
+function isHeldImageUrl(url = '') {
+  return /digital image not yet created|no[ _-]?image|placeholder/i.test(String(url || ''));
+}
+
 function pickSearchImage(payload = {}) {
   if (payload.media_available === false) return '';
+  if (payload.media_placeholder === true) return '';
   if (payload.media_public_display_allowed === false) return '';
   if (['tate', 'getty'].includes(String(payload.source || '').toLowerCase())) return '';
-  return payload.media_medium
+  const image = payload.media_medium
     || payload.media_large
     || payload.media_thumbnail
     || payload.image_url
     || payload.primaryImageSmall
     || '';
+  const safeImage = isAucklandPayload(payload) ? upgradeAucklandImageUrl(image) : image;
+  return isHeldImageUrl(safeImage) ? '' : safeImage;
 }
 
 function hasUsableObjectImage(payload = {}) {
   const image = pickSearchImage(payload);
   if (!image) return false;
-  if (/digital image not yet created|no[ _-]?image|placeholder/i.test(image)) return false;
+  if (isHeldImageUrl(image)) return false;
   return true;
 }
 
@@ -2674,28 +2798,77 @@ function loadMVObjects() {
 
 function generateNFCTags() {
   NFC_TAGS.length = 0;
-  const keys = Object.keys(OBJECTS)
-    .filter(k => hasUsableObjectImage(OBJECTS[k]._mv || {}))
-    .slice(0, AUX_IO_MANAGEMENT_LIMIT);
+  const imageBackedKeys = Object.keys(OBJECTS)
+    .filter(k => hasUsableObjectImage(OBJECTS[k]._mv || {}));
+  const keys = getAuxDemoSeedKeys(imageBackedKeys);
   keys.forEach((k, i) => {
     const tag = {
       code: 'NFC' + String(i + 1).padStart(3, '0'),
-      status: i < 90 ? 'live' : 'draft',
+      status: 'live',
       objectId: k,
       location: 'Exhibition Space — ' + (OBJECTS[k].location || 'TBC'),
-      scans: i < 90 ? (i * 7) % 64 + 5 : 0,
-      lastScan: i < 90 ? ((i * 11) % 58 + 1) + ' min ago' : 'Never'
+      scans: (i * 7) % 64 + 5,
+      lastScan: ((i * 11) % 58 + 1) + ' min ago'
     };
     NFC_TAGS.push(tag);
     nfcVisibility[tag.code] = {...NFC_VIS_DEFAULTS};
   });
-  // Add a small pool of unassigned tags for workflow testing.
-  for (let i = keys.length; i < keys.length + 8; i++) {
-    const tag = { code: 'NFC' + String(i + 1).padStart(3, '0'), status: 'unassigned', objectId: null, location: 'Unassigned — Storage', scans: 0, lastScan: 'Never' };
+  // Most slots are intentionally empty so institutions can test assigning their own objects.
+  for (let i = keys.length; i < keys.length + AUX_IO_EMPTY_SLOT_COUNT; i++) {
+    const tag = { code: 'NFC' + String(i + 1).padStart(3, '0'), status: 'unassigned', objectId: null, location: 'Empty slot — assign object', scans: 0, lastScan: 'Never' };
     NFC_TAGS.push(tag);
     nfcVisibility[tag.code] = {...NFC_VIS_DEFAULTS};
   }
   document.getElementById('nfcTabCount').textContent = NFC_TAGS.length;
+  updateNFCWorksetNote();
+}
+
+function getAuxDemoSeedKeys(imageBackedKeys) {
+  const used = new Set();
+  const selected = [];
+  const haystackFor = key => {
+    const o = OBJECTS[key] || {};
+    const p = o._mv || {};
+    return normalizeSearchText([
+      key, o.id, o.title, o.type, o.year, o.dams, o.location, o.ai,
+      p.title, p.description, p.institution, p.source_collection,
+      p.accession_number, p.object_type, p.medium, p.creator, p.artist,
+      Array.isArray(p.keywords) ? p.keywords.join(' ') : p.keywords
+    ].filter(Boolean).join(' '));
+  };
+
+  const haystacks = new Map(imageBackedKeys.map(key => [key, haystackFor(key)]));
+  AUX_IO_DEMO_SEED_TERMS.forEach(term => {
+    if (selected.length >= AUX_IO_PRELOADED_COUNT) return;
+    const needles = normalizeSearchText(term).split(/\s+/).filter(Boolean);
+    const match = imageBackedKeys.find(key => {
+      if (used.has(key)) return false;
+      const haystack = haystacks.get(key) || '';
+      return needles.every(needle => haystack.includes(needle));
+    });
+    if (match) {
+      used.add(match);
+      selected.push(match);
+    }
+  });
+
+  if (selected.length < AUX_IO_PRELOADED_COUNT) {
+    imageBackedKeys
+      .filter(key => !used.has(key))
+      .sort(() => Math.random() - 0.5)
+      .slice(0, AUX_IO_PRELOADED_COUNT - selected.length)
+      .forEach(key => selected.push(key));
+  }
+
+  return selected;
+}
+
+function updateNFCWorksetNote() {
+  const el = document.getElementById('nfcWorksetNote');
+  if (!el) return;
+  const loaded = NFC_TAGS.filter(t => t.objectId).length;
+  const empty = NFC_TAGS.filter(t => !t.objectId).length;
+  el.innerHTML = `<strong>${loaded}</strong> loaded demo AUX.IO records · <strong>${empty}</strong> empty slots ready to assign. Select an empty slot, search the collection, then click <strong>Assign</strong>.`;
 }
 
 function displayAuxCode(code) {
@@ -2717,6 +2890,10 @@ function switchTab(name, el) {
   if (el) el.classList.add('active');
   const panel = document.getElementById('panel-' + name);
   if (panel) panel.classList.add('active');
+  if (name === 'nfc' && NFC_TAGS.length && !activeNFCCode) {
+    const firstEmpty = NFC_TAGS.find(t => !t.objectId) || NFC_TAGS[0];
+    selectNFC(firstEmpty.code);
+  }
 }
 function setChip(el) { el.closest('.filter-group').querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); }
 function togglePill(el) { el.classList.toggle('active'); }
@@ -3199,8 +3376,9 @@ function famtecDetails(title) {
 // ═══════════════════════════════════════════════════════════════════
 function thumbHTML(o) {
   const p = o._mv;
-  if (p && p.media_thumbnail) {
-    return `<img src="${p.media_thumbnail}" alt="${escQ(o.title)}" loading="lazy"
+  const image = p ? pickSearchImage(p) : '';
+  if (image) {
+    return `<img src="${image}" alt="${escQ(o.title)}" loading="lazy"
       onerror="this.outerHTML='<div style=\\'font-size:0.42rem;opacity:0.2;text-align:center\\'>▣<br>${escQ(o.dams)}</div>'">`; 
   }
   return `<div style="font-size:1rem;opacity:0.15;margin-bottom:3px">▣</div><div style="font-size:0.44rem">${o.dams}</div>`;
@@ -3308,8 +3486,10 @@ function doConverse() {
             chat: { default: 'I am ' + obj.title + '.' }
           };
         }
+        const objPayload = { ...obj, _source_collection: obj.collection, source_institution: obj.institution, media_medium: obj.image };
+        const objImage = pickSearchImage(objPayload);
         html += `<div class="convo-obj-card" onclick="openObj('${objKey}')">`;
-        if (obj.image) html += `<img src="${obj.image}" loading="lazy" onerror="this.style.display='none'">`;
+        if (objImage) html += `<img src="${objImage}" loading="lazy" onerror="this.style.display='none'">`;
         html += `<div class="coc-title">${obj.title}</div>`;
         html += `<div class="coc-meta">${obj.institution} · ${(obj.score*100).toFixed(0)}%</div>`;
         html += `</div>`;
@@ -3340,8 +3520,10 @@ function renderConvoResults(objects) {
     const label = COLLECTION_LABELS[obj.collection] || COLLECTION_LABELS.archai_pilot;
     const rights = getObjectRightsInfo(obj);
     const objKey = (obj.collection || 'archai_pilot') + '_c_' + (obj.registration || Math.random().toString(36).slice(2,8));
-    const thumbInner = obj.image
-      ? `<img src="${obj.image}" style="width:100%;height:100%;object-fit:cover" loading="lazy" onerror="this.style.display='none'">`
+    const objPayload = { ...obj, _source_collection: obj.collection, source_institution: obj.institution, media_medium: obj.image };
+    const objImage = pickSearchImage(objPayload);
+    const thumbInner = objImage
+      ? `<img src="${objImage}" style="width:100%;height:100%;object-fit:cover" loading="lazy" onerror="this.style.display='none'">`
       : `<div style="font-size:1rem;opacity:0.15;margin-bottom:3px">▣</div>`;
     return `<div class="result-card" onclick="openObj('${objKey}')">
       <div class="thumb"><div class="thumb-live"></div>${thumbInner}</div>
@@ -3461,6 +3643,176 @@ function openObj(id) {
   openObjectDetail(id);
 }
 
+// ── Object Detail: curatorial actions + project list ─────────────
+const OD_PROJECT_KEY = 'archai.curatorialProject.v1';
+
+function odCurrentObjectRecord() {
+  const id = window._odCurrentId;
+  const o = id ? OBJECTS[id] : null;
+  if (!o) return null;
+  const p = o._mv || {};
+  return {
+    id,
+    canonical_id: p.canonical_id || o.id || id,
+    title: getDisplayTitle(p, o.title || 'Object'),
+    institution: getInstitutionName(o),
+    registration: getDisplayRegistration(p, o.dams || ''),
+    date: p.date_range || String(o.year || ''),
+    type: p.object_type || o.type || p.discipline || '',
+    source_url: p.source_url || '',
+    media_url: pickSearchImage(p),
+    rights: getObjectRightsInfo(p).status,
+  };
+}
+
+function odSetActionStatus(message) {
+  const el = document.getElementById('od-action-status');
+  if (!el) return;
+  el.textContent = message || '';
+  if (message) setTimeout(() => { if (el.textContent === message) el.textContent = ''; }, 2600);
+}
+
+function odReadProject() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(OD_PROJECT_KEY) || '{}');
+    return { title: parsed.title || 'Current object list', objects: Array.isArray(parsed.objects) ? parsed.objects : [] };
+  } catch {
+    return { title: 'Current object list', objects: [] };
+  }
+}
+
+function odWriteProject(project) {
+  localStorage.setItem(OD_PROJECT_KEY, JSON.stringify(project));
+}
+
+function odCopyText(text, successMessage) {
+  if (navigator.clipboard?.writeText) {
+    navigator.clipboard.writeText(text).then(() => odSetActionStatus(successMessage || 'Copied'));
+    return;
+  }
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand('copy');
+  textarea.remove();
+  odSetActionStatus(successMessage || 'Copied');
+}
+
+function odShareCurrentObject() {
+  const record = odCurrentObjectRecord();
+  if (!record) return;
+  const url = new URL(location.href);
+  url.searchParams.set('object', record.canonical_id);
+  const text = `${record.title}\n${record.institution}${record.registration ? ' · ' + record.registration : ''}\n${record.source_url || url.toString()}`;
+  if (navigator.share) {
+    navigator.share({ title: record.title, text, url: record.source_url || url.toString() })
+      .then(() => odSetActionStatus('Shared'))
+      .catch(() => odCopyText(text, 'Copied share text'));
+  } else {
+    odCopyText(text, 'Copied share text');
+  }
+}
+
+function odSaveCurrentObjectToProject() {
+  const record = odCurrentObjectRecord();
+  if (!record) return;
+  const project = odReadProject();
+  const existing = project.objects.findIndex(item => item.canonical_id === record.canonical_id);
+  if (existing >= 0) project.objects[existing] = record;
+  else project.objects.push(record);
+  project.updated = new Date().toISOString();
+  odWriteProject(project);
+  odRenderProjectPanel();
+  odSetActionStatus(existing >= 0 ? 'Project item updated' : 'Saved to project');
+}
+
+function odRemoveProjectObject(canonicalId) {
+  const project = odReadProject();
+  project.objects = project.objects.filter(item => item.canonical_id !== canonicalId);
+  project.updated = new Date().toISOString();
+  odWriteProject(project);
+  odRenderProjectPanel();
+  odSetActionStatus('Removed from project');
+}
+
+function odCopyProjectList() {
+  const project = odReadProject();
+  const lines = project.objects.map((item, index) =>
+    `${index + 1}. ${item.title} — ${item.institution}${item.registration ? ' · ' + item.registration : ''}${item.source_url ? '\n   ' + item.source_url : ''}`
+  );
+  odCopyText(`${project.title}\n\n${lines.join('\n') || 'No objects saved yet.'}`, 'Project list copied');
+}
+
+function odExportProjectJSON() {
+  const project = odReadProject();
+  const blob = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'archai-project-list.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  odSetActionStatus('Project JSON exported');
+}
+
+function odRenderProjectPanel() {
+  const panel = document.getElementById('od-project-panel');
+  if (!panel) return;
+  const project = odReadProject();
+  const count = project.objects.length;
+  const list = count ? project.objects.map(item => `
+    <div class="od-project-item">
+      <div>
+        <div class="od-project-item-title">${escQ(item.title)}</div>
+        <div class="od-project-item-meta">${escQ(item.institution)}${item.registration ? ' · ' + escQ(item.registration) : ''}${item.rights ? ' · ' + escQ(item.rights) : ''}</div>
+      </div>
+      <button class="btn" onclick="odRemoveProjectObject('${escQ(item.canonical_id)}')">Remove</button>
+    </div>
+  `).join('') : '<div class="od-project-empty">No objects saved yet. Use “Save to Project” on object records to build a working list.</div>';
+
+  panel.innerHTML = `
+    <div class="od-project-head">
+      <div>
+        <div class="od-project-title">${escQ(project.title)}</div>
+        <div class="od-project-note">A lightweight staff workspace for building object lists, exhibition shortlists, research sets, or collection-review batches. Saved locally in this browser for now; Directus-backed project persistence is the next production step.</div>
+      </div>
+      <div class="od-project-actions">
+        <button class="btn" onclick="odCopyProjectList()" ${count ? '' : 'disabled'}>Copy List</button>
+        <button class="btn" onclick="odExportProjectJSON()" ${count ? '' : 'disabled'}>Export JSON</button>
+      </div>
+    </div>
+    <div class="od-project-list">${list}</div>
+  `;
+}
+
+function odSpeakObjectSummary() {
+  if (!window.speechSynthesis) {
+    odSetActionStatus('Speech unavailable');
+    return;
+  }
+  const record = odCurrentObjectRecord();
+  if (!record) return;
+  const o = OBJECTS[window._odCurrentId];
+  const p = o?._mv || {};
+  const desc = p.description || o?.ai || '';
+  const text = `${record.title}. ${record.institution}. ${record.date ? record.date + '. ' : ''}${record.type ? record.type + '. ' : ''}${desc ? desc.substring(0, 420) : 'No description is available in the local record.'}`;
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = getOdSpeechLanguageCode();
+  const selectedVoice = resolveOdSpeechVoice(utterance.lang);
+  if (selectedVoice) {
+    utterance.voice = selectedVoice;
+    utterance.lang = selectedVoice.lang || utterance.lang;
+  }
+  utterance.rate = 0.98;
+  utterance.pitch = 1;
+  utterance.onstart = () => odSetActionStatus('Reading summary');
+  utterance.onend = () => odSetActionStatus('Summary finished');
+  utterance.onerror = () => odSetActionStatus('Speech failed');
+  window.speechSynthesis.speak(utterance);
+}
+
 function openObjectDetail(objKey) {
   const o = OBJECTS[objKey];
   if (!o) return;
@@ -3483,7 +3835,7 @@ function openObjectDetail(objKey) {
   const rights = getObjectRightsInfo(p);
 
   // Image
-  const imgSrc = p.media_large || p.media_medium || p.media_thumbnail || null;
+  const imgSrc = pickSearchImage(p) || null;
   const imgCol = document.getElementById('od-image-col');
   if (imgSrc) {
     imgCol.innerHTML = `<img src="${imgSrc}" alt="${escQ(displayTitle)}" loading="lazy"
@@ -3517,10 +3869,15 @@ function openObjectDetail(objKey) {
   if (p.source_url) {
     linksEl.innerHTML += `<a href="${p.source_url}" target="_blank" class="btn" style="font-size:0.55rem">View on ${escQ(getInstitutionName(o))} →</a>`;
   }
-  if (p.media_large || p.media_medium) {
-    linksEl.innerHTML += `<a href="${p.media_large || p.media_medium}" target="_blank" class="btn" style="font-size:0.55rem">Look Closer / Source Image →</a>`;
+  const sourceImage = pickSearchImage(p);
+  if (sourceImage) {
+    linksEl.innerHTML += `<a href="${sourceImage}" target="_blank" class="btn" style="font-size:0.55rem">Look Closer / Source Image →</a>`;
   }
+  linksEl.innerHTML += `<button class="btn" onclick="odShareCurrentObject()">Share / Copy</button>`;
+  linksEl.innerHTML += `<button class="btn" onclick="odSaveCurrentObjectToProject()">Save to Project</button>`;
+  linksEl.innerHTML += `<button class="btn" onclick="odSpeakObjectSummary()">Read Summary</button>`;
   linksEl.innerHTML += `<a href="http://localhost:8055/admin" target="_blank" class="btn" style="font-size:0.55rem">Edit in Directus →</a>`;
+  linksEl.innerHTML += `<span class="od-action-status" id="od-action-status"></span>`;
 
   // Description
   const descEl = document.getElementById('od-description');
@@ -3558,6 +3915,7 @@ function openObjectDetail(objKey) {
   ).join('');
   document.getElementById('od-chat-in').value = '';
   updateOdSpeechUI();
+  odRenderProjectPanel();
 
   // Related objects
   document.getElementById('od-related').innerHTML = '<div style="font-family:var(--mono);font-size:0.55rem;color:var(--text3);padding:4px 0;">Finding related objects via Qdrant…</div>';
@@ -3734,8 +4092,9 @@ function odLoadRelated(objKey, o) {
           chat: { default: 'I am ' + (p.title || 'an object') + ' in the ' + label.name + ' collection.' }
         };
       }
-      const thumb = p.media_thumbnail
-        ? `<img src="${p.media_thumbnail}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">`
+      const relImage = pickSearchImage(p);
+      const thumb = relImage
+        ? `<img src="${relImage}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">`
         : '<span style="font-size:0.5rem;opacity:0.2">▣</span>';
       return `<div class="od-rel-card" onclick="openObjectDetail('${relKey}')">
         <div class="od-rel-thumb">${thumb}</div>
@@ -3757,8 +4116,9 @@ function odLoadRelated(objKey, o) {
     relEl.innerHTML = '<div style="font-family:var(--mono);font-size:0.48rem;color:var(--text3);margin-bottom:8px;">⚡ Ollama offline — showing collection objects (not similarity-ranked)</div>' +
       otherKeys.map(k => {
         const ro = OBJECTS[k]; const rp = ro._mv || {};
-        const thumb = rp.media_thumbnail
-          ? `<img src="${rp.media_thumbnail}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">`
+        const relImage = pickSearchImage(rp);
+        const thumb = relImage
+          ? `<img src="${relImage}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">`
           : '<span style="font-size:0.5rem;opacity:0.2">▣</span>';
         return `<div class="od-rel-card" onclick="openObjectDetail('${k}')">
           <div class="od-rel-thumb">${thumb}</div>
@@ -3881,12 +4241,13 @@ function renderNFCList(filter = 'all', search = '') {
     const obj = t.objectId ? OBJECTS[t.objectId] : null;
     return `<div class="nfc-card ${(!t.objectId) ? 'unassigned' : ''} ${activeNFCCode === t.code ? 'active' : ''}" onclick="selectNFC('${t.code}')">
       <div class="nfc-card-header"><div class="nfc-code">${displayAuxCode(t.code)}</div><div class="nfc-status-badge ${t.status}">${t.status}</div></div>
-      <div class="nfc-object-name">${obj ? escQ(obj.title) : '— Unassigned —'}</div>
-      <div class="nfc-object-id">${obj ? escQ(obj.id) : 'No object linked'}</div>
+      <div class="nfc-object-name">${obj ? escQ(obj.title) : 'Empty slot — assign object'}</div>
+      <div class="nfc-object-id">${obj ? escQ(obj.id) : 'Ready for collection object or draft record'}</div>
       <div class="nfc-location">${escQ(t.location)}</div>
       <div class="nfc-scans">Scans: ${t.scans} · Last: ${t.lastScan}</div>
     </div>`;
   }).join('') || '<div style="font-family:var(--mono);font-size:0.55rem;color:var(--text3);padding:10px;">No AUX.IO tags match filter.</div>';
+  updateNFCWorksetNote();
 }
 
 function nfcFilter(el, f) { document.querySelectorAll('.nfc-fchip').forEach(c => c.classList.remove('active')); el.classList.add('active'); renderNFCList(f, document.querySelector('.nfc-search').value.toLowerCase()); }
@@ -3938,8 +4299,8 @@ function renderNFCEditor(tag) {
       </div>
     </div>
     <div class="aux-workflow-note">
-      AUX.IO workflow: create or select an object record, choose what visitors can see, preview the phone page, then publish the tag. Demo data is loaded here, but institutions can draft their own object records below.
-      <div class="aux-pill-row"><span class="aux-mini-pill">Create</span><span class="aux-mini-pill">Assign</span><span class="aux-mini-pill">Preview</span><span class="aux-mini-pill">Publish</span></div>
+      AUX.IO workflow: use one of the 10 loaded examples, or select an empty slot and assign an object from the collection. You can also draft a new institution-owned object record for testing.
+      <div class="aux-pill-row"><span class="aux-mini-pill">Choose slot</span><span class="aux-mini-pill">Assign object</span><span class="aux-mini-pill">Preview visitor page</span><span class="aux-mini-pill">Publish</span></div>
     </div>
     <div class="editor-section">
       <div class="editor-section-title"><span>AUX.IO Placement</span></div>
@@ -3957,15 +4318,15 @@ function renderNFCEditor(tag) {
           <div class="ao-thumb">${obj._mv && pickSearchImage(obj._mv) ? `<img src="${pickSearchImage(obj._mv)}" loading="lazy">` : escQ(obj.dams)}</div>
         <div><div class="ao-title">${escQ(obj.title)}</div><div class="ao-id">${escQ([obj.id, (obj.type || '').substring(0,30), obj.year].filter(Boolean).join(' · '))}</div></div>
         <div class="ao-remove" onclick="clearAssignment('${tag.code}')">Remove</div>
-      </div>` : `<div style="font-family:var(--mono);font-size:0.62rem;color:var(--text3);margin-bottom:12px;padding:10px;border:1px dashed var(--border2)">No object assigned — select from the collection below</div>`}
+      </div>` : `<div class="aux-step-note"><strong>Empty AUX.IO slot</strong>Step 1: search or browse below. Step 2: click <b>Assign</b> on an object. Step 3: preview the phone page, then save or publish.</div>`}
       <div style="font-family:var(--mono);font-size:0.56rem;color:var(--text3);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;">Assign from Collection</div>
-      <div class="object-picker"><input class="op-search" type="text" placeholder="Search all loaded objects by title, ID, institution, rights…" oninput="filterObjectPicker(this,'${tag.code}')"><div id="opItems-${tag.code}">${renderObjectPickerItems(tag.code, '')}</div></div>
-      <div class="aux-helper">Initial shortlist favours image-backed records for speed. Search reaches all loaded records, including objects without images. For public visitor pages, use image-backed records or add a media URL in the institutional draft form.</div>
+      <div class="object-picker"><input class="op-search" type="text" placeholder="Type 2+ letters: title, object no., institution, material, rights…" oninput="filterObjectPicker(this,'${tag.code}')"><div id="opItems-${tag.code}">${renderObjectPickerItems(tag.code, '')}</div></div>
+      <div class="aux-helper">The default shortlist shows image-backed records that are safer for public visitor pages. Searching reaches all loaded records, including metadata-only objects for staff testing.</div>
     </div>
     <div class="editor-section">
       <div class="editor-section-title"><span>Create Institution Object Draft</span></div>
       <div class="aux-field-grid">
-        <div class="aux-field"><label>Object title</label><input id="aux-new-title-${tag.code}" class="aux-input" placeholder="Untitled object / artwork title"></div>
+        <div class="aux-field"><label>Object title <span style="color:var(--text3);font-weight:400;">/ optional for quick demo</span></label><input id="aux-new-title-${tag.code}" class="aux-input" placeholder="Leave blank to create an AUX.IO draft object"></div>
         <div class="aux-field"><label>Institution / collection</label><input id="aux-new-inst-${tag.code}" class="aux-input" placeholder="Your museum or gallery"></div>
         <div class="aux-field"><label>Accession / object no.</label><input id="aux-new-accession-${tag.code}" class="aux-input" placeholder="2026.001"></div>
         <div class="aux-field"><label>Object type / medium</label><input id="aux-new-type-${tag.code}" class="aux-input" placeholder="Video installation, textile, painting..."></div>
@@ -3975,8 +4336,8 @@ function renderNFCEditor(tag) {
         <div class="aux-field full"><label>Source record URL</label><input id="aux-new-source-${tag.code}" class="aux-input" placeholder="https://collections.yourmuseum.org/object/..."></div>
         <div class="aux-field full"><label>Visitor description / interpretation seed</label><textarea id="aux-new-desc-${tag.code}" class="aux-textarea" placeholder="Short object description, curatorial note, access note, or draft interpretation..."></textarea></div>
       </div>
-      <button class="btn nfc" onclick="createInstitutionObjectForAux('${tag.code}')">Create Object + Assign to AUX.IO</button>
-      <div class="aux-helper">This creates a local prototype object record so museums can test AUX.IO with their own material. Production should save this to Directus and preserve full source metadata separately from visitor interpretation.</div>
+      <button class="btn nfc" onclick="createInstitutionObjectForAux('${tag.code}')">Create Draft + Assign to AUX.IO</button>
+      <div class="aux-helper">This creates a local prototype object record so museums can test AUX.IO with their own material. You can start blank for a quick demo, then rename and enrich it. Production should save this to Directus and preserve full source metadata separately from visitor interpretation.</div>
     </div>
     <div class="editor-section">
       <div class="editor-section-title"><span>Visitor Content Visibility</span></div>
@@ -3993,7 +4354,7 @@ function renderNFCPreview(tag) {
   const vis = nfcVisibility[tag.code];
   const p = obj && obj._mv ? obj._mv : null;
   // Use medium image for phone preview (better quality than thumbnail)
-  const imgSrc = p && (p.media_medium || p.media_thumbnail);
+  const imgSrc = p ? pickSearchImage(p) : '';
 
   document.getElementById('nfcPreview').innerHTML = `
     <div class="preview-frame">
@@ -4016,7 +4377,7 @@ function renderNFCPreview(tag) {
             <div class="pf-rel-label">Related objects</div>
             <div class="pf-rel-grid">
               ${Object.keys(OBJECTS).filter(id => id !== tag.objectId).slice(0, 3).map(id => {
-                const ro = OBJECTS[id]; const rt = ro._mv && ro._mv.media_thumbnail;
+                const ro = OBJECTS[id]; const rt = ro._mv && pickSearchImage(ro._mv);
                 return `<div class="pf-rel-item">
                   <div class="pf-rel-thumb">${rt ? `<img src="${rt}" loading="lazy">` : '▣'}</div>
                   <div class="pf-rel-title">${ro.title.substring(0, 18)}</div>
@@ -4051,10 +4412,11 @@ function createInstitutionObjectForAux(code) {
   const tag = NFC_TAGS.find(t => t.code === code);
   if (!tag) return;
   const read = key => document.getElementById(`aux-new-${key}-${code}`)?.value?.trim() || '';
-  const title = read('title');
+  let title = read('title');
+  const titleInput = document.getElementById(`aux-new-title-${code}`);
   if (!title) {
-    alert('Add an object title before creating the institutional draft.');
-    return;
+    title = `${displayAuxCode(code)} draft object`;
+    if (titleInput) titleInput.value = title;
   }
 
   const institution = read('inst') || 'Institution draft';
@@ -4434,7 +4796,7 @@ function renderVPage(objId) {
   document.getElementById('vSub').textContent = [o.type, o.year, o.location].filter(Boolean).join(' · ');
 
   const imgEl = document.getElementById('vImg');
-  const thumbSrc = p.media_medium || p.media_thumbnail;
+  const thumbSrc = pickSearchImage(p);
   imgEl.innerHTML = thumbSrc ? `<img src="${thumbSrc}" loading="lazy" style="max-height:300px;object-fit:contain">` : 'No image available';
 
   document.getElementById('vStory').innerHTML = `<strong>${o.title}</strong> — ${(o.ai || '').substring(0, 300)}`;
@@ -4449,7 +4811,7 @@ function renderVPage(objId) {
   document.getElementById('vRelated').innerHTML = Object.keys(OBJECTS)
     .filter(id => id !== objId).slice(0, 3).map(id => {
       const ro = OBJECTS[id];
-      const rThumb = ro._mv && ro._mv.media_thumbnail;
+      const rThumb = ro._mv && pickSearchImage(ro._mv);
       return `<div class="rel-card" onclick="switchVPage('${id}',null)">
         <div class="rel-thumb">${rThumb ? `<img src="${rThumb}" loading="lazy">` : '▣'}</div>
         <div class="rel-title">${ro.title}</div>
