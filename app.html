@@ -646,7 +646,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
     </div>
   </div>
   <div>
-    <div class="header-meta"><b id="clockDisplay">—</b><br><span>Build v11.6.5 · 19 connected collections · rights-aware media · AUX.IO setup bench</span></div>
+    <div class="header-meta"><b id="clockDisplay">—</b><br><span id="headerMetaLine">Build v11.6.5 · connecting… · rights-aware media · AUX.IO setup bench</span></div>
     <div class="header-links">
       <a class="header-link" href="http://localhost:11434" target="_blank">Ollama LLM</a>
       <a class="header-link" href="http://localhost:8055/admin" target="_blank">Directus CMS</a>
@@ -1350,6 +1350,15 @@ function qdrantFetch(path, options) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
+      });
+    }
+    // Bare collection info (points_count) also goes through the flat proxy route.
+    const info = path.match(/^\/collections\/([^/]+)$/);
+    if (info) {
+      return fetch(`${API_BASE}/api/proxy/qdrant/info`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ collection: info[1] }),
       });
     }
     const url = `${API_BASE}/api/proxy${path.replace('/collections/', '/qdrant/').replace('/points/scroll', '/scroll').replace('/points/search', '/search')}`;
@@ -2276,6 +2285,10 @@ function ccBuildConfig() {
     mapping: {
       records_path: 'data',
       page_param: 'page',
+      ...(document.getElementById('ccKey')?.value !== 'none' ? {
+        auth_header: 'X-Api-Key',
+        api_key_env: `${id.toUpperCase()}_API_KEY`
+      } : {}),
       fields: {
         source_record_id: 'id',
         title: 'title',
@@ -2299,13 +2312,19 @@ function ccUpdateConfig() {
   const out = document.getElementById('ccConfigOut');
   const cmd = document.getElementById('ccCmdOut');
   if (out) out.textContent = JSON.stringify(cfg, null, 2);
+  const needsKey = (document.getElementById('ccKey')?.value || 'none') !== 'none';
+  const keytec = needsKey
+    ? `# Key stays in the host keychain (Keytec) — store once, then wrap every run:
+#   famtec.js set ${cfg.id} ${cfg.id.toUpperCase()}_API_KEY
+node "$KEYTEC/famtec.js" run ${cfg.id} -- `
+    : '';
   if (cmd) cmd.textContent =
 `# 1. Save this config (Download) and edit mapping.fields to match your API's
 #    response shape (dot-paths into each record).
 # 2. Dry-run — the generic harvester works for most JSON APIs, no code needed:
-node backend-archai/scripts/generic-harvester.js --config archai-connector-${cfg.id}.json --limit 10
+${keytec}node backend-archai/scripts/generic-harvester.js --config archai-connector-${cfg.id}.json --limit 10
 # 3. Review the rights/media report + complete the legal check, then:
-node backend-archai/scripts/generic-harvester.js --config archai-connector-${cfg.id}.json --limit 150 --apply
+${keytec}node backend-archai/scripts/generic-harvester.js --config archai-connector-${cfg.id}.json --limit 150 --apply
 # (Complex sources can still get a dedicated ${cfg.harvester_script})`;
 }
 
@@ -2969,6 +2988,10 @@ function loadMVObjects() {
     document.getElementById('sb-mv-count').textContent = totalCount;
     document.getElementById('resultsLabel').textContent = totalCount + ' objects · ' + getCollectionSummary(counts, COLLECTIONS);
     document.getElementById('nodel-mv-count').textContent = totalCount;
+    // Header line reads live state — never hardcode counts (they drift).
+    const liveCols = Object.keys(counts).filter(k => counts[k] > 0).length;
+    const headerMeta = document.getElementById('headerMetaLine');
+    if (headerMeta) headerMeta.textContent = `Build v11.6.5 · ${liveCols} live collections · ${totalCount.toLocaleString()} objects · rights-aware media · AUX.IO setup bench`;
 
     generateNFCTags();
     renderResultCards();
