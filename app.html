@@ -698,6 +698,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
     <span class="tab-count" style="color:var(--nfc)" id="nfcTabCount">0</span>
   </div>
   <div class="tab t-vocab" data-roles="admin,curator,collections" onclick="switchTab('vocab',this)">Vocabulary &amp; Thesaurus</div>
+  <div class="tab t-connect" data-roles="admin,curator,collections" onclick="switchTab('connect',this)">Connect Collection</div>
   <div class="tab t-visitor" data-roles="admin,curator,collections,technician,volunteer,visitor" onclick="switchTab('visitor',this)">Visitor View</div>
   <div class="tab t-famtec" data-roles="admin,curator,collections,technician,volunteer" onclick="switchTab('famtec',this)">FAMTEC Exchange</div>
   <div class="tab t-objdetail" id="tab-objdetail" data-roles="admin,curator,collections,technician,volunteer" onclick="switchTab('objdetail',this)" style="display:none">
@@ -991,6 +992,79 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
   </div>
 </div>
 
+<!-- ████ CONNECT COLLECTION PANEL ████ -->
+<div class="panel" id="panel-connect">
+  <div style="display:grid;grid-template-columns:minmax(340px,1fr) minmax(340px,1.1fr);gap:26px;align-items:start;">
+    <div>
+      <div class="section-label" style="margin-bottom:6px;">Connect a Collection — Harvester / API Setup</div>
+      <div style="font-family:var(--mono);font-size:0.55rem;color:var(--text3);line-height:1.9;margin-bottom:16px;">
+        Point ARCHAI at your collection API. This builds a harvester config for the onboarding
+        pipeline: raw records are preserved exactly as received, rights and cultural-protocol
+        metadata stay attached per item, and nothing is published until it passes the legal and
+        media gates. Your collection system is never modified — ARCHAI reads, it does not write.
+      </div>
+
+      <div class="section-label" style="font-size:0.5rem;margin-bottom:8px;">1 · Institution</div>
+      <input id="ccName" placeholder="Institution name — e.g. RMIT Gallery" style="width:100%;margin-bottom:8px;" class="nfc-search">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+        <input id="ccRegion" placeholder="Region — e.g. Oceania" class="nfc-search">
+        <input id="ccFocus" placeholder="Focus — e.g. design, photography" class="nfc-search">
+      </div>
+
+      <div class="section-label" style="font-size:0.5rem;margin-bottom:8px;">2 · Source</div>
+      <select id="ccMode" class="nfc-search" style="width:100%;margin-bottom:8px;" onchange="ccUpdateConfig()">
+        <option value="api">REST / JSON API</option>
+        <option value="iiif">IIIF (Image + Presentation API)</option>
+        <option value="oai_pmh">OAI-PMH harvest endpoint</option>
+        <option value="aggregator_api">Aggregator API (e.g. national portal)</option>
+        <option value="csv_export">CSV / spreadsheet export</option>
+        <option value="cms_dams">CMS / DAMS connector (EMu, TMS, CollectiveAccess, ResourceSpace, Directus)</option>
+      </select>
+      <input id="ccUrl" placeholder="API base URL — e.g. https://api.example.org/collection/v2" style="width:100%;margin-bottom:8px;" class="nfc-search" oninput="ccUpdateConfig()">
+      <input id="ccDocs" placeholder="API documentation URL (optional)" style="width:100%;margin-bottom:8px;" class="nfc-search" oninput="ccUpdateConfig()">
+      <select id="ccKey" class="nfc-search" style="width:100%;margin-bottom:6px;" onchange="ccUpdateConfig()">
+        <option value="none">No API key required</option>
+        <option value="free_registration">Free registration key</option>
+        <option value="institutional_agreement">Key under institutional agreement</option>
+      </select>
+      <div style="font-family:var(--mono);font-size:0.48rem;color:var(--warn);margin-bottom:14px;">
+        Keys are never stored in this page or the config — they live in the host keychain (Keytec) and are injected at harvest time.
+      </div>
+
+      <div class="section-label" style="font-size:0.5rem;margin-bottom:8px;">3 · Rights &amp; cultural safety defaults</div>
+      <select id="ccRights" class="nfc-search" style="width:100%;margin-bottom:8px;" onchange="ccUpdateConfig()">
+        <option value="per-item">Rights are recorded per item (recommended)</option>
+        <option value="cc0">Whole dataset CC0 / public domain</option>
+        <option value="cc-by">Whole dataset CC BY</option>
+        <option value="mixed-check">Mixed / unclear — needs item-level legal review</option>
+      </select>
+      <label style="font-family:var(--mono);font-size:0.52rem;color:var(--text2);display:block;margin-bottom:6px;"><input type="checkbox" id="ccSensitive" checked onchange="ccUpdateConfig()"> Exclude culturally sensitive / restricted records by default (hard gate)</label>
+      <label style="font-family:var(--mono);font-size:0.52rem;color:var(--text2);display:block;margin-bottom:14px;"><input type="checkbox" id="ccMediaGate" checked onchange="ccUpdateConfig()"> Hold records without healthy open media from public AUX.IO (staff-searchable only)</label>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn primary" onclick="ccTestEndpoint()">Test endpoint</button>
+        <button class="btn" onclick="ccDownloadConfig()">Download config</button>
+        <button class="btn" onclick="ccCopyConfig(this)">Copy config</button>
+      </div>
+      <div id="ccTestResult" style="font-family:var(--mono);font-size:0.52rem;color:var(--text3);margin-top:10px;line-height:1.8;"></div>
+    </div>
+
+    <div>
+      <div class="section-label" style="margin-bottom:6px;">Generated harvester config</div>
+      <div style="font-family:var(--mono);font-size:0.5rem;color:var(--text3);margin-bottom:8px;">
+        Drops into <span style="color:var(--text2)">backend-archai/scripts/collection-targets.json</span> — the registry the legal-harvest bot reads. A harvester run then follows the standard gates: dry-run → item-rights check → media audit → curator rebuild → AUX.IO regeneration.
+      </div>
+      <pre id="ccConfigOut" style="background:var(--surface);border:1px solid var(--border);padding:14px;font-size:0.55rem;line-height:1.7;overflow:auto;max-height:420px;white-space:pre-wrap;"></pre>
+      <div class="section-label" style="margin:14px 0 6px;">Run (on the ARCHAI host)</div>
+      <pre id="ccCmdOut" style="background:var(--surface);border:1px solid var(--border);padding:14px;font-size:0.55rem;line-height:1.7;overflow:auto;white-space:pre-wrap;"></pre>
+      <div style="font-family:var(--mono);font-size:0.5rem;color:var(--text3);line-height:1.9;margin-top:10px;">
+        Onboarding path: <span style="color:var(--text2)">connect → dry-run → legal review → live harvest → staff search → curated AUX.IO publish</span>.
+        See <span style="color:var(--text2)">backend-archai/scripts/COLLECTION_ONBOARDING_BLUEPRINT.md</span> for the full checklist.
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ████ VISITOR PANEL ████ -->
 <div class="panel" id="panel-visitor">
   <div class="visitor-layout">
@@ -1071,7 +1145,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
       <div class="sb-title" style="color:var(--accent4);margin-bottom:10px;">Institution Chat</div>
       <div class="famtec-chat">
         <div class="famtec-chat-head">
-          <div style="font-family:var(--serif);font-size:0.95rem;" id="famtecChatTitle">FAMTEC × ACMI</div>
+          <div style="font-family:var(--serif);font-size:0.95rem;" id="famtecChatTitle">FAMTEC × RMIT Gallery (demo)</div>
         </div>
         <div class="famtec-msgs" id="famtecMsgs"></div>
         <div class="famtec-chat-row">
@@ -1261,6 +1335,23 @@ document.addEventListener('keydown', event => {
 
 function qdrantFetch(path, options) {
   if (USE_PROXY) {
+    // The backend proxy expects a flat endpoint (/api/proxy/qdrant/scroll|search)
+    // with the collection in the request BODY, not Qdrant's native
+    // /collections/<col>/points/<op> path. Rewrite scroll/search accordingly,
+    // otherwise object loading 404s and AUX.IO has no demo records to seed.
+    const op = path.match(/^\/collections\/([^/]+)\/points\/(scroll|search)$/);
+    if (op) {
+      const collection = op[1];
+      const endpoint = op[2];
+      let body = {};
+      try { body = options && options.body ? JSON.parse(options.body) : {}; } catch (_e) { body = {}; }
+      body.collection = collection;
+      return fetch(`${API_BASE}/api/proxy/qdrant/${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+    }
     const url = `${API_BASE}/api/proxy${path.replace('/collections/', '/qdrant/').replace('/points/scroll', '/scroll').replace('/points/search', '/search')}`;
     return fetch(url, options);
   }
@@ -2115,19 +2206,22 @@ const ROLE_DEFS = {
 };
 
 // ── FAMTEC DATA ─────────────────────────────────────────────────
+// Demo network only: FAMTEC plus RMIT venues. Do not use real external
+// institution names in fictional exchange content — it reads as implied
+// partnership.
 const FAMTEC_INSTITUTIONS = [
   { id:'famtec', name:'FAMTEC', city:'Melbourne', focus:'Media art, digital heritage, robotics' },
-  { id:'acmi', name:'ACMI', city:'Melbourne', focus:'Screen culture, AV installations, interactive media' },
-  { id:'sama', name:'South Australian Museum', city:'Adelaide', focus:'Collections digitisation, exhibition infrastructure' },
-  { id:'mga', name:'Monash Gallery of Art', city:'Melbourne', focus:'Photography, moving image, media installs' }
+  { id:'rmitgallery', name:'RMIT Gallery (demo)', city:'Melbourne', focus:'Contemporary art, design, exhibition programs' },
+  { id:'rmitlibrary', name:'RMIT Library (demo)', city:'Melbourne', focus:'Special collections, archives, digitisation' },
+  { id:'partner', name:'Partner Museum (demo)', city:'—', focus:'Example onboarding institution for testing workflows' }
 ];
 
 const FAMTEC_FEED = [
-  { kind:'loan', title:'2x BrightSign XT media players (loan)', org:'ACMI', timing:'Available 10 Mar – 28 Apr', body:'Tested for synchronized two-channel playback. Can include SD card image + documentation set.', tags:['loan','media player','playback','installation'] },
+  { kind:'loan', title:'2x media players for synced playback (loan)', org:'RMIT Gallery (demo)', timing:'Available 10 Mar – 28 Apr', body:'Tested for synchronized two-channel playback. Can include SD card image + documentation set.', tags:['loan','media player','playback','installation'] },
   { kind:'rental', title:'Short-throw projector package (rental)', org:'FAMTEC', timing:'Week rates + install support', body:'Projection package with lenses, mounts and alignment support for immersive rooms.', tags:['rental','projector','install','av'] },
   { kind:'need skills', title:'Need dev support for legacy browser artwork', org:'FAMTEC', timing:'Exhibition opens in 6 weeks', body:'Seeking emulation / browser preservation specialist for IE6-era net art display and capture workflow.', tags:['need skills','preservation','emulation','net art'] },
   { kind:'available crew', title:'Installation technicians available (2-person team)', org:'FAMTEC', timing:'April capacity open', body:'Experienced in media server commissioning, projection alignment, sensor calibration and deinstall documentation.', tags:['available crew','installation','commissioning'] },
-  { kind:'need skills', title:'Sound artist/technician for ambisonics tuning', org:'MGA', timing:'Install week 14 Apr', body:'Need support calibrating multi-channel speaker layout and documenting presets.', tags:['need skills','sound','ambisonics'] },
+  { kind:'need skills', title:'Digitisation workflow advice for archive ingest', org:'RMIT Library (demo)', timing:'Semester ingest surge', body:'Short-term guidance on capture standards, file naming and preservation-grade storage for a special-collections push.', tags:['need skills','digitisation','archives'] },
   { kind:'loan', title:'AUX.IO kiosks + tags starter kit', org:'FAMTEC', timing:'Pilot loan (8 weeks)', body:'Loan bundle for visitor wayfinding and object interpretation pilots. Includes deployment guide.', tags:['loan','aux.io','visitor experience','pilot'] }
 ];
 
@@ -2136,18 +2230,100 @@ const FAMTEC_CHAT = {
     { who:'FAMTEC / Collections', text:'We need a technician familiar with media-server failover and install documentation for an April exhibition.' },
     { who:'FAMTEC / Ops', text:'We can offer a 2-person install team and a commissioning checklist. Do you need weekend bump-in coverage?' }
   ],
-  acmi: [
-    { who:'ACMI / Exhibitions', text:'We can loan 2 BrightSign units with sync config if transport is arranged.' },
+  rmitgallery: [
+    { who:'RMIT Gallery (demo)', text:'We can loan 2 synced media players with config if transport is arranged.' },
     { who:'FAMTEC / AV', text:'Great. Can you share firmware version and playback logs from your last show?' }
   ],
-  sama: [{ who:'SAMA / Digital', text:'Looking for short-term digitisation workflow advice for a seasonal exhibition ingest surge.' }],
-  mga: [{ who:'MGA / Tech', text:'Need ambisonics tuning support and a repeatable setup sheet for our team.' }]
+  rmitlibrary: [{ who:'RMIT Library (demo)', text:'Looking for short-term digitisation workflow advice for a special-collections ingest surge.' }],
+  partner: [{ who:'Partner Museum (demo)', text:'Testing the exchange workflow as part of ARCHAI onboarding — this thread is example content.' }]
 };
+
+// ═══════════════════════════════════════════════════════════════════
+// CONNECT COLLECTION — harvester/API config builder
+// ═══════════════════════════════════════════════════════════════════
+function ccBuildConfig() {
+  const name = (document.getElementById('ccName')?.value || '').trim();
+  const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '').slice(0, 24) || 'newinstitution';
+  const mode = document.getElementById('ccMode')?.value || 'api';
+  const rights = document.getElementById('ccRights')?.value || 'per-item';
+  const rightsText = { 'per-item': 'mixed / item-level', 'cc0': 'CC0 / public domain', 'cc-by': 'CC BY', 'mixed-check': 'mixed / needs item-level legal review' }[rights];
+  const docs = (document.getElementById('ccDocs')?.value || '').trim();
+  return {
+    id,
+    name: name || 'New institution',
+    region: (document.getElementById('ccRegion')?.value || '').trim() || 'TBC',
+    focus: (document.getElementById('ccFocus')?.value || '').split(',').map(s => s.trim()).filter(Boolean),
+    status: 'planned',
+    priority: 99,
+    harvester_script: `${id}-harvester.js`,
+    translation_mode: 'source-first',
+    access_mode: mode,
+    api_base_url: (document.getElementById('ccUrl')?.value || '').trim(),
+    api_key: document.getElementById('ccKey')?.value || 'none',
+    metadata_rights: rightsText,
+    image_rights: rights === 'cc0' ? 'CC0 / public domain' : 'per-item / mixed',
+    public_demo_policy: rights === 'mixed-check' ? 'held_pending_item_rights_review' : 'approved_with_item_rights_check',
+    quality_gate: [
+      'image-backed',
+      'item-rights-cleared',
+      document.getElementById('ccSensitive')?.checked !== false ? 'culturally-appropriate (sensitive records excluded by default)' : null,
+      document.getElementById('ccMediaGate')?.checked !== false ? 'media-health gate (placeholder/low-res held from public AUX.IO)' : null
+    ].filter(Boolean).join(' + '),
+    cultural_protocol: 'Preserve source sensitivity and community-protocol flags; exclusion is the default until protocols are agreed',
+    verification_status: 'unverified_draft',
+    official_docs: docs ? [docs] : [],
+    notes: 'Draft connector generated in the ARCHAI app Connect Collection page. Run a dry-run harvest and a legal review before any live onboarding.'
+  };
+}
+
+function ccUpdateConfig() {
+  const cfg = ccBuildConfig();
+  const out = document.getElementById('ccConfigOut');
+  const cmd = document.getElementById('ccCmdOut');
+  if (out) out.textContent = JSON.stringify(cfg, null, 2);
+  if (cmd) cmd.textContent =
+`# 1. Add the config above to backend-archai/scripts/collection-targets.json
+# 2. Dry-run first — nothing is written until the legal review passes:
+node backend-archai/scripts/legal-harvest-bot.js --report
+node backend-archai/scripts/${cfg.harvester_script} --limit 10 --dry-run`;
+}
+
+async function ccTestEndpoint() {
+  const el = document.getElementById('ccTestResult');
+  const url = (document.getElementById('ccUrl')?.value || '').trim();
+  if (!el) return;
+  if (!/^https?:\/\//i.test(url)) { el.innerHTML = '<span style="color:var(--warn)">Enter a full http(s):// API base URL first.</span>'; return; }
+  el.textContent = 'Testing endpoint…';
+  try {
+    const r = await fetch(url, { method: 'GET', mode: 'cors' });
+    const type = r.headers.get('content-type') || 'unknown type';
+    el.innerHTML = `<span style="color:var(--ok)">Reachable — HTTP ${r.status}</span> · ${escQ(type)}<br>Endpoint responds from the browser; the host-side harvester will also reach it.`;
+  } catch (e) {
+    el.innerHTML = `<span style="color:var(--warn)">Not reachable from the browser</span> (often just CORS).<br>This does not block onboarding — the ARCHAI host harvester makes server-side requests without browser CORS limits. Verify the URL against the API docs, then dry-run on the host.`;
+  }
+}
+
+function ccDownloadConfig() {
+  const cfg = ccBuildConfig();
+  const blob = new Blob([JSON.stringify(cfg, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `archai-connector-${cfg.id}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function ccCopyConfig(btn) {
+  navigator.clipboard.writeText(JSON.stringify(ccBuildConfig(), null, 2)).then(() => {
+    if (btn) { const t = btn.textContent; btn.textContent = '✓ Copied'; setTimeout(() => btn.textContent = t, 1400); }
+  });
+}
 
 // ═══════════════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', () => {
+  ccUpdateConfig();
   setInterval(() => {
     document.getElementById('clockDisplay').textContent =
       new Date().toLocaleTimeString('en-AU', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
