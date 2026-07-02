@@ -2775,10 +2775,18 @@ function isHeldImageUrl(url = '') {
   return /digital image not yet created|no[ _-]?image|placeholder/i.test(String(url || ''));
 }
 
+function isFalseFlag(value) {
+  return value === false || String(value).toLowerCase() === 'false';
+}
+
+function isTrueFlag(value) {
+  return value === true || String(value).toLowerCase() === 'true';
+}
+
 function pickSearchImage(payload = {}) {
-  if (payload.media_available === false) return '';
-  if (payload.media_placeholder === true) return '';
-  if (payload.media_public_display_allowed === false) return '';
+  if (isFalseFlag(payload.media_available)) return '';
+  if (isTrueFlag(payload.media_placeholder)) return '';
+  if (isFalseFlag(payload.media_public_display_allowed)) return '';
   if (['tate', 'getty'].includes(String(payload.source || '').toLowerCase())) return '';
   const image = payload.media_medium
     || payload.media_large
@@ -3697,7 +3705,8 @@ function doConverse() {
 
     // Render object cards if present
     if (data.objects && data.objects.length > 0) {
-      html += '<div class="convo-objects">';
+      const imageBackedObjects = [];
+      let objectCards = '';
       for (const obj of data.objects) {
         const objKey = (obj.collection || 'archai_pilot') + '_c_' + (obj.registration || Math.random().toString(36).slice(2,8));
         // Register object for detail view if not already known
@@ -3711,17 +3720,21 @@ function doConverse() {
         }
         const objPayload = { ...obj, _source_collection: obj.collection, source_institution: obj.institution, media_medium: obj.image };
         const objImage = pickSearchImage(objPayload);
-        html += `<div class="convo-obj-card" onclick="openObj('${objKey}')">`;
-        if (objImage) html += `<img src="${objImage}" loading="lazy" onerror="this.style.display='none'">`;
-        html += `<div class="coc-title">${obj.title}</div>`;
-        html += `<div class="coc-meta">${obj.institution} · ${(obj.score*100).toFixed(0)}%</div>`;
-        html += `</div>`;
+        if (!objImage) continue;
+        imageBackedObjects.push(obj);
+        objectCards += `<div class="convo-obj-card" onclick="openObj('${objKey}')">`;
+        objectCards += `<img src="${objImage}" loading="lazy" onerror="this.closest('.convo-obj-card').style.display='none'">`;
+        objectCards += `<div class="coc-title">${obj.title}</div>`;
+        objectCards += `<div class="coc-meta">${obj.institution} · ${(obj.score*100).toFixed(0)}%</div>`;
+        objectCards += `</div>`;
       }
-      html += '</div>';
+      if (imageBackedObjects.length) {
+        html += `<div class="convo-objects">${objectCards}</div>`;
+      }
 
       // Also update the main results area with the objects
-      document.getElementById('resultsLabel').textContent = data.objects.length + ' objects cited · conversational';
-      renderConvoResults(data.objects);
+      document.getElementById('resultsLabel').textContent = imageBackedObjects.length + ' image-ready objects cited · conversational';
+      renderConvoResults(imageBackedObjects);
     }
 
     if (pending) { pending.id = ''; pending.innerHTML = html; }
@@ -3739,7 +3752,17 @@ function doConverse() {
 
 function renderConvoResults(objects) {
   const container = document.getElementById('resultsContainer');
-  container.innerHTML = objects.map(obj => {
+  const imageReadyObjects = objects.filter(obj => {
+    const objPayload = { ...obj, _source_collection: obj.collection, source_institution: obj.institution, media_medium: obj.image };
+    return Boolean(pickSearchImage(objPayload));
+  });
+
+  if (!imageReadyObjects.length) {
+    container.innerHTML = '<div style="padding:20px;font-family:var(--mono);font-size:0.62rem;color:var(--text3)">ARCHAI found relevant records, but none have public image-ready media for display yet.</div>';
+    return;
+  }
+
+  container.innerHTML = imageReadyObjects.map(obj => {
     const label = COLLECTION_LABELS[obj.collection] || COLLECTION_LABELS.archai_pilot;
     const rights = getObjectRightsInfo(obj);
     const objKey = (obj.collection || 'archai_pilot') + '_c_' + (obj.registration || Math.random().toString(36).slice(2,8));
