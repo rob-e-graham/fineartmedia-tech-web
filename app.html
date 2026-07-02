@@ -2272,7 +2272,25 @@ function ccBuildConfig() {
     cultural_protocol: 'Preserve source sensitivity and community-protocol flags; exclusion is the default until protocols are agreed',
     verification_status: 'unverified_draft',
     official_docs: docs ? [docs] : [],
-    notes: 'Draft connector generated in the ARCHAI app Connect Collection page. Run a dry-run harvest and a legal review before any live onboarding.'
+    notes: 'Draft connector generated in the ARCHAI app Connect Collection page. Run a dry-run harvest and a legal review before any live onboarding.',
+    mapping: {
+      records_path: 'data',
+      page_param: 'page',
+      fields: {
+        source_record_id: 'id',
+        title: 'title',
+        description: 'description',
+        creator: 'creator',
+        date_range: 'date',
+        object_type: 'type',
+        medium: 'medium',
+        image: 'images.0.url',
+        rights: 'rights',
+        record_url: 'url',
+        sensitive: 'cultural_sensitivity'
+      },
+      open_licence_values: ['cc0', 'public domain', 'pdm', 'cc by']
+    }
   };
 }
 
@@ -2282,10 +2300,13 @@ function ccUpdateConfig() {
   const cmd = document.getElementById('ccCmdOut');
   if (out) out.textContent = JSON.stringify(cfg, null, 2);
   if (cmd) cmd.textContent =
-`# 1. Add the config above to backend-archai/scripts/collection-targets.json
-# 2. Dry-run first — nothing is written until the legal review passes:
-node backend-archai/scripts/legal-harvest-bot.js --report
-node backend-archai/scripts/${cfg.harvester_script} --limit 10 --dry-run`;
+`# 1. Save this config (Download) and edit mapping.fields to match your API's
+#    response shape (dot-paths into each record).
+# 2. Dry-run — the generic harvester works for most JSON APIs, no code needed:
+node backend-archai/scripts/generic-harvester.js --config archai-connector-${cfg.id}.json --limit 10
+# 3. Review the rights/media report + complete the legal check, then:
+node backend-archai/scripts/generic-harvester.js --config archai-connector-${cfg.id}.json --limit 150 --apply
+# (Complex sources can still get a dedicated ${cfg.harvester_script})`;
 }
 
 async function ccTestEndpoint() {
@@ -4519,10 +4540,12 @@ function renderNFCEditor(tag) {
       <div class="editor-section-title"><span>Visitor Content Visibility</span></div>
       <div class="vis-grid">${visItems.map(([key, label]) => `<div class="vis-item ${vis[key] ? 'on' : ''}" onclick="toggleVis('${tag.code}','${key}',this)"><div class="vis-toggle ${vis[key] ? 'on' : ''}"></div><span class="vis-label">${label}</span></div>`).join('')}</div>
     </div>
-    <div style="display:flex;gap:8px;margin-top:16px;">
+    <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
       <button class="btn primary" onclick="saveNFC('${tag.code}')">Save Changes</button>
       ${obj ? `<button class="btn" onclick="openObj('${tag.objectId}')">View Object Detail</button>` : '<button class="btn" disabled>View Object Detail</button>'}
-    </div>`;
+      ${obj ? `<a class="btn" style="text-decoration:none" href="${BACKEND_BASE}/api/nfc/pages/${tag.code.replace(/^NFC-?(\d+)$/i, (m, n) => 'NFC-' + n.padStart(3, '0'))}" target="_blank" rel="noopener">View Live Page →</a>` : ''}
+    </div>
+    <div style="font-family:var(--mono);font-size:0.48rem;color:var(--text3);margin-top:8px;">Save first, then View Live Page shows the visitor page served from the backend record — including institution drafts.</div>`;
 }
 
 function renderNFCPreview(tag) {
@@ -4571,7 +4594,15 @@ function renderNFCPreview(tag) {
     </div>`;
 }
 
-function assignObject(nfcCode, objId) { const tag = NFC_TAGS.find(t => t.code === nfcCode); if (tag) { tag.objectId = objId; if (tag.status === 'unassigned' || tag.status === 'new') tag.status = 'draft'; renderNFCList(); renderNFCEditor(tag); renderNFCPreview(tag); } }
+function assignObject(nfcCode, objId) {
+  const tag = NFC_TAGS.find(t => t.code === nfcCode);
+  if (!tag) return;
+  tag.objectId = objId;
+  if (tag.status === 'unassigned' || tag.status === 'new') tag.status = 'draft';
+  // Don't let the empty-slot placeholder leak into the saved record / live page.
+  if (/empty slot/i.test(tag.location || '')) tag.location = 'Gallery — location TBC';
+  renderNFCList(); renderNFCEditor(tag); renderNFCPreview(tag);
+}
 function clearAssignment(nfcCode) { const tag = NFC_TAGS.find(t => t.code === nfcCode); if (tag) { tag.objectId = null; tag.status = 'unassigned'; renderNFCList(); renderNFCEditor(tag); renderNFCPreview(tag); } }
 function toggleVis(nfcCode, key, el) { nfcVisibility[nfcCode][key] = !nfcVisibility[nfcCode][key]; el.classList.toggle('on'); el.querySelector('.vis-toggle').classList.toggle('on'); const tag = NFC_TAGS.find(t => t.code === nfcCode); if (tag) renderNFCPreview(tag); }
 function publishNFC(code) { const tag = NFC_TAGS.find(t => t.code === code); if (tag && tag.objectId) { tag.status = 'live'; selectNFC(code); } else alert('Assign an object before publishing'); }
