@@ -161,6 +161,7 @@ body.public-demo [data-staff-only]{display:none!important;}
 .filter-group{display:flex;align-items:center;gap:5px;}
 .fg-label{font-family:var(--mono);font-size:0.53rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);}
 .chip{font-family:var(--mono);font-size:0.58rem;letter-spacing:1px;text-transform:uppercase;padding:3px 7px;border:1px solid var(--border2);color:var(--text3);cursor:pointer;transition:all 0.12s;}
+.collection-filter-select{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.5px;padding:3px 7px;border:1px solid var(--border2);background:var(--surface);color:var(--text2);cursor:pointer;max-width:200px;}
 .chip:hover{color:var(--text2);border-color:var(--text3);}
 .chip.active{color:var(--text);border-color:var(--text3);background:var(--surface2);}
 .results-header{font-family:var(--mono);font-size:0.56rem;color:var(--text3);text-transform:uppercase;letter-spacing:2px;padding:9px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
@@ -650,7 +651,7 @@ body.public-demo [data-staff-only]{display:none!important;}
     </div>
   </div>
   <div>
-    <div class="header-meta"><b id="clockDisplay">—</b><br><span id="headerMetaLine">Build v11.6.11 · connecting… · rights-aware media · AUXIO setup bench</span></div>
+    <div class="header-meta"><b id="clockDisplay">—</b><br><span id="headerMetaLine">Build v11.6.14 · connecting… · rights-aware media · AUXIO setup bench</span></div>
     <div class="header-links">
       <a class="header-link" data-staff-only href="http://localhost:11434" target="_blank">Ollama LLM</a>
       <a class="header-link" data-staff-only href="http://localhost:8055/admin" target="_blank">Directus CMS</a>
@@ -751,6 +752,7 @@ body.public-demo [data-staff-only]{display:none!important;}
       <div class="filter-row">
         <div class="filter-group"><span class="fg-label">Role</span><div class="chip active" onclick="setChip(this)">Curator</div><div class="chip" onclick="setChip(this)">Collections</div><div class="chip" onclick="setChip(this)">Research</div></div>
         <div class="filter-group"><span class="fg-label">Scope</span><div class="chip active" onclick="setChip(this)">All</div><div class="chip" onclick="setChip(this)">Technology</div><div class="chip" onclick="setChip(this)">History</div><div class="chip" onclick="setChip(this)">Science</div></div>
+        <div class="filter-group"><span class="fg-label">Collection</span><select id="collectionFilter" class="collection-filter-select" onchange="setSearchCollection(this.value)"><option value="">All collections</option></select></div>
       </div>
       <div class="results-header">
         <span id="resultsLabel">Loading — connecting to Qdrant…</span>
@@ -1433,11 +1435,36 @@ function getAuxPageBase() {
   return `http://${host}:8787/aux`;
 }
 
-async function proxyCuratorSearch(query, limit = 20) {
+// Which collection the staff/visitor is scoping search to ('' = all collections).
+let selectedSearchCollection = '';
+
+function setSearchCollection(value) {
+  selectedSearchCollection = value || '';
+  const q = document.getElementById('curatorSearch').value.trim();
+  if (q) { doSearch(); } else { renderResultCards(); }
+}
+
+// Populate the collection filter from the collections that actually loaded.
+function populateCollectionFilter(counts) {
+  const sel = document.getElementById('collectionFilter');
+  if (!sel) return;
+  const cols = Object.keys(counts).filter(k => counts[k] > 0)
+    .sort((a, b) => (getCollectionLabel(a).name || a).localeCompare(getCollectionLabel(b).name || b));
+  const current = sel.value;
+  sel.innerHTML = '<option value="">All collections</option>' + cols.map(c => {
+    const l = getCollectionLabel(c);
+    return `<option value="${c}">${escHTML(l.name || l.short || c)}</option>`;
+  }).join('');
+  if (current && cols.includes(current)) sel.value = current;
+}
+
+async function proxyCuratorSearch(query, limit = 20, collection = '') {
+  const body = { query, limit };
+  if (collection) body.collection = collection;
   const r = await fetch(`${BACKEND_BASE}/api/proxy/curator/search`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query, limit }),
+    body: JSON.stringify(body),
   });
   const d = await r.json();
   return d.results || [];
@@ -2249,8 +2276,8 @@ const ROLE_DEFS = {
                  tabs:['curator','nfc','visitor','famtec'] },
   visitor:     { label:'Visitor',            note:'Visitor mode · public-facing preview only',
                  tabs:['visitor'] },
-  demo:        { label:'Public Demo',         note:'Public read-only demo · search, converse, and explore the collection. Editing and publishing are disabled.',
-                 tabs:['curator','visitor','objdetail'] }
+  demo:        { label:'Public Demo',         note:'Public read-only demo · explore every part of ARCHAI. Search, converse, and browse freely; editing and publishing are disabled.',
+                 tabs:['curator','nodel','nfc','vocab','connect','visitor','famtec','objdetail'] }
 };
 
 // ── FAMTEC DATA ─────────────────────────────────────────────────
@@ -3039,9 +3066,10 @@ function loadMVObjects() {
     // Header line reads live state — never hardcode counts (they drift).
     const liveCols = Object.keys(counts).filter(k => counts[k] > 0).length;
     const headerMeta = document.getElementById('headerMetaLine');
-    if (headerMeta) headerMeta.textContent = `Build v11.6.11 · ${liveCols} live collections · ${totalCount.toLocaleString()} objects · rights-aware media · AUXIO setup bench`;
+    if (headerMeta) headerMeta.textContent = `Build v11.6.14 · ${liveCols} live collections · ${totalCount.toLocaleString()} objects · rights-aware media · AUXIO setup bench`;
 
     generateNFCTags();
+    populateCollectionFilter(counts);
     renderResultCards();
     renderNFCList();
     renderVisitorList();
@@ -3533,6 +3561,59 @@ function exportNFCQR(code) {
   URL.revokeObjectURL(a.href);
 }
 
+// Make a live AUXIO visitor page from any object, using the object's own
+// verified metadata. Stable code per object so re-running updates the same page
+// instead of spawning duplicates. Persists via POST /api/nfc (the same endpoint
+// staff use); the public demo role is allowlisted for exactly this one write.
+function makeAuxioFromObject(objId) {
+  const obj = objId ? OBJECTS[objId] : null;
+  const statusEl = document.getElementById('od-action-status');
+  if (!obj) { if (statusEl) statusEl.textContent = 'Open an object first.'; return; }
+  const p = obj._mv || {};
+  const img = pickSearchImage(p);
+  const institution = p.source_institution || p.institution || obj.location || '';
+  const accession = p.registration_number || p.accession_number || obj.id || obj.dams || '';
+  const rights = p.licence || p.media_rights_title || 'Open access / per-record rights';
+  const draftId = 'auxio-' + String(objId).replace(/[^A-Za-z0-9_-]+/g, '').slice(0, 48);
+  const code = 'AUX-' + String(objId).replace(/[^A-Za-z0-9]+/g, '').slice(-12).toUpperCase();
+  const objectDraft = {
+    id: draftId,
+    title: obj.title || getDisplayTitle(p, 'Untitled object'),
+    type: obj.type || p.object_type || 'Object',
+    year: obj.year || p.date_range || p.date || null,
+    location: institution,
+    status: 'live',
+    dataset: 'demo_visitor_auxio',
+    media: img ? [{ kind: 'image', thumbUrl: img, rights }] : [],
+    tags: Array.isArray(p.keyword_terms) ? p.keyword_terms.slice(0, 8) : ['auxio'],
+    materials: p.medium ? [p.medium] : [],
+    description: p.description || obj.ai || '',
+    aiInterpretation: obj.ai || p.description || '',
+    verifiedFacts: [
+      institution ? `Institution: ${institution}` : '',
+      accession ? `Accession: ${accession}` : '',
+      rights ? `Rights: ${rights}` : ''
+    ].filter(Boolean),
+    source: { sourceUrl: p.source_url || p.record_url || '', accessionNumber: accession, institution, rights },
+    workflow: { state: 'published' }
+  };
+  const payload = { code, status: 'live', objectId: draftId, location: institution || 'Visitor demo', visibility: { ...NFC_VIS_DEFAULTS }, objectDraft, savedAt: new Date().toISOString() };
+  if (statusEl) statusEl.textContent = 'Creating AUXIO page…';
+  fetch(`${BACKEND_BASE}/api/nfc`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+  })
+  .then(r => r.json())
+  .then(d => {
+    if (!d.ok) throw new Error(d.error || 'failed');
+    const url = `${BACKEND_BASE}/api/nfc/pages/${encodeURIComponent(code)}`;
+    if (statusEl) statusEl.innerHTML = `AUXIO page created — <a href="${escHTML(url)}" target="_blank" rel="noopener" style="color:var(--accent)">open the visitor page →</a>`;
+    window.open(url, '_blank', 'noopener');
+  })
+  .catch(() => {
+    if (statusEl) statusEl.textContent = 'Could not create the AUXIO page right now — please try again.';
+  });
+}
+
 function saveNFC(code) {
   const tag = NFC_TAGS.find(t => t.code === code);
   if (!tag) return;
@@ -3692,7 +3773,10 @@ function renderResultCards() {
   const c = document.getElementById('resultsContainer');
   if (!c) return;
   const allKeys = Object.keys(OBJECTS);
-  const keys = diversifyByCollection(allKeys.filter(id => hasUsableObjectImage(OBJECTS[id]._mv || {})));
+  const keys = diversifyByCollection(allKeys.filter(id =>
+    hasUsableObjectImage(OBJECTS[id]._mv || {}) &&
+    (!selectedSearchCollection || OBJECTS[id]._source === selectedSearchCollection)
+  ));
   if (!keys.length) {
     c.innerHTML = '<div style="padding:30px;font-family:var(--mono);font-size:0.62rem;color:var(--text3);text-align:center;">No image-backed objects loaded. Connect to Qdrant or re-run the harvesters.</div>';
     return;
@@ -3893,7 +3977,7 @@ async function doSearch(query) {
   container.innerHTML = '<div style="padding:20px;font-family:var(--mono);font-size:0.62rem;color:var(--text2)">Reviewing the curator index and preparing image-backed matches…</div>';
 
   try {
-    const semanticResults = await proxyCuratorSearch(q, CURATOR_SEARCH_LIMIT);
+    const semanticResults = await proxyCuratorSearch(q, CURATOR_SEARCH_LIMIT, selectedSearchCollection);
     const seen = new Set();
     const imageReady = [];
 
@@ -3927,6 +4011,7 @@ async function doSearch(query) {
     console.warn('Semantic search failed, falling back to text search:', e.message);
     const terms = q.toLowerCase().split(/\s+/);
     const matches = Object.entries(OBJECTS).filter(([id, o]) => {
+      if (selectedSearchCollection && o._source !== selectedSearchCollection) return false;
       const haystack = [o.title, o.ai, o.type, o.location, o.dams, o.id,
         o._mv ? (o._mv.description || '') : '',
         o._mv ? (o._mv.discipline || '') : '',
@@ -4210,6 +4295,7 @@ function openObjectDetail(objKey) {
   if (sourceImage) {
     linksEl.innerHTML += `<a href="${sourceImage}" target="_blank" class="btn" style="font-size:0.55rem">Look Closer / Source Image →</a>`;
   }
+  linksEl.innerHTML += `<button class="btn primary" onclick="makeAuxioFromObject(window._odCurrentId)">✦ Make AUXIO</button>`;
   linksEl.innerHTML += `<button class="btn" onclick="odShareCurrentObject()">Share / Copy</button>`;
   linksEl.innerHTML += `<button class="btn" data-staff-only onclick="odSaveCurrentObjectToProject()">Save to Project</button>`;
   linksEl.innerHTML += `<button class="btn" onclick="odSpeakObjectSummary()">Read Summary</button>`;
