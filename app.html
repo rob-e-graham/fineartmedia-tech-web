@@ -147,7 +147,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
 .convo-msg.assistant{background:rgba(232,228,220,0.02);border-left:2px solid var(--border2);color:var(--text);white-space:pre-wrap}
 .convo-msg .convo-typing{display:inline-block;width:10px;height:10px;border:1.5px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.5s linear infinite}
 .convo-objects{display:flex;gap:8px;overflow-x:auto;padding:8px 0;margin-top:8px}
-.convo-obj-card{flex:0 0 140px;background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:border-color 0.2s}
+.convo-obj-cards{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.convo-obj-card{flex:0 0 140px;max-width:140px;background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:border-color 0.2s}
 .convo-obj-card:hover{border-color:var(--accent)}
 .convo-obj-card img{width:100%;height:80px;object-fit:cover;filter:brightness(0.7)}
 .convo-obj-card .coc-title{padding:6px 8px;font-family:var(--mono);font-size:0.5rem;line-height:1.3;color:var(--text2)}
@@ -647,7 +648,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
     </div>
   </div>
   <div>
-    <div class="header-meta"><b id="clockDisplay">—</b><br><span id="headerMetaLine">Build v11.6.7 · connecting… · rights-aware media · AUXIO setup bench</span></div>
+    <div class="header-meta"><b id="clockDisplay">—</b><br><span id="headerMetaLine">Build v11.6.8 · connecting… · rights-aware media · AUXIO setup bench</span></div>
     <div class="header-links">
       <a class="header-link" href="http://localhost:11434" target="_blank">Ollama LLM</a>
       <a class="header-link" href="http://localhost:8055/admin" target="_blank">Directus CMS</a>
@@ -3030,7 +3031,7 @@ function loadMVObjects() {
     // Header line reads live state — never hardcode counts (they drift).
     const liveCols = Object.keys(counts).filter(k => counts[k] > 0).length;
     const headerMeta = document.getElementById('headerMetaLine');
-    if (headerMeta) headerMeta.textContent = `Build v11.6.5 · ${liveCols} live collections · ${totalCount.toLocaleString()} objects · rights-aware media · AUXIO setup bench`;
+    if (headerMeta) headerMeta.textContent = `Build v11.6.8 · ${liveCols} live collections · ${totalCount.toLocaleString()} objects · rights-aware media · AUXIO setup bench`;
 
     generateNFCTags();
     renderResultCards();
@@ -3744,6 +3745,7 @@ function doConverse() {
 
     // Render object cards if present
     if (data.objects && data.objects.length > 0) {
+      html += `<div class="convo-obj-cards">`;
       for (const obj of data.objects) {
         const objKey = ensureConvoObject(obj);
         const objImage = pickSearchImage(OBJECTS[objKey]._mv || {});
@@ -3753,6 +3755,7 @@ function doConverse() {
         html += `<div class="coc-meta">${escHTML(obj.institution || '')} · ${(obj.score*100).toFixed(0)}%</div>`;
         html += `</div>`;
       }
+      html += `</div>`;
 
       // Also update the main results area — renderConvoResults filters to
       // image-ready records internally, so pass the full cited set.
