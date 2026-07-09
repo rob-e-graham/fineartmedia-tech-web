@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>window.ARCHAI_API_BASE = "https://archai-api.fineartmedia.tech";</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ARCHAI™ — Sovereign Semantic Heritage</title>
@@ -646,7 +647,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
     </div>
   </div>
   <div>
-    <div class="header-meta"><b id="clockDisplay">—</b><br><span id="headerMetaLine">Build v11.6.5 · connecting… · rights-aware media · AUX.IO setup bench</span></div>
+    <div class="header-meta"><b id="clockDisplay">—</b><br><span id="headerMetaLine">Build v11.6.7 · connecting… · rights-aware media · AUXIO setup bench</span></div>
     <div class="header-links">
       <a class="header-link" href="http://localhost:11434" target="_blank">Ollama LLM</a>
       <a class="header-link" href="http://localhost:8055/admin" target="_blank">Directus CMS</a>
@@ -665,7 +666,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
         <option value="visitor">Visitor</option>
       </select>
     </div>
-    <div class="role-note" id="roleNote">Curator access · collection editing, AUX.IO publishing, vocab tools</div>
+    <div class="role-note" id="roleNote">Curator access · collection editing, AUXIO publishing, vocab tools</div>
   </div>
 </header>
 
@@ -682,7 +683,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
 </div>
 
 <div class="wip-banner">
-  <div><strong>Draft institutional demo / WIP.</strong> Testing the ARCHAI semantic layer, staff collection search, AUX.IO publishing, voice/audio access, rights-aware media, IIIF viewing, and CMS/DAMS connector workflows before partner deployment.</div>
+  <div><strong>Draft institutional demo / WIP.</strong> Testing the ARCHAI semantic layer, staff collection search, AUXIO publishing, voice/audio access, rights-aware media, IIIF viewing, and CMS/DAMS connector workflows before partner deployment.</div>
   <button class="header-link" type="button" onclick="openTrainingOverlay()">How to test</button>
 </div>
 
@@ -694,7 +695,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
     <span class="tab-count" style="color:var(--nodel)">2⚠</span>
   </div>
   <div class="tab t-nfc" data-roles="admin,curator,collections,volunteer" onclick="switchTab('nfc',this)">
-    <div class="tab-dot" style="background:var(--nfc)"></div>AUX.IO Management
+    <div class="tab-dot" style="background:var(--nfc)"></div>AUXIO Management
     <span class="tab-count" style="color:var(--nfc)" id="nfcTabCount">0</span>
   </div>
   <div class="tab t-vocab" data-roles="admin,curator,collections" onclick="switchTab('vocab',this)">Vocabulary &amp; Thesaurus</div>
@@ -785,7 +786,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
           <div>Objects loaded: <span id="sb-mv-count">0</span></div>
         </div>
         <button class="pipe-btn" onclick="loadMVObjects()">↻ Reload All Collections</button>
-        <button class="pipe-btn" style="margin-top:4px" onclick="runHarvesters()">▶ Run Harvesters</button>
+        <button class="pipe-btn" style="margin-top:4px" onclick="runHarvesters(this)">▶ Run Harvesters</button>
       </div>
       <div class="sb-section">
         <div class="sb-title">Cultural Safety</div>
@@ -825,7 +826,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
       <div class="gallery-grid">
         <div class="gallery-card g-ok">
           <div class="gc-header"><div class="gc-name">Entrance Atrium</div><div class="gc-st ok">Online</div></div>
-          <div class="gc-nodes"><div class="gc-node n-on"><div class="dot dot-ok" style="width:4px;height:4px;animation:none"></div>Rob-01</div><div class="gc-node n-on"><div class="dot dot-ok" style="width:4px;height:4px;animation:none"></div>AUX.IO-Kiosk-01</div></div>
+          <div class="gc-nodes"><div class="gc-node n-on"><div class="dot dot-ok" style="width:4px;height:4px;animation:none"></div>Rob-01</div><div class="gc-node n-on"><div class="dot dot-ok" style="width:4px;height:4px;animation:none"></div>AUXIO-Kiosk-01</div></div>
           <div class="gc-footer"><span>2/2 online</span><span>Runtime: 6h 14m</span></div>
         </div>
         <div class="gallery-card g-warn">
@@ -898,7 +899,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
         <div class="sb-title">Visitor Interactions</div>
         <div style="font-family:var(--mono);font-size:0.58rem;color:var(--text3);line-height:2;">
           <div>Robot interactions: <span style="color:var(--text2)">87</span></div>
-          <div>AUX.IO scans: <span style="color:var(--text2)">54</span></div>
+          <div>AUXIO scans: <span style="color:var(--text2)">54</span></div>
           <div>Comments received: <span style="color:var(--text2)">12</span></div>
         </div>
       </div>
@@ -926,25 +927,25 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
   <div class="nfc-mgmt-layout">
     <div class="nfc-list-col">
       <div class="nfc-list-header">
-        <div class="sb-title" style="margin:0;color:var(--nfc)">AUX.IO Tags</div>
+        <div class="sb-title" style="margin:0;color:var(--nfc)">AUXIO Tags</div>
         <div class="btn nfc" onclick="onboardNewNFC()">+ Onboard</div>
       </div>
-      <input class="nfc-search" type="text" placeholder="Search AUX.IO, object, location…" oninput="filterNFCList(this.value)">
+      <input class="nfc-search" type="text" placeholder="Search AUXIO, object, location…" oninput="filterNFCList(this.value)">
       <div class="nfc-filter-row">
         <div class="nfc-fchip active" onclick="nfcFilter(this,'all')">All</div>
         <div class="nfc-fchip" onclick="nfcFilter(this,'live')">Live</div>
         <div class="nfc-fchip" onclick="nfcFilter(this,'draft')">Draft</div>
         <div class="nfc-fchip" onclick="nfcFilter(this,'unassigned')">Unassigned</div>
       </div>
-      <div class="nfc-workset-note" id="nfcWorksetNote">Loading AUX.IO workset…</div>
+      <div class="nfc-workset-note" id="nfcWorksetNote">Loading AUXIO workset…</div>
       <div id="nfcList"></div>
     </div>
     <div class="nfc-editor-col" id="nfcEditor">
       <div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:var(--mono);font-size:0.65rem;color:var(--text3);text-align:center;flex-direction:column;gap:12px;">
         <div style="font-size:2rem;opacity:0.15">⬡</div>
-        <div style="text-transform:uppercase;letter-spacing:2px;">Select an AUX.IO tag to edit</div>
-        <div style="color:var(--text3);font-size:0.55rem;max-width:280px;line-height:1.8;">Create an AUX.IO record, assign any loaded object, or draft a new institutional object for a museum/gallery visitor page.</div>
-        <button class="btn nfc" onclick="onboardNewNFC()">+ Onboard New AUX.IO Tag</button>
+        <div style="text-transform:uppercase;letter-spacing:2px;">Select an AUXIO tag to edit</div>
+        <div style="color:var(--text3);font-size:0.55rem;max-width:280px;line-height:1.8;">Create an AUXIO record, assign any loaded object, or draft a new institutional object for a museum/gallery visitor page.</div>
+        <button class="btn nfc" onclick="onboardNewNFC()">+ Onboard New AUXIO Tag</button>
       </div>
     </div>
     <div class="nfc-preview-col" id="nfcPreviewCol">
@@ -952,7 +953,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
       <div class="phone-frame">
         <div class="phone-notch"></div>
         <div class="phone-inner" id="nfcPreview">
-          <div style="font-family:var(--mono);font-size:0.55rem;color:var(--text3);text-align:center;padding:60px 10px;">Tap an AUX.IO tag from the list to preview</div>
+          <div style="font-family:var(--mono);font-size:0.55rem;color:var(--text3);text-align:center;padding:60px 10px;">Tap an AUXIO tag from the list to preview</div>
         </div>
         <div class="phone-home"></div>
       </div>
@@ -1039,7 +1040,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
         <option value="mixed-check">Mixed / unclear — needs item-level legal review</option>
       </select>
       <label style="font-family:var(--mono);font-size:0.52rem;color:var(--text2);display:block;margin-bottom:6px;"><input type="checkbox" id="ccSensitive" checked onchange="ccUpdateConfig()"> Exclude culturally sensitive / restricted records by default (hard gate)</label>
-      <label style="font-family:var(--mono);font-size:0.52rem;color:var(--text2);display:block;margin-bottom:14px;"><input type="checkbox" id="ccMediaGate" checked onchange="ccUpdateConfig()"> Hold records without healthy open media from public AUX.IO (staff-searchable only)</label>
+      <label style="font-family:var(--mono);font-size:0.52rem;color:var(--text2);display:block;margin-bottom:14px;"><input type="checkbox" id="ccMediaGate" checked onchange="ccUpdateConfig()"> Hold records without healthy open media from public AUXIO (staff-searchable only)</label>
 
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <button class="btn primary" onclick="ccTestEndpoint()">Test endpoint</button>
@@ -1066,13 +1067,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
         </div>
       </div>
       <div style="font-family:var(--mono);font-size:0.5rem;color:var(--text3);line-height:1.9;margin-top:12px;">
-        The full path: <span style="color:var(--text2)">connect → test run → legal review → live connection → staff search → curated AUX.IO publish</span>. Questions at any step: <span style="color:var(--accent2)">rob@fineartmedia.tech</span>
+        The full path: <span style="color:var(--text2)">connect → test run → legal review → live connection → staff search → curated AUXIO publish</span>. Questions at any step: <span style="color:var(--accent2)">rob@fineartmedia.tech</span>
       </div>
 
       <details style="margin-top:18px;">
         <summary style="font-family:var(--mono);font-size:0.52rem;color:var(--text3);letter-spacing:1px;text-transform:uppercase;cursor:pointer;padding:8px 0;border-top:1px solid var(--border);">▸ Technical configuration — for your IT team</summary>
         <div style="font-family:var(--mono);font-size:0.5rem;color:var(--text3);margin:8px 0;">
-          This connector drops into <span style="color:var(--text2)">backend-archai/scripts/collection-targets.json</span>, the registry the legal-harvest bot reads. Runs follow the standard gates: dry-run → item-rights check → media audit → curator rebuild → AUX.IO regeneration. Full checklist: <span style="color:var(--text2)">COLLECTION_ONBOARDING_BLUEPRINT.md</span>.
+          This connector drops into <span style="color:var(--text2)">backend-archai/scripts/collection-targets.json</span>, the registry the legal-harvest bot reads. Runs follow the standard gates: dry-run → item-rights check → media audit → curator rebuild → AUXIO regeneration. Full checklist: <span style="color:var(--text2)">COLLECTION_ONBOARDING_BLUEPRINT.md</span>.
         </div>
         <pre id="ccConfigOut" style="background:var(--surface);border:1px solid var(--border);padding:14px;font-size:0.52rem;line-height:1.65;overflow:auto;max-height:300px;white-space:pre-wrap;"></pre>
         <div class="section-label" style="margin:12px 0 6px;">Run (on the ARCHAI host)</div>
@@ -1300,17 +1301,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
       <div class="training-grid">
         <div class="training-card"><h4>1. Search the collection</h4><p>Use <code>Converse</code> for semantic questions across the database, <code>Classic Search</code> for direct matching, and image/colour modes as developing test lanes. Metadata-only records stay searchable, while public views require safer media and rights gates.</p></div>
         <div class="training-card"><h4>2. Review an object</h4><p>Open any object and switch between Curatorial, Collections, Exhibition, and Interpretation lenses. These are staff-facing response modes, not visitor questions: they shape how ARCHAI reads the same record.</p></div>
-        <div class="training-card"><h4>3. Build AUX.IO pages</h4><p>In AUX.IO Management, select or create an object, assign it to a QR/NFC/spatial trigger, choose visibility options, preview the phone page, then publish. Production should save these edits in Directus or the institution's CMS/DAMS layer.</p></div>
+        <div class="training-card"><h4>3. Build AUXIO pages</h4><p>In AUXIO Management, select or create an object, assign it to a QR/NFC/spatial trigger, choose visibility options, preview the phone page, then publish. Production should save these edits in Directus or the institution's CMS/DAMS layer.</p></div>
         <div class="training-card"><h4>4. Use vocabulary tools</h4><p>The thesaurus layer helps staff standardise terms, map local language to AAT/LCSH/TGN-style vocabularies, and flag culturally sensitive terminology before it becomes public interpretation.</p></div>
         <div class="training-card"><h4>5. Connect CMS and DAMS</h4><p>The harvester layer is the next institutional-testing focus: custom connectors for APIs, CMS, DAMS, spreadsheets, IIIF manifests, and local media stores while preserving source records separately from interpretation.</p></div>
-        <div class="training-card"><h4>6. Current boundaries</h4><p>Nodel/exhibition ops and FAMTEC Exchange remain prototype modules. The strongest current lanes are collection search, object review, AUX.IO publishing, rights/media gating, IIIF viewing, and browser voice access.</p></div>
+        <div class="training-card"><h4>6. Current boundaries</h4><p>Nodel/exhibition ops and FAMTEC Exchange remain prototype modules. The strongest current lanes are collection search, object review, AUXIO publishing, rights/media gating, IIIF viewing, and browser voice access.</p></div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-window.ARCHAI_API_BASE = window.ARCHAI_API_BASE || 'https://archai-api.fineartmedia.tech';
 // ═══════════════════════════════════════════════════════════════════
 // ARCHAI™ v11.6 — Multi-Collection · Backend-Aware · Live LLM Chat
 // Collection objects loaded from Qdrant. Comments and curator vectors via backend APIs.
@@ -1355,7 +1355,7 @@ function qdrantFetch(path, options) {
     // The backend proxy expects a flat endpoint (/api/proxy/qdrant/scroll|search)
     // with the collection in the request BODY, not Qdrant's native
     // /collections/<col>/points/<op> path. Rewrite scroll/search accordingly,
-    // otherwise object loading 404s and AUX.IO has no demo records to seed.
+    // otherwise object loading 404s and AUXIO has no demo records to seed.
     const op = path.match(/^\/collections\/([^/]+)\/points\/(scroll|search)$/);
     if (op) {
       const collection = op[1];
@@ -1595,7 +1595,7 @@ function translateStringsWithOllama(strings, languageKey, contextLabel) {
   }
 
   const langMeta = getResponseLanguageMeta(languageKey);
-  const sys = `You translate museum interface copy and collection record text into ${langMeta.label}. Return only valid JSON: an array of translated strings in the same order. Preserve accession numbers, dates, institution names, artist names, URLs, licence names, and the product names ARCHAI, AUX.IO, Qdrant, Ollama, and Directus exactly. Do not add commentary or markdown.`;
+  const sys = `You translate museum interface copy and collection record text into ${langMeta.label}. Return only valid JSON: an array of translated strings in the same order. Preserve accession numbers, dates, institution names, artist names, URLs, licence names, and the product names ARCHAI, AUXIO, Qdrant, Ollama, and Directus exactly. Do not add commentary or markdown.`;
   const numberedStrings = strings.map((text, index) => `${index + 1}. ${JSON.stringify(text)}`).join('\n');
 
   return ollamaFetch('/api/chat', JSON.stringify({
@@ -1846,7 +1846,9 @@ function getOdVoiceIndicatorState(message = '') {
     text.includes('blocked') ||
     text.includes('failed') ||
     text.includes('error') ||
-    text.includes('not support')
+    text.includes('not support') ||
+    text.includes('not expose') ||
+    text.includes('no speech detected')
   ) return 'error';
   return '';
 }
@@ -1909,6 +1911,8 @@ function ensureOdSpeechRecognition() {
       window._odSpeechStatus = 'Question captured. Sending to ARCHAI…';
       updateOdSpeechUI();
       odChat();
+    } else if (transcript) {
+      updateOdSpeechUI('Listening… ' + transcript);
     }
   };
 
@@ -1917,7 +1921,9 @@ function ensureOdSpeechRecognition() {
     window._odSpeechListening = false;
     updateOdSpeechUI(code === 'not-allowed'
       ? 'Microphone access was blocked in the browser.'
-      : `Speech demo error: ${code}.`);
+      : code === 'no-speech'
+        ? 'No speech detected — press Start Voice Question to try again.'
+        : `Speech demo error: ${code}.`);
   };
 
   recognition.onend = () => {
@@ -1941,8 +1947,10 @@ function odStartVoiceQuestion() {
   try {
     recognition.start();
   } catch (err) {
-    window._odSpeechListening = false;
-    updateOdSpeechUI('Voice capture is already running.');
+    // start() only throws when capture is already running — keep the
+    // listening state truthful so Stop stays enabled.
+    window._odSpeechListening = true;
+    updateOdSpeechUI('Voice capture is already running — speak now, or press Stop Voice.');
   }
 }
 
@@ -2075,7 +2083,8 @@ function getCollectionVoiceIndicatorState(message = '') {
     text.includes('blocked') ||
     text.includes('failed') ||
     text.includes('error') ||
-    text.includes('not expose')
+    text.includes('not expose') ||
+    text.includes('no speech detected')
   ) return 'error';
   return '';
 }
@@ -2146,7 +2155,9 @@ function ensureCollectionSpeechRecognition() {
     window._collectionSpeechListening = false;
     updateCollectionVoiceUI(code === 'not-allowed'
       ? 'Microphone access was blocked in the browser.'
-      : `Collection voice error: ${code}.`);
+      : code === 'no-speech'
+        ? 'No speech detected — press Voice Query to try again.'
+        : `Collection voice error: ${code}.`);
   };
 
   recognition.onend = () => {
@@ -2170,8 +2181,10 @@ function collectionStartVoiceQuery() {
   try {
     recognition.start();
   } catch {
-    window._collectionSpeechListening = false;
-    updateCollectionVoiceUI('Voice capture is already running.');
+    // start() only throws when capture is already running — keep the
+    // listening state truthful so Stop stays enabled.
+    window._collectionSpeechListening = true;
+    updateCollectionVoiceUI('Voice capture is already running — speak now, or press Stop.');
   }
 }
 
@@ -2219,13 +2232,13 @@ function collectionStopSpeaking() {
 const ROLE_DEFS = {
   admin:       { label:'Admin',              note:'Admin access · user management, infra config, pipeline controls, all data',
                  tabs:['curator','nodel','nfc','vocab','connect','visitor','famtec','objdetail'] },
-  curator:     { label:'Curator',            note:'Curator access · collection editing, AUX.IO publishing, vocab tools',
+  curator:     { label:'Curator',            note:'Curator access · collection editing, AUXIO publishing, vocab tools',
                  tabs:['curator','nodel','nfc','vocab','connect','visitor','famtec','objdetail'] },
-  collections: { label:'Collections Officer', note:'Collections Officer · data entry, upload/tagging, AUX.IO assignment',
+  collections: { label:'Collections Officer', note:'Collections Officer · data entry, upload/tagging, AUXIO assignment',
                  tabs:['curator','nfc','vocab','connect','visitor','famtec','objdetail'] },
   technician:  { label:'Technician / AV',    note:'Technician / AV · Nodel operations and technical record visibility',
                  tabs:['nodel','visitor','famtec','objdetail'] },
-  volunteer:   { label:'Volunteer',          note:'Volunteer · read-only collection lookup, AUX.IO preview, visitor support',
+  volunteer:   { label:'Volunteer',          note:'Volunteer · read-only collection lookup, AUXIO preview, visitor support',
                  tabs:['curator','nfc','visitor','famtec'] },
   visitor:     { label:'Visitor',            note:'Visitor mode · public-facing preview only',
                  tabs:['visitor'] }
@@ -2248,7 +2261,7 @@ const FAMTEC_FEED = [
   { kind:'need skills', title:'Need dev support for legacy browser artwork', org:'FAMTEC', timing:'Exhibition opens in 6 weeks', body:'Seeking emulation / browser preservation specialist for IE6-era net art display and capture workflow.', tags:['need skills','preservation','emulation','net art'] },
   { kind:'available crew', title:'Installation technicians available (2-person team)', org:'FAMTEC', timing:'April capacity open', body:'Experienced in media server commissioning, projection alignment, sensor calibration and deinstall documentation.', tags:['available crew','installation','commissioning'] },
   { kind:'need skills', title:'Digitisation workflow advice for archive ingest', org:'RMIT Library (demo)', timing:'Semester ingest surge', body:'Short-term guidance on capture standards, file naming and preservation-grade storage for a special-collections push.', tags:['need skills','digitisation','archives'] },
-  { kind:'loan', title:'AUX.IO kiosks + tags starter kit', org:'FAMTEC', timing:'Pilot loan (8 weeks)', body:'Loan bundle for visitor wayfinding and object interpretation pilots. Includes deployment guide.', tags:['loan','aux.io','visitor experience','pilot'] }
+  { kind:'loan', title:'AUXIO kiosks + tags starter kit', org:'FAMTEC', timing:'Pilot loan (8 weeks)', body:'Loan bundle for visitor wayfinding and object interpretation pilots. Includes deployment guide.', tags:['loan','aux.io','visitor experience','pilot'] }
 ];
 
 const FAMTEC_CHAT = {
@@ -2293,7 +2306,7 @@ function ccBuildConfig() {
       'image-backed',
       'item-rights-cleared',
       document.getElementById('ccSensitive')?.checked !== false ? 'culturally-appropriate (sensitive records excluded by default)' : null,
-      document.getElementById('ccMediaGate')?.checked !== false ? 'media-health gate (placeholder/low-res held from public AUX.IO)' : null
+      document.getElementById('ccMediaGate')?.checked !== false ? 'media-health gate (placeholder/low-res held from public AUXIO)' : null
     ].filter(Boolean).join(' + '),
     cultural_protocol: 'Preserve source sensitivity and community-protocol flags; exclusion is the default until protocols are agreed',
     verification_status: 'unverified_draft',
@@ -2404,7 +2417,7 @@ window.addEventListener('DOMContentLoaded', () => {
     };
   }
 
-  // Load MV objects from Qdrant
+  // Load collection objects from Qdrant (all connected collections)
   loadMVObjects();
 
   // FAMTEC init
@@ -2919,18 +2932,18 @@ function renderSemanticResults(query, results, labelText) {
     return `<div class="result-card" onclick="openObj('${objectKey}')">
       <div class="thumb"><div class="thumb-live"></div>${
         image
-          ? `<img src="${image}" alt="${escQ(getDisplayTitle(payload))}" loading="lazy" onerror="this.outerHTML='<div style=\\'font-size:0.42rem;opacity:0.2;text-align:center\\'>▣<br>${escQ(displayRegistration)}</div>'">`
-          : `<div style="font-size:1rem;opacity:0.15;margin-bottom:3px">▣</div><div style="font-size:0.44rem">${escQ(displayRegistration)}</div>`
+          ? `<img src="${image}" alt="${escHTML(getDisplayTitle(payload))}" loading="lazy" onerror="this.outerHTML='<div style=\\'font-size:0.42rem;opacity:0.2;text-align:center\\'>▣<br>${escQ(displayRegistration)}</div>'">`
+          : `<div style="font-size:1rem;opacity:0.15;margin-bottom:3px">▣</div><div style="font-size:0.44rem">${escHTML(displayRegistration)}</div>`
       }</div>
       <div>
-        <div class="r-title">${getDisplayTitle(payload)}</div>
-        <div class="r-meta">${metaParts.join(' · ')}</div>
-        <div class="r-summary">${summary}</div>
-        ${matchLine ? `<div class="r-summary" style="margin-top:6px;font-style:normal;color:var(--text3)">Matched on: ${escQ(cues.join(' · '))}</div>` : ''}
+        <div class="r-title">${escHTML(getDisplayTitle(payload))}</div>
+        <div class="r-meta">${escHTML(metaParts.join(' · '))}</div>
+        <div class="r-summary">${escHTML(summary)}</div>
+        ${matchLine ? `<div class="r-summary" style="margin-top:6px;font-style:normal;color:var(--text3)">Matched on: ${escHTML(cues.join(' · '))}</div>` : ''}
         <div class="tag-row">
           <span class="tag" style="border-color:${collection.border};color:${collection.colour}">${collection.short}</span>
           <span class="tag" style="border-color:${rights.color};color:${rights.color}">${rights.status}</span>
-          ${payload.discipline ? '<span class="tag">' + escQ(payload.discipline) + '</span>' : ''}
+          ${payload.discipline ? '<span class="tag">' + escHTML(payload.discipline) + '</span>' : ''}
         </div>
       </div>
       <div>
@@ -3017,7 +3030,7 @@ function loadMVObjects() {
     // Header line reads live state — never hardcode counts (they drift).
     const liveCols = Object.keys(counts).filter(k => counts[k] > 0).length;
     const headerMeta = document.getElementById('headerMetaLine');
-    if (headerMeta) headerMeta.textContent = `Build v11.6.5 · ${liveCols} live collections · ${totalCount.toLocaleString()} objects · rights-aware media · AUX.IO setup bench`;
+    if (headerMeta) headerMeta.textContent = `Build v11.6.5 · ${liveCols} live collections · ${totalCount.toLocaleString()} objects · rights-aware media · AUXIO setup bench`;
 
     generateNFCTags();
     renderResultCards();
@@ -3114,12 +3127,12 @@ function updateNFCWorksetNote() {
   if (!el) return;
   const loaded = NFC_TAGS.filter(t => t.objectId).length;
   const empty = NFC_TAGS.filter(t => !t.objectId).length;
-  el.innerHTML = `<strong>${loaded}</strong> loaded demo AUX.IO records · <strong>${empty}</strong> empty slots ready to assign. Select an empty slot, search the collection, then click <strong>Assign</strong>.`;
+  el.innerHTML = `<strong>${loaded}</strong> loaded demo AUXIO records · <strong>${empty}</strong> empty slots ready to assign. Select an empty slot, search the collection, then click <strong>Assign</strong>.`;
 }
 
 function displayAuxCode(code) {
   if (!code) return '';
-  return String(code).replace(/^NFC-?(\d+)$/i, (_m, num) => `AUX.IO ${num.padStart(3, '0')}`);
+  return String(code).replace(/^NFC-?(\d+)$/i, (_m, num) => `AUXIO ${num.padStart(3, '0')}`);
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -3439,10 +3452,12 @@ function emergencyStopAll() {
   }
 }
 
-function runHarvesters() {
-  const btn = event.target;
-  btn.textContent = '⏳ Running…';
-  btn.style.opacity = '0.6';
+function runHarvesters(btn) {
+  btn = btn || document.querySelector('.pipe-btn');
+  if (btn) {
+    btn.textContent = '⏳ Running…';
+    btn.style.opacity = '0.6';
+  }
   const counts = Object.fromEntries(COLLECTIONS.map(col => [col, 0]));
   Promise.all(
     Object.keys(counts).map(col =>
@@ -3452,8 +3467,10 @@ function runHarvesters() {
         .catch(() => {})
     )
   ).then(() => {
-    btn.textContent = '▶ Run Harvesters';
-    btn.style.opacity = '1';
+    if (btn) {
+      btn.textContent = '▶ Run Harvesters';
+      btn.style.opacity = '1';
+    }
     const total = Object.values(counts).reduce((a, b) => a + b, 0);
     const log = document.querySelector('.event-log');
     if (log) {
@@ -3550,11 +3567,11 @@ function saveNFC(code) {
   .then(r => r.json())
   .then(d => {
     if (!d.ok) throw new Error(d.error || 'Save failed');
-    const btn = document.querySelector('.btn.primary');
+    const btn = document.querySelector('#nfcEditor .btn.primary');
     if (btn) { btn.textContent = '✓ Saved to backend'; setTimeout(() => { btn.textContent = 'Save Changes'; }, 2200); }
   })
   .catch(() => {
-    const btn = document.querySelector('.btn.primary');
+    const btn = document.querySelector('#nfcEditor .btn.primary');
     if (btn) { btn.textContent = '✓ Saved (local)'; setTimeout(() => { btn.textContent = 'Save Changes'; }, 2000); }
   });
 }
@@ -3626,10 +3643,10 @@ function thumbHTML(o) {
   const p = o._mv;
   const image = p ? pickSearchImage(p) : '';
   if (image) {
-    return `<img src="${image}" alt="${escQ(o.title)}" loading="lazy"
-      onerror="this.outerHTML='<div style=\\'font-size:0.42rem;opacity:0.2;text-align:center\\'>▣<br>${escQ(o.dams)}</div>'">`; 
+    return `<img src="${image}" alt="${escHTML(o.title)}" loading="lazy"
+      onerror="this.outerHTML='<div style=\\'font-size:0.42rem;opacity:0.2;text-align:center\\'>▣<br>${escQ(o.dams)}</div>'">`;
   }
-  return `<div style="font-size:1rem;opacity:0.15;margin-bottom:3px">▣</div><div style="font-size:0.44rem">${o.dams}</div>`;
+  return `<div style="font-size:1rem;opacity:0.15;margin-bottom:3px">▣</div><div style="font-size:0.44rem">${escHTML(o.dams)}</div>`;
 }
 
 function renderResultCards() {
@@ -3652,15 +3669,15 @@ function renderResultCards() {
     return `<div class="result-card" onclick="openObj('${id}')">
       <div class="thumb"><div class="thumb-live"></div>${thumbHTML(o)}</div>
       <div>
-        <div class="r-title">${escQ(getDisplayTitle(p, o.title))}</div>
-        <div class="r-meta">${escQ([p.discipline || o.type, p.category || '', getDisplayRegistration(p, o.dams)].filter(Boolean).join(' · '))}</div>
-        <div class="r-summary">${escQ((o.ai || '').substring(0, 120))}${(o.ai || '').length > 120 ? '…' : ''}</div>
+        <div class="r-title">${escHTML(getDisplayTitle(p, o.title))}</div>
+        <div class="r-meta">${escHTML([p.discipline || o.type, p.category || '', getDisplayRegistration(p, o.dams)].filter(Boolean).join(' · '))}</div>
+        <div class="r-summary">${escHTML((o.ai || '').substring(0, 120))}${(o.ai || '').length > 120 ? '…' : ''}</div>
         <div class="tag-row">
           <span class="tag" style="border-color:${label.border};color:${label.colour}">${label.short}</span>
           <span class="tag" style="border-color:${rights.color};color:${rights.color}">${rights.status}</span>
-          ${p.discipline ? '<span class="tag">' + escQ(p.discipline) + '</span>' : ''}
-          <span class="tag">${escQ((o.location || '').substring(0, 24))}</span>
-          ${nfcAssigned(id) ? '<span class="tag nfc-tag">AUX.IO</span>' : ''}
+          ${p.discipline ? '<span class="tag">' + escHTML(p.discipline) + '</span>' : ''}
+          <span class="tag">${escHTML((o.location || '').substring(0, 24))}</span>
+          ${nfcAssigned(id) ? '<span class="tag nfc-tag">AUXIO</span>' : ''}
         </div>
       </div>
       <div>
@@ -3706,8 +3723,13 @@ function doConverse() {
   .then(r => r.json())
   .then(data => {
     const pending = document.getElementById('convo-pending');
-    if (!data.ok && data.error) {
-      if (pending) { pending.id = ''; pending.innerHTML = data.error; }
+    if (!data.ok || !data.message) {
+      // Backend busy, rate-limited, or the query was rejected — degrade to
+      // classic search rather than surfacing a raw error to the user. The
+      // collection always returns something, like the rest of the site.
+      if (pending) { pending.id = ''; pending.innerHTML = 'Searching the collection directly…'; }
+      document.getElementById('curatorSearch').value = q;
+      doSearch();
       return;
     }
 
@@ -3722,36 +3744,20 @@ function doConverse() {
 
     // Render object cards if present
     if (data.objects && data.objects.length > 0) {
-      const imageBackedObjects = [];
-      let objectCards = '';
       for (const obj of data.objects) {
-        const objKey = (obj.collection || 'archai_pilot') + '_c_' + (obj.registration || Math.random().toString(36).slice(2,8));
-        // Register object for detail view if not already known
-        if (!OBJECTS[objKey]) {
-          OBJECTS[objKey] = {
-            title: obj.title, year: obj.date || '', type: obj.type || '',
-            id: obj.registration, dams: obj.registration, location: '',
-            status: 'exhibited', nodeLinked: false, ai: '', _source: obj.collection,
-            chat: { default: 'I am ' + obj.title + '.' }
-          };
-        }
-        const objPayload = { ...obj, _source_collection: obj.collection, source_institution: obj.institution, media_medium: obj.image };
-        const objImage = pickSearchImage(objPayload);
-        if (!objImage) continue;
-        imageBackedObjects.push(obj);
-        objectCards += `<div class="convo-obj-card" onclick="openObj('${objKey}')">`;
-        objectCards += `<img src="${objImage}" loading="lazy" onerror="this.closest('.convo-obj-card').style.display='none'">`;
-        objectCards += `<div class="coc-title">${obj.title}</div>`;
-        objectCards += `<div class="coc-meta">${obj.institution} · ${(obj.score*100).toFixed(0)}%</div>`;
-        objectCards += `</div>`;
-      }
-      if (imageBackedObjects.length) {
-        html += `<div class="convo-objects">${objectCards}</div>`;
+        const objKey = ensureConvoObject(obj);
+        const objImage = pickSearchImage(OBJECTS[objKey]._mv || {});
+        html += `<div class="convo-obj-card" onclick="openObj('${objKey}')">`;
+        if (objImage) html += `<img src="${objImage}" loading="lazy" onerror="this.style.display='none'">`;
+        html += `<div class="coc-title">${escHTML(obj.title)}</div>`;
+        html += `<div class="coc-meta">${escHTML(obj.institution || '')} · ${(obj.score*100).toFixed(0)}%</div>`;
+        html += `</div>`;
       }
 
-      // Also update the main results area with the objects
-      document.getElementById('resultsLabel').textContent = imageBackedObjects.length + ' image-ready objects cited · conversational';
-      renderConvoResults(imageBackedObjects);
+      // Also update the main results area — renderConvoResults filters to
+      // image-ready records internally, so pass the full cited set.
+      document.getElementById('resultsLabel').textContent = data.objects.length + ' objects cited · conversational';
+      renderConvoResults(data.objects);
     }
 
     if (pending) { pending.id = ''; pending.innerHTML = html; }
@@ -3765,6 +3771,34 @@ function doConverse() {
     document.getElementById('curatorSearch').value = q;
     doSearch();
   });
+}
+
+// Register a conversational-search citation as a browsable object with a
+// stable key, so every card rendering (thread + results area) opens the same
+// record, and the detail view has payload metadata + image to show.
+function ensureConvoObject(obj) {
+  const collection = obj.collection || 'archai_pilot';
+  const idPart = obj.registration || normalizeSearchText(obj.title || '').replace(/\s+/g, '-') || 'untitled';
+  const objKey = collection + '_c_' + idPart;
+  if (!OBJECTS[objKey]) {
+    const payload = {
+      ...obj,
+      _source_collection: collection,
+      source_institution: obj.institution,
+      registration_number: obj.registration || '',
+      date_range: obj.date || '',
+      object_type: obj.type || '',
+      media_medium: obj.image
+    };
+    OBJECTS[objKey] = {
+      title: obj.title, year: obj.date || '', type: obj.type || '',
+      id: obj.registration, dams: obj.registration, location: '',
+      status: 'exhibited', nodeLinked: false, ai: obj.description || '',
+      _mv: payload, _source: collection,
+      chat: { default: 'I am ' + (obj.title || 'an object') + '.' }
+    };
+  }
+  return objKey;
 }
 
 function renderConvoResults(objects) {
@@ -3782,18 +3816,17 @@ function renderConvoResults(objects) {
   container.innerHTML = imageReadyObjects.map(obj => {
     const label = COLLECTION_LABELS[obj.collection] || COLLECTION_LABELS.archai_pilot;
     const rights = getObjectRightsInfo(obj);
-    const objKey = (obj.collection || 'archai_pilot') + '_c_' + (obj.registration || Math.random().toString(36).slice(2,8));
-    const objPayload = { ...obj, _source_collection: obj.collection, source_institution: obj.institution, media_medium: obj.image };
-    const objImage = pickSearchImage(objPayload);
+    const objKey = ensureConvoObject(obj);
+    const objImage = pickSearchImage(OBJECTS[objKey]._mv || {});
     const thumbInner = objImage
       ? `<img src="${objImage}" style="width:100%;height:100%;object-fit:cover" loading="lazy" onerror="this.style.display='none'">`
       : `<div style="font-size:1rem;opacity:0.15;margin-bottom:3px">▣</div>`;
     return `<div class="result-card" onclick="openObj('${objKey}')">
       <div class="thumb"><div class="thumb-live"></div>${thumbInner}</div>
       <div>
-        <div class="r-title">${obj.title}</div>
-        <div class="r-meta">${obj.type || ''} · ${obj.maker || ''} · ${obj.registration || ''}</div>
-        <div class="r-summary">${obj.date || ''}</div>
+        <div class="r-title">${escHTML(obj.title)}</div>
+        <div class="r-meta">${escHTML([obj.type, obj.maker, obj.registration].filter(Boolean).join(' · '))}</div>
+        <div class="r-summary">${escHTML(obj.date || '')}</div>
         <div class="tag-row">
           <span class="tag" style="border-color:${label.border};color:${label.colour}">${label.short}</span>
           ${rights.detail !== 'Source rights not yet specified' ? `<span class="tag" style="border-color:${rights.color};color:${rights.color}">${rights.status}</span>` : ''}
@@ -4027,8 +4060,8 @@ function odRenderProjectPanel() {
   const list = count ? project.objects.map(item => `
     <div class="od-project-item">
       <div>
-        <div class="od-project-item-title">${escQ(item.title)}</div>
-        <div class="od-project-item-meta">${escQ(item.institution)}${item.registration ? ' · ' + escQ(item.registration) : ''}${item.rights ? ' · ' + escQ(item.rights) : ''}</div>
+        <div class="od-project-item-title">${escHTML(item.title)}</div>
+        <div class="od-project-item-meta">${escHTML(item.institution)}${item.registration ? ' · ' + escHTML(item.registration) : ''}${item.rights ? ' · ' + escHTML(item.rights) : ''}</div>
       </div>
       <button class="btn" onclick="odRemoveProjectObject('${escQ(item.canonical_id)}')">Remove</button>
     </div>
@@ -4037,7 +4070,7 @@ function odRenderProjectPanel() {
   panel.innerHTML = `
     <div class="od-project-head">
       <div>
-        <div class="od-project-title">${escQ(project.title)}</div>
+        <div class="od-project-title">${escHTML(project.title)}</div>
         <div class="od-project-note">A lightweight staff workspace for building object lists, exhibition shortlists, research sets, or collection-review batches. Saved locally in this browser for now; Directus-backed project persistence is the next production step.</div>
       </div>
       <div class="od-project-actions">
@@ -4101,11 +4134,11 @@ function openObjectDetail(objKey) {
   const imgSrc = pickSearchImage(p) || null;
   const imgCol = document.getElementById('od-image-col');
   if (imgSrc) {
-    imgCol.innerHTML = `<img src="${imgSrc}" alt="${escQ(displayTitle)}" loading="lazy"
+    imgCol.innerHTML = `<img src="${imgSrc}" alt="${escHTML(displayTitle)}" loading="lazy"
       onerror="this.outerHTML='<div class=\\'od-image-placeholder\\'><div style=\\'font-size:2rem;opacity:0.08\\'>▣</div><div style=\\'font-family:var(--mono);font-size:0.55rem;color:var(--text3)\\'>Image unavailable</div></div>'"
       style="width:100%;height:100%;object-fit:contain;min-height:280px;">`;
   } else {
-    imgCol.innerHTML = `<div class="od-image-placeholder"><div style="font-size:2.5rem;opacity:0.06">▣</div><div style="font-family:var(--mono);font-size:0.55rem;color:var(--text3);text-align:center">No image<br>${escQ(getDisplayRegistration(p, o.dams || '—'))}</div></div>`;
+    imgCol.innerHTML = `<div class="od-image-placeholder"><div style="font-size:2.5rem;opacity:0.06">▣</div><div style="font-family:var(--mono);font-size:0.55rem;color:var(--text3);text-align:center">No image<br>${escHTML(getDisplayRegistration(p, o.dams || '—'))}</div></div>`;
   }
 
   // Title + sub
@@ -4123,14 +4156,14 @@ function openObjectDetail(objKey) {
     ['Canonical ID', p.canonical_id || o.id || '—'],
   ];
   document.getElementById('od-meta-grid').innerHTML = keyMeta.map(([k, v]) =>
-    `<div class="od-meta-item"><div class="od-meta-key">${k}</div><div class="od-meta-val">${v}</div></div>`
+    `<div class="od-meta-item"><div class="od-meta-key">${k}</div><div class="od-meta-val">${escHTML(v)}</div></div>`
   ).join('');
 
   // Source links
   const linksEl = document.getElementById('od-source-links');
   linksEl.innerHTML = '';
   if (p.source_url) {
-    linksEl.innerHTML += `<a href="${p.source_url}" target="_blank" class="btn" style="font-size:0.55rem">View on ${escQ(getInstitutionName(o))} →</a>`;
+    linksEl.innerHTML += `<a href="${escHTML(p.source_url)}" target="_blank" class="btn" style="font-size:0.55rem">View on ${escHTML(getInstitutionName(o))} →</a>`;
   }
   const sourceImage = pickSearchImage(p);
   if (sourceImage) {
@@ -4150,7 +4183,7 @@ function openObjectDetail(objKey) {
     `<div id="od-rights-note" style="margin-top:16px;max-width:880px;padding:12px 14px;border:1px solid ${rights.color};background:rgba(255,255,255,0.02);">
       <div style="font-family:var(--mono);font-size:0.56rem;letter-spacing:1.8px;text-transform:uppercase;color:${rights.color};margin-bottom:6px;">Legal Status</div>
       <div style="font-size:0.76rem;color:var(--text2);line-height:1.7;"><strong style="color:var(--text);font-weight:400;">${rights.status}</strong> — ${rights.guidance}</div>
-      <div style="font-family:var(--mono);font-size:0.54rem;color:var(--text3);line-height:1.7;margin-top:6px;">Licence / rights: ${escQ(rights.detail)}</div>
+      <div style="font-family:var(--mono);font-size:0.54rem;color:var(--text3);line-height:1.7;margin-top:6px;">Licence / rights: ${escHTML(rights.detail)}</div>
     </div>`;
 
   // Full metadata — show ALL _mv fields
@@ -4161,7 +4194,7 @@ function openObjectDetail(objKey) {
     fullEl.innerHTML = entries.map(([k, v]) => {
       const val = String(v);
       const isUrl = val.startsWith('http');
-      return `<div class="od-meta-item"><div class="od-meta-key">${k.replace(/_/g, ' ')}</div><div class="od-meta-val">${isUrl ? '<a href="'+val+'" target="_blank" style="color:var(--accent);word-break:break-all">'+val+'</a>' : val}</div></div>`;
+      return `<div class="od-meta-item"><div class="od-meta-key">${escHTML(k.replace(/_/g, ' '))}</div><div class="od-meta-val">${isUrl ? '<a href="'+escHTML(val)+'" target="_blank" style="color:var(--accent);word-break:break-all">'+escHTML(val)+'</a>' : escHTML(val)}</div></div>`;
     }).join('');
   } else {
     fullEl.innerHTML = '<div style="font-family:var(--mono);font-size:0.55rem;color:var(--text3)">No raw metadata available</div>';
@@ -4207,7 +4240,7 @@ function odChat() {
   inEl.value = '';
   inEl.disabled = true;
 
-  msgs.innerHTML += `<div class="chat-msg u">↳ ${escQ(q)}</div>`;
+  msgs.innerHTML += `<div class="chat-msg u">↳ ${escHTML(q)}</div>`;
   const thinkId = 'od-think-' + Date.now();
   msgs.innerHTML += `<div class="chat-msg a thinking" id="${thinkId}">thinking…</div>`;
   msgs.scrollTop = msgs.scrollHeight;
@@ -4237,10 +4270,35 @@ RULES:
 
   window._odChatHistory.push({ role: 'user', content: q });
 
+  // Answer from the object's verified metadata whenever the live model path
+  // does not return usable text — offline, rate-limited, busy, or blocked.
+  // The object should never dead-end; it always speaks from its record.
+  const odMetadataFallback = (noteText) => {
+    const reply = generateMetadataResponse(o, q);
+    window._odChatHistory.push({ role: 'assistant', content: reply });
+    window._odLastAssistantReply = reply;
+    window._odSpeechStatus = 'Metadata reply ready. You can read it aloud.';
+    const t = document.getElementById(thinkId);
+    if (t) {
+      t.innerHTML = reply + `<div style="font-family:var(--mono);font-size:0.48rem;color:var(--text3);margin-top:6px;border-top:1px solid var(--border);padding-top:4px;">⚡ ${escQ(noteText)}</div>`;
+      t.style.color = ''; t.classList.remove('thinking');
+    }
+    msgs.scrollTop = msgs.scrollHeight;
+  };
+
   ollamaFetch('/api/chat', JSON.stringify({ model: 'qwen2.5:14b', stream: false, messages: [{ role: 'system', content: sys }, ...window._odChatHistory] }))
   .then(r => r.json())
   .then(data => {
-    const reply = (data.message && data.message.content) || 'I cannot speak right now.';
+    const reply = data && data.message && data.message.content && data.message.content.trim();
+    if (!reply) {
+      // 200 with an error/empty payload (rate limit, model busy, blocked) —
+      // fall back to the verified record instead of a dead-end message.
+      const note = data && data.error
+        ? 'Answered from the verified record — the live model is busy right now.'
+        : 'Answered from the verified record — the live model returned no text.';
+      odMetadataFallback(note);
+      return;
+    }
     window._odChatHistory.push({ role: 'assistant', content: reply });
     window._odLastAssistantReply = reply;
     window._odSpeechStatus = 'Reply ready. You can read it aloud or ask another question.';
@@ -4249,17 +4307,8 @@ RULES:
     msgs.scrollTop = msgs.scrollHeight;
   })
   .catch(e => {
-    console.warn('Ollama unreachable, using metadata fallback:', e.message);
-    const reply = generateMetadataResponse(o, q);
-    window._odChatHistory.push({ role: 'assistant', content: reply });
-    window._odLastAssistantReply = reply;
-    window._odSpeechStatus = 'Metadata fallback reply ready. You can read it aloud.';
-    const t = document.getElementById(thinkId);
-    if (t) {
-      t.innerHTML = reply + '<div style="font-family:var(--mono);font-size:0.48rem;color:var(--text3);margin-top:6px;border-top:1px solid var(--border);padding-top:4px;">⚡ Metadata response — Ollama offline. Fix: run <code>launchctl setenv OLLAMA_ORIGINS "*"</code> then restart Ollama.</div>';
-      t.style.color = ''; t.classList.remove('thinking');
-    }
-    msgs.scrollTop = msgs.scrollHeight;
+    console.warn('Live chat unreachable, using metadata fallback:', e.message);
+    odMetadataFallback('Metadata response — the local model is offline.');
   })
   .finally(() => { inEl.disabled = false; inEl.focus(); updateOdSpeechUI(); });
 }
@@ -4362,8 +4411,8 @@ function odLoadRelated(objKey, o) {
       return `<div class="od-rel-card" onclick="openObjectDetail('${relKey}')">
         <div class="od-rel-thumb">${thumb}</div>
         <div class="od-rel-info">
-          <div class="od-rel-title">${p.title || '—'}</div>
-          <div class="od-rel-meta">${label.short} · ${p.discipline || ''} ${p.registration_number ? '· ' + p.registration_number : ''}</div>
+          <div class="od-rel-title">${escHTML(p.title || '—')}</div>
+          <div class="od-rel-meta">${label.short} · ${escHTML(p.discipline || '')} ${p.registration_number ? '· ' + escHTML(p.registration_number) : ''}</div>
           <div class="od-rel-score">Similarity: ${score}</div>
         </div>
       </div>`;
@@ -4386,8 +4435,8 @@ function odLoadRelated(objKey, o) {
         return `<div class="od-rel-card" onclick="openObjectDetail('${k}')">
           <div class="od-rel-thumb">${thumb}</div>
           <div class="od-rel-info">
-            <div class="od-rel-title">${ro.title || '—'}</div>
-            <div class="od-rel-meta">${rp.discipline || ''} ${rp.registration_number ? '· ' + rp.registration_number : ''}</div>
+            <div class="od-rel-title">${escHTML(ro.title || '—')}</div>
+            <div class="od-rel-meta">${escHTML(rp.discipline || '')} ${rp.registration_number ? '· ' + escHTML(rp.registration_number) : ''}</div>
           </div>
         </div>`;
       }).join('');
@@ -4423,12 +4472,12 @@ function renderODComment(c, depth) {
   const replies = (c.replies || []).map(r => renderODComment(r, depth + 1)).join('');
 
   return `<div class="od-comment-item ${flagClass}" style="${hidden ? 'opacity:0.6;' : ''}">
-    <div class="od-comment-text">${hidden ? '⚠ ' : ''}${escQ(c.text)}</div>
+    <div class="od-comment-text">${hidden ? '⚠ ' : ''}${escHTML(c.text)}</div>
     <div class="od-comment-meta">
       <span>${c.author_type || 'visitor'}</span>
       <span>${c.created_at ? new Date(c.created_at).toLocaleDateString() : ''}</span>
       ${c.ai_flag ? `<span class="od-comment-flag ${c.ai_flag}">${c.ai_flag}</span>` : ''}
-      ${c.ai_reason ? `<span style="font-style:italic;">${escQ(c.ai_reason)}</span>` : ''}
+      ${c.ai_reason ? `<span style="font-style:italic;">${escHTML(c.ai_reason)}</span>` : ''}
       <span class="od-comment-actions-inline">
         ${hidden ? `<button class="od-comment-action-btn" onclick="odModerateComment('${c.id}','visible')">Approve</button>` : ''}
         <button class="od-comment-action-btn remove" onclick="odModerateComment('${c.id}','removed')">Remove</button>
@@ -4504,12 +4553,12 @@ function renderNFCList(filter = 'all', search = '') {
     const obj = t.objectId ? OBJECTS[t.objectId] : null;
     return `<div class="nfc-card ${(!t.objectId) ? 'unassigned' : ''} ${activeNFCCode === t.code ? 'active' : ''}" onclick="selectNFC('${t.code}')">
       <div class="nfc-card-header"><div class="nfc-code">${displayAuxCode(t.code)}</div><div class="nfc-status-badge ${t.status}">${t.status}</div></div>
-      <div class="nfc-object-name">${obj ? escQ(obj.title) : 'Empty slot — assign object'}</div>
-      <div class="nfc-object-id">${obj ? escQ(obj.id) : 'Ready for collection object or draft record'}</div>
-      <div class="nfc-location">${escQ(t.location)}</div>
+      <div class="nfc-object-name">${obj ? escHTML(obj.title) : 'Empty slot — assign object'}</div>
+      <div class="nfc-object-id">${obj ? escHTML(obj.id) : 'Ready for collection object or draft record'}</div>
+      <div class="nfc-location">${escHTML(t.location)}</div>
       <div class="nfc-scans">Scans: ${t.scans} · Last: ${t.lastScan}</div>
     </div>`;
-  }).join('') || '<div style="font-family:var(--mono);font-size:0.55rem;color:var(--text3);padding:10px;">No AUX.IO tags match filter.</div>';
+  }).join('') || '<div style="font-family:var(--mono);font-size:0.55rem;color:var(--text3);padding:10px;">No AUXIO tags match filter.</div>';
   updateNFCWorksetNote();
 }
 
@@ -4541,7 +4590,7 @@ function renderObjectPickerItems(code, query = '') {
     const rights = getObjectRightsInfo(o._mv || {});
     return `<div class="op-item ${tag.objectId === id ? 'selected' : ''}" onclick="assignObject('${tag.code}','${id}')">
       <div class="op-thumb">${thumbSrc ? `<img src="${thumbSrc}" loading="lazy">` : '<div style="font-size:0.42rem;opacity:0.45">NO IMAGE</div>'}</div>
-      <div><div class="op-name">${escQ(o.title)}</div><div class="op-meta">${escQ([(o.type || '').substring(0, 30), o.year, rights.status].filter(Boolean).join(' · '))}</div></div>
+      <div><div class="op-name">${escHTML(o.title)}</div><div class="op-meta">${escHTML([(o.type || '').substring(0, 30), o.year, rights.status].filter(Boolean).join(' · '))}</div></div>
       <div class="op-add">${tag.objectId === id ? '✓ Assigned' : 'Assign'}</div>
     </div>`;
   }).join('') || '<div style="font-family:var(--mono);font-size:0.55rem;color:var(--text3);padding:12px;">No loaded objects match this search.</div>';
@@ -4551,26 +4600,26 @@ function renderNFCEditor(tag) {
   const obj = tag.objectId ? OBJECTS[tag.objectId] : null;
   const vis = nfcVisibility[tag.code];
 
-  const visItems = [['objectImage','Object Image'],['aiInterpretation','AI Interpretation'],['askQuestions','Ask Questions'],['relatedWorks','Related Works'],['visitorComments','Visitor Comments'],['nfcCode','Show AUX.IO Code']];
+  const visItems = [['objectImage','Object Image'],['aiInterpretation','AI Interpretation'],['askQuestions','Ask Questions'],['relatedWorks','Related Works'],['visitorComments','Visitor Comments'],['nfcCode','Show AUXIO Code']];
 
   document.getElementById('nfcEditor').innerHTML = `
     <div class="editor-header">
-      <div><div class="editor-nfc-code">${displayAuxCode(tag.code)}</div><div style="font-family:var(--mono);font-size:0.58rem;color:var(--text3);margin-top:4px">${tag.location}</div></div>
+      <div><div class="editor-nfc-code">${displayAuxCode(tag.code)}</div><div style="font-family:var(--mono);font-size:0.58rem;color:var(--text3);margin-top:4px">${escHTML(tag.location)}</div></div>
       <div class="editor-actions">
         <div class="btn" onclick="exportNFCQR('${tag.code}')">Export QR</div>
         ${tag.status !== 'live' ? `<div class="btn ok" onclick="publishNFC('${tag.code}')">Publish Live</div>` : `<div class="btn warn" onclick="unpublishNFC('${tag.code}')">Unpublish</div>`}
       </div>
     </div>
     <div class="aux-workflow-note">
-      AUX.IO workflow: use one of the 10 loaded examples, or select an empty slot and assign an object from the collection. You can also draft a new institution-owned object record for testing.
+      AUXIO workflow: use one of the 10 loaded examples, or select an empty slot and assign an object from the collection. You can also draft a new institution-owned object record for testing.
       <div class="aux-pill-row"><span class="aux-mini-pill">Choose slot</span><span class="aux-mini-pill">Assign object</span><span class="aux-mini-pill">Preview visitor page</span><span class="aux-mini-pill">Publish</span></div>
     </div>
     <div class="editor-section">
-      <div class="editor-section-title"><span>AUX.IO Placement</span></div>
+      <div class="editor-section-title"><span>AUXIO Placement</span></div>
       <div class="aux-field-grid">
         <div class="aux-field full">
           <label for="aux-location-${tag.code}">Gallery / location / physical trigger</label>
-          <input id="aux-location-${tag.code}" class="aux-input" value="${escQ(tag.location)}" oninput="updateAuxLocation('${tag.code}', this.value)" placeholder="Gallery 3 · Case 4 · doorway NFC / QR / kiosk">
+          <input id="aux-location-${tag.code}" class="aux-input" value="${escHTML(tag.location)}" oninput="updateAuxLocation('${tag.code}', this.value)" placeholder="Gallery 3 · Case 4 · doorway NFC / QR / kiosk">
         </div>
       </div>
       <div class="aux-helper">This is the location or access point visitors encounter: NFC tag, QR code, kiosk, room map point, or future spatial/audio trigger.</div>
@@ -4578,10 +4627,10 @@ function renderNFCEditor(tag) {
     <div class="editor-section">
       <div class="editor-section-title"><span>Assigned Collection Object</span>${obj ? `<div class="btn" onclick="clearAssignment('${tag.code}')">Remove</div>` : ''}</div>
       ${obj ? `<div class="assigned-object">
-          <div class="ao-thumb">${obj._mv && pickSearchImage(obj._mv) ? `<img src="${pickSearchImage(obj._mv)}" loading="lazy">` : escQ(obj.dams)}</div>
-        <div><div class="ao-title">${escQ(obj.title)}</div><div class="ao-id">${escQ([obj.id, (obj.type || '').substring(0,30), obj.year].filter(Boolean).join(' · '))}</div></div>
+          <div class="ao-thumb">${obj._mv && pickSearchImage(obj._mv) ? `<img src="${pickSearchImage(obj._mv)}" loading="lazy">` : escHTML(obj.dams)}</div>
+        <div><div class="ao-title">${escHTML(obj.title)}</div><div class="ao-id">${escHTML([obj.id, (obj.type || '').substring(0,30), obj.year].filter(Boolean).join(' · '))}</div></div>
         <div class="ao-remove" onclick="clearAssignment('${tag.code}')">Remove</div>
-      </div>` : `<div class="aux-step-note"><strong>Empty AUX.IO slot</strong>Step 1: search or browse below. Step 2: click <b>Assign</b> on an object. Step 3: preview the phone page, then save or publish.</div>`}
+      </div>` : `<div class="aux-step-note"><strong>Empty AUXIO slot</strong>Step 1: search or browse below. Step 2: click <b>Assign</b> on an object. Step 3: preview the phone page, then save or publish.</div>`}
       <div style="font-family:var(--mono);font-size:0.56rem;color:var(--text3);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;">Assign from Collection</div>
       <div class="object-picker"><input class="op-search" type="text" placeholder="Type 2+ letters: title, object no., institution, material, rights…" oninput="filterObjectPicker(this,'${tag.code}')"><div id="opItems-${tag.code}">${renderObjectPickerItems(tag.code, '')}</div></div>
       <div class="aux-helper">The default shortlist shows image-backed records that are safer for public visitor pages. Searching reaches all loaded records, including metadata-only objects for staff testing.</div>
@@ -4589,7 +4638,7 @@ function renderNFCEditor(tag) {
     <div class="editor-section">
       <div class="editor-section-title"><span>Create Institution Object Draft</span></div>
       <div class="aux-field-grid">
-        <div class="aux-field"><label>Object title <span style="color:var(--text3);font-weight:400;">/ optional for quick demo</span></label><input id="aux-new-title-${tag.code}" class="aux-input" placeholder="Leave blank to create an AUX.IO draft object"></div>
+        <div class="aux-field"><label>Object title <span style="color:var(--text3);font-weight:400;">/ optional for quick demo</span></label><input id="aux-new-title-${tag.code}" class="aux-input" placeholder="Leave blank to create an AUXIO draft object"></div>
         <div class="aux-field"><label>Institution / collection</label><input id="aux-new-inst-${tag.code}" class="aux-input" placeholder="Your museum or gallery"></div>
         <div class="aux-field"><label>Accession / object no.</label><input id="aux-new-accession-${tag.code}" class="aux-input" placeholder="2026.001"></div>
         <div class="aux-field"><label>Object type / medium</label><input id="aux-new-type-${tag.code}" class="aux-input" placeholder="Video installation, textile, painting..."></div>
@@ -4599,8 +4648,8 @@ function renderNFCEditor(tag) {
         <div class="aux-field full"><label>Source record URL</label><input id="aux-new-source-${tag.code}" class="aux-input" placeholder="https://collections.yourmuseum.org/object/..."></div>
         <div class="aux-field full"><label>Visitor description / interpretation seed</label><textarea id="aux-new-desc-${tag.code}" class="aux-textarea" placeholder="Short object description, curatorial note, access note, or draft interpretation..."></textarea></div>
       </div>
-      <button class="btn nfc" onclick="createInstitutionObjectForAux('${tag.code}')">Create Draft + Assign to AUX.IO</button>
-      <div class="aux-helper">This creates a local prototype object record so museums can test AUX.IO with their own material. You can start blank for a quick demo, then rename and enrich it. Production should save this to Directus and preserve full source metadata separately from visitor interpretation.</div>
+      <button class="btn nfc" onclick="createInstitutionObjectForAux('${tag.code}')">Create Draft + Assign to AUXIO</button>
+      <div class="aux-helper">This creates a local prototype object record so museums can test AUXIO with their own material. You can start blank for a quick demo, then rename and enrich it. Production should save this to Directus and preserve full source metadata separately from visitor interpretation.</div>
     </div>
     <div class="editor-section">
       <div class="editor-section-title"><span>Visitor Content Visibility</span></div>
@@ -4625,10 +4674,10 @@ function renderNFCPreview(tag) {
     <div class="preview-frame">
       <div class="pf-tag"><span>${displayAuxCode(tag.code)}</span><span style="color:${tag.status === 'live' ? 'var(--ok)' : 'var(--text3)'}">${tag.status.toUpperCase()}</span></div>
       ${obj ? `
-        <div class="pf-title">${obj.title}</div>
-        <div class="pf-sub">${obj.type} · ${obj.year}</div>
+        <div class="pf-title">${escHTML(obj.title)}</div>
+        <div class="pf-sub">${escHTML([obj.type, obj.year].filter(Boolean).join(' · '))}</div>
         ${vis.objectImage && imgSrc ? `<div class="pf-img"><img src="${imgSrc}" loading="lazy" onerror="this.parentElement.style.display='none'"></div>` : ''}
-        ${vis.aiInterpretation ? `<div class="pf-story">${(obj.ai || '').substring(0, 160)}${(obj.ai || '').length > 160 ? '…' : ''}</div>` : ''}
+        ${vis.aiInterpretation ? `<div class="pf-story">${escHTML((obj.ai || '').substring(0, 160))}${(obj.ai || '').length > 160 ? '…' : ''}</div>` : ''}
         ${vis.askQuestions ? `
           <div class="pf-ask-label">Ask this object</div>
           <div class="pf-chips">
@@ -4645,7 +4694,7 @@ function renderNFCPreview(tag) {
                 const ro = OBJECTS[id]; const rt = ro._mv && pickSearchImage(ro._mv);
                 return `<div class="pf-rel-item">
                   <div class="pf-rel-thumb">${rt ? `<img src="${rt}" loading="lazy">` : '▣'}</div>
-                  <div class="pf-rel-title">${ro.title.substring(0, 18)}</div>
+                  <div class="pf-rel-title">${escHTML(ro.title.substring(0, 18))}</div>
                 </div>`;
               }).join('')}
             </div>
@@ -4655,8 +4704,8 @@ function renderNFCPreview(tag) {
             <div class="pf-comment-label">Leave a response</div>
             <div class="pf-comment-mock">What did this make you think?</div>
           </div>` : ''}
-        <div class="qr-box">QR /<br>AUX.IO<br>${displayAuxCode(tag.code).replace('AUX.IO ', '')}</div>
-      ` : `<div style="font-size:0.55rem;color:var(--text3);padding:40px 10px;text-align:center">No object assigned<br><br>Select an AUX.IO tag and assign an object to preview</div>`}
+        <div class="qr-box">QR /<br>AUXIO<br>${displayAuxCode(tag.code).replace('AUXIO ', '')}</div>
+      ` : `<div style="font-size:0.55rem;color:var(--text3);padding:40px 10px;text-align:center">No object assigned<br><br>Select an AUXIO tag and assign an object to preview</div>`}
     </div>`;
 }
 
@@ -4733,8 +4782,11 @@ function createInstitutionObjectForAux(code) {
     year: date,
     dams: institution,
     location: tag.location,
+    status: 'draft',
+    nodeLinked: false,
     ai: description || `${title}. ${type}. ${institution}.`,
-    _mv: payload
+    _mv: payload,
+    chat: { default: `I am ${title}, a draft record from ${institution}.` }
   };
 
   tag.objectId = id;
@@ -4956,10 +5008,10 @@ function lookupVocab() {
     const badge = r.provider ? `<span style="font-family:var(--mono);font-size:0.42rem;padding:1px 4px;border:1px solid var(--border2);color:var(--accent3);margin-left:5px;letter-spacing:0.5px">${r.provider.toUpperCase()}</span>` : '';
     const desc = r.scopeNote ? r.scopeNote.substring(0,120) + (r.scopeNote.length>120?'…':'') : r.path;
     return `<div class="term-result ${idx === 0 ? 'selected' : ''}" onclick="selectVocabTerm('${encodeURIComponent(JSON.stringify(data))}', this)">
-      <div class="tr-term">${r.term}${badge}</div>
-      <div class="tr-source">${[...r.sources].join(', ')} · ${r.type} · ${r.category}</div>
+      <div class="tr-term">${escHTML(r.term)}${badge}</div>
+      <div class="tr-source">${escHTML([...r.sources].join(', '))} · ${escHTML(r.type)} · ${escHTML(r.category)}</div>
       <div class="tr-id">${r.count} object${r.count !== 1 ? 's' : ''}${r.language ? ' · ' + r.language : ''}</div>
-      <div class="tr-desc">${desc}</div>
+      <div class="tr-desc">${escHTML(desc)}</div>
     </div>`;
   }).join('');
 
@@ -5001,8 +5053,8 @@ function selectVocabTermData(term) {
   const providerBadge = provider ? `<span style="display:inline-block;font-family:var(--mono);font-size:0.48rem;padding:2px 6px;border:1px solid var(--border2);color:var(--accent3);margin-left:6px;letter-spacing:1px;text-transform:uppercase">${provider.replace('_',' ')}</span>` : '';
 
   detail.innerHTML = `
-    <div class="td-title">${term.term || term.path}${providerBadge}</div>
-    <div class="td-source">${sources.join(', ')} · ${term.type} · ${term.category}</div>
+    <div class="td-title">${escHTML(term.term || term.path)}${providerBadge}</div>
+    <div class="td-source">${escHTML(sources.join(', '))} · ${escHTML(term.type)} · ${escHTML(term.category)}</div>
     ${language ? `<div style="font-family:var(--mono);font-size:0.48rem;color:var(--text3);margin-top:4px">Language: ${language}</div>` : ''}
     ${externalIds.aat ? `<div style="font-family:var(--mono);font-size:0.48rem;color:var(--text3);margin-top:2px">AAT ID: ${externalIds.aat}</div>` : ''}
     ${uri ? `<div style="margin-top:2px"><a href="${uri}" target="_blank" style="font-family:var(--mono);font-size:0.48rem;color:var(--accent2);text-decoration:none;">URI: ${uri} →</a></div>` : ''}
@@ -5047,8 +5099,8 @@ function renderVisitorList() {
   el.innerHTML = keys.map(k => {
     const o = OBJECTS[k];
     return `<div class="vp-nfc-item ${currentVPage === k ? 'active' : ''}" onclick="switchVPage('${k}',this)">
-      <div class="vp-nfc-name">${o.title}</div>
-      <div class="vp-nfc-id">${o._mv ? o._mv.registration_number || '' : ''} · ${getCollectionLabel(o._source).short}</div>
+      <div class="vp-nfc-name">${escHTML(o.title)}</div>
+      <div class="vp-nfc-id">${escHTML(o._mv ? o._mv.registration_number || '' : '')} · ${getCollectionLabel(o._source).short}</div>
       <div class="vp-badges"><div class="vbadge live">${getCollectionLabel(o._source).short}</div></div>
     </div>`;
   }).join('');
@@ -5072,7 +5124,7 @@ function renderVPage(objId) {
   const thumbSrc = pickSearchImage(p);
   imgEl.innerHTML = thumbSrc ? `<img src="${thumbSrc}" loading="lazy" style="max-height:300px;object-fit:contain">` : 'No image available';
 
-  document.getElementById('vStory').innerHTML = `<strong>${o.title}</strong> — ${(o.ai || '').substring(0, 300)}`;
+  document.getElementById('vStory').innerHTML = `<strong>${escHTML(o.title)}</strong> — ${escHTML((o.ai || '').substring(0, 300))}`;
 
   const chips = ['What are you?', 'Tell me your history', 'How were you used?', 'What are you made of?'];
   document.getElementById('vChips').innerHTML = chips.map(c =>
@@ -5087,7 +5139,7 @@ function renderVPage(objId) {
       const rThumb = ro._mv && pickSearchImage(ro._mv);
       return `<div class="rel-card" onclick="switchVPage('${id}',null)">
         <div class="rel-thumb">${rThumb ? `<img src="${rThumb}" loading="lazy">` : '▣'}</div>
-        <div class="rel-title">${ro.title}</div>
+        <div class="rel-title">${escHTML(ro.title)}</div>
       </div>`;
     }).join('');
 
@@ -5129,7 +5181,7 @@ function vAsk(q) {
   ollamaFetch('/api/chat', JSON.stringify({ model: 'qwen2.5:14b', stream: false, messages: [{ role: 'system', content: sys }, { role: 'user', content: q }] }))
   .then(r => r.json())
   .then(data => {
-    const reply = (data.message && data.message.content) || o.chat.default;
+    const reply = (data.message && data.message.content) || (o.chat && o.chat.default) || ('I am ' + (o.title || 'an object') + '.');
     el.textContent = reply; el.style.color = '';
   })
   .catch(e => {
@@ -5156,7 +5208,7 @@ function loadComments(objectId) {
       if (!comments.length) { list.innerHTML = ''; return; }
       list.innerHTML = comments.slice(0, 10).map(c => `
         <div class="vpc-item vpc-flag-${c.status === 'approved' ? 'safe' : c.status}">
-          <div>${escQ(c.text)}</div>
+          <div>${escHTML(c.text)}</div>
           <div class="vpc-item-meta">${c.author_type} · ${new Date(c.created_at).toLocaleDateString()}</div>
         </div>`).join('');
     })
@@ -5191,6 +5243,18 @@ function submitVisitorComment() {
   })
   .catch(() => { status.textContent = 'Connection error — try again'; })
   .finally(() => { input.disabled = false; });
+}
+
+// escHTML — for interpolating collection text into HTML markup or attributes.
+// escQ — only for strings that land inside a single-quoted JS string in an
+// inline handler (onclick="fn('…')"); its \' escaping shows a literal
+// backslash if used in plain HTML text.
+function escHTML(s) {
+  return String(s ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 function escQ(s) {
