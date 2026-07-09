@@ -651,7 +651,7 @@ body.public-demo [data-staff-only]{display:none!important;}
     </div>
   </div>
   <div>
-    <div class="header-meta"><b id="clockDisplay">—</b><br><span id="headerMetaLine">Build v11.6.14 · connecting… · rights-aware media · AUXIO setup bench</span></div>
+    <div class="header-meta"><b id="clockDisplay">—</b><br><span id="headerMetaLine">Build v11.6.15 · connecting… · rights-aware media · AUXIO setup bench</span></div>
     <div class="header-links">
       <a class="header-link" data-staff-only href="http://localhost:11434" target="_blank">Ollama LLM</a>
       <a class="header-link" data-staff-only href="http://localhost:8055/admin" target="_blank">Directus CMS</a>
@@ -2572,7 +2572,8 @@ const COLLECTIONS = [
   'archai_rijks', 'archai_europeana', 'archai_auckland', 'archai_tepapa',
   'archai_mplus', 'archai_brasiliana', 'archai_smithsonian', 'archai_tate',
   'archai_streetart', 'archai_getty', 'archai_wellcome', 'archai_qagoma', 'archai_rawg',
-  'archai_nga'
+  'archai_nga',
+  'archai_wikimedia', 'archai_internetarchive', 'archai_loc', 'archai_dpla', 'archai_trove'
 ];
 const COLLECTION_LABELS = {
   archai_pilot: { name: 'Museums Victoria', short: 'MV', colour: 'rgba(143,188,176,0.7)', border: 'rgba(143,188,176,0.3)' },
@@ -2593,7 +2594,12 @@ const COLLECTION_LABELS = {
   archai_wellcome: { name: 'Wellcome Collection', short: 'Well', colour: 'rgba(112,186,163,0.84)', border: 'rgba(112,186,163,0.34)' },
   archai_qagoma: { name: 'QAGOMA', short: 'QAG', colour: 'rgba(174,139,199,0.84)', border: 'rgba(174,139,199,0.34)' },
   archai_rawg: { name: 'RAWG Video Games Database', short: 'RAWG', colour: 'rgba(122,166,216,0.84)', border: 'rgba(122,166,216,0.34)' },
-  archai_nga: { name: 'National Gallery of Art, Washington', short: 'NGA', colour: 'rgba(202,166,104,0.84)', border: 'rgba(202,166,104,0.34)' }
+  archai_nga: { name: 'National Gallery of Art, Washington', short: 'NGA', colour: 'rgba(202,166,104,0.84)', border: 'rgba(202,166,104,0.34)' },
+  archai_wikimedia: { name: 'Wikimedia Commons', short: 'WMC', colour: 'rgba(150,180,150,0.84)', border: 'rgba(150,180,150,0.34)' },
+  archai_internetarchive: { name: 'Internet Archive', short: 'IA', colour: 'rgba(200,140,110,0.84)', border: 'rgba(200,140,110,0.34)' },
+  archai_loc: { name: 'Library of Congress', short: 'LoC', colour: 'rgba(140,160,200,0.84)', border: 'rgba(140,160,200,0.34)' },
+  archai_dpla: { name: 'Digital Public Library of America', short: 'DPLA', colour: 'rgba(120,190,190,0.84)', border: 'rgba(120,190,190,0.34)' },
+  archai_trove: { name: 'Trove · NLA', short: 'Trove', colour: 'rgba(196,150,120,0.84)', border: 'rgba(196,150,120,0.34)' }
 };
 
 function getCollectionLabel(col) {
@@ -3066,7 +3072,7 @@ function loadMVObjects() {
     // Header line reads live state — never hardcode counts (they drift).
     const liveCols = Object.keys(counts).filter(k => counts[k] > 0).length;
     const headerMeta = document.getElementById('headerMetaLine');
-    if (headerMeta) headerMeta.textContent = `Build v11.6.14 · ${liveCols} live collections · ${totalCount.toLocaleString()} objects · rights-aware media · AUXIO setup bench`;
+    if (headerMeta) headerMeta.textContent = `Build v11.6.15 · ${liveCols} live collections · ${totalCount.toLocaleString()} objects · rights-aware media · AUXIO setup bench`;
 
     generateNFCTags();
     populateCollectionFilter(counts);
@@ -5016,7 +5022,12 @@ function buildVocabIndex() {
     archai_wellcome: 'Wellcome Collection',
     archai_qagoma: 'QAGOMA',
     archai_rawg: 'RAWG Video Games Database',
-    archai_nga: 'National Gallery of Art, Washington'
+    archai_nga: 'National Gallery of Art, Washington',
+    archai_wikimedia: 'Wikimedia Commons',
+    archai_internetarchive: 'Internet Archive',
+    archai_loc: 'Library of Congress',
+    archai_dpla: 'Digital Public Library of America',
+    archai_trove: 'Trove · NLA'
   };
 
   for (const [key, obj] of Object.entries(OBJECTS)) {
