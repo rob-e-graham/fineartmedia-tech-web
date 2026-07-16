@@ -4,12 +4,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dark Plates — Autonomous AI Art for Winter Solstice 2026</title>
+<title>Dark Plates — Autonomous AI Art for Dark Mofo 2026</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="shortcut icon" href="favicon.ico">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="description" content="Dark Plates is an autonomous image system generating copperplate-style engravings from live festival signal during Winter Solstice 2026. No human selects the subject matter.">
+<meta name="description" content="Dark Plates was an autonomous AI system generating copperplate engravings from endangered Tasmanian species and live cultural signal during Dark Mofo's Winter Solstice 2026 festival. No human selected the subject matter.">
 <meta name="theme-color" content="#080808">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -145,6 +145,15 @@ footer a:hover{color:var(--fg)}
   .interactive-frame{aspect-ratio:9/14}
   footer{flex-direction:column;align-items:flex-start;padding:32px 24px}
 }
+/* GALLERY */
+.gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px}
+.gallery-grid figure{margin:0;position:relative;overflow:hidden;background:#050505}
+.gallery-grid img{display:block;width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease,opacity 0.5s ease;opacity:0.92}
+.gallery-grid figure:hover img{transform:scale(1.03);opacity:1}
+.gallery-grid figcaption{position:absolute;left:0;right:0;bottom:0;padding:24px 14px 10px;background:linear-gradient(to top,rgba(5,5,5,0.85),transparent);font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(232,228,220,0.75);opacity:0;transition:opacity 0.35s}
+.gallery-grid figure:hover figcaption{opacity:1}
+.gallery-note{margin-top:14px;font-family:var(--mono);font-size:9px;letter-spacing:0.1em;color:rgba(232,228,220,0.35)}
+@media(max-width:900px){.gallery-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -168,23 +177,23 @@ footer a:hover{color:var(--fg)}
 <!-- HERO -->
 <div class="hero">
   <div class="hero-content">
-    <div class="hero-tag rv">Autonomous AI Artwork — Winter Solstice 2026</div>
+    <div class="hero-tag rv">A Hyper-Colonial Cultural Survey — Dark Mofo 2026</div>
     <h1 class="hero-title rv">Dark <em>Plates</em></h1>
-    <p class="hero-subtitle rv">An autonomous image system generating copperplate-style engravings from live festival signal during Winter Solstice 2026. No human selects the subject matter. The specimen is not the animal — the specimen is the festival.</p>
+    <p class="hero-subtitle rv">An autonomous image system that generated one copperplate engraving every six hours from endangered Tasmanian species and live cultural signal during Dark Mofo's Winter Solstice festival. No human selected the subject matter. The specimen is not the animal — the specimen is the festival.</p>
     <div class="hero-stats rv">
-      <span class="stat">Winter Solstice 2026</span>
+      <span class="stat">Dark Mofo 2026</span>
       <span class="stat">Hobart, Tasmania</span>
-      <span class="stat">11–22 June</span>
-      <span class="stat">New plate every 6 hours</span>
+      <span class="stat">Ran 11–22 June</span>
+      <span class="stat">4 plates a day, every 6 hours</span>
     </div>
-    <a href="https://darkplates.art" target="_blank" rel="noopener" class="hero-cta">Enter the interactive <span class="arrow">&#8594;</span></a>
+    <a href="https://darkplates.art" target="_blank" rel="noopener" class="hero-cta">Enter the archive <span class="arrow">&#8594;</span></a>
   </div>
   <div class="hero-panel">
     <span class="panel-label">Status</span>
     <p><strong>Medium:</strong> AI-generated copperplate engravings</p>
     <p><strong>Palette:</strong> Black ink + blood-red on bone paper</p>
-    <p><strong>Distribution:</strong> QR street prints, Instagram archive</p>
-    <p><strong>Affiliation:</strong> None. Not commissioned or endorsed.</p>
+    <p><strong>Distribution:</strong> QR street prints, darkplates.art archive</p>
+<p><strong>Affiliation:</strong> Independent critical artwork — not part of, commissioned by, or endorsed by Dark Mofo, MONA, or any festival, venue, or institution referenced within it. Rob DJ'd records at Wormhole during the festival.</p>
   </div>
 </div>
 
@@ -195,10 +204,12 @@ footer a:hover{color:var(--fg)}
   <div class="wrap">
     <p class="sec-label">Concept</p>
     <div class="text-block">
-      <h3>The colonial plate as autonomous critique</h3>
-      <p>Dark Plates generates one copperplate engraving every six hours. No human selects the subject matter. Each plate is assembled from a structured source bank containing Tasmanian endangered and extinct species, native flora, contemporary political issues, festival events, public social media discourse, First Nations cultural context, and colonial voyage expedition artworks.</p>
-      <p>These fragments are combined through a structured prompt and rendered as late-eighteenth-century copperplate engravings: black ink on bone paper with blood-red wash. Deliberate anatomical distortions are driven by the political and social content of each generation cycle.</p>
-      <p>The visual language of colonial scientific classification is applied to the contemporary cultural event that inherited its structures. The technique is precise and clinical. The subject is grotesque, mutated, or structurally impossible. The contrast between calm technique and disturbing content is the operative mechanism.</p>
+<h3>The colonial plate as autonomous critique</h3>
+      <p>Dark Plates generated one copperplate engraving every six hours across Dark Mofo's twelve-day run. No human selected the subject matter. Each plate was assembled from a structured source bank containing Tasmanian endangered and extinct species, native flora, contemporary political issues, festival events, public social media discourse, First Nations cultural context, and colonial voyage expedition artworks.</p>
+      <p>These fragments were combined through a structured prompt and rendered as late-eighteenth-century copperplate engravings: black ink on bone paper with blood-red wash. Deliberate anatomical distortions were driven by the political and social content of each generation cycle. Every plate carried one endangered Tasmanian species as its structural body — the animal was the real subject; the festival, the housing crisis, the crowd, the city, were context for the animal's testimony.</p>
+      <p>The visual language of colonial scientific classification was applied to the contemporary cultural event that inherited its structures. The technique is precise and clinical. The subject is grotesque, mutated, or structurally impossible. The contrast between calm technique and disturbing content is the operative mechanism.</p>
+      <p>Every cultural event generates a parallel version of itself — posts, reviews, complaints, weather reports, opinion distributed across platforms in real time. For a growing number of people that shadow is the primary experience. Dark Plates rendered that shadow through the oldest visual technology of classification available: the colonial expedition plate, turned inward on the colony's own mess at machine speed.</p>
+      <p>The source bank held 62 threatened and extinct Tasmanian species plus 409 real records harvested from the Libraries Tasmania state archive — railway plans, lighthouse photographs, causeway sketches. Over the twelve days the no-repeat cycling surfaced 38 distinct species and 36 native plants, woven through 30 civic issues and 33 festival events — not the thylacine on repeat, but the whole threatened catalogue, animals most Tasmanians couldn't name.</p>
     </div>
   </div>
 </section>
@@ -208,8 +219,16 @@ footer a:hover{color:var(--fg)}
   <div class="wrap">
     <p class="sec-label">Selected Plates</p>
     <div class="gallery-grid" id="galleryGrid">
-      <!-- Populated dynamically from live API -->
+      <figure><img src="dark-plates/plate-waning-vigil.jpg" alt="The Waning Vigil — Tasmanian devil, copperplate engraving" loading="lazy"><figcaption>The Waning Vigil — Tasmanian devil</figcaption></figure>
+      <figure><img src="dark-plates/plate-drowned-ledger.jpg" alt="The Drowned Ledger — Tasmanian long-eared bat, copperplate engraving" loading="lazy"><figcaption>The Drowned Ledger — long-eared bat</figcaption></figure>
+      <figure><img src="dark-plates/plate-mourning-exchange.jpg" alt="Mourning Exchange — Tasmanian emu, copperplate engraving" loading="lazy"><figcaption>Mourning Exchange — Tasmanian emu</figcaption></figure>
+      <figure><img src="dark-plates/plate-cicatrix.jpg" alt="Cicatrix Against the Threshold — fur seal, copperplate engraving" loading="lazy"><figcaption>Cicatrix Against the Threshold — fur seal</figcaption></figure>
+      <figure><img src="dark-plates/plate-metallic-murmurs.jpg" alt="Metallic Murmurs — copperplate engraving" loading="lazy"><figcaption>Metallic Murmurs</figcaption></figure>
+      <figure><img src="dark-plates/plate-echoes-bark.jpg" alt="Echoes Beneath the Bark — copperplate engraving" loading="lazy"><figcaption>Echoes Beneath the Bark</figcaption></figure>
+      <figure><img src="dark-plates/plate-brine-pulse.jpg" alt="Beneath the Brine Pulse — copperplate engraving" loading="lazy"><figcaption>Beneath the Brine Pulse</figcaption></figure>
+      <figure><img src="dark-plates/plate-threshold-reckoning.jpg" alt="Threshold of Reckoning — copperplate engraving" loading="lazy"><figcaption>Threshold of Reckoning</figcaption></figure>
     </div>
+    <p class="gallery-note">Eight of the forty-eight plates in the final archive. The complete folio, with provenance and conversation records, lives at <a href="https://darkplates.art" style="color:var(--red);text-decoration:none">darkplates.art</a>.</p>
   </div>
 </section>
 
@@ -218,9 +237,10 @@ footer a:hover{color:var(--fg)}
   <div class="wrap">
     <p class="sec-label">Origin</p>
     <div class="text-block">
-      <h3>Art Cunt Shit Cunt</h3>
-      <p>The name comes from a pub. A local in rural Tasmania, asked about the winter solstice festival, said: "Oh, that art cunt shit cunt." The divide between the art circus that descends on Hobart every winter and the people who actually live there is the tension the work operates inside. The name stayed.</p>
-      <p>Dark Plates takes that tension and runs it through a colonial engraving press. The system does not resolve the contradiction between spectacle and place. It renders it in copperplate, with the clinical precision of the colonists who first drew these animals, and the fury of the people who inherited the mess.</p>
+<h3>The name</h3>
+      <p>The project's working title comes from a story told by Nick Smithies, Tasmanian media artist — an overheard sentence at a rural Tasmanian pub, four words of flat vernacular contempt for a festival passing through: an art event for art people, nothing to do with the lives around it. Unprintable, unimprovable, and exactly the tension the work runs on. The name stayed as the internal working title; the public-facing name became Dark Plates.</p>
+      <p>Dark Plates holds two meanings at once: the copperplate and the record. Both are pressed, etched, and played. Rob performed a vinyl DJ set — dark, deep, rolling bass — at Wormhole during the festival under the same name, alongside the AI system generating engravings around the clock.</p>
+      <p>That origin matters methodologically. The work doesn't begin from theory; it begins from a sentence spoken in a pub by someone the festival economy talks about but rarely talks to. Dark Plates holds that scepticism and the festival's genuine cultural achievement in the same frame, without resolving either into the other.</p>
     </div>
   </div>
 </section>
@@ -233,6 +253,61 @@ footer a:hover{color:var(--fg)}
       <h3>Dark Plates</h3>
       <p>The system operates a single LLM voice that writes plate verdicts and responds to visitor chat. It speaks in a register drawn from Van Diemen's Land convict cant and contemporary Australian English. Profanity, when it appears, is historical and earned.</p>
       <p>Plate verdicts appear as short captions beneath each engraving. The interactive chat responds to visitor questions about the artwork, the source ingredients, the city, the animals, and the colonial plate system. The voice knows what built each plate and will tell you.</p>
+      <p style="margin-top:24px;padding:20px 24px;border-left:2px solid var(--red);background:rgba(255,255,255,0.015);font-family:var(--mono);font-size:12px;line-height:1.9;color:rgba(232,228,220,0.6)">One visitor spent seventeen messages telling the machine to calm down, calling it "a laptop protest." It didn't back down. A few exchanges later the same person wrote: <em style="color:var(--red);font-style:italic">"the city sits uncomfortably on the edge of an ancient landscape… where do we go from here with a noble heart?"</em> Neither side of that exchange was scripted.</p>
+    </div>
+  </div>
+</section>
+
+<!-- NO OUTSIDE -->
+<section>
+  <div class="wrap">
+    <p class="sec-label">No Outside</p>
+    <div class="text-block">
+      <h3>We're all allergic to AI and we all use it every day</h3>
+      <p>The work is full of contradictions and it knows it. It uses a corporate AI model to produce a critique of extractive systems. It borrows colonial visual grammar to critique colonial inheritance. It's free to access and costs money to run. It criticises spectacle while being, itself, a spectacle. It surveys a festival it is also, in the form of a DJ set, performing inside.</p>
+      <p>These contradictions aren't flaws — they're the subject. There is no pure position from which to make art about corporate AI that doesn't involve corporate AI, no way to critique the colonial gaze without using the colonial gaze. Every plate was published with a full provenance record — the prompts, the source fragments, the species, the model, the signals that went into it. The original colonial surveys hid their methods behind institutional authority; Dark Plates published the specimen and the dissection together. The work does not claim to be clean. It claims to be honest.</p>
+    </div>
+  </div>
+</section>
+
+<!-- REPAIR -->
+<section>
+  <div class="wrap">
+    <p class="sec-label">Repair / Support</p>
+    <div class="text-block">
+<h3>The work points at damage</h3>
+      <p>Dark Plates is not a crisis service, and says so. But a critical artwork that names a housing crisis four times a day owes its audience the phone number. The survey documents the wound; this page holds the door open to doing something about it. If a plate surfaced something that matters to you, here is where to send care, time, money, or a phone call. In immediate danger, call 000.</p>
+    </div>
+    <div class="about-grid" style="margin-top:40px">
+      <ul class="signal-list">
+        <li><strong style="color:var(--fg)">Wildlife</strong></li>
+        <li>Bonorong Wildlife Rescue — 0447 264 625, all hours</li>
+        <li>Whale and dolphin strandings — 0427 942 537</li>
+        <li>Threatened Species Link — Tasmanian threatened species information</li>
+      </ul>
+      <ul class="signal-list">
+        <li><strong style="color:var(--fg)">Land / Water</strong></li>
+        <li>EPA Tasmania — report pollution or environmental incidents, 1800 005 171</li>
+        <li>Landcare Tasmania — local land, water, coast and habitat care groups</li>
+        <li>Environment Tasmania — campaigns and advocacy for lutruwita / Tasmania's environment</li>
+      </ul>
+    </div>
+    <div class="about-grid" style="margin-top:8px">
+      <ul class="signal-list">
+        <li><strong style="color:var(--fg)">People</strong></li>
+        <li>Housing Connect — homelessness and housing support, 1800 800 588</li>
+        <li>FindHelpTAS — directory for food, housing, money, health and local support</li>
+        <li>Access Mental Health — 1800 332 388</li>
+        <li>Safe from Violence — family violence 1800 633 937 / sexual assault 1800 697 877</li>
+        <li>Foodbank Tasmania — food relief and support</li>
+      </ul>
+      <ul class="signal-list">
+        <li><strong style="color:var(--fg)">First Nations</strong></li>
+        <li>Tasmanian Aboriginal Centre Health Service — culturally safe Aboriginal health care</li>
+        <li>Tasmanian Aboriginal Legal Service — free legal support, 1800 595 162</li>
+        <li>13YARN — Aboriginal and Torres Strait Islander crisis support, 13 92 76</li>
+        <li>Lifeline — crisis support, 13 11 14</li>
+      </ul>
     </div>
   </div>
 </section>
@@ -251,8 +326,8 @@ footer a:hover{color:var(--fg)}
         <p>OpenAI gpt-4.1-mini for plate verdicts, interactive chat, and exhibition-catalogue titling.</p>
       </div>
       <div class="spec-item">
-        <h4>Source Bank</h4>
-        <p>62 animals, 50 plants, 52 colonial Tasmanian artworks, 50 Cook/Webber expedition plates, 50 political issues, 81 social media posts, 50 First Nations references.</p>
+<h4>Source Bank</h4>
+        <p>62 threatened/extinct species, native flora, colonial expedition artworks, contemporary political issues, festival events, public commentary, First Nations context, and 409 archive records from Libraries Tasmania.</p>
       </div>
       <div class="spec-item">
         <h4>Infrastructure</h4>
@@ -260,7 +335,7 @@ footer a:hover{color:var(--fg)}
       </div>
       <div class="spec-item">
         <h4>Distribution</h4>
-        <p>darkplates.art, QR code stickers and posters distributed in Hobart during festival period, Instagram permanent archive.</p>
+        <p>darkplates.art, QR code stickers and posters distributed around Hobart during the festival. The archive stays online at darkplates.art.</p>
       </div>
       <div class="spec-item">
         <h4>Research Context</h4>
@@ -277,17 +352,17 @@ footer a:hover{color:var(--fg)}
         <div class="process-card rv">
           <div class="process-num">01</div>
           <h3>Signal ingestion</h3>
-          <p>The system monitors festival program, critical reviews, social media, and local Hobart conditions. Nine signal ingredients are assembled fresh for each generation cycle.</p>
+          <p>The system monitored the festival program, critical reviews, social media, and local Hobart conditions. Nine signal ingredients were assembled fresh for each generation cycle.</p>
         </div>
         <div class="process-card rv">
           <div class="process-num">02</div>
           <h3>Plate generation</h3>
-          <p>Signals are rendered as late-eighteenth-century copperplate engravings — black ink and blood-red on bone paper — combining scientific illustration, botanical diagrams, and expedition cartography.</p>
+          <p>Signals were rendered as late-eighteenth-century copperplate engravings — black ink and blood-red on bone paper — combining scientific illustration, botanical diagrams, and expedition cartography.</p>
         </div>
         <div class="process-card rv">
           <div class="process-num">03</div>
           <h3>Street distribution</h3>
-          <p>Each plate is printed as a QR street poster, placed around Hobart during the festival. The full archive lives permanently on Instagram as a public record.</p>
+          <p>Each plate was printed as a QR street poster, placed around Hobart during the festival. The full archive stays online at darkplates.art as a public record.</p>
         </div>
       </div>
     </div>
@@ -297,11 +372,21 @@ footer a:hover{color:var(--fg)}
   <section id="interactive">
     <div class="wrap">
       <div class="interactive-header">
-        <div class="sec-label rv">Live Interactive</div>
+        <div class="sec-label rv">The Archive</div>
         <a href="https://darkplates.art" target="_blank" rel="noopener" class="interactive-link rv">Open full site <span>&#8594;</span></a>
       </div>
+      <p style="font-family:var(--sans);font-size:14px;line-height:1.75;color:rgba(232,228,220,0.55);margin-bottom:24px;max-width:640px">Generation finished when the festival ended, but the archive stays online. Every plate, its provenance record, and its conversation log remain — you can still open a plate, ask it something, and read where every image came from.</p>
       <div class="interactive-frame rv">
         <iframe src="https://darkplates.art?embed=1" allow="clipboard-write" title="Dark Plates — Interactive gallery, AI chat, and public message board"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSING -->
+  <section>
+    <div class="wrap">
+      <div class="text-block" style="max-width:760px">
+        <p style="font-family:var(--serif);font-size:19px;line-height:1.8;color:rgba(232,228,220,0.75)">It is not a protest against the festival and not a celebration of it. It is a mirror made of colonial grammar, held up to a city that invited the world to look at death and call it entertainment — while the species that were here first thin out quietly offstage. The question is not whether the mirror is real. The question is whether the reflection is honest.</p>
       </div>
     </div>
   </section>
@@ -309,8 +394,8 @@ footer a:hover{color:var(--fg)}
 </main>
 
 <footer>
-  <p>Dark Plates &copy; 2026 Rob Graham / <a href="/">FAMTEC</a></p>
-  <p>Not commissioned, endorsed, or affiliated with any festival or institution.</p>
+  <p>Dark Plates &copy; 2026 Rob Graham / <a href="/">FAMTEC</a> — Unofficial. Uninvited. Unlit.</p>
+  <p>Not part of, commissioned by, or endorsed by Dark Mofo, MONA, or any festival, venue, or institution referenced within it.</p>
 </footer>
 
 <script>
