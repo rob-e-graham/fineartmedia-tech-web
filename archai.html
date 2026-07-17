@@ -671,9 +671,9 @@ footer a:hover{color:var(--fg)}
     <div class="hero-tag">Sovereign Semantic Heritage AI</div>
     <h1 class="hero-title">ARCHAI</h1>
     <p class="hero-subtitle">Search, compare, and interpret cultural records through a sovereign semantic layer that sits above existing CMS, DAMS, and archival systems. ARCHAI respects institutional structure while making collection knowledge more accessible for curators, staff, researchers, and visitors; AUXIO carries rights-aware interpretation into galleries, maps, and mobile access.</p>
-    <p class="hero-demo-note"><strong>Public research demo:</strong> ARCHAI is now framed as a 24-source research network. The current indexed pilot contains 3,147 staff-searchable records across 19 live sources, including municipal public-art material for murals, street art, civic commissions, and social-practice records. Library of Congress, Wikimedia Commons / Wikidata, Trove / National Library of Australia, Digital Public Library of America, and Internet Archive are included as the next library, archive, civic-memory, open-media, and linked-data connectors. This website presents a simplified, image-first interface; the full ARCHAI app also works with metadata-only and rights-held records, alongside curatorial, collections, accessibility, infrastructure, and publishing workflows.</p>
+    <p class="hero-demo-note"><strong>Public research demo:</strong> ARCHAI is framed as a 24-source research network. The current indexed pilot contains 3,147 staff-searchable records across museum, heritage, public-art, library, archive, and open-knowledge sources, including municipal public-art material for murals, street art, civic commissions, and social-practice records. Library of Congress, Wikimedia Commons / Wikidata, Trove / National Library of Australia, Digital Public Library of America, and Internet Archive extend the network into library, archive, civic-memory, open-media, and linked-data context. This website presents a simplified, image-first interface; the full ARCHAI app also works with metadata-only and rights-held records, alongside curatorial, collections, accessibility, infrastructure, and publishing workflows.</p>
     <div class="hero-sources">
-      <div class="hero-sources-label">24-source research network · 19 indexed live sources · public/open records do not imply institutional endorsement</div>
+      <div class="hero-sources-label">24-source research network · public/open records do not imply institutional endorsement</div>
       <div class="hero-collections">
         <span class="coll coll-mv">Museums Victoria</span>
         <span class="coll coll-met">The Metropolitan Museum of Art</span>
@@ -727,12 +727,12 @@ footer a:hover{color:var(--fg)}
           <div class="source-filter">
             <div class="source-filter-head">
               <span>Collection scope</span>
-              <span>Swipe or scroll to review all 19 indexed sources</span>
+              <span>Swipe or scroll to review connected public sources</span>
             </div>
             <div class="source-tabs" id="sourceTabs" aria-label="Filter search by collection"></div>
           </div>
           <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search 3,147 indexed records across 19 live sources..." autocomplete="off">
+            <input type="text" id="searchInput" placeholder="Search 3,147 indexed records across connected sources..." autocomplete="off">
             <button id="searchBtn">Search</button>
           </div>
           <div class="search-chips">
@@ -761,11 +761,11 @@ footer a:hover{color:var(--fg)}
             <div class="chat-tone-note" id="demoConversationLensNote"></div>
           </div>
           <div class="demo-conversation-chips">
-            <button onclick="setDemoConversationQuestion('Compare how different institutions describe related objects.')">Compare institutions</button>
-            <button onclick="setDemoConversationQuestion('Find an unexpected connection across the collection.')">Unexpected connection</button>
-            <button onclick="setDemoConversationQuestion('What might be missing or unclear in these records?')">Record gaps</button>
-            <button onclick="setDemoConversationQuestion('How do street art and public art records connect civic space, authorship, and community memory?')">Street &amp; civic art</button>
-            <button onclick="setDemoConversationQuestion('How does technology shape cultural memory in these collections?')">Technology &amp; memory</button>
+            <button onclick="askDemoConversation('Compare how different institutions describe related objects.')">Compare institutions</button>
+            <button onclick="askDemoConversation('Find an unexpected connection across the collection.')">Unexpected connection</button>
+            <button onclick="askDemoConversation('What might be missing or unclear in these records?')">Record gaps</button>
+            <button onclick="askDemoConversation('How do street art and public art records connect civic space, authorship, and community memory?')">Street &amp; civic art</button>
+            <button onclick="askDemoConversation('How does technology shape cultural memory in these collections?')">Technology &amp; memory</button>
           </div>
           <div class="demo-conversation-messages" id="demoConversationMessages" aria-live="polite">
             <div class="chat-msg assistant">I can read across the connected collection records. Ask about objects, materials, histories, technologies, institutions, or patterns across the corpus.</div>
@@ -833,14 +833,14 @@ footer a:hover{color:var(--fg)}
       <div class="about-grid">
         <div class="about-text rv">
           <p>ARCHAI is an <em>open-source, sovereign semantic interface for cultural heritage</em> — an active research toolkit designed to sit above existing CMS and DAMS infrastructure. Institutions can run semantic search, grounded collection interpretation, spatial tools, accessibility support, and visitor engagement on their own network and under their own governance.</p>
-          <p>The current research corpus contains 3,147 records across 19 indexed museum, heritage, public-art, and cultural-data sources. Its public-art layer gives the demo a place for street art, murals, civic commissions, precinct works, and social-practice records alongside museum and archive material. The wider source network now adds Library of Congress, Wikimedia Commons / Wikidata, Trove / National Library of Australia, Digital Public Library of America, and Internet Archive as next-step connectors, bringing library, archive, civic-memory, open-media, born-digital, and linked-data context into the ARCHAI ecology. Staff can search the complete metadata layer; public interfaces use a separate rights and media-health gate so a connected record is not automatically treated as reusable visitor media.</p>
+          <p>The current research corpus contains 3,147 records across museum, heritage, public-art, library, archive, and cultural-data sources. Its public-art layer gives the demo a place for street art, murals, civic commissions, precinct works, and social-practice records alongside museum and archive material. The wider source network includes Library of Congress, Wikimedia Commons / Wikidata, Trove / National Library of Australia, Digital Public Library of America, and Internet Archive, bringing library, archive, civic-memory, open-media, born-digital, and linked-data context into the ARCHAI ecology. Staff can search the complete metadata layer; public interfaces use a separate rights and media-health gate so a connected record is not automatically treated as reusable visitor media.</p>
           <p>AUXIO offers optional factual, third-person, and era-informed interpretation modes through NFC, QR, hyperlink, map, or location-aware exhibition triggers. The working audio interface supports microphone questions and spoken replies through browser speech services, opening the prototype to <span class="voice-language-count">detected browser languages</span> on supported devices, with further accessibility and multilingual testing in development.</p>
           <p>The data format powering each conversation is <em>Obtext</em> (Object Context) — a structured record containing identity, physical properties, temporal context, significance, and crucially, constraints — what the object explicitly does not know.</p>
           <p>ARCHAI remains an active research prototype. This website is a public-facing demo layer rather than the full operational app. FAMTEC is open to funded research partnerships, institutional pilots, accessibility testing, collection-data collaborations, development support, and evaluation with museum, gallery, archive, and university teams, and looks forward to collaborating, growing, learning, researching, and testing with partners across the wider GLAM sector.</p>
           <p>Developed as part of doctoral research at RMIT University, School of Design. The research paper was accepted for the 6th Summit on New Media Art Archiving (ISEA2026 Dubai).</p>
           <div class="rights-note">
             <h4>Sources &amp; Rights</h4>
-            <p>ARCHAI is presented as a 24-source research network: 19 indexed live sources plus Library of Congress, Wikimedia Commons / Wikidata, Trove / National Library of Australia, Digital Public Library of America, and Internet Archive as onboarding connectors. The staff layer currently contains 3,147 indexed records; the public AUXIO layer publishes 1,402 image-backed pages that passed the current availability and rights gates. Every object retains its source, attribution, and legal status. Institutional or platform inclusion does not imply partnership or endorsement.</p>
+            <p>ARCHAI is presented as a 24-source research network spanning indexed live sources and onboarding connectors. The staff layer currently contains 3,147 indexed records; the public AUXIO layer publishes 1,402 image-backed pages that passed the current availability and rights gates. Every object retains its source, attribution, and legal status. Institutional or platform inclusion does not imply partnership or endorsement.</p>
           </div>
         </div>
         <div class="rv">
@@ -855,7 +855,7 @@ footer a:hover{color:var(--fg)}
             <li>Five-layer hallucination prevention</li>
             <li>AI-moderated visitor comments</li>
             <li>Conversational collection search</li>
-            <li>24-source network · 19 indexed live sources · 3,147 records</li>
+            <li>24-source network · 3,147 indexed records</li>
             <li>1,402 rights-gated AUXIO visitor pages</li>
             <li>Designed QR poster, access sticker &amp; visitor postcard outputs on 440 cleared records</li>
             <li>SQLite persistent storage</li>
@@ -952,7 +952,7 @@ footer a:hover{color:var(--fg)}
 <footer>
   <p>ARCHAI &copy; 2026 Rob Graham / <a href="/">FAMTEC</a> — All rights reserved</p>
   <p>Research prototype · open to funded pilots and testing partners · <a href="https://github.com/rob-e-graham/archai" target="_blank">GitHub</a></p>
-  <p>24-source research network · 3,147 indexed records across 19 live sources · 1,402 rights-gated AUXIO pages · source inclusion does not imply endorsement.</p>
+  <p>24-source research network · 3,147 indexed records · 1,402 rights-gated AUXIO pages · source inclusion does not imply endorsement.</p>
 </footer>
 
 <script>
@@ -986,7 +986,12 @@ const COLLECTION_META = {
   archai_wellcome: { short: 'Well', className: 'src-akl', institution: 'Wellcome Collection' },
   archai_qagoma: { short: 'QAG', className: 'src-va', institution: 'QAGOMA' },
   archai_rawg: { short: 'RAWG', className: 'src-eu', institution: 'RAWG Video Games Database' },
-  archai_nga: { short: 'NGA', className: 'src-cma', institution: 'National Gallery of Art, Washington' }
+  archai_nga: { short: 'NGA', className: 'src-cma', institution: 'National Gallery of Art, Washington' },
+  archai_wikimedia: { short: 'WMC', className: 'src-akl', institution: 'Wikimedia Commons' },
+  archai_internetarchive: { short: 'IA', className: 'src-aic', institution: 'Internet Archive' },
+  archai_loc: { short: 'LoC', className: 'src-va', institution: 'Library of Congress' },
+  archai_dpla: { short: 'DPLA', className: 'src-eu', institution: 'Digital Public Library of America' },
+  archai_trove: { short: 'Trove', className: 'src-cma', institution: 'Trove / National Library of Australia' }
 };
 
 const PUBLIC_DEMO_HELD_COLLECTIONS = new Set([
@@ -1008,6 +1013,7 @@ let liveCollectionCounts = {};
 let liveObjectCount = 3147;
 let demoMode = 'search';
 let demoConversationHistory = [];
+let demoConversationBusy = false;
 let demoLastReply = '';
 let demoRecognition = null;
 let demoListening = false;
@@ -1048,7 +1054,9 @@ function renderCollectionTabs() {
   if (!tabs) return;
   const allCount = liveObjectCount ? '<span class="source-tab-count">' + liveObjectCount.toLocaleString() + '</span>' : '';
   let html = '<button class="source-tab ' + (selectedCollection === 'all' ? 'active' : '') + '" onclick="setCollectionFilter(\'all\')" aria-label="All sources, ' + liveObjectCount.toLocaleString() + ' records" aria-pressed="' + (selectedCollection === 'all') + '">All sources' + allCount + '</button>';
-  for (const [collection, meta] of getPublicCollectionEntries()) {
+  const collectionEntries = getPublicCollectionEntries()
+    .filter(([collection]) => !backendLive || Number(liveCollectionCounts[collection] || 0) > 0);
+  for (const [collection, meta] of collectionEntries) {
     const count = Number(liveCollectionCounts[collection] || 0);
     const countLabel = count ? '<span class="source-tab-count">' + count.toLocaleString() + '</span>' : '';
     const accessibleCount = count ? ', ' + count.toLocaleString() + ' records' : '';
@@ -1176,11 +1184,12 @@ async function discoverBackend() {
 
 function applyLiveStats(health) {
   const liveCounts = health?.integrations?.qdrant?.liveCounts || {};
-  const sourceCollections = Object.entries(liveCounts)
-    .filter(([key, count]) => !['archai_curator', 'archai_objects'].includes(key) && !PUBLIC_DEMO_HELD_COLLECTIONS.has(key) && Number(count) > 0)
+  const publicCollections = getPublicCollectionEntries();
+  const livePublicCollections = publicCollections
+    .filter(([key]) => Number(liveCounts[key] || 0) > 0)
     .map(([key]) => key);
-  const objectCount = health?.counts?.collectionObjects || 3147;
-  const collectionCount = sourceCollections.length || 19;
+  const objectCount = health?.counts?.curatorVectors || health?.counts?.collectionObjects || 3147;
+  const collectionCount = livePublicCollections.length || publicCollections.length || 19;
   const searchInput = document.getElementById('searchInput');
   const searchInfo = document.getElementById('searchInfo');
   const modeText = document.getElementById('modeText');
@@ -1196,6 +1205,9 @@ function applyLiveStats(health) {
   }
   liveCollectionCounts = liveCounts;
   liveObjectCount = objectCount;
+  if (selectedCollection !== 'all' && !Number(liveCollectionCounts[selectedCollection] || 0)) {
+    selectedCollection = 'all';
+  }
   renderCollectionTabs();
 }
 
@@ -1206,7 +1218,8 @@ async function proxyEmbed(text) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ prompt: text.substring(0, 1000) }),
   });
-  const d = await r.json();
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok || !Array.isArray(d.embedding)) throw new Error(d.error || `Embedding unavailable (${r.status})`);
   return d.embedding;
 }
 
@@ -1216,7 +1229,8 @@ async function proxySearch(collection, vector, limit = 10) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ collection, vector, limit }),
   });
-  const d = await r.json();
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok || !Array.isArray(d.result)) throw new Error(d.error || `Collection search unavailable (${r.status})`);
   return d.result || [];
 }
 
@@ -1243,14 +1257,28 @@ async function proxyCuratorSearch(query, limit = 20, collection = '') {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ query, limit, ...(collection ? { collection } : {}) }),
   });
-  const d = await r.json();
+  const d = await r.json().catch(() => ({}));
   if (!r.ok || !d.ok) throw new Error(d.error || 'Collection search unavailable');
   return d.results || [];
 }
 
 async function searchSelectedCollection(query, limit = 20) {
   const collection = selectedCollection === 'all' ? '' : selectedCollection;
-  return proxyCuratorSearch(query, limit, collection);
+  if (!collection) return proxyCuratorSearch(query, limit);
+
+  const curatorResults = await proxyCuratorSearch(query, limit, collection);
+  if (curatorResults.length) return curatorResults;
+
+  const vector = await proxyEmbed(query);
+  const directResults = await proxySearch(collection, vector, limit);
+  return directResults.map((result) => ({
+    ...result,
+    payload: {
+      ...(result.payload || {}),
+      _source_collection: result.payload?._source_collection || collection,
+      _source_id: result.payload?._source_id || result.id || ''
+    }
+  }));
 }
 
 async function proxyCuratorConverse(message, history = []) {
@@ -1263,9 +1291,9 @@ async function proxyCuratorConverse(message, history = []) {
       body: JSON.stringify({ message, history }),
       signal: controller.signal,
     });
-    const d = await r.json();
+    const d = await r.json().catch(() => ({}));
     if (!r.ok || !d.ok) {
-      throw new Error(d.error || 'Curator mode unavailable');
+      throw new Error(d.error || `Curator mode unavailable (${r.status})`);
     }
     return d;
   } finally {
@@ -1279,6 +1307,7 @@ let latestSearchQuery = '';
 let latestSearchResults = [];
 let latestSearchWasCapped = false;
 let curatorHistory = [];
+let curatorConversationBusy = false;
 let curatorLens = 'curatorial';
 let searchRequestId = 0;
 const CURATOR_SEARCH_LIMIT = 50;
@@ -1564,14 +1593,19 @@ function stopDemoSpeech() {
 async function askDemoConversation(question) {
   const cleanQuestion = String(question || '').trim();
   if (!cleanQuestion) return;
+  if (demoConversationBusy) return;
   if (!backendLive) {
     updateDemoVoiceUI('ARCHAI is offline. Collection browsing remains available when the backend reconnects.', 'error');
     return;
   }
+  demoConversationBusy = true;
   const input = document.getElementById('demoConversationInput');
   const messages = document.getElementById('demoConversationMessages');
   const askButton = document.getElementById('demoConversationAsk');
-  if (!messages) return;
+  if (!messages) {
+    demoConversationBusy = false;
+    return;
+  }
   if (input) input.value = '';
   if (askButton) askButton.disabled = true;
   messages.innerHTML += '<div class="chat-msg user">' + esc(cleanQuestion) + '</div>';
@@ -1580,9 +1614,8 @@ async function askDemoConversation(question) {
   const lensMeta = getCurrentCuratorLensMeta();
   const contextualQuestion = 'Use the ' + lensMeta.label + ' lens. ' + lensMeta.instruction + ' Question: ' + cleanQuestion;
   try {
-    const reply = await proxyCuratorConverse(contextualQuestion, demoConversationHistory.slice(-6));
-    demoConversationHistory.push({ role: 'user', content: cleanQuestion });
-    demoConversationHistory.push({ role: 'assistant', content: reply.message });
+    const reply = await proxyCuratorConverse(contextualQuestion, safeConversationHistory(demoConversationHistory, 6));
+    rememberConversationTurn(demoConversationHistory, cleanQuestion, reply.message || '');
     demoLastReply = reply.message || '';
     const pending = document.getElementById('pendingDemoConversationMsg');
     if (pending) {
@@ -1590,14 +1623,15 @@ async function askDemoConversation(question) {
       pending.innerHTML = formatAssistantText(demoLastReply) + renderCuratorSources(reply.objects || []);
     }
     updateDemoVoiceUI('Reply ready. Read it on screen or choose Read reply.');
-  } catch {
+  } catch (error) {
     const pending = document.getElementById('pendingDemoConversationMsg');
     if (pending) {
       pending.id = '';
-      pending.textContent = 'ARCHAI could not review the collection right now. Try again in a moment or use Search Collections.';
+      pending.textContent = 'ARCHAI could not review the collection right now. ' + (error?.message || 'Try again in a moment or use Search Collections.');
     }
     updateDemoVoiceUI('The conversational service did not respond. Search remains available.', 'error');
   } finally {
+    demoConversationBusy = false;
     if (askButton) askButton.disabled = false;
     messages.scrollTop = messages.scrollHeight;
   }
@@ -1605,7 +1639,7 @@ async function askDemoConversation(question) {
 
 function esc(str) {
   const d = document.createElement('div');
-  d.textContent = typeof str === 'string' ? str : '';
+  d.textContent = str == null ? '' : String(str);
   return d.innerHTML;
 }
 
@@ -1614,6 +1648,36 @@ function formatAssistantText(value) {
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/\n\n/g, '<br><br>')
     .replace(/\n/g, '<br>');
+}
+
+const HISTORY_USER_LIMIT = 700;
+const HISTORY_ASSISTANT_LIMIT = 900;
+const HISTORY_MAX_ITEMS = 8;
+
+function compactHistoryText(value, limit = HISTORY_ASSISTANT_LIMIT) {
+  return String(value || '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, limit);
+}
+
+function safeConversationHistory(history = [], maxItems = 6) {
+  return (Array.isArray(history) ? history : [])
+    .slice(-maxItems)
+    .map((item) => ({
+      role: item?.role === 'assistant' ? 'assistant' : 'user',
+      content: compactHistoryText(
+        item?.content,
+        item?.role === 'assistant' ? HISTORY_ASSISTANT_LIMIT : HISTORY_USER_LIMIT
+      )
+    }))
+    .filter((item) => item.content);
+}
+
+function rememberConversationTurn(history, userContent, assistantContent) {
+  history.push({ role: 'user', content: compactHistoryText(userContent, HISTORY_USER_LIMIT) });
+  history.push({ role: 'assistant', content: compactHistoryText(assistantContent, HISTORY_ASSISTANT_LIMIT) });
+  while (history.length > HISTORY_MAX_ITEMS) history.shift();
 }
 
 const SEARCH_STOPWORDS = new Set([
@@ -2114,14 +2178,20 @@ document.getElementById('demoVoiceRead').addEventListener('click', readDemoReply
 document.getElementById('demoVoiceSilence').addEventListener('click', stopDemoSpeech);
 
 async function askCollection(question) {
-  if (!question || !latestSearchQuery) return;
+  const cleanQuestion = String(question || '').trim();
+  if (!cleanQuestion || !latestSearchQuery) return;
+  if (curatorConversationBusy) return;
+  curatorConversationBusy = true;
   const input = document.getElementById('curatorInput');
   if (input) input.value = '';
 
   const msgs = document.getElementById('curatorMessages');
-  if (!msgs) return;
+  if (!msgs) {
+    curatorConversationBusy = false;
+    return;
+  }
 
-  msgs.innerHTML += '<div class="chat-msg user">' + esc(question) + '</div>';
+  msgs.innerHTML += '<div class="chat-msg user">' + esc(cleanQuestion) + '</div>';
   const thinkingPhrases = ['Tracing connections', 'Reviewing the collection', 'Looking across institutions', 'Following the semantic thread', 'Preparing a curatorial reading'];
   msgs.innerHTML += '<div class="chat-msg assistant" id="pendingCuratorMsg"><div class="thinking-alive"><div class="thinking-label">' + thinkingPhrases[0] + '</div><div class="thinking-dots"><span></span><span></span><span></span></div></div></div>';
   msgs.scrollTop = msgs.scrollHeight;
@@ -2138,13 +2208,12 @@ async function askCollection(question) {
     'Search: "' + latestSearchQuery + '". ' +
     'Use the ' + lensMeta.label + ' lens. ' +
     lensMeta.instruction + ' ' +
-    'Question: ' + question;
+    'Question: ' + cleanQuestion;
 
   try {
-    const reply = await proxyCuratorConverse(contextualQuestion, curatorHistory.slice(-4));
+    const reply = await proxyCuratorConverse(contextualQuestion, safeConversationHistory(curatorHistory, 4));
     clearInterval(thinkInterval);
-    curatorHistory.push({ role: 'user', content: question });
-    curatorHistory.push({ role: 'assistant', content: reply.message });
+    rememberConversationTurn(curatorHistory, cleanQuestion, reply.message || '');
 
     const pending = document.getElementById('pendingCuratorMsg');
     if (pending) {
@@ -2160,11 +2229,13 @@ async function askCollection(question) {
     }
   }
 
+  curatorConversationBusy = false;
   msgs.scrollTop = msgs.scrollHeight;
 }
 
 // ── Object detail ───────────────────────────────────────────────
 let chatHistory = [];
+let objectConversationBusy = false;
 let currentPayload = null;
 let chatTone = 'curatorial';
 
@@ -2221,7 +2292,7 @@ function buildSystemPrompt(payload) {
   const institution = getCollectionMeta(col).institution;
   const metadataBlock = Object.entries(payload)
     .filter(([k]) => !k.startsWith('_'))
-    .map(([k, v]) => k + ': ' + v)
+    .map(([k, v]) => k + ': ' + formatMetadataValue(v))
     .join('\n');
 
   const toneInstruction = {
@@ -2303,7 +2374,12 @@ function openImageInNewTab() {
 }
 
 function openObject(payloadStr) {
-  const p = JSON.parse(payloadStr);
+  let p = {};
+  try {
+    p = JSON.parse(payloadStr);
+  } catch {
+    return;
+  }
   currentPayload = p;
   chatHistory = [];
   if (CHAT_TONES[curatorLens]) chatTone = curatorLens;
@@ -2322,7 +2398,7 @@ function openObject(payloadStr) {
   const rights = getObjectRightsInfo(p);
 
   let html = '';
-  if (img) html += '<img class="obj-hero-img" src="' + img + '" alt="' + title.replace(/"/g,'') + '" onload="archaiHeroImageLoad(this)" onerror="archaiHeroImageError(this)">';
+  if (img) html += '<img class="obj-hero-img" src="' + esc(img) + '" alt="' + esc(title) + '" onload="archaiHeroImageLoad(this)" onerror="archaiHeroImageError(this)">';
   const iiifImage = p.media_large || p.media_medium || img;
   if (iiifImage) {
     html += '<div class="obj-image-actions">';
@@ -2330,18 +2406,18 @@ function openObject(payloadStr) {
     if (p.media_iiif_available || p.media_iiif_info_url) html += '<button onclick="openImageInNewTab()">Look closer</button>';
     html += '</div>';
   }
-  html += '<h2 class="obj-title">' + title + '</h2>';
-  if (maker) html += '<div class="obj-maker">' + maker + (date ? ' · ' + date : '') + '</div>';
+  html += '<h2 class="obj-title">' + esc(title) + '</h2>';
+  if (maker) html += '<div class="obj-maker">' + esc(maker) + (date ? ' · ' + esc(date) : '') + '</div>';
 
   html += '<div class="obj-meta-grid">';
-  if (type) html += '<div class="obj-meta-item"><div class="om-label">Type</div><div class="om-value">' + type + '</div></div>';
-  if (materials) html += '<div class="obj-meta-item"><div class="om-label">Materials</div><div class="om-value">' + materials + '</div></div>';
-  if (location) html += '<div class="obj-meta-item"><div class="om-label">Location</div><div class="om-value">' + location + '</div></div>';
-  if (reg) html += '<div class="obj-meta-item"><div class="om-label">Registration</div><div class="om-value">' + reg + '</div></div>';
-  html += '<div class="obj-meta-item"><div class="om-label">Institution</div><div class="om-value">' + institution + '</div></div>';
+  if (type) html += '<div class="obj-meta-item"><div class="om-label">Type</div><div class="om-value">' + esc(type) + '</div></div>';
+  if (materials) html += '<div class="obj-meta-item"><div class="om-label">Materials</div><div class="om-value">' + esc(materials) + '</div></div>';
+  if (location) html += '<div class="obj-meta-item"><div class="om-label">Location</div><div class="om-value">' + esc(location) + '</div></div>';
+  if (reg) html += '<div class="obj-meta-item"><div class="om-label">Registration</div><div class="om-value">' + esc(reg) + '</div></div>';
+  html += '<div class="obj-meta-item"><div class="om-label">Institution</div><div class="om-value">' + esc(institution) + '</div></div>';
   html += '</div>';
 
-  if (desc) html += '<div class="obj-desc">' + desc.substring(0, 600) + (desc.length > 600 ? '...' : '') + '</div>';
+  if (desc) html += '<div class="obj-desc">' + esc(desc.substring(0, 600)) + (desc.length > 600 ? '...' : '') + '</div>';
 
   html += '<div class="obj-staff-actions">';
   html += '<button onclick="shareDemoObject()">Share / copy</button>';
@@ -2522,12 +2598,19 @@ function readDemoObjectSummary() {
 }
 
 async function askObject(question) {
-  if (!question || !currentPayload) return;
+  const cleanQuestion = String(question || '').trim();
+  if (!cleanQuestion || !currentPayload) return;
+  if (objectConversationBusy) return;
+  objectConversationBusy = true;
   const input = document.getElementById('chatInput');
   if (input) input.value = '';
 
   const msgs = document.getElementById('chatMessages');
-  msgs.innerHTML += '<div class="chat-msg user">' + question + '</div>';
+  if (!msgs) {
+    objectConversationBusy = false;
+    return;
+  }
+  msgs.innerHTML += '<div class="chat-msg user">' + esc(cleanQuestion) + '</div>';
   const thinkingPhrases = ['Considering your question', 'Consulting my record', 'Searching my memory', 'Gathering my thoughts', 'Recalling what I know'];
   msgs.innerHTML += '<div class="chat-msg assistant" id="pendingMsg"><div class="thinking-alive"><div class="thinking-label">' + thinkingPhrases[0] + '</div><div class="thinking-dots"><span></span><span></span><span></span></div></div></div>';
   msgs.scrollTop = msgs.scrollHeight;
@@ -2543,10 +2626,9 @@ async function askObject(question) {
   const systemPrompt = buildSystemPrompt(p);
 
   try {
-    const reply = await proxyChat(systemPrompt, question, chatHistory.slice(-6));
+    const reply = await proxyChat(systemPrompt, cleanQuestion, safeConversationHistory(chatHistory, 6));
     clearInterval(_thinkInterval);
-    chatHistory.push({ role: 'user', content: question });
-    chatHistory.push({ role: 'assistant', content: reply });
+    rememberConversationTurn(chatHistory, cleanQuestion, reply);
 
     const pending = document.getElementById('pendingMsg');
     if (pending) { pending.id = ''; pending.innerHTML = formatAssistantText(reply); }
@@ -2555,6 +2637,7 @@ async function askObject(question) {
     const pending = document.getElementById('pendingMsg');
     if (pending) { pending.id = ''; pending.innerHTML = 'Sorry, I could not respond right now.'; }
   }
+  objectConversationBusy = false;
   msgs.scrollTop = msgs.scrollHeight;
 }
 
