@@ -239,6 +239,7 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
   gap:10px;
+  align-items:start;
 }
 .curator-source{
   border:1px solid rgba(232,228,220,0.08);
@@ -259,6 +260,30 @@ section{padding:100px 0;border-top:1px solid var(--rule)}
   background:rgba(232,228,220,0.02);
   border-bottom:1px solid rgba(232,228,220,0.08);
   overflow:hidden;
+}
+.curator-source-media.no-media{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+  padding:16px;
+  text-align:center;
+  background:linear-gradient(135deg,rgba(200,169,110,0.035),rgba(143,188,176,0.02));
+}
+.curator-source-media.no-media span{
+  font-family:var(--mono);
+  font-size:18px;
+  letter-spacing:0.08em;
+  color:rgba(200,169,110,0.48);
+}
+.curator-source-media.no-media small{
+  font-family:var(--mono);
+  font-size:8px;
+  line-height:1.5;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:rgba(232,228,220,0.42);
 }
 .curator-source-media img{
   width:100%;
@@ -1929,6 +1954,13 @@ function dedupeCuratorObjects(objects = []) {
   return deduped;
 }
 
+function curatorSourceMediaStatus(payload = {}) {
+  if (payload.media_placeholder === true) return 'Source placeholder withheld';
+  if (payload.media_available === false) return 'Image unavailable';
+  if (payload.media_public_display_allowed === false) return 'Image rights held';
+  return 'Metadata-only record';
+}
+
 function renderCuratorSources(objects = [], label = 'Objects informing this response') {
   const deduped = dedupeCuratorObjects(objects);
   if (!deduped.length) return '';
@@ -1939,6 +1971,8 @@ function renderCuratorSources(objects = [], label = 'Objects informing this resp
     const payload = findSearchPayload(obj) || obj;
     const title = obj.title || obj.object_name || payload.title || payload.object_name || 'Untitled';
     const image = (pickImage(payload)) || obj.image || '';
+    const collection = payload._source_collection || obj._source_collection || obj.collection || 'archai_pilot';
+    const collectionMeta = getCollectionMeta(collection);
     const institution = obj.institution || (payload._source_collection ? getCollectionMeta(payload._source_collection).institution : '');
     const date = obj.date || payload.date || payload.date_display || payload.production_date || '';
     const registration = obj.registration || obj.registration_number || obj.accession_number || payload.registration_number || payload.accession_number || '';
@@ -1947,6 +1981,8 @@ function renderCuratorSources(objects = [], label = 'Objects informing this resp
     html += '<div class="curator-source clickable" onclick="openObject(decodeURIComponent(this.dataset.payload))" data-payload="' + encoded + '">';
     if (image) {
       html += '<div class="curator-source-media"><img src="' + esc(image) + '" alt="' + esc(title) + '" loading="lazy" onload="archaiHeroImageLoad(this)" onerror="archaiHeroImageError(this)"></div>';
+    } else {
+      html += '<div class="curator-source-media no-media"><span>' + esc(collectionMeta.short) + '</span><small>' + esc(curatorSourceMediaStatus(payload)) + '</small></div>';
     }
     html += '<div class="curator-source-body">';
     html += '<div class="curator-source-title">' + esc(title) + '</div>';
