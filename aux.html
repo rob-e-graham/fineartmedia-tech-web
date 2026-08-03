@@ -34,7 +34,9 @@ html{font-size:16px;scroll-behavior:smooth}
 body{background:var(--bg);color:var(--fg);font-family:var(--sans);min-height:100dvh;overflow-x:hidden;line-height:1.6}
 
 /* ─── Header ─── */
-header{text-align:center;padding:4rem 1.5rem 2rem;border-bottom:1px solid var(--rule)}
+header{position:relative;text-align:center;padding:4rem 1.5rem 2rem;border-bottom:1px solid var(--rule)}
+.aux-back{position:absolute;top:1.25rem;left:1.5rem;font-family:var(--mono);font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color 0.2s}
+.aux-back:hover{color:var(--fg)}
 .logo{font-family:var(--mono);font-size:2.5rem;font-weight:500;letter-spacing:0.15em;color:var(--gold)}
 .logo span{color:var(--dim);font-weight:400}
 .subtitle{font-family:var(--serif);font-size:0.95rem;color:var(--dim);margin-top:0.5rem;font-style:italic}
@@ -81,7 +83,8 @@ footer a{color:var(--gold);text-decoration:none}
 <body>
 
 <header>
-  <div class="logo">AUX<span>.IO</span></div>
+  <a class="aux-back" href="/">&#8592; FAMTEC</a>
+  <div class="logo">AUX<span>IO</span></div>
   <div class="subtitle">Talk to museum objects</div>
   <div class="expansion">Archai User eXperience — data In, data Out</div>
 </header>
