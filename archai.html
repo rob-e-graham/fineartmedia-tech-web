@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ARCHAI — Sovereign Semantic Heritage AI</title>
-<meta name="description" content="ARCHAI is sovereign semantic infrastructure for cultural heritage: a 24-source research network with 3,147 indexed pilot records across museum, heritage, public-art, library, archive, and open-knowledge sources.">
+<meta name="description" content="ARCHAI is sovereign semantic infrastructure for cultural heritage: a 25-source research network with 3,147 indexed pilot records across museum, heritage, public-art, library, archive, and open-knowledge sources.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="shortcut icon" href="favicon.ico">
@@ -102,6 +102,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 .coll-loc::before{background:var(--rijks-blue)}
 .coll-wiki::before{background:var(--gold)}
 .coll-trove::before{background:var(--teal)}
+.coll-acmi::before{background:#5ab6c4}
 .coll-dpla::before{background:var(--met-red)}
 .coll-archive::before{background:var(--fg)}
 .hero-status{position:relative;z-index:20;width:280px;flex-shrink:0;padding:14px 16px;border:1px solid rgba(200,169,110,0.12);background:rgba(8,8,8,0.56);backdrop-filter:blur(8px);align-self:flex-end}
@@ -697,11 +698,12 @@ footer a:hover{color:var(--fg)}
     <div class="hero-tag">Sovereign Semantic Heritage AI</div>
     <h1 class="hero-title">ARCHAI</h1>
     <p class="hero-subtitle">Search, compare, and interpret cultural records through a sovereign semantic layer that sits above existing CMS, DAMS, and archival systems. ARCHAI respects institutional structure while making collection knowledge more accessible for curators, staff, researchers, and visitors; AUXIO carries rights-aware interpretation into galleries, maps, and mobile access.</p>
-    <p class="hero-demo-note"><strong>Public research demo:</strong> ARCHAI is framed as a 24-source research network. The current indexed pilot contains 3,147 staff-searchable records across museum, heritage, public-art, library, archive, and open-knowledge sources, including municipal public-art material for murals, street art, civic commissions, and social-practice records. Library of Congress, Wikimedia Commons / Wikidata, Trove / National Library of Australia, Digital Public Library of America, and Internet Archive extend the network into library, archive, civic-memory, open-media, and linked-data context. This website presents a simplified, image-first interface; the full ARCHAI app also works with metadata-only and rights-held records, alongside curatorial, collections, accessibility, infrastructure, and publishing workflows.</p>
+    <p class="hero-demo-note"><strong>Public research demo:</strong> ARCHAI is framed as a 25-source research network. The current indexed pilot contains 3,147 staff-searchable records across museum, heritage, public-art, library, archive, and open-knowledge sources, including municipal public-art material for murals, street art, civic commissions, and social-practice records. Library of Congress, Wikimedia Commons / Wikidata, Trove / National Library of Australia, Digital Public Library of America, and Internet Archive extend the network into library, archive, civic-memory, open-media, and linked-data context. This website presents a simplified, image-first interface; the full ARCHAI app also works with metadata-only and rights-held records, alongside curatorial, collections, accessibility, infrastructure, and publishing workflows.</p>
     <div class="hero-sources">
-      <div class="hero-sources-label">24-source research network · public/open records do not imply institutional endorsement</div>
+      <div class="hero-sources-label">25-source research network · public/open records do not imply institutional endorsement</div>
       <div class="hero-collections">
         <span class="coll coll-mv">Museums Victoria</span>
+        <span class="coll coll-acmi">ACMI — Australian Centre for the Moving Image</span>
         <span class="coll coll-met">The Metropolitan Museum of Art</span>
         <span class="coll coll-va">Victoria and Albert Museum</span>
         <span class="coll coll-aic">Art Institute of Chicago</span>
@@ -866,7 +868,7 @@ footer a:hover{color:var(--fg)}
           <p>Developed as part of doctoral research at RMIT University, School of Design. The research paper was accepted for the 6th Summit on New Media Art Archiving (ISEA2026 Dubai).</p>
           <div class="rights-note">
             <h4>Sources &amp; Rights</h4>
-            <p>ARCHAI is presented as a 24-source research network spanning indexed live sources and onboarding connectors. The staff layer currently contains 3,147 indexed records; the public AUXIO layer publishes 1,402 image-backed pages that passed the current availability and rights gates. Every object retains its source, attribution, and legal status. Institutional or platform inclusion does not imply partnership or endorsement.</p>
+            <p>ARCHAI is presented as a 25-source research network spanning indexed live sources and onboarding connectors. The staff layer currently contains 3,147 indexed records; the public AUXIO layer publishes 1,402 image-backed pages that passed the current availability and rights gates. Every object retains its source, attribution, and legal status. Institutional or platform inclusion does not imply partnership or endorsement.</p>
           </div>
         </div>
         <div class="rv">
@@ -881,7 +883,7 @@ footer a:hover{color:var(--fg)}
             <li>Five-layer hallucination prevention</li>
             <li>AI-moderated visitor comments</li>
             <li>Conversational collection search</li>
-            <li>24-source network · 3,147 indexed records</li>
+            <li>25-source network · 3,147 indexed records</li>
             <li>1,402 rights-gated AUXIO visitor pages</li>
             <li>Designed QR poster, access sticker &amp; visitor postcard outputs on 440 cleared records</li>
             <li>SQLite persistent storage</li>
@@ -978,7 +980,7 @@ footer a:hover{color:var(--fg)}
 <footer>
   <p>ARCHAI &copy; 2026 Rob Graham / <a href="/">FAMTEC</a> — All rights reserved</p>
   <p>Research prototype · open to funded pilots and testing partners · <a href="https://github.com/rob-e-graham/archai" target="_blank">GitHub</a></p>
-  <p>24-source research network · 3,147 indexed records · 1,402 rights-gated AUXIO pages · source inclusion does not imply endorsement.</p>
+  <p>25-source research network · 3,147 indexed records · 1,402 rights-gated AUXIO pages · source inclusion does not imply endorsement.</p>
 </footer>
 
 <script>
@@ -1017,7 +1019,8 @@ const COLLECTION_META = {
   archai_internetarchive: { short: 'IA', className: 'src-aic', institution: 'Internet Archive' },
   archai_loc: { short: 'LoC', className: 'src-va', institution: 'Library of Congress' },
   archai_dpla: { short: 'DPLA', className: 'src-eu', institution: 'Digital Public Library of America' },
-  archai_trove: { short: 'Trove', className: 'src-cma', institution: 'Trove / National Library of Australia' }
+  archai_trove: { short: 'Trove', className: 'src-cma', institution: 'Trove / National Library of Australia' },
+  archai_acmi: { short: 'ACMI', className: 'src-tp', institution: 'ACMI — Australian Centre for the Moving Image' }
 };
 
 const PUBLIC_DEMO_HELD_COLLECTIONS = new Set([

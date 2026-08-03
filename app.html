@@ -2573,7 +2573,8 @@ const COLLECTIONS = [
   'archai_mplus', 'archai_brasiliana', 'archai_smithsonian', 'archai_tate',
   'archai_streetart', 'archai_getty', 'archai_wellcome', 'archai_qagoma', 'archai_rawg',
   'archai_nga',
-  'archai_wikimedia', 'archai_internetarchive', 'archai_loc', 'archai_dpla', 'archai_trove'
+  'archai_wikimedia', 'archai_internetarchive', 'archai_loc', 'archai_dpla', 'archai_trove',
+  'archai_acmi'
 ];
 const COLLECTION_LABELS = {
   archai_pilot: { name: 'Museums Victoria', short: 'MV', colour: 'rgba(143,188,176,0.7)', border: 'rgba(143,188,176,0.3)' },
@@ -2599,7 +2600,8 @@ const COLLECTION_LABELS = {
   archai_internetarchive: { name: 'Internet Archive', short: 'IA', colour: 'rgba(200,140,110,0.84)', border: 'rgba(200,140,110,0.34)' },
   archai_loc: { name: 'Library of Congress', short: 'LoC', colour: 'rgba(140,160,200,0.84)', border: 'rgba(140,160,200,0.34)' },
   archai_dpla: { name: 'Digital Public Library of America', short: 'DPLA', colour: 'rgba(120,190,190,0.84)', border: 'rgba(120,190,190,0.34)' },
-  archai_trove: { name: 'Trove · NLA', short: 'Trove', colour: 'rgba(196,150,120,0.84)', border: 'rgba(196,150,120,0.34)' }
+  archai_trove: { name: 'Trove · NLA', short: 'Trove', colour: 'rgba(196,150,120,0.84)', border: 'rgba(196,150,120,0.34)' },
+  archai_acmi: { name: 'ACMI, Melbourne', short: 'ACMI', colour: 'rgba(88,182,196,0.84)', border: 'rgba(88,182,196,0.34)' }
 };
 
 function getCollectionLabel(col) {
@@ -5027,7 +5029,8 @@ function buildVocabIndex() {
     archai_internetarchive: 'Internet Archive',
     archai_loc: 'Library of Congress',
     archai_dpla: 'Digital Public Library of America',
-    archai_trove: 'Trove · NLA'
+    archai_trove: 'Trove · NLA',
+    archai_acmi: 'ACMI, Melbourne'
   };
 
   for (const [key, obj] of Object.entries(OBJECTS)) {
