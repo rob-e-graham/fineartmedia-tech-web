@@ -76,10 +76,12 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
 .v-response:empty{display:none}
 .v-response .who{display:block;font-family:var(--mono);font-size:.5rem;letter-spacing:1.6px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
 .v-response .grounded{display:block;font-family:var(--mono);font-size:.46rem;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-top:12px}
-.v-thinking{font-family:var(--mono);font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent2)}
-.v-thinking .dot{animation:blink 1.4s infinite both}
-.v-thinking .dot:nth-child(2){animation-delay:.2s}.v-thinking .dot:nth-child(3){animation-delay:.4s}
-@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+.v-thinking{display:flex;align-items:center;gap:11px;font-family:var(--mono);font-size:.56rem;letter-spacing:1.6px;text-transform:uppercase;color:var(--accent2)}
+.v-thinking-dots{display:inline-flex;gap:5px;flex-shrink:0}
+.v-thinking-dots span{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block;animation:vdot 1.25s infinite ease-in-out both}
+.v-thinking-dots span:nth-child(1){animation-delay:-.26s}
+.v-thinking-dots span:nth-child(2){animation-delay:-.13s}
+@keyframes vdot{0%,80%,100%{transform:scale(.45);opacity:.35}40%{transform:scale(1);opacity:1}}
 .v-readrow{display:flex;gap:8px;align-items:center;margin-top:12px}
 .v-readbtn{font-family:var(--mono);font-size:.5rem;letter-spacing:1.2px;text-transform:uppercase;background:transparent;border:1px solid var(--border2);color:var(--text2);padding:6px 11px;border-radius:100px;cursor:pointer;display:inline-flex;gap:6px;align-items:center;transition:all .15s}
 .v-readbtn:hover{border-color:var(--accent);color:var(--text)}
@@ -362,10 +364,21 @@ function render(lens){
   [...tonesEl.children].forEach(b=>b.classList.toggle('active',b.dataset.lens===lens));
 }
 
+let thinkingTimer=null;
+const THINKING_PHRASES=['Consulting Heide’s record','Reviewing the object file','Finding the clearest answer','Looking through the details'];
 function showThinking(){
-  respEl.innerHTML='<span class="v-thinking">Consulting Heide’s record<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></span>';
+  respEl.innerHTML='<span class="v-thinking"><span class="thinking-label">'+THINKING_PHRASES[0]+'</span><span class="v-thinking-dots"><span></span><span></span><span></span></span></span>';
+  let i=0;
+  clearInterval(thinkingTimer);
+  thinkingTimer=setInterval(()=>{
+    i=(i+1)%THINKING_PHRASES.length;
+    const el=respEl.querySelector('.thinking-label');
+    if(el) el.textContent=THINKING_PHRASES[i]; else clearInterval(thinkingTimer);
+  },2100);
 }
+function clearThinking(){ clearInterval(thinkingTimer); thinkingTimer=null; }
 function renderAnswer(text, live){
+  clearThinking();
   lastReply=text;
   const tag = live
     ? '✓ Live · grounded in Heide’s record · qwen2.5, on Heide-controlled hardware'
