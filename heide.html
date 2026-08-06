@@ -118,6 +118,13 @@ details.v-panel summary::-webkit-details-marker{display:none}
 .v-comment-btn:active{background:var(--accent);color:#12140d}
 .v-note{font-family:var(--serif);font-size:.95rem;font-style:italic;color:var(--text2);line-height:1.5;margin-top:10px}
 
+/* SHARE / SAVE */
+.v-share{display:flex;flex-wrap:wrap;gap:8px}
+.v-share-btn{flex:1 1 auto;min-width:calc(50% - 4px);display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--mono);font-size:.56rem;letter-spacing:1px;text-transform:uppercase;background:var(--bg);border:1px solid var(--border2);color:var(--text2);padding:11px 12px;border-radius:3px;cursor:pointer;transition:all .15s}
+.v-share-btn:hover{border-color:var(--accent);color:var(--text)}
+.v-share-icon{font-size:.92rem;line-height:1}
+.v-share-note{font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--text3);margin-top:12px;line-height:1.45}
+
 /* GOVERNANCE */
 .v-gov{border:1px solid var(--border2);border-left:2px solid var(--brick);border-radius:3px;padding:14px 16px;margin:4px 0 12px;background:var(--surface)}
 .v-gov .t{font-family:var(--mono);font-size:.5rem;letter-spacing:1.6px;text-transform:uppercase;color:var(--brick);margin-bottom:8px}
@@ -253,6 +260,19 @@ details.v-panel summary::-webkit-details-marker{display:none}
         <textarea class="v-comment-input" id="commentInput" placeholder="What did the Cottage make you think or feel?"></textarea>
         <button class="v-comment-btn" onclick="fakeSubmit()">Submit response</button>
         <div class="v-note" id="commentNote"></div>
+      </div>
+    </details>
+
+    <details class="v-panel">
+      <summary><span class="v-panel-title">Share / save</span><span class="v-panel-hint">Links &amp; downloads</span></summary>
+      <div class="v-panel-body">
+        <div class="v-share">
+          <button class="v-share-btn" id="shareNativeBtn" onclick="shareNative()"><span class="v-share-icon">↗</span> Share</button>
+          <button class="v-share-btn" onclick="shareEmail()"><span class="v-share-icon">✉</span> Email</button>
+          <button class="v-share-btn" onclick="copyLink(this)"><span class="v-share-icon">⎘</span> Copy link</button>
+          <button class="v-share-btn" onclick="shareX()"><span class="v-share-icon">𝕏</span> Post</button>
+        </div>
+        <div class="v-share-note">On a phone, Share also lets you save this page to Files or add it to your home screen.</div>
       </div>
     </details>
 
@@ -452,6 +472,29 @@ function fakeSubmit(){
   document.getElementById('commentInput').value='';
   document.getElementById('commentNote').textContent='Thank you. In a live pilot your note would go to Heide for review, then, if approved, join the object record with attribution. A memory left today becomes a primary source decades from now.';
 }
+
+// ── SHARE / SAVE ───────────────────────────────────────────────────
+const PAGE_URL = window.location.href;
+const SHARE_TITLE = 'Heide I — The Cottage · ARCHAI';
+const SHARE_TEXT = 'Heide I, the Cottage — talk to the place where Australian modernism began, in four voices. An ARCHAI × Heide concept.';
+function shareNative(){
+  if(navigator.share){ navigator.share({title:SHARE_TITLE,text:SHARE_TEXT,url:PAGE_URL}).catch(()=>{}); }
+  else { copyLink(document.getElementById('shareNativeBtn')); }
+}
+function shareEmail(){
+  const s=encodeURIComponent(SHARE_TITLE);
+  const b=encodeURIComponent(SHARE_TEXT+'\n\n'+PAGE_URL);
+  window.location.href='mailto:?subject='+s+'&body='+b;
+}
+function copyLink(btn){
+  const flash=()=>{ if(btn){const o=btn.innerHTML;btn.innerHTML='<span class="v-share-icon">✓</span> Copied';setTimeout(()=>{btn.innerHTML=o;},1600);} };
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(PAGE_URL).then(flash).catch(()=>prompt('Copy this link:',PAGE_URL)); }
+  else { prompt('Copy this link:',PAGE_URL); }
+}
+function shareX(){
+  window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(SHARE_TEXT)+'&url='+encodeURIComponent(PAGE_URL),'_blank','noopener');
+}
+
 render('guide');
 </script>
 </body>
