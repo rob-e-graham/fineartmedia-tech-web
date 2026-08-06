@@ -212,32 +212,6 @@ details.v-panel summary::-webkit-details-marker{display:none}
 
     <div class="v-divider"></div>
 
-    <div class="v-map">
-      <div class="v-map-label">◎ Where you are</div>
-      <div class="v-map-frame">
-        <svg viewBox="0 0 400 250" role="img" aria-label="Indicative map of the Heide Cottage Loop">
-          <path class="map-river" d="M8 40 Q 120 18 210 34 T 392 30"/>
-          <text x="12" y="30" style="fill:rgba(120,150,150,.7);font-family:ui-monospace,monospace" font-size="7" letter-spacing="1">BIRRARUNG</text>
-          <path class="map-loop" d="M70 62 L135 96 L210 146 L300 92 L330 150 L300 205 L226 212 L210 146"/>
-          <g class="map-node" data-key="heide3" onclick="setLocation('heide3')"><circle cx="70" cy="62" r="5"/><text x="70" y="52" text-anchor="middle">GALLERIES</text></g>
-          <g class="map-node" data-key="heide2" onclick="setLocation('heide2')"><circle cx="135" cy="96" r="5"/><text x="135" y="86" text-anchor="middle">HEIDE II</text></g>
-          <g class="map-node" data-key="sculpture" onclick="setLocation('sculpture')"><circle cx="210" cy="146" r="5"/><text x="210" y="163" text-anchor="middle">SCULPTURE PARK</text></g>
-          <g class="map-node" data-key="cottage" onclick="setLocation('cottage')"><circle cx="300" cy="92" r="5.5"/><text x="300" y="80" text-anchor="middle">THE COTTAGE</text></g>
-          <g class="map-node" data-key="garden" onclick="setLocation('garden')"><circle cx="330" cy="150" r="5"/><text x="330" y="140" text-anchor="middle">KITCHEN GARDEN</text></g>
-          <g class="map-node" data-key="orchard" onclick="setLocation('orchard')"><circle cx="300" cy="205" r="5"/><text x="300" y="223" text-anchor="middle">ORCHARD</text></g>
-          <g class="map-node" data-key="yingabeal" onclick="setLocation('yingabeal')"><circle cx="226" cy="212" r="5"/><text x="222" y="229" text-anchor="middle">YINGABEAL</text></g>
-          <g id="hereMarker" transform="translate(300,92)" style="pointer-events:none">
-            <circle class="map-here-ring" r="5"><animate attributeName="r" values="5;14" dur="1.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.9;0" dur="1.8s" repeatCount="indefinite"/></circle>
-            <circle class="map-here-dot" r="3.4"/>
-          </g>
-        </svg>
-      </div>
-      <div class="v-here-label" id="hereLabel">You are here · Heide I — The Cottage</div>
-      <div class="v-map-note">Tap a marker as you explore and the map keeps up with you. Talk to whatever you're standing in front of, in your own language, and it will tell you what's nearby and where to head next. (Indicative map, not to scale.)</div>
-    </div>
-
-    <div class="v-divider"></div>
-
     <div class="v-ask-label">Ask this place — one object, four voices</div>
     <div class="v-tone-label">Choose a voice</div>
     <div class="v-tone-buttons" id="tones">
@@ -275,6 +249,40 @@ details.v-panel summary::-webkit-details-marker{display:none}
       </div>
     </details>
 
+    <details class="v-panel">
+      <summary><span class="v-panel-title">Visitor response</span><span class="v-panel-hint">Leave a note</span></summary>
+      <div class="v-panel-body">
+        <div class="v-comment-label">Leave a memory or a connection — reviewed by Heide, attributed, kept with the record</div>
+        <textarea class="v-comment-input" id="commentInput" placeholder="What did the Cottage make you think or feel?"></textarea>
+        <button class="v-comment-btn" onclick="fakeSubmit()">Submit response</button>
+        <div class="v-note" id="commentNote"></div>
+      </div>
+    </details>
+
+    <div class="v-map">
+      <div class="v-map-label">◎ Where you are</div>
+      <div class="v-map-frame">
+        <svg viewBox="0 0 400 250" role="img" aria-label="Indicative map of the Heide Cottage Loop">
+          <path class="map-river" d="M8 40 Q 120 18 210 34 T 392 30"/>
+          <text x="12" y="30" style="fill:rgba(120,150,150,.7);font-family:ui-monospace,monospace" font-size="7" letter-spacing="1">BIRRARUNG</text>
+          <path class="map-loop" d="M70 62 L135 96 L210 146 L300 92 L330 150 L300 205 L226 212 L210 146"/>
+          <g class="map-node" data-key="heide3" onclick="setLocation('heide3')"><circle cx="70" cy="62" r="5"/><text x="70" y="52" text-anchor="middle">GALLERIES</text></g>
+          <g class="map-node" data-key="heide2" onclick="setLocation('heide2')"><circle cx="135" cy="96" r="5"/><text x="135" y="86" text-anchor="middle">HEIDE II</text></g>
+          <g class="map-node" data-key="sculpture" onclick="setLocation('sculpture')"><circle cx="210" cy="146" r="5"/><text x="210" y="163" text-anchor="middle">SCULPTURE PARK</text></g>
+          <g class="map-node" data-key="cottage" onclick="setLocation('cottage')"><circle cx="300" cy="92" r="5.5"/><text x="300" y="80" text-anchor="middle">THE COTTAGE</text></g>
+          <g class="map-node" data-key="garden" onclick="setLocation('garden')"><circle cx="330" cy="150" r="5"/><text x="330" y="140" text-anchor="middle">KITCHEN GARDEN</text></g>
+          <g class="map-node" data-key="orchard" onclick="setLocation('orchard')"><circle cx="300" cy="205" r="5"/><text x="300" y="223" text-anchor="middle">ORCHARD</text></g>
+          <g class="map-node" data-key="yingabeal" onclick="setLocation('yingabeal')"><circle cx="226" cy="212" r="5"/><text x="222" y="229" text-anchor="middle">YINGABEAL</text></g>
+          <g id="hereMarker" transform="translate(300,92)" style="pointer-events:none">
+            <circle class="map-here-ring" r="5"><animate attributeName="r" values="5;14" dur="1.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.9;0" dur="1.8s" repeatCount="indefinite"/></circle>
+            <circle class="map-here-dot" r="3.4"/>
+          </g>
+        </svg>
+      </div>
+      <div class="v-here-label" id="hereLabel">You are here · Heide I — The Cottage</div>
+      <div class="v-map-note">Tap a marker as you explore and the map keeps up with you. Talk to whatever you're standing in front of, in your own language, and it will tell you what's nearby and where to head next. (Indicative map, not to scale.)</div>
+    </div>
+
     <div class="v-divider"></div>
 
     <details class="v-panel">
@@ -294,16 +302,6 @@ details.v-panel summary::-webkit-details-marker{display:none}
       <div class="t">🌳 Nearby · Yingabeal, the song tree</div>
       <p>A short walk away stands Yingabeal, an ancient scarred marker tree where songlines meet. That story belongs to Wurundjeri Woi-wurrung. In ARCHAI a source community governs exactly what an object may say, enforced the moment it speaks, so this voice stays theirs to shape or to keep silent.</p>
     </div>
-
-    <details class="v-panel">
-      <summary><span class="v-panel-title">Visitor response</span><span class="v-panel-hint">Leave a note</span></summary>
-      <div class="v-panel-body">
-        <div class="v-comment-label">Leave a memory or a connection — reviewed by Heide, attributed, kept with the record</div>
-        <textarea class="v-comment-input" id="commentInput" placeholder="What did the Cottage make you think or feel?"></textarea>
-        <button class="v-comment-btn" onclick="fakeSubmit()">Submit response</button>
-        <div class="v-note" id="commentNote"></div>
-      </div>
-    </details>
 
     <details class="v-panel">
       <summary><span class="v-panel-title">Share / save</span><span class="v-panel-hint">Links &amp; downloads</span></summary>
