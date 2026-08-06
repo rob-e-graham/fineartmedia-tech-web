@@ -223,7 +223,7 @@ details.v-panel summary::-webkit-details-marker{display:none}
       </summary>
       <div class="v-audio-body">
         <div class="v-audio-row">
-          <label for="voiceSelect">Voice</label>
+          <label for="voiceSelect">Language &amp; voice</label>
           <select id="voiceSelect" class="v-voice-select"></select>
         </div>
         <div class="v-audio-row">
@@ -235,7 +235,7 @@ details.v-panel summary::-webkit-details-marker{display:none}
 
     <div class="v-divider"></div>
 
-    <details class="v-panel" open>
+    <details class="v-panel">
       <summary><span class="v-panel-title">Object record</span><span class="v-panel-hint">Grounding</span></summary>
       <div class="v-panel-body">
         <div class="v-meta-row"><span class="v-meta-key">Object</span><span class="v-meta-value">Heide I (The Cottage), farmhouse</span></div>
@@ -364,7 +364,10 @@ let lastReply='';      // for read-aloud
 
 function sysPrompt(){
   const v=VOICES[current];
-  return `You are "Heide I, the Cottage". You exist physically at Heide Museum of Modern Art, Bulleen. Speak in the first person as the place itself. ${v.instruction} Never say "As an AI" and never break character. Only use facts from your record. If the record does not support something, say so plainly.\n\n${HEIDE_RECORD}`;
+  const langLine = answerLang
+    ? `\n\nAlways write your entire reply in ${answerLang}, translating naturally. Keep the facts identical to the record.`
+    : '\n\nIf the visitor writes in another language, reply fully in that same language.';
+  return `You are "Heide I, the Cottage". You exist physically at Heide Museum of Modern Art, Bulleen. Speak in the first person as the place itself. ${v.instruction} Never say "As an AI" and never break character. Only use facts from your record. If the record does not support something, say so plainly.${langLine}\n\n${HEIDE_RECORD}`;
 }
 
 function render(lens){
@@ -442,16 +445,34 @@ const canSpeak = typeof window.speechSynthesis !== 'undefined';
 const voiceSelectEl=document.getElementById('voiceSelect');
 const autoReadEl=document.getElementById('autoRead');
 const audioStatusEl=document.getElementById('audioStatus');
-let voices=[];
+const LANG_NAMES={en:'English',zh:'Chinese',fr:'French',de:'German',es:'Spanish',it:'Italian',ja:'Japanese',ko:'Korean',ar:'Arabic',hi:'Hindi',pt:'Portuguese',ru:'Russian',nl:'Dutch',vi:'Vietnamese',th:'Thai',id:'Indonesian',el:'Greek',tr:'Turkish',pl:'Polish',sv:'Swedish',he:'Hebrew',fi:'Finnish',da:'Danish',nb:'Norwegian',no:'Norwegian',cs:'Czech',ro:'Romanian',hu:'Hungarian',uk:'Ukrainian',ms:'Malay',fa:'Persian',ta:'Tamil',bn:'Bengali',sk:'Slovak',hr:'Croatian',ca:'Catalan'};
+let _dn=null; try{ _dn=new Intl.DisplayNames(['en'],{type:'language'}); }catch(e){}
+function langName(code){ code=(code||'').toLowerCase(); let n=null; if(_dn){ try{n=_dn.of(code);}catch(e){} } return (n&&n.toLowerCase()!==code)?n:(LANG_NAMES[code]||code.toUpperCase()); }
+let answerLang=null; // null = reply in the language the visitor uses
+function allVoices(){ return canSpeak?window.speechSynthesis.getVoices():[]; }
 function loadVoices(){
   if(!canSpeak) return;
-  voices=window.speechSynthesis.getVoices().filter(v=>/^en(-|_|$)/i.test(v.lang));
-  if(!voices.length) voices=window.speechSynthesis.getVoices();
-  const pref=['en-AU','en-GB','en-US'];
-  voices.sort((a,b)=>{const ai=pref.indexOf(a.lang),bi=pref.indexOf(b.lang);return (ai<0?9:ai)-(bi<0?9:bi);});
-  voiceSelectEl.innerHTML=voices.map((v,i)=>`<option value="${i}">${v.name} · ${v.lang}${v.lang.startsWith('en-AU')?' (Australian)':''}</option>`).join('');
+  const all=allVoices(); if(!all.length) return;
+  const groups={};
+  all.forEach((v,idx)=>{ const base=((v.lang||'').split(/[-_]/)[0]||'other').toLowerCase(); (groups[base]=groups[base]||[]).push({v,idx}); });
+  const codes=Object.keys(groups).sort((a,b)=>{ if(a==='en')return -1; if(b==='en')return 1; return langName(a).localeCompare(langName(b)); });
+  voiceSelectEl.innerHTML=codes.map(code=>{
+    const opts=groups[code].map(({v,idx})=>`<option value="${idx}">${v.name} · ${v.lang}</option>`).join('');
+    return `<optgroup label="${langName(code)}">${opts}</optgroup>`;
+  }).join('');
+  const auIdx=all.findIndex(v=>/^en-AU/i.test(v.lang));
+  if(auIdx>=0) voiceSelectEl.value=String(auIdx);
+  onVoiceChange();
 }
-function currentVoice(){ return voices[voiceSelectEl.value|0] || null; }
+function currentVoice(){ return allVoices()[voiceSelectEl.value|0] || null; }
+function onVoiceChange(){
+  const v=currentVoice(); if(!v){answerLang=null;return;}
+  const base=((v.lang||'').split(/[-_]/)[0]||'').toLowerCase();
+  answerLang=(base==='en'||!base)?null:langName(base);
+  if(audioStatusEl) audioStatusEl.textContent = answerLang
+    ? ('The Cottage will answer and read aloud in '+answerLang+' — ask in any language.')
+    : 'Answers follow the language you ask in; audio uses your device’s voices. Whisper + Coqui is the production path, on Heide-controlled hardware.';
+}
 function speak(text){
   if(!canSpeak){ audioStatusEl.textContent='This browser has no speech support — try Safari or Chrome.'; return; }
   window.speechSynthesis.cancel();
@@ -465,7 +486,7 @@ function speak(text){
 }
 function stopSpeak(){ if(canSpeak) window.speechSynthesis.cancel(); const btn=document.getElementById('readBtn'); if(btn){btn.classList.remove('on');btn.textContent='🔊 Read aloud';} }
 function toggleRead(){ if(canSpeak && window.speechSynthesis.speaking){ stopSpeak(); } else { speak(lastReply); } }
-if(canSpeak){ loadVoices(); window.speechSynthesis.onvoiceschanged=loadVoices; }
+if(canSpeak){ voiceSelectEl.addEventListener('change', onVoiceChange); loadVoices(); window.speechSynthesis.onvoiceschanged=loadVoices; }
 else { document.getElementById('audioTools').style.display='none'; }
 
 function fakeSubmit(){
