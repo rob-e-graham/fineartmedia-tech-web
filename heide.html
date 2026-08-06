@@ -125,6 +125,22 @@ details.v-panel summary::-webkit-details-marker{display:none}
 .v-share-icon{font-size:.92rem;line-height:1}
 .v-share-note{font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--text3);margin-top:12px;line-height:1.45}
 
+/* SITE MAP — the NFC tag is the object's eyes */
+.v-map-label{font-family:var(--mono);font-size:.56rem;color:var(--accent2);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.v-map-frame{background:var(--surface);border:1px solid var(--border2);border-radius:5px;padding:12px 12px 10px}
+.v-map-frame svg{width:100%;height:auto;display:block}
+.map-loop{fill:none;stroke:var(--border2);stroke-width:1.4;stroke-dasharray:3 4}
+.map-river{fill:none;stroke:rgba(120,150,150,.35);stroke-width:6;stroke-linecap:round}
+.map-node circle{fill:var(--surface2);stroke:var(--accent);stroke-width:1.4;cursor:pointer;transition:fill .15s}
+.map-node:hover circle{fill:var(--accent)}
+.map-node.active circle{fill:var(--accent)}
+.map-node text{fill:var(--text2);font-family:var(--mono);font-size:7px;letter-spacing:.3px;pointer-events:none}
+.map-node.active text{fill:var(--text)}
+.map-here-dot{fill:var(--brick)}
+.map-here-ring{fill:none;stroke:var(--brick);stroke-width:1.5}
+.v-here-label{font-family:var(--mono);font-size:.55rem;letter-spacing:1px;text-transform:uppercase;color:var(--brick);margin-top:11px}
+.v-map-note{font-family:var(--serif);font-style:italic;font-size:.92rem;color:var(--text2);line-height:1.5;margin-top:7px}
+
 /* GOVERNANCE */
 .v-gov{border:1px solid var(--border2);border-left:2px solid var(--brick);border-radius:3px;padding:14px 16px;margin:4px 0 12px;background:var(--surface)}
 .v-gov .t{font-family:var(--mono);font-size:.5rem;letter-spacing:1.6px;text-transform:uppercase;color:var(--brick);margin-bottom:8px}
@@ -193,6 +209,32 @@ details.v-panel summary::-webkit-details-marker{display:none}
     </div>
 
     <div class="v-story"><strong>Heide I</strong> is the original weatherboard farmhouse where the whole story begins. In 1934 the art patrons John and Sunday Reed bought this old dairy farm on the Yarra and made the cottage their home for the next thirty-five years. Around its kitchen table they gathered a circle of young modernists, and in 1946 to 47 Sidney Nolan painted his first Ned Kelly series right here. This small house is where Australian modernism took root.</div>
+
+    <div class="v-divider"></div>
+
+    <div class="v-map">
+      <div class="v-map-label">◎ Where you are · the tag is the object's eyes</div>
+      <div class="v-map-frame">
+        <svg viewBox="0 0 400 250" role="img" aria-label="Indicative map of the Heide Cottage Loop">
+          <path class="map-river" d="M8 40 Q 120 18 210 34 T 392 30"/>
+          <text x="12" y="30" style="fill:rgba(120,150,150,.7);font-family:ui-monospace,monospace" font-size="7" letter-spacing="1">BIRRARUNG</text>
+          <path class="map-loop" d="M70 62 L135 96 L210 146 L300 92 L330 150 L300 205 L226 212 L210 146"/>
+          <g class="map-node" data-key="heide3" onclick="setLocation('heide3')"><circle cx="70" cy="62" r="5"/><text x="70" y="52" text-anchor="middle">GALLERIES</text></g>
+          <g class="map-node" data-key="heide2" onclick="setLocation('heide2')"><circle cx="135" cy="96" r="5"/><text x="135" y="86" text-anchor="middle">HEIDE II</text></g>
+          <g class="map-node" data-key="sculpture" onclick="setLocation('sculpture')"><circle cx="210" cy="146" r="5"/><text x="210" y="163" text-anchor="middle">SCULPTURE PARK</text></g>
+          <g class="map-node" data-key="cottage" onclick="setLocation('cottage')"><circle cx="300" cy="92" r="5.5"/><text x="300" y="80" text-anchor="middle">THE COTTAGE</text></g>
+          <g class="map-node" data-key="garden" onclick="setLocation('garden')"><circle cx="330" cy="150" r="5"/><text x="330" y="140" text-anchor="middle">KITCHEN GARDEN</text></g>
+          <g class="map-node" data-key="orchard" onclick="setLocation('orchard')"><circle cx="300" cy="205" r="5"/><text x="300" y="223" text-anchor="middle">ORCHARD</text></g>
+          <g class="map-node" data-key="yingabeal" onclick="setLocation('yingabeal')"><circle cx="226" cy="212" r="5"/><text x="222" y="229" text-anchor="middle">YINGABEAL</text></g>
+          <g id="hereMarker" transform="translate(300,92)" style="pointer-events:none">
+            <circle class="map-here-ring" r="5"><animate attributeName="r" values="5;14" dur="1.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.9;0" dur="1.8s" repeatCount="indefinite"/></circle>
+            <circle class="map-here-dot" r="3.4"/>
+          </g>
+        </svg>
+      </div>
+      <div class="v-here-label" id="hereLabel">You are here · Heide I — The Cottage</div>
+      <div class="v-map-note">Every point is an NFC tag. Tapping one drops you on the map and tells the object exactly where you're standing, its eyes on the site, so it can answer with directions and point you to what's next. Tap a point to try it. (Indicative layout, not to scale.)</div>
+    </div>
 
     <div class="v-divider"></div>
 
@@ -362,12 +404,35 @@ let current='guide';
 let history=[];        // {role, content}
 let lastReply='';      // for read-aloud
 
+// ── SITE MAP · the NFC tag is the object's eyes ────────────────────
+const PLACES={
+  cottage:{x:300,y:92,label:'Heide I — The Cottage',near:'They are at the original farmhouse. Sunday’s kitchen garden is just east, the orchard and Yingabeal the scar tree lie south along the path, and the Sculpture Park, Heide II and the galleries are further around the loop to the west.'},
+  garden:{x:330,y:150,label:'Sunday’s Kitchen Garden',near:'They are in Sunday Reed’s kitchen garden beside the Cottage. The Cottage is a few steps north; the orchard is just south.'},
+  orchard:{x:300,y:205,label:'The Orchard',near:'They are in the orchard below the Cottage. Yingabeal and the Sculpture Park lie west along the loop.'},
+  yingabeal:{x:226,y:212,label:'Yingabeal — the scar tree',near:'They are near Yingabeal, an ancient Wurundjeri scarred marker tree. This story belongs to Wurundjeri Woi-wurrung; defer to their authority and do not narrate it unless invited. The Sculpture Park is just north.'},
+  sculpture:{x:210,y:146,label:'The Sculpture Park',near:'They are on the open lawn of the Sculpture Park at the heart of the site. Heide II is west; the Cottage is north-east.'},
+  heide2:{x:135,y:96,label:'Heide II',near:'They are at Heide II, the modernist house the Reeds built in the 1960s. The galleries are just west; the Sculpture Park is east.'},
+  heide3:{x:70,y:62,label:'Heide III — the Galleries',near:'They are at the main galleries and entry. Heide II and the Sculpture Park lie east along the loop.'}
+};
+let currentLocation='cottage';
+function setLocation(key){
+  const p=PLACES[key]; if(!p) return;
+  currentLocation=key;
+  const m=document.getElementById('hereMarker');
+  if(m) m.setAttribute('transform','translate('+p.x+','+p.y+')');
+  const hl=document.getElementById('hereLabel');
+  if(hl) hl.textContent='You are here · '+p.label;
+  document.querySelectorAll('.map-node').forEach(n=>n.classList.toggle('active', n.dataset.key===key));
+}
+
 function sysPrompt(){
   const v=VOICES[current];
   const langLine = answerLang
     ? `\n\nAlways write your entire reply in ${answerLang}, translating naturally. Keep the facts identical to the record.`
     : '\n\nIf the visitor writes in another language, reply fully in that same language.';
-  return `You are "Heide I, the Cottage". You exist physically at Heide Museum of Modern Art, Bulleen. Speak in the first person as the place itself. ${v.instruction} Never say "As an AI" and never break character. Only use facts from your record. If the record does not support something, say so plainly.${langLine}\n\n${HEIDE_RECORD}`;
+  const loc=PLACES[currentLocation]||PLACES.cottage;
+  const locLine=`\n\nVISITOR LOCATION (from the NFC tag they tapped): ${loc.label}. ${loc.near} When it helps, use this to orient them and say what is nearby or where to go next.`;
+  return `You are "Heide I, the Cottage". You exist physically at Heide Museum of Modern Art, Bulleen. Speak in the first person as the place itself. ${v.instruction} Never say "As an AI" and never break character. Only use facts from your record. If the record does not support something, say so plainly.${langLine}${locLine}\n\n${HEIDE_RECORD}`;
 }
 
 function render(lens){
@@ -517,6 +582,7 @@ function shareX(){
 }
 
 render('guide');
+setLocation(currentLocation);
 </script>
 </body>
 </html>
