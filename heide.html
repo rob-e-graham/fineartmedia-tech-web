@@ -266,10 +266,10 @@ details.v-panel summary::-webkit-details-marker{display:none}
       <summary><span class="v-panel-title">Share / save</span><span class="v-panel-hint">Links &amp; downloads</span></summary>
       <div class="v-panel-body">
         <div class="v-share">
-          <button class="v-share-btn" id="shareNativeBtn" onclick="shareNative()"><span class="v-share-icon">↗</span> Share</button>
-          <button class="v-share-btn" onclick="shareEmail()"><span class="v-share-icon">✉</span> Email</button>
-          <button class="v-share-btn" onclick="copyLink(this)"><span class="v-share-icon">⎘</span> Copy link</button>
-          <button class="v-share-btn" onclick="shareX()"><span class="v-share-icon">𝕏</span> Post</button>
+          <button class="v-share-btn" id="shareNativeBtn" onclick="shareNative()">Share</button>
+          <button class="v-share-btn" onclick="shareEmail()">Email</button>
+          <button class="v-share-btn" onclick="copyLink(this)">Copy link</button>
+          <button class="v-share-btn" onclick="shareX()">Post</button>
         </div>
         <div class="v-share-note">On a phone, Share also lets you save this page to Files or add it to your home screen.</div>
       </div>
@@ -478,7 +478,7 @@ function renderAnswer(text, live){
     : '✓ From Heide’s record (live voice offline — showing the curated reply)';
   respEl.innerHTML='<span class="who">Heide I · '+VOICES[current].label+' voice</span>'
     + text.replace(/</g,'&lt;')
-    + '<div class="v-readrow"><button class="v-readbtn" id="readBtn" onclick="toggleRead()">🔊 Read aloud</button></div>'
+    + '<div class="v-readrow"><button class="v-readbtn" id="readBtn" onclick="toggleRead()">Read aloud</button></div>'
     + '<span class="grounded">'+tag+'</span>';
   if(autoReadEl.checked) speak(text);
 }
@@ -550,11 +550,11 @@ function speak(text){
   const v=currentVoice(); if(v) u.voice=v;
   u.rate=0.98; u.pitch=1; u.lang=(v&&v.lang)||'en-AU';
   const btn=document.getElementById('readBtn');
-  u.onstart=()=>{ if(btn){btn.classList.add('on');btn.textContent='⏸ Stop';} };
-  u.onend=()=>{ if(btn){btn.classList.remove('on');btn.textContent='🔊 Read aloud';} };
+  u.onstart=()=>{ if(btn){btn.classList.add('on');btn.textContent='Stop';} };
+  u.onend=()=>{ if(btn){btn.classList.remove('on');btn.textContent='Read aloud';} };
   window.speechSynthesis.speak(u);
 }
-function stopSpeak(){ if(canSpeak) window.speechSynthesis.cancel(); const btn=document.getElementById('readBtn'); if(btn){btn.classList.remove('on');btn.textContent='🔊 Read aloud';} }
+function stopSpeak(){ if(canSpeak) window.speechSynthesis.cancel(); const btn=document.getElementById('readBtn'); if(btn){btn.classList.remove('on');btn.textContent='Read aloud';} }
 function toggleRead(){ if(canSpeak && window.speechSynthesis.speaking){ stopSpeak(); } else { speak(lastReply); } }
 if(canSpeak){ voiceSelectEl.addEventListener('change', onVoiceChange); loadVoices(); window.speechSynthesis.onvoiceschanged=loadVoices; }
 else { document.getElementById('audioTools').style.display='none'; }
@@ -593,7 +593,7 @@ function shareEmail(){
   window.location.href='mailto:?subject='+s+'&body='+b;
 }
 function copyLink(btn){
-  const flash=()=>{ if(btn){const o=btn.innerHTML;btn.innerHTML='<span class="v-share-icon">✓</span> Copied';setTimeout(()=>{btn.innerHTML=o;},1600);} };
+  const flash=()=>{ if(btn){const o=btn.textContent;btn.textContent='Copied';setTimeout(()=>{btn.textContent=o;},1600);} };
   if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(PAGE_URL).then(flash).catch(()=>prompt('Copy this link:',PAGE_URL)); }
   else { prompt('Copy this link:',PAGE_URL); }
 }
