@@ -60,8 +60,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
 .v-tone.active{background:var(--accent);border-color:var(--accent);color:#12140d}
 .v-tone-note{font-family:var(--serif);font-style:italic;font-size:.92rem;color:var(--text2);margin:4px 0 16px;min-height:1.2em}
 .v-intro{font-size:1.05rem;line-height:1.6;color:var(--text);background:var(--surface);border-left:2px solid var(--accent);padding:14px 16px;border-radius:3px;margin-bottom:16px}
-.v-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
-.v-chip{font-family:var(--mono);font-size:.58rem;letter-spacing:.5px;padding:8px 12px;border:1px solid var(--border2);color:var(--text2);cursor:pointer;border-radius:2px;background:var(--surface);transition:all .15s}
+.v-chips{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.v-chip{font-family:var(--mono);font-size:.58rem;letter-spacing:.5px;line-height:1.35;padding:0 13px;min-height:48px;border:1px solid var(--border2);color:var(--text2);cursor:pointer;border-radius:2px;background:var(--surface);transition:all .15s;display:flex;align-items:center}
 .v-chip:hover{border-color:var(--accent);color:var(--text)}
 .v-chip.active{border-color:var(--accent);background:var(--accent);color:#12140d}
 .v-chat-row{display:flex;gap:8px;align-items:stretch;margin-bottom:6px}
@@ -117,6 +117,10 @@ details.v-panel summary::-webkit-details-marker{display:none}
 .v-comment-btn{margin-top:10px;font-family:var(--mono);font-size:.56rem;letter-spacing:1.5px;text-transform:uppercase;background:transparent;color:var(--accent2);border:1px solid var(--accent);padding:9px 16px;border-radius:3px;cursor:pointer}
 .v-comment-btn:active{background:var(--accent);color:#12140d}
 .v-note{font-family:var(--serif);font-size:.95rem;font-style:italic;color:var(--text2);line-height:1.5;margin-top:10px}
+.v-prev-comments{margin-top:16px;display:flex;flex-direction:column;gap:12px}
+.v-prev-comment{border-left:2px solid var(--border2);padding:6px 0 6px 12px}
+.v-prev-comment-text{font-family:var(--serif);font-size:1rem;color:var(--text);line-height:1.5}
+.v-prev-comment-meta{font-family:var(--mono);font-size:.5rem;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-top:5px}
 
 /* SHARE / SAVE */
 .v-share{display:flex;flex-wrap:wrap;gap:8px}
@@ -232,11 +236,8 @@ details.v-panel summary::-webkit-details-marker{display:none}
     <div class="v-response" id="response"></div>
 
     <!-- AUDIO / VOICE TOOLS (AUXIO-style) -->
-    <details class="v-audio" id="audioTools">
-      <summary>
-        <span class="v-audio-title">🔊 Audio &amp; voice tools</span>
-        <span class="v-audio-hint">Open controls</span>
-      </summary>
+    <details class="v-panel" id="audioTools">
+      <summary><span class="v-panel-title">Audio &amp; voice tools</span><span class="v-panel-hint">Open controls</span></summary>
       <div class="v-audio-body">
         <div class="v-audio-row">
           <label for="voiceSelect">Language &amp; voice</label>
@@ -252,15 +253,30 @@ details.v-panel summary::-webkit-details-marker{display:none}
     <details class="v-panel">
       <summary><span class="v-panel-title">Visitor response</span><span class="v-panel-hint">Leave a note</span></summary>
       <div class="v-panel-body">
-        <div class="v-comment-label">Leave a memory or a connection — reviewed by Heide, attributed, kept with the record</div>
-        <textarea class="v-comment-input" id="commentInput" placeholder="What did the Cottage make you think or feel?"></textarea>
-        <button class="v-comment-btn" onclick="fakeSubmit()">Submit response</button>
-        <div class="v-note" id="commentNote"></div>
+        <div class="v-comment">
+          <div class="v-comment-label">Leave a response — your note joins the collection record</div>
+          <textarea class="v-comment-input" id="commentInput" placeholder="What did this object make you think or feel?"></textarea>
+          <button class="v-comment-btn" id="commentBtn" onclick="submitComment()">Submit Response</button>
+          <div class="v-prev-comments" id="prevComments"></div>
+        </div>
+      </div>
+    </details>
+
+    <details class="v-panel">
+      <summary><span class="v-panel-title">Share / save</span><span class="v-panel-hint">Links &amp; downloads</span></summary>
+      <div class="v-panel-body">
+        <div class="v-share">
+          <button class="v-share-btn" id="shareNativeBtn" onclick="shareNative()"><span class="v-share-icon">↗</span> Share</button>
+          <button class="v-share-btn" onclick="shareEmail()"><span class="v-share-icon">✉</span> Email</button>
+          <button class="v-share-btn" onclick="copyLink(this)"><span class="v-share-icon">⎘</span> Copy link</button>
+          <button class="v-share-btn" onclick="shareX()"><span class="v-share-icon">𝕏</span> Post</button>
+        </div>
+        <div class="v-share-note">On a phone, Share also lets you save this page to Files or add it to your home screen.</div>
       </div>
     </details>
 
     <div class="v-map">
-      <div class="v-map-label">◎ Where you are</div>
+      <div class="v-map-label">Where you are</div>
       <div class="v-map-frame">
         <svg viewBox="0 0 400 250" role="img" aria-label="Indicative map of the Heide Cottage Loop">
           <path class="map-river" d="M8 40 Q 120 18 210 34 T 392 30"/>
@@ -280,7 +296,7 @@ details.v-panel summary::-webkit-details-marker{display:none}
         </svg>
       </div>
       <div class="v-here-label" id="hereLabel">You are here · Heide I — The Cottage</div>
-      <div class="v-map-note">Tap a marker as you explore and the map keeps up with you. Talk to whatever you're standing in front of, in your own language, and it will tell you what's nearby and where to head next. (Indicative map, not to scale.)</div>
+      <div class="v-map-note">Tap a marker to find your way around the grounds.</div>
     </div>
 
     <div class="v-divider"></div>
@@ -299,22 +315,9 @@ details.v-panel summary::-webkit-details-marker{display:none}
     </details>
 
     <div class="v-gov">
-      <div class="t">🌳 Nearby · Yingabeal, the song tree</div>
+      <div class="t">Nearby · Yingabeal, the song tree</div>
       <p>A short walk away stands Yingabeal, an ancient scarred marker tree where songlines meet. That story belongs to Wurundjeri Woi-wurrung. In ARCHAI a source community governs exactly what an object may say, enforced the moment it speaks, so this voice stays theirs to shape or to keep silent.</p>
     </div>
-
-    <details class="v-panel">
-      <summary><span class="v-panel-title">Share / save</span><span class="v-panel-hint">Links &amp; downloads</span></summary>
-      <div class="v-panel-body">
-        <div class="v-share">
-          <button class="v-share-btn" id="shareNativeBtn" onclick="shareNative()"><span class="v-share-icon">↗</span> Share</button>
-          <button class="v-share-btn" onclick="shareEmail()"><span class="v-share-icon">✉</span> Email</button>
-          <button class="v-share-btn" onclick="copyLink(this)"><span class="v-share-icon">⎘</span> Copy link</button>
-          <button class="v-share-btn" onclick="shareX()"><span class="v-share-icon">𝕏</span> Post</button>
-        </div>
-        <div class="v-share-note">On a phone, Share also lets you save this page to Files or add it to your home screen.</div>
-      </div>
-    </details>
 
     <div class="v-aoc">Heide stands on the lands of the Wurundjeri Woi-wurrung people of the Kulin Nation, beside the Birrarung. We pay respect to Elders past and present. Sovereignty was never ceded.</div>
 
@@ -354,7 +357,8 @@ const VOICES = {
     q:[
       {q:"Where do I go next?",a:"Head left off the porch into Sunday's walled kitchen garden, the garden that fed all the artists who came here. From there the Cottage loop carries on to the orchard, then out toward the Sculpture Park and Heide II."},
       {q:"What happened here?",a:"This is where the Reeds gathered the artists who became Australian modernism, and where Nolan painted his Kelly series. Thirty-five years of art, arguments and dinners, all under this little roof."},
-      {q:"How long is the walk?",a:"The Cottage loop is a gentle fifteen to twenty minutes at an easy pace, mostly flat, with an accessible path option and plenty of shade to stop in."}
+      {q:"How long is the walk?",a:"The Cottage loop is a gentle fifteen to twenty minutes at an easy pace, mostly flat, with an accessible path option and plenty of shade to stop in."},
+      {q:"What should I not miss?",a:"Don't miss Sunday's kitchen garden right beside me, and the walk down through the Sculpture Park. If you have time, Heide II shows how the Reeds' vision grew from this farmhouse into modern architecture."}
     ]
   },
   child:{
@@ -365,7 +369,8 @@ const VOICES = {
     q:[
       {q:"Who lived here?",a:"John and Sunday Reed lived here! Sunday grew a big garden full of vegetables and flowers, and she loved helping artists make their pictures. The house was always full of people."},
       {q:"Who was Ned Kelly?",a:"Ned Kelly was a real bushranger from long ago who wore armour and a big square iron helmet, like a letterbox! Sidney the painter loved his story so much he painted him lots of times, right here."},
-      {q:"What grew in the garden?",a:"Yummy things! Vegetables, herbs and fruit trees, and lots of flowers. The artists would pick fresh food and all eat together. Can you spot the fruit trees in the orchard?"}
+      {q:"What grew in the garden?",a:"Yummy things! Vegetables, herbs and fruit trees, and lots of flowers. The artists would pick fresh food and all eat together. Can you spot the fruit trees in the orchard?"},
+      {q:"Tell me a story",a:"Once, artists painted all day in my rooms and ate together at a big table, with vegetables straight from Sunday's garden. One of them loved a bushranger's story so much he painted him again and again, right here!"}
     ]
   },
   education:{
@@ -376,7 +381,8 @@ const VOICES = {
     q:[
       {q:"What was the Heide Circle?",a:"The group of artists, writers and thinkers the Reeds gathered from the 1930s, including Nolan, Joy Hester, Albert Tucker, John Perceval and later Mirka Mora and Charles Blackman. Heide became a place to make, argue over and promote modern art in Australia."},
       {q:"What was Angry Penguins?",a:"A modernist journal linked to the Heide circle, famous for the 1944 Ern Malley affair, a hoax where two poets invented a fake modernist to fool the editor. Those very poems were argued over in this cottage."},
-      {q:"Why does patronage matter here?",a:"The Reeds show how support, a home, food and belief, can shape a national art movement. Without their patronage much of Australian modernism might not have happened. It's a case study in art and place."}
+      {q:"Why does patronage matter here?",a:"The Reeds show how support, a home, food and belief, can shape a national art movement. Without their patronage much of Australian modernism might not have happened. It's a case study in art and place."},
+      {q:"Who were the artists?",a:"The Heide Circle included Sidney Nolan, Joy Hester, Albert Tucker and John Perceval, and later Mirka Mora and Charles Blackman. The Reeds gave them a home, food and belief, and modern Australian art grew from it."}
     ]
   },
   curatorial:{
@@ -387,7 +393,8 @@ const VOICES = {
     q:[
       {q:"Provenance of the Kelly series?",a:"Painted at Heide 1946–47; retained by Sunday Reed after Nolan's departure; gifted by Sunday to the National Gallery of Australia in 1976, 'with love.' Twenty-seven paintings comprise the first series. (Confirm catalogue details against the NGA record before citing.)"},
       {q:"What is verified vs uncertain?",a:"Verified: the 1934 purchase, the artist circle, the Kelly series and its 1976 NGA gift. Where the record is silent — exact conversations, undocumented visits — this voice says it does not know rather than invent."},
-      {q:"Rights on associated works?",a:"Heide sets rights and reproduction terms per item. This concept shows no rights-restricted images; in a live deployment, item-level rights and cultural protocols gate what may be shown or said, enforced at ingest and at the point of speaking."}
+      {q:"Rights on associated works?",a:"Heide sets rights and reproduction terms per item. This concept shows no rights-restricted images; in a live deployment, item-level rights and cultural protocols gate what may be shown or said, enforced at ingest and at the point of speaking."},
+      {q:"Who were the Reeds?",a:"John and Sunday Reed were art patrons and collectors who bought this farm in 1934 and made it the crucible of Australian modernism. Sunday in particular shaped the circle, and in 1976 gifted Nolan's first Kelly series to the National Gallery of Australia."}
     ]
   }
 };
@@ -552,9 +559,24 @@ function toggleRead(){ if(canSpeak && window.speechSynthesis.speaking){ stopSpea
 if(canSpeak){ voiceSelectEl.addEventListener('change', onVoiceChange); loadVoices(); window.speechSynthesis.onvoiceschanged=loadVoices; }
 else { document.getElementById('audioTools').style.display='none'; }
 
-function fakeSubmit(){
-  document.getElementById('commentInput').value='';
-  document.getElementById('commentNote').textContent='Thank you. In a live pilot your note would go to Heide for review, then, if approved, join the object record with attribution. A memory left today becomes a primary source decades from now.';
+const COMMENT_KEY='heide_cottage_comments';
+function renderComments(){
+  const box=document.getElementById('prevComments'); if(!box) return;
+  let local=[]; try{ local=JSON.parse(localStorage.getItem(COMMENT_KEY))||[]; }catch(e){}
+  box.innerHTML=local.map(c=>'<div class="v-prev-comment"><div class="v-prev-comment-text">'+String(c.text).replace(/</g,'&lt;')+'</div><div class="v-prev-comment-meta">Visitor · '+c.time+'</div></div>').join('');
+}
+function submitComment(){
+  const input=document.getElementById('commentInput');
+  const text=input.value.trim(); if(!text) return;
+  const btn=document.getElementById('commentBtn');
+  let local=[]; try{ local=JSON.parse(localStorage.getItem(COMMENT_KEY))||[]; }catch(e){}
+  const time=new Date().toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
+  local.unshift({text, time});
+  try{ localStorage.setItem(COMMENT_KEY, JSON.stringify(local)); }catch(e){}
+  input.value='';
+  btn.textContent='Thank you — response recorded'; btn.style.color='var(--accent2)'; btn.style.borderColor='var(--accent2)';
+  renderComments();
+  setTimeout(()=>{ btn.textContent='Submit Response'; btn.style.color=''; btn.style.borderColor=''; }, 3000);
 }
 
 // ── SHARE / SAVE ───────────────────────────────────────────────────
@@ -581,6 +603,7 @@ function shareX(){
 
 render('guide');
 setLocation(currentLocation);
+renderComments();
 </script>
 </body>
 </html>
