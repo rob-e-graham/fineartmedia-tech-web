@@ -59,6 +59,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
 .v-tone:hover{border-color:var(--accent)}
 .v-tone.active{background:var(--accent);border-color:var(--accent);color:#12140d}
 .v-tone-note{font-family:var(--serif);font-style:italic;font-size:.92rem;color:var(--text2);margin:4px 0 16px;min-height:1.2em}
+.v-lang-row{display:flex;align-items:center;gap:10px;margin:0 0 16px}
+.v-lang-label{font-family:var(--mono);font-size:.5rem;letter-spacing:2px;text-transform:uppercase;color:var(--text3);flex:none}
+.v-lang-select{flex:1;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-family:var(--mono);font-size:.66rem;padding:10px 11px;border-radius:3px;outline:none;cursor:pointer}
+.v-lang-select:focus{border-color:var(--accent)}
 .v-intro{font-size:1.05rem;line-height:1.6;color:var(--text);background:var(--surface);border-left:2px solid var(--accent);padding:14px 16px;border-radius:3px;margin-bottom:16px}
 .v-chips{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
 .v-chip{font-family:var(--mono);font-size:.58rem;letter-spacing:.5px;line-height:1.35;padding:0 13px;min-height:48px;border:1px solid var(--border2);color:var(--text2);cursor:pointer;border-radius:2px;background:var(--surface);transition:all .15s;display:flex;align-items:center}
@@ -225,6 +229,11 @@ details.v-panel summary::-webkit-details-marker{display:none}
       <button class="v-tone" data-lens="curatorial">Curatorial</button>
     </div>
     <div class="v-tone-note" id="toneNote"></div>
+
+    <div class="v-lang-row">
+      <label for="langSelect" class="v-lang-label">Language</label>
+      <select id="langSelect" class="v-lang-select" onchange="onLangChange()"></select>
+    </div>
 
     <div class="v-intro" id="intro"></div>
 
@@ -432,12 +441,13 @@ function setLocation(key){
 
 function sysPrompt(){
   const v=VOICES[current];
+  const langLead = answerLang ? `Write your ENTIRE reply in ${answerLang} only. Do not use English. ` : '';
   const langLine = answerLang
-    ? `\n\nAlways write your entire reply in ${answerLang}, translating naturally. Keep the facts identical to the record.`
+    ? `\n\nIMPORTANT: your whole reply must be written in ${answerLang}, translating naturally, with the facts kept identical to the record. No English.`
     : '\n\nIf the visitor writes in another language, reply fully in that same language.';
   const loc=PLACES[currentLocation]||PLACES.cottage;
   const locLine=`\n\nVISITOR LOCATION (from the NFC tag they tapped): ${loc.label}. ${loc.near} When it helps, use this to orient them and say what is nearby or where to go next.`;
-  return `You are "Heide I, the Cottage". You exist physically at Heide Museum of Modern Art, Bulleen. Speak in the first person as the place itself. ${v.instruction} Never say "As an AI" and never break character. Only use facts from your record. If the record does not support something, say so plainly.${langLine}${locLine}\n\n${HEIDE_RECORD}`;
+  return `${langLead}You are "Heide I, the Cottage". You exist physically at Heide Museum of Modern Art, Bulleen. Speak in the first person as the place itself. ${v.instruction} Never say "As an AI" and never break character. Only use facts from your record. If the record does not support something, say so plainly.${langLine}${locLine}\n\n${HEIDE_RECORD}`;
 }
 
 function render(lens){
@@ -535,14 +545,42 @@ function loadVoices(){
   onVoiceChange();
 }
 function currentVoice(){ return allVoices()[voiceSelectEl.value|0] || null; }
-function onVoiceChange(){
-  const v=currentVoice(); if(!v){answerLang=null;return;}
-  const base=((v.lang||'').split(/[-_]/)[0]||'').toLowerCase();
-  answerLang=(base==='en'||!base)?null:langName(base);
-  if(audioStatusEl) audioStatusEl.textContent = answerLang
-    ? ('The Cottage will answer and read aloud in '+answerLang+' — ask in any language.')
-    : 'Answers follow the language you ask in; audio uses your device’s voices. Whisper + Coqui is the production path, on Heide-controlled hardware.';
+const langSelectEl=document.getElementById('langSelect');
+const LANGS=[
+  {code:'auto',label:'Auto — match my question'},
+  {code:'en',label:'English'},
+  {code:'zh',label:'中文 · Chinese'},
+  {code:'ar',label:'العربية · Arabic'},
+  {code:'vi',label:'Tiếng Việt · Vietnamese'},
+  {code:'el',label:'Ελληνικά · Greek'},
+  {code:'it',label:'Italiano · Italian'},
+  {code:'es',label:'Español · Spanish'},
+  {code:'fr',label:'Français · French'},
+  {code:'hi',label:'हिन्दी · Hindi'},
+  {code:'ja',label:'日本語 · Japanese'},
+  {code:'ko',label:'한국어 · Korean'}
+];
+function populateLangs(){ if(langSelectEl) langSelectEl.innerHTML=LANGS.map(l=>'<option value="'+l.code+'">'+l.label+'</option>').join(''); }
+function updateAudioStatus(){
+  if(!audioStatusEl) return;
+  audioStatusEl.textContent = answerLang
+    ? ('Answering in '+answerLang+'. Read-aloud uses a matching voice; pick another below if you like.')
+    : 'Answers follow the language you ask in. Read-aloud uses your device’s built-in voices.';
 }
+function pickVoiceForLang(code){
+  if(!canSpeak || !voiceSelectEl.options.length) return;
+  const all=allVoices();
+  let idx = (code==='auto'||code==='en') ? all.findIndex(v=>/^en-AU/i.test(v.lang)) : all.findIndex(v=>((v.lang||'').split(/[-_]/)[0].toLowerCase())===code);
+  if(idx<0 && code!=='auto') idx = all.findIndex(v=>/^en/i.test(v.lang));
+  if(idx>=0) voiceSelectEl.value=String(idx);
+}
+function onLangChange(){
+  const code=langSelectEl?langSelectEl.value:'auto';
+  answerLang=(code==='auto')?null:langName(code);
+  pickVoiceForLang(code);
+  updateAudioStatus();
+}
+function onVoiceChange(){ updateAudioStatus(); }
 function speak(text){
   if(!canSpeak){ audioStatusEl.textContent='This browser has no speech support — try Safari or Chrome.'; return; }
   window.speechSynthesis.cancel();
@@ -556,8 +594,10 @@ function speak(text){
 }
 function stopSpeak(){ if(canSpeak) window.speechSynthesis.cancel(); const btn=document.getElementById('readBtn'); if(btn){btn.classList.remove('on');btn.textContent='Read aloud';} }
 function toggleRead(){ if(canSpeak && window.speechSynthesis.speaking){ stopSpeak(); } else { speak(lastReply); } }
+populateLangs();
 if(canSpeak){ voiceSelectEl.addEventListener('change', onVoiceChange); loadVoices(); window.speechSynthesis.onvoiceschanged=loadVoices; }
 else { document.getElementById('audioTools').style.display='none'; }
+updateAudioStatus();
 
 const COMMENT_KEY='heide_cottage_comments';
 function renderComments(){
