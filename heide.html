@@ -20,6 +20,9 @@ html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 html,body{scrollbar-width:none;-ms-overflow-style:none}
 html::-webkit-scrollbar,body::-webkit-scrollbar{width:0;height:0;display:none}
 body{background:var(--bg);color:var(--text);font-family:var(--serif);font-weight:300;min-height:100dvh;-webkit-font-smoothing:antialiased}
+body.is-cjk .v-ask-label,body.is-cjk .v-tone-label,body.is-cjk .v-global-lang-select,body.is-cjk .v-tone,body.is-cjk .v-panel-title,body.is-cjk .v-panel-hint,body.is-cjk .v-meta-tag,body.is-cjk .v-footline,body.is-cjk .v-here-label,body.is-cjk .v-map-label,body.is-cjk .v-comment-label,body.is-cjk .v-share-btn,body.is-cjk .v-chat-send{letter-spacing:.08em}
+body.is-rtl{direction:rtl}
+body.is-rtl .v-header,body.is-rtl .v-header-tools,body.is-rtl .v-chat-row,body.is-rtl .v-audio-row,body.is-rtl .v-share{direction:rtl}
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
   background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E")}
 .v-stage{width:100%;min-height:100dvh}
@@ -29,7 +32,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
 .v-header{padding:15px 20px 13px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:100}
 .v-logo-heide{display:block}
 .v-logo-heide svg{width:104px;height:auto;display:block;filter:brightness(1.18)}
-.v-tag{font-family:var(--mono);font-size:.46rem;color:var(--accent2);letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border:1px solid rgba(154,168,106,.32);white-space:nowrap;margin-top:3px}
+.v-tag{font-family:var(--mono);font-size:.46rem;color:var(--accent2);letter-spacing:2px;text-transform:uppercase;padding:0 9px;border:1px solid rgba(154,168,106,.32);white-space:nowrap;height:26px;display:inline-flex;align-items:center;box-sizing:border-box}
+.v-header-tools{display:flex;align-items:center;gap:7px;margin-top:3px}
+.v-global-lang-select{height:26px;box-sizing:border-box;max-width:112px;background:transparent;border:1px solid rgba(154,168,106,.32);color:var(--accent2);font-family:var(--mono);font-size:.46rem;letter-spacing:1.3px;text-transform:uppercase;padding:0 20px 0 8px;border-radius:0;outline:none;cursor:pointer}
+.v-global-lang-select:focus{border-color:var(--accent2)}
+.v-global-lang-select option{background:var(--bg);color:var(--text)}
 
 /* HERO */
 .v-hero{width:100%;background:var(--surface);display:flex;align-items:center;justify-content:center;overflow:hidden;min-height:200px;max-height:54vh;animation:imgFade 1s ease both}
@@ -59,10 +66,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
 .v-tone:hover{border-color:var(--accent)}
 .v-tone.active{background:var(--accent);border-color:var(--accent);color:#12140d}
 .v-tone-note{font-family:var(--serif);font-style:italic;font-size:.92rem;color:var(--text2);margin:4px 0 16px;min-height:1.2em}
-.v-lang-row{display:flex;align-items:center;gap:10px;margin:0 0 16px}
-.v-lang-label{font-family:var(--mono);font-size:.5rem;letter-spacing:2px;text-transform:uppercase;color:var(--text3);flex:none}
-.v-lang-select{flex:1;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-family:var(--mono);font-size:.66rem;padding:10px 11px;border-radius:3px;outline:none;cursor:pointer}
-.v-lang-select:focus{border-color:var(--accent)}
 .v-intro{font-size:1.05rem;line-height:1.6;color:var(--text);background:var(--surface);border-left:2px solid var(--accent);padding:14px 16px;border-radius:3px;margin-bottom:16px}
 .v-chips{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
 .v-chip{font-family:var(--mono);font-size:.58rem;letter-spacing:.5px;line-height:1.35;padding:0 13px;min-height:48px;border:1px solid var(--border2);color:var(--text2);cursor:pointer;border-radius:2px;background:var(--surface);transition:all .15s;display:flex;align-items:center}
@@ -197,7 +200,10 @@ details.v-panel summary::-webkit-details-marker{display:none}
       </g><defs><clipPath id="hclip"><rect width="378.085" height="224" fill="white"/></clipPath></defs>
       </svg>
     </span>
-    <div class="v-tag">AUXIO · Concept</div>
+    <div class="v-header-tools">
+      <select id="langSelect" class="v-global-lang-select" onchange="onLangChange()" aria-label="Language"></select>
+      <div class="v-tag">AUXIO · Concept</div>
+    </div>
   </div>
 
   <div class="v-hero">
@@ -229,11 +235,6 @@ details.v-panel summary::-webkit-details-marker{display:none}
       <button class="v-tone" data-lens="curatorial">Curatorial</button>
     </div>
     <div class="v-tone-note" id="toneNote"></div>
-
-    <div class="v-lang-row">
-      <label for="langSelect" class="v-lang-label">Language</label>
-      <select id="langSelect" class="v-lang-select" onchange="onLangChange()"></select>
-    </div>
 
     <div class="v-intro" id="intro"></div>
 
@@ -408,6 +409,381 @@ const VOICES = {
   }
 };
 
+const UI_LANG_KEY='heide_auxio_language';
+const LOCALE_BY_LANG={en:'en-AU',zh:'zh-CN',ar:'ar',vi:'vi-VN',el:'el-GR',it:'it-IT',es:'es-ES',fr:'fr-FR',hi:'hi-IN',ja:'ja-JP',ko:'ko-KR'};
+
+function voiceUiFromVoices(){
+  return Object.fromEntries(Object.entries(VOICES).map(([key,voice])=>[
+    key,
+    {
+      label:voice.label,
+      note:voice.note,
+      intro:voice.intro,
+      q:voice.q.map(item=>({q:item.q,a:item.a}))
+    }
+  ]));
+}
+
+const UI_COPY={
+  en:{
+    static:{
+      pageTitle:'Heide I · The Cottage · AUXIO Concept',
+      tag:'AUXIO · Concept',
+      credit:'Photo · Heide I · Wikimedia Commons · Public domain',
+      title:'Heide I · The Cottage',
+      sub:'Farmhouse · c.1870, acquired 1934 · Wurundjeri Woi-wurrung Country',
+      institution:'Heide Museum of Modern Art · Bulleen, Naarm/Melbourne',
+      metaTags:['Public domain image','Victorian Heritage Register','Concept demo · not official Heide content'],
+      story:'<strong>Heide I</strong> is the original weatherboard farmhouse where the whole story begins. In 1934, art patrons John and Sunday Reed bought this former dairy farm beside the Yarra River and made the cottage their home for the next thirty-five years. Around its kitchen table they gathered a circle of young modernist artists. Sidney Nolan painted the first <em>Ned Kelly</em> series here in 1946-47. Australian modernism took root in this small house.',
+      askLabel:'Ask this place · one object, four voices',
+      toneLabel:'Choose a voice',
+      langLabel:'Language',
+      chatPlaceholder:'Ask this place anything...',
+      askButton:'Ask',
+      audioTitle:'Audio & voice tools',
+      audioHint:'Open controls',
+      voiceLabel:'Language & voice',
+      autoRead:'Read replies automatically',
+      audioStatusAuto:'Replies follow the language you ask in. Spoken audio uses the browser voices available on this device.',
+      audioStatusFixed:'Replying in {language}. Spoken audio will try to match that language; choose a different voice below if needed.',
+      noSpeech:'This browser does not support spoken audio. Try Safari or Chrome.',
+      visitorTitle:'Visitor response',
+      visitorHint:'Leave a note',
+      commentLabel:'Leave a response · your note becomes part of the collection record',
+      commentPlaceholder:'What does this object make you think or feel?',
+      commentButton:'Submit response',
+      commentThanks:'Thank you · response recorded',
+      commentMeta:'Visitor response · {date}',
+      shareTitle:'Share / save',
+      shareHint:'Links and downloads',
+      shareButtons:['Share','Email','Copy link','Post'],
+      shareNote:'On mobile, the share menu can also save this page to Files or add it to your home screen.',
+      objectTitle:'Object record',
+      objectHint:'Grounding',
+      objectRows:[
+        ['Object','Heide I (The Cottage), farmhouse'],
+        ['Occupants','John and Sunday Reed, 1934-1981'],
+        ['Significance','Birthplace of Australian modernism'],
+        ['Location','7 Templestowe Rd, Bulleen VIC'],
+        ['Heritage','Victorian Heritage Register'],
+        ['Rights','Interpretation set by Heide · image public domain'],
+        ['Source image','Wikimedia Commons, public domain photograph']
+      ],
+      mapLabel:'You are here',
+      mapNote:'Tap markers to orient yourself across the site.',
+      mapNodes:{heide3:'GALLERIES',heide2:'HEIDE II',sculpture:'SCULPTURE PARK',cottage:'COTTAGE',garden:'KITCHEN GARDEN',orchard:'ORCHARD',yingabeal:'YINGABEAL'},
+      places:{cottage:'Heide I · The Cottage',garden:"Sunday's kitchen garden",orchard:'The orchard',yingabeal:'Yingabeal · scarred tree',sculpture:'The sculpture park',heide2:'Heide II',heide3:'Heide III · galleries'},
+      herePrefix:'You are here · ',
+      govTitle:'Nearby · Yingabeal, the Song Tree',
+      govBody:'A short walk from here is Yingabeal, an ancient Wurundjeri scarred marker tree where Songlines meet. This story belongs to Wurundjeri Woi-wurrung people. In ARCHAI, source communities can define what an object may say, and have those limits enforced at the moment it speaks, so the voice remains shaped by them, or stays silent by their choice.',
+      aoc:'Heide stands on the Country of the Wurundjeri Woi-wurrung people of the Kulin Nation, beside the Birrarung. We pay respect to Elders past and present. Sovereignty was never ceded.',
+      concept:'Discussion concept · built by Rob Graham, RMIT School of Design PhD, for Heide × ARCHAI conversations · content grounded in public Heide history · Heide logo used only for co-branding discussion · live replies are generated on request and grounded in the record above.',
+      footlineHtml:'<b>Powered by ARCHAI</b> · sovereign, local-first cultural heritage AI<br>Object voice · consent governance · rights-aware · runs on Heide-controlled hardware',
+      thinking:['Checking the Heide record','Looking at the object file','Finding the clearest answer','Searching the grounded details'],
+      responseWho:'Heide I · {voice} voice',
+      liveTag:'✓ Live · grounded in Heide’s record · qwen2.5, on Heide-controlled hardware',
+      offlineTag:'✓ From Heide’s record (live voice offline · showing curated reply)',
+      readAloud:'Read aloud',
+      stop:'Stop',
+      freeFallback:"If the live voice is offline, I can only answer from my record. I am Heide I, the cottage. John and Sunday Reed lived here from 1934; this is where Australian modernism took root, and where Sidney Nolan painted the first Ned Kelly series in 1946-47.",
+      visitorName:'Visitor',
+      copied:'Copied',
+      copyPrompt:'Copy this link:',
+      autoLangLabel:'Auto · match my question',
+      autoLangShort:'Auto',
+      shareWebTitle:'Heide I · The Cottage · ARCHAI',
+      shareWebText:'Heide I, the Cottage · ask the birthplace of Australian modernism in four voices. ARCHAI × Heide concept demo.'
+    },
+    voices:voiceUiFromVoices()
+  },
+  zh:{
+    static:{
+      pageTitle:'Heide I · 小屋 · AUXIO 概念',
+      tag:'AUXIO · 概念',
+      credit:'照片 · Heide I · Wikimedia Commons · 公共领域',
+      title:'Heide I · 小屋',
+      sub:'农舍 · 约1870年，1934年购入 · Wurundjeri Woi-wurrung Country',
+      institution:'海德现代艺术博物馆 · Bulleen，Naarm/Melbourne',
+      metaTags:['公共领域图片','维多利亚遗产登记','概念展示 · 非海德官方内容'],
+      story:'<strong>Heide I</strong> 是最初的木板农舍，整个故事从这里开始。1934年，艺术赞助人 John 和 Sunday Reed 买下这座雅拉河边的旧奶牛场，并在接下来的三十五年把小屋作为家。在厨房餐桌旁，他们聚集了一群年轻的现代主义艺术家。1946至1947年，Sidney Nolan 就在这里创作了第一组 <em>Ned Kelly</em> 系列。澳大利亚现代主义就是从这座小房子扎根的。',
+      askLabel:'向这个地方提问 · 一个对象，四种声音',
+      toneLabel:'选择声音',
+      langLabel:'语言',
+      chatPlaceholder:'向这个地方提问...',
+      askButton:'提问',
+      audioTitle:'音频和语音工具',
+      audioHint:'打开控制',
+      voiceLabel:'语言和声音',
+      autoRead:'自动朗读回答',
+      audioStatusAuto:'回答会跟随你提问的语言。朗读会使用设备内置声音。',
+      audioStatusFixed:'正在使用 {language} 回答。朗读会尽量匹配该语言的声音；你也可以在下面选择其他声音。',
+      noSpeech:'此浏览器不支持语音朗读，请尝试 Safari 或 Chrome。',
+      visitorTitle:'访客回应',
+      visitorHint:'留言',
+      commentLabel:'留下回应 · 你的笔记会加入收藏记录',
+      commentPlaceholder:'这个对象让你想到或感受到了什么？',
+      commentButton:'提交回应',
+      commentThanks:'谢谢 · 回应已记录',
+      commentMeta:'访客回应 · {date}',
+      shareTitle:'分享 / 保存',
+      shareHint:'链接和下载',
+      shareButtons:['分享','邮件','复制链接','发布'],
+      shareNote:'在手机上，分享菜单也可以把此页面保存到文件，或添加到主屏幕。',
+      objectTitle:'对象记录',
+      objectHint:'依据',
+      objectRows:[
+        ['对象','Heide I（小屋），农舍'],
+        ['居住者','John 和 Sunday Reed，1934-1981'],
+        ['重要性','澳大利亚现代主义的发源地'],
+        ['地点','7 Templestowe Rd, Bulleen VIC'],
+        ['遗产','维多利亚遗产登记'],
+        ['权利','解释由 Heide 设定 · 图片为公共领域'],
+        ['来源图片','Wikimedia Commons，公共领域照片']
+      ],
+      mapLabel:'你所在的位置',
+      mapNote:'点击标记，在场地中找到方向。',
+      mapNodes:{heide3:'展厅',heide2:'HEIDE II',sculpture:'雕塑公园',cottage:'小屋',garden:'厨房花园',orchard:'果园',yingabeal:'YINGABEAL'},
+      places:{cottage:'Heide I · 小屋',garden:'Sunday 的厨房花园',orchard:'果园',yingabeal:'Yingabeal · 疤痕树',sculpture:'雕塑公园',heide2:'Heide II',heide3:'Heide III · 展厅'},
+      herePrefix:'你在这里 · ',
+      govTitle:'附近 · Yingabeal，歌之树',
+      govBody:'不远处是 Yingabeal，一棵古老的 Wurundjeri 疤痕标记树，歌曲线在这里交汇。这个故事属于 Wurundjeri Woi-wurrung。在 ARCHAI 中，源社区可以决定一个对象被允许说什么，并在它开口的那一刻执行这些边界，所以这道声音仍由他们塑造，或由他们选择保持沉默。',
+      aoc:'Heide 位于 Kulin Nation 的 Wurundjeri Woi-wurrung 人民土地上，毗邻 Birrarung。我们向过去和现在的长者致敬。主权从未被割让。',
+      concept:'讨论概念 · 由 Rob Graham，RMIT 设计博士项目，为 Heide × ARCHAI 对话建立 · 内容来自 Heide 公开历史 · Heide 标志仅用于联合品牌讨论 · 在线回答按需生成，并以以上记录为依据。',
+      footlineHtml:'<b>运行于 ARCHAI</b> · 主权、本地优先的文化遗产 AI<br>对象声音 · 同意治理 · 权利感知 · 留在 Heide 的硬件上',
+      thinking:['查阅 Heide 记录','查看对象档案','寻找最清楚的回答','检索有依据的细节'],
+      responseWho:'Heide I · {voice} 声音',
+      liveTag:'✓ 在线 · 基于 Heide 记录 · qwen2.5，运行在 Heide 控制的硬件上',
+      offlineTag:'✓ 来自 Heide 记录（在线声音离线 · 显示策展回复）',
+      readAloud:'朗读',
+      stop:'停止',
+      freeFallback:'在线声音暂时离线时，我只能根据自己的记录回答。我是 Heide I，小屋。John 和 Sunday Reed 从1934年起住在这里；这里是澳大利亚现代主义的发源地，也是 Sidney Nolan 于1946至1947年创作第一组 Ned Kelly 系列的地方。',
+      visitorName:'访客',
+      copied:'已复制',
+      copyPrompt:'复制这个链接：',
+      autoLangLabel:'自动 · 跟随我的问题',
+      autoLangShort:'自动',
+      shareWebTitle:'Heide I · 小屋 · ARCHAI',
+      shareWebText:'Heide I，小屋 · 与澳大利亚现代主义开始的地方对话，四种声音。ARCHAI × Heide 概念展示。'
+    },
+    voices:{
+      guide:{
+        label:'导览',
+        note:'温暖、清楚，会把你带到参观路线上的下一个地点。',
+        intro:"欢迎。你正站在 Heide I 前面，也就是最初的农舍和整个场地的核心。John 和 Sunday Reed 从1934年起住在这里，年轻的 Sidney Nolan 就在这里的餐桌旁画下第一组 Ned Kelly 系列。先感受一下这里，然后准备好时，可以沿小路走进 Sunday 的厨房花园。",
+        q:[
+          {q:'接下来去哪里？',a:'你可以沿着小路向西走，参观海德二号现代主义住宅和画廊。如果您对户外雕塑感兴趣，可以前往附近的雕塑公园漫步。如果你想了解我们的历史花园，向东走就是 Sunday 的厨房花园。'},
+          {q:'这里发生过什么？',a:'这里是 John 和 Sunday Reed 从1934年开始生活、工作和接待艺术家的家。Sidney Nolan 在这里创作第一组 Ned Kelly 系列，很多重要的澳大利亚现代主义故事都从这座农舍开始。'},
+          {q:'步行需要多久？',a:'从 Heide I 走到 Heide II 通常只需要几分钟。去厨房花园更近，去雕塑公园可以按自己的节奏慢慢走。'},
+          {q:'我不应该错过什么？',a:'不要错过房子的尺度感。它很朴素，但曾经容纳了非常大的想法。之后可以看看厨房花园、Heide II，以及附近的 Yingabeal 疤痕树。'}
+        ]
+      },
+      child:{
+        label:'儿童',
+        note:'简单、好奇，适合孩子和家庭。',
+        intro:'你好！这座小房子叫 Heide I。它看起来像普通农舍，但很多艺术家曾经来到这里，一起吃饭、聊天、画画。有一位叫 Sidney Nolan 的艺术家，在这里画了非常有名的 Ned Kelly 图像。',
+        q:[
+          {q:'谁住在这里？',a:'John Reed 和 Sunday Reed 住在这里。他们喜欢艺术，也喜欢邀请艺术家朋友来家里交流。'},
+          {q:'为什么这房子重要？',a:'因为很多重要的澳大利亚艺术故事都从这里开始。它提醒我们，大创意也可以从一张厨房桌子开始。'},
+          {q:'Ned Kelly 是谁？',a:'Ned Kelly 是澳大利亚历史里很有名的人物。Sidney Nolan 在这里画了他的故事，那些画后来变得非常出名。'},
+          {q:'我可以问什么？',a:'你可以问这座房子谁住过、艺术家为什么来这里、花园里种过什么，或者下一站应该去哪里。'}
+        ]
+      },
+      education:{
+        label:'教育',
+        note:'面向学生、教师和课堂提问。',
+        intro:'Heide I 可以帮助学生理解地方、社群和艺术如何互相影响。它既是一座家宅，也是一处工作、交谈和实验的空间。这里的故事连接现代主义、赞助、日常生活和文化记忆。',
+        q:[
+          {q:'这能教学生什么？',a:'它能说明艺术并不只在画廊里产生。艺术也来自友情、争论、餐桌、花园和一个支持创作的地方。'},
+          {q:'有哪些主题？',a:'主题包括澳大利亚现代主义、艺术赞助、创作社群、地方记忆、文化景观，以及如何讲述一个场地的多层历史。'},
+          {q:'这和 Ned Kelly 有什么关系？',a:'Sidney Nolan 在这里创作第一组 Ned Kelly 系列。这个场地帮助学生把这些图像放回它们产生的具体生活环境中。'},
+          {q:'教师可以怎样使用它？',a:'教师可以把 Heide I 作为一个起点，让学生比较房屋、花园、艺术作品和人物关系，思考文化记忆如何形成。'}
+        ]
+      },
+      curatorial:{
+        label:'策展',
+        note:'更深入地关注出处、解释、证据和治理。',
+        intro:'从策展角度看，Heide I 不只是背景，而是一个承载艺术生产的地点。它把家宅、工作室、赞助、收藏、友谊和现场记忆连接在一起，也提醒我们解释系统必须清楚标出依据和边界。',
+        q:[
+          {q:'什么可以确认？',a:'可确认的是，John 和 Sunday Reed 于1934年购入这处房产，Heide I 成为他们的家；Sidney Nolan 于1946至1947年在这里创作第一组 Ned Kelly 系列。'},
+          {q:'哪些地方需要谨慎？',a:'任何关于私人关系、动机或第一人称记忆的说法都需要谨慎。ARCHAI 应把这些内容标记为解释或背景，而不是未经证实的事实。'},
+          {q:'为什么对象边界重要？',a:'边界让回答留在记录内部。系统可以说出已核实的事实、已批准的解释和已知未知，而不是用模型记忆补空。'},
+          {q:'ARCHAI 在这里测试什么？',a:'它测试一个地点如何以多种声音与访客交流，同时保留来源、权利、文化治理和拒答行为。'}
+        ]
+      }
+    }
+  }
+};
+Object.assign(UI_COPY,{"ar":{"static":{"pageTitle":"هيد I · المنزل الصغير · مفهوم AUXIO","tag":"مفهوم AUXIO","credit":"صورة · هيد I · ويكيميديا كومنز · في المجال العام","title":"هيد I · المنزل الصغير","sub":"مزرعة · حوالي 1870، اقتُرِحَت عام 1934 · أرض ووروندجرى واوي-وارنج","institution":"متحف هيد للفن المعاصر · بولين، نارام/ملبورن","metaTags":["صورة في المجال العام","سجل التراث الفيكتوري","عرض مفهوم · ليس محتوى رسمي من هيد"],"story":"<strong>هيد I</strong> هو المنزل القديم حيث تبدأ القصة. في عام 1934، اشترى الرعاة الفنيون جون وسنداي ريد هذا المزرعة السابقة للحليب المجاورة لنهر بيرارانج وأقاموا في المنزل لمدة ثلاثين سنة. حول طاولة مطبخهم جمعوا دوائر من الفنانين الشباب. صنع سيدني نولان أول سلسلة <em>نيد كيلي</em> هنا بين عامي 1946-1947. اتخذت الفنون الحديثة الأسترالية جذورها في هذا المنزل الصغير.","askLabel":"اسأل عن هذا المكان · قطعة واحدة، أربع أصوات","toneLabel":"اختر صوتًا","langLabel":"اللغة","chatPlaceholder":"اسأل عن هذا المكان أي شيء...","askButton":"أسأل","audioTitle":"أدوات الصوت والصوت","audioHint":"افتح التحكمات","voiceLabel":"اللغة والصوت","autoRead":"اقرأ الردود تلقائيًا","audioStatusAuto":"تتبع الردود باللغة التي تسأل بها. يستخدم الصوت المنقول لغة الجهاز المستخدمة في هذا المتصفح.","audioStatusFixed":"الرد باللغة {language}. سيحاول الصوت المنقول استخدام نفس اللغة؛ اختر صوتًا مختلفًا أدناه إذا كان ذلك ضروريًا.","noSpeech":"لا يدعم هذا المتصفح الصوت المنقول. حاول سفاري أو كروم.","visitorTitle":"رد الزائر","visitorHint":"اترك ملاحظة","commentLabel":"اترك رد · تصبح ملاحظتك جزءًا من السجل الخاص بالمجموعة","commentPlaceholder":"ما الذي يجعلك تفكر فيه أو تشعر به عند رؤية هذا العرض؟","commentButton":"أرسل الرد","commentThanks":"شكراً · تم تسجيل الرد","commentMeta":"رد الزائر · {date}","shareTitle":"شارك / حفظ","shareHint":"روابط وتنزيلات","shareButtons":["شارك","بريد إلكتروني","نسخ الرابط","مشاركة"],"shareNote":"في الهاتف المحمول، يمكن للقائمة المشتركة حفظ هذه الصفحة في ملفاتك أو إضافتها إلى شاشة البداية الخاصة بك.","objectTitle":"سجّل القطعة","objectHint":"الأساس","objectRows":[["القطعة","هيد I (الكوتيج)، المنزل القروي"],["المقيمين","جون وصونداي ريد، 1934-1981"],["الأهمية","مهد التجديد الفني الأسترالي"],["الموقع","7 Templestowe Rd, Bulleen VIC"],["التاريخ الثقافي","سجل التراث في فيكتوريا"],["حقوق الملكية","التأويل من قبل هيد · الصورة في نطاق حقوق النشر العام"],["صورة المصدر","ويكي ميديا كومنز، صورة عامة"]],"mapLabel":"أنت هنا","mapNote":"اضغط على العلامات لتحديد موقعك داخل الموقع.","mapNodes":{"heide3":"المعارض","heide2":"هيد II","sculpture":"حديقة التماثيل","cottage":"الكوتيج","garden":"حديقة المطبخ","orchard":"المزرعة","yingabeal":"يينغابيال"},"places":{"cottage":"هيد I · الكوتيج","garden":"حديقة صونداي للمطبخ","orchard":"المزرعة","yingabeal":" Yingabeal · شجرة الندوب","sculpture":"حديقة المنحوتات","heide2":"هيد II","heide3":"هيد III · المعارض"},"herePrefix":"أنت هنا · ","govTitle":"المجاورة · Yingabeal، شجرة الأغنية","govBody":"قريب من هنا توجد Yingabeal، شجرة ماركة ورندجيري القديمة حيث تتلاقى خطوط الأغاني. هذه القصة تنتمي إلى قبيلة Wurundjeri Woi-wurrung. في ARCHAI، يمكن للمجتمعات المصدرة تحديد ما قد يقوله العنصر، ويتم تطبيق تلك الحدود عند لحظة إصدار الصوت، بحيث يبقى الصوت متأثراً بهم أو يصمت بناءً على اختيارهم.","aoc":"تقف هيد على أرض قبيلة Wurundjeri Woi-wurrung من الأمةkulun، بجانب Birrarung. نحن نحترم كبار السن السابقين والحاليين. لم تتم تسليم السيادة أبداً.","concept":"فكرة النقاش · بنى Rob Graham، برنامج الدكتوراه في كلية التصميم في جامعة RMIT، لـ Heide × ARCHAI · المحتوى مبني على التاريخ العام للهيد · شعار هيد يستخدم فقط لتسمية النقاش · الردود الحية تولد عند الطلب وتستند إلى السجل أعلاه.","footlineHtml":"<b>مدعوم بواسطة ARCHAI</b> · سيادي، أولويات محلية ثقافية ذكاء اصطناعي · صوت العنصر · حوكمة الموافقة · على دراية بالحقوق · يعمل على معدات هيد","thinking":["فحص سجل هيد"," просмотр файла объекта","بحث عن الإجابة الأكثر وضوحاً","بحث التفاصيل الموثوقة"],"responseWho":"هيد I · صوت {voice}","liveTag":"✓ حي · مستند إلى سجل هيد · qwen2.5، على معدات هيد تحت سيطرة هيد","offlineTag":"✓ من سجل هيد (صوت مباشر غير متاح · يعرض رد مدروس)","readAloud":"اقرأ بصوت عالٍ","stop":"توقف","freeFallback":"إذا كان الصوت المباشر غير متاح، يمكنني الرد فقط من سجلي. أنا هيد I، المنزل. عاش جون وسنداي ريد هنا منذ عام 1934؛ هذا هو المكان الذي نمت فيه الحداثة الأسترالية، حيث رسم سيدني نولان أول سلسلة نيد كيلي في عام 1946-47.","visitorName":"زائر","copied":"تم النسخ","copyPrompt":"نسخ الرابط:","autoLangLabel":"تلقائي · تطابق سؤالي","autoLangShort":"تلقائي","shareWebTitle":"هيد I · المنزل · ARCHAI","shareWebText":"هيد I، المنزل · اسأل عن مسقط رأس الحداثة الأسترالية في أربع أصوات. مفهوم هيد × ARCHAI."},"voices":{"guide":{"label":"دليل","note":"دافئ ومضياف، ويأخذك إلى المكان التالي على الدائرة.","intro":"مرحباً. تقف أمام هيد I، المنزل القديم والقلب من الموقع بأكمله. عاش جون وسنداي ريد هنا منذ عام 1934، وهذا هو المكان الذي رسم فيه الشاب سيدني نولان أول سلسلة نيد كيلي على طاولة الطعام. تأمل في ذلك، ثم اتبع المسار إلى حديقة سنداي المطبخية عندما تكون مستعدًا.","q":[{"q":"أين أذهب بعد ذلك؟","a":"اتجه يساراً من الشرفة إلى حديقة سنداي المطبخية، الحديقة التي غذت جميع الفنانين الذين جاءوا هنا. من هناك تستمر دورة المنزل في الذهاب إلى البستان، ثم خارجًا نحو حديقة المنحوتات و هيد II."},{"q":"ماذا حدث هنا؟","a":"هنا حيث جمع ريدز الفنانين الذين أصبحوا حركة الفن الأسترالية الحديثة، وهنا رسم نولان سلسلته عن كيلي. ثلاثون عاماً من الفن والنقاشات والعشاءات تحت هذا السقف الصغير."},{"q":"كم تستغرق المشي؟","a":"يمكنك أن تمشي لمدة خمسة عشر إلى عشرين دقيقة في مسار Cottage Loop، وهو طريق مستقيم وسهل، مع خيار للطريق الممهدة والمظللة."},{"q":"ما الذي لا يجب علي missing؟","a":"لا تفوت حديقة سوندا المطبخية بجانبي والمشي عبر حدائق التماثيل. إذا كان لديك الوقت، يعرض Heide II كيف نمت رؤية ريدز من هذا المنزل القديم إلى العمارة الحديثة."}]},"child":{"label":"الأطفال","note":"رائع وسهل، مليء بالدهشة، للأطفال الصغار.","intro":"مرحباً! أنا المزرعة الصغيرة التي تسمى هايد. منذ زمن بعيد عاش زوج طيب، جون وسوندا، فيّ، وكان الكثير من الفنانين يأتون لرسم وإكليل الطعام معًا. واحد منهم، سيدني، رسم مجرم الغاب الشهير بelmet كبير الشكل، بالضبط على الطاولة المطبخية. هل تستطيع العثور على الحديقة السحرية التي زرعتها سوندا؟","q":[{"q":"من عاش هنا؟","a":"عاشا جون وسوندا ريد هنا! زرعت سوندا حديقة كبيرة مليئة بالخضروات والزهور، وكانت تحب مساعدة الفنانين في صنع لوحاتهم. كان البيت دائمًا مليئًا بالناس."},{"q":"من هو نيد كيلي؟","a":"نيد كيلي كان مجرم الغاب الحقيقي من زمن بعيد يرتدي درعاً وelmet كبير الشكل مثل صندوق البريد! أحب سيدني القصة كثيراً أنه رسمه مراراً وتكراراً، هنا."},{"q":"ما الذي نمت في الحديقة؟","a":"أشياء لذيذة! خضروات، أعشاب وأشجار فاكهة، وكميات من الزهور. كان الفنانين يقطفون الطعام الطازج ويأكلون معًا. هل تستطيع رؤية أشجار الفاكهة في الحديقة؟"},{"q":"أخبرني قصة","a":"في يوم ما، رسم الفنانين طوال اليوم في غرفي وأكلوا معاً على طاولة كبيرة، مع الخضروات من حديقة سوندا. واحد منهم أحب قصته كثيراً أنه رسمه مراراً وتكراراً، هنا!"}]},"education":{"label":"التعليم","note":"متوافق مع المناهج الدراسية، مرتبط بالتاريخ الفني الأسترالي.","intro":"هايد I هي منزل فرنسي الصنع الذي اشتراه جون وسوندا ريد عام 1934. جمعوا دوائر من الفنانين المحدثين هنا، نولان، هستير، تاكر، بيرسيفال وغيرهم، وفي 1946 إلى 47 رسم نولان سلسلته الأولى عن كيلي على الطاولة المطبخية. هذا هو المكان الذي انبثقت منه الحركة الفنية الأسترالية الحديثة.","q":[{"q":"ما كان دوائر هايد؟","a":"المجموعة من الفنانين والكتاب والمفكرين الذين جمعهم ريدز منذ الثلاثينيات، بما في ذلك نولان، جوي هستير، ألبرت تاكر، جون بيرسيفال واح latter ميركا مورا وكارلز بلاكمان. أصبح هايد مكانًا لصنع الفن والنقاش حوله وترويجه في أستراليا."},{"q":"ما كان Angry Penguins؟","a":"مجلة حديثة مرتبطة بدائرة هايد، مشهورة بحادثة Ern Malley عام 1944، حيث اخترع كاتبان شخصية مزيفة لخداع المحرر. كانت تلك القصائد نفسها محل نقاش في هذا المنزل."},{"q":"لماذا يهم الدعم هنا؟","a":"الريدز يوضحون كيف يمكن أن يكون الدعم والمنزل والأكل والثقة عاملاً في تشكيل حركة فنية وطنية. بدون دعمهم، قد لا تكون الكثير من الفن الأسترالي الحديث قد حدث. إنه دراسة حالة للفن والموقع."},{"q":"من كان الفنانين؟","a":"دوائر هايد شملت سيدني نولان، جوي هستير، ألبرت تاكر وجون بيرسيفال، واح latter ميركا مورا وكارلز بلاكمان. أعطى الرديز لهم منزلاً وأكلة وثقة، والفن الأسترالي الحديث نما منها."}]},"curatorial":{"label":"الإدارة","note":"المصدرية والأبحاث، للموظفين والمحللين.","intro":"هايد I، المنزل القديم الذي اشتراه جون وسوندا ريد عام 1934 وتم تجديده بطريقة فرنسية بروفسيرية، هو مكان نشأة الفن الأسترالي الحديث. تم تنفيذ سلسلة نولان الأولى عن كيلي (1946-1947) هنا وأهداها سوندا ريد إلى متحف أستراليا الوطني عام 1976. حيث يكون السجل صامتًا، ستقول هذه الصوت بدلاً من اختراع.","q":[{"q":"المصدرية لسلسلة كيلي؟","a":"منفذ في هايد 1946-1947 ؛ بقيت عند ساندي ريد بعد مغادرة نولان ؛ قدمتها ساندي إلى المتحف الوطني للفنون الأسترالية عام 1976 ، \"بكل الحب\". تتكون السلسلة الأولى من عشرين لوحة. (تحقق من تفاصيل الكتالوج ضد السجل في المتحف الوطني للفنون الأسترالية قبل الإقتباس.)"},{"q":"ما هو الموثق مقابل غير المؤكد؟","a":"موثق: الشراء عام 1934 ، الدائرة الفنية ، سلسلة نولان كيلي وifta هديته إلى المتحف الوطني للفنون الأسترالية في 1976. حيث يكون السجل صامتاً - المحادثات الدقيقة ، الزيارات غير الوثائقية - هذا الصوت يقول أنه لا يعرف بدلاً من اختراع."},{"q":"حقوق الأعمال المرتبطة؟","a":"هايد يحدد الحقوق والشروط المتعلقة بالنسخ لكل عنصر. هذه الفكرة لا تظهر أي صور مقيدة بحقوق الطبع والنشر ؛ في نشرة حية ، يتم تنظيم حقوق العناصر الثقافية وprotocols عند الإدخال وفي نقطة التحدث."},{"q":"من هم ريد؟","a":"جون وساندي ريد كانوا من أبرز الرعاة والمجموعات الفنية الذين اشتروا هذا المزرعة عام 1934 وأصبحت مركزًا للحداثة الأسترالية. ساندي بشكل خاص شكل الدائرة ، وفي عام 1976 قدمت السلسلة الأولى لنولان كيلي إلى المتحف الوطني للفنون الأسترالية."}]}}},"vi":{"static":{"pageTitle":"Heide I · The Cottage · AUXIO Concept","tag":"AUXIO · Concept","credit":"Ảnh · Heide I · Wikimedia Commons · Công cộng","title":"Heide I · The Cottage","sub":"Nhà nông thôn · khoảng 1870, mua vào năm 1934 · Đất của Wurundjeri Woi-wurrung","institution":"Bảo tàng Nghệ thuật Hiện đại Heide · Bulleen, Naarm/Melbourne","metaTags":["Ảnh công cộng","Danh sách Di sản Victoria","Demo khái niệm · không phải nội dung chính thức của Heide"],"story":"<strong>Heide I</strong> là ngôi nhà nông thôn gỗ sơn đầu tiên nơi câu chuyện bắt đầu. Năm 1934, John và Sunday Reed đã mua trang trại sữa cũ bên sông Yarra này và làm cho căn cottage trở thành nhà của họ trong ba mươi lăm năm tiếp theo. Quanh bàn ăn của họ, họ tụ tập một nhóm các nghệ sĩ hiện đại trẻ tuổi. Sidney Nolan vẽ loạt <em>Ned Kelly</em> đầu tiên ở đây vào năm 1946-47. Chủ nghĩa hiện đại Úc đã nảy sinh trong ngôi nhà nhỏ này.","askLabel":"Hỏi về nơi này · một vật phẩm, bốn giọng nói","toneLabel":"Chọn một giọng nói","langLabel":"Ngôn ngữ","chatPlaceholder":"Hãy hỏi bất cứ điều gì về nơi này...","askButton":"Hỏi","audioTitle":"Công cụ âm thanh và giọng nói","audioHint":"Mở điều khiển","voiceLabel":"Ngôn ngữ và giọng nói","autoRead":"Đọc tự động các câu trả lời","audioStatusAuto":"Các câu trả lời sẽ theo ngôn ngữ mà bạn hỏi. Âm thanh phát ra sử dụng các giọng nói có sẵn trên thiết bị này.","audioStatusFixed":"Trả lời bằng {language}. Âm thanh phát ra sẽ cố gắng phù hợp với ngôn ngữ đó; chọn một giọng khác dưới đây nếu cần.","noSpeech":"Trình duyệt của bạn không hỗ trợ âm thanh phát ra. Hãy thử Safari hoặc Chrome.","visitorTitle":"Phản hồi từ khách tham quan","visitorHint":"Để lại một ghi chú","commentLabel":"Để lại phản hồi · ghi chú của bạn trở thành phần của hồ sơ sưu tập","commentPlaceholder":"Vật phẩm này khiến bạn nghĩ gì hay cảm thấy như thế nào?","commentButton":"Gửi phản hồi","commentThanks":"Cảm ơn · phản hồi đã được lưu","commentMeta":"Phản hồi từ khách tham quan · {date}","shareTitle":"Chia sẻ / lưu","shareHint":"Liên kết và tải xuống","shareButtons":["Chia sẻ","Email","Sao chép liên kết","Bài đăng"],"shareNote":"Trên thiết bị di động, menu chia sẻ cũng có thể lưu trang này vào Tệp hoặc thêm nó vào màn hình chính của bạn.","objectTitle":"Danh mục đối tượng","objectHint":"Địa điểm","objectRows":[["Đối tượng","Heide I (The Cottage), nông trại"],["Người cư ngụ","John và Sunday Reed, 1934-1981"],["Tầm quan trọng","Nơi sinh ra chủ nghĩa hiện đại Úc"],["Vị trí","7 Templestowe Rd, Bulleen VIC"],["Di sản","Danh mục Di sản Victoria"],["Quyền","Giải thích do Heide thiết lập · hình ảnh công cộng"],["Ảnh nguồn gốc","Wikimedia Commons, hình ảnh công cộng"]],"mapLabel":"Bạn đang ở đây","mapNote":"Nhấn dấu hiệu để định vị chính mình trên toàn bộ khu vực.","mapNodes":{"heide3":"GALLERIES","heide2":"HEIDE II","sculpture":"VƯỜN ĐÁ","cottage":"COTTAGE","garden":"VƯỜN RAU CỦ","orchard":"NHÀ TRĀI","yingabeal":"YINGABEAL"},"places":{"cottage":"Heide I · The Cottage","garden":"Vườn rau củ của Sunday","orchard":"Nhà trai","yingabeal":"Yingabeal · cây có vết khắc","sculpture":"Khu vườn điêu khắc","heide2":"Heide II","heide3":"Heide III · phòng trưng bày"},"herePrefix":"Bạn đang ở đây · ","govTitle":"Cận kề · Yingabeal, cây hát","govBody":"Từ đây chỉ cần đi bộ ngắn là đến Yingabeal, một cây cổ đại của người Wurundjeri có vết khắc nơi các Songlines gặp nhau. Câu chuyện này thuộc về người Wurundjeri Woi-wurrung. Trong ARCHAI, cộng đồng nguồn có thể xác định điều gì mà một vật phẩm có thể nói và áp dụng giới hạn đó vào lúc nó phát ngôn, vì vậy giọng điệu vẫn được hình thành bởi họ hoặc giữ im lặng theo lựa chọn của họ.","aoc":"Heide nằm trên đất đai của người Wurundjeri Woi-wurrung thuộc Kulin Nation bên cạnh con sông Birrarung. Chúng tôi xin kính chào các bậc trưởng lão hiện tại và quá cố. Quyền chủ quyền chưa bao giờ được nhượng lại.","concept":"Khái niệm thảo luận · xây dựng bởi Rob Graham, RMIT School of Design PhD, cho Heide × ARCHAI cuộc trò chuyện · nội dung dựa trên lịch sử công khai của Heide · logo Heide chỉ dùng để đồng thương hiệu thảo luận · phản hồi trực tiếp được tạo ra khi có yêu cầu và dựa trên thông tin đã nêu.","footlineHtml":"<b>Năng lượng bởi ARCHAI</b> · chủ quyền, địa phương đầu tiên AI di sản văn hóa<br>Giọng điệu vật phẩm · quản lý sự đồng ý · nhận thức về quyền lợi · chạy trên phần cứng do Heide kiểm soát","thinking":["Kiểm tra hồ sơ của Heide","Xem tệp đối tượng","Tìm câu trả lời rõ ràng nhất","Tìm chi tiết đã được xác minh"],"responseWho":"Heide I · {voice} giọng nói","liveTag":"✓ Trực tiếp · dựa trên hồ sơ của Heide · qwen2.5, chạy trên phần cứng do Heide kiểm soát","offlineTag":"✓ Từ hồ sơ của Heide (giọng điệu trực tuyến không hoạt động · chỉ hiển thị phản hồi đã được chọn lọc)","readAloud":"Đọc to","stop":"Dừng lại","freeFallback":"Nếu giọng điệu trực tiếp không hoạt động, tôi chỉ có thể trả lời từ hồ sơ của mình. Tôi là Heide I, ngôi nhà nhỏ. John và Sunday Reed sống ở đây từ năm 1934; đây là nơi mà chủ nghĩa hiện đại Úc bắt đầu phát triển, và Sidney Nolan đã vẽ loạt tranh Ned Kelly đầu tiên tại đây vào năm 1946-47.","visitorName":"Khách tham quan","copied":"Đã sao chép","copyPrompt":"Sao chép liên kết:","autoLangLabel":"Tự động · khớp câu hỏi của tôi","autoLangShort":"Tự động","shareWebTitle":"Heide I · Ngôi Nhà Nhỏ · ARCHAI","shareWebText":"Heide I, ngôi nhà nhỏ · hỏi về nơi sinh ra chủ nghĩa hiện đại Úc trong bốn giọng điệu. Khái niệm demo ARCHAI × Heide."},"voices":{"guide":{"label":"Hướng dẫn","note":"Nồng ấm và thân thiện, nó sẽ đưa bạn đến địa điểm tiếp theo trên vòng quay.","intro":"Chào mừng. Bạn đang đứng trước Heide I, ngôi nhà nông trại gốc và trái tim của toàn bộ khu vực. John và Sunday Reed sống ở đây từ năm 1934, và đây là nơi mà Sidney Nolan trẻ tuổi đã vẽ loạt tranh Ned Kelly đầu tiên tại bàn ăn. Hãy thưởng thức nó, sau đó đi vào vườn nấu ăn của Sunday khi bạn sẵn sàng.","q":[{"q":"Bạn nên đến đâu tiếp theo?","a":"Đi qua bên trái ra khỏi hiên nhà vào vườn nấu ăn của Sunday, vườn nuôi dưỡng tất cả các nghệ sĩ đã đến đây. Từ đó vòng quay ngôi nhà nhỏ sẽ dẫn bạn đến khu vườn cây ăn quả, sau đó ra phía công viên điêu khắc và Heide II."},{"q":"Điều gì đã xảy ra ở đây?","a":"Đây là nơi John và Sunday Reed tụ tập các nghệ sĩ trở thành hiện đại chủ nghĩa Úc, và nơi Sidney Nolan vẽ loạt tranh về Ned Kelly. Ba mươi lăm năm nghệ thuật, tranh cãi và bữa ăn, tất cả dưới mái nhà nhỏ này."},{"q":"Quãng đường đi mất bao lâu?","a":"Đường vòng Cottage kéo dài khoảng mười lăm đến hai mươi phút với tốc độ dễ dàng, chủ yếu bằng phẳng, có lựa chọn con đường thuận tiện và nhiều bóng râm để dừng lại."},{"q":"Tôi không nên bỏ qua điều gì?","a":"Hãy chắc chắn không bỏ qua vườn rau của Sunday ngay bên cạnh tôi, và con đường đi xuống công viên điêu khắc. Nếu bạn có thời gian, Heide II sẽ cho thấy cách tầm nhìn của Reed phát triển từ ngôi nhà nông thôn này thành kiến trúc hiện đại."}]},"child":{"label":"Trẻ em","note":"Hài hước và đơn giản, đầy sự kỳ diệu, dành cho các khách nhỏ tuổi.","intro":"Xin chào! Tôi là ngôi nhà nhỏ được gọi là Heide. Cách đây rất lâu, một cặp vợ chồng tốt bụng tên John và Sunday đã sống trong tôi, và nhiều nghệ sĩ đến vẽ và ăn cùng nhau. Một trong số họ, Sidney, đã vẽ một tay cướp nổi tiếng với mũ vuông lớn ngay tại bàn bếp. Bạn có thể tìm thấy vườn kỳ diệu mà Sunday trồng không?","q":[{"q":"Ai đã sống ở đây?","a":"John và Sunday Reed đã sống ở đây! Sunday trồng một vườn rau lớn đầy rau củ và hoa, và cô ấy rất thích giúp đỡ nghệ sĩ tạo ra bức tranh của họ. Nhà luôn đầy người."},{"q":"Ned Kelly là ai?","a":"Ned Kelly là một tay cướp rừng thực sự từ lâu đời đã mặc áo giáp và mũ sắt vuông lớn như hộp thư! Sidney, người họa sĩ yêu câu chuyện của anh ta đến nỗi anh ta vẽ anh ta nhiều lần ngay tại đây."},{"q":"Trong vườn trồng gì?","a":"Những thứ ngon miệng! Rau củ, thảo mộc và cây trái, cùng rất nhiều hoa. Nghệ sĩ sẽ hái thực phẩm tươi và ăn cùng nhau. Bạn có thể nhìn thấy những cây trái trong khu vườn không?"},{"q":"Hãy kể cho tôi một câu chuyện","a":"Một lần, các nghệ sĩ vẽ suốt cả ngày trong phòng của tôi và ăn cùng nhau tại một chiếc bàn lớn, với rau củ từ chính vườn của Sunday. Một trong số họ yêu câu chuyện về tay cướp rừng đến nỗi anh ta vẽ anh ta nhiều lần ngay tại đây!"}]},"education":{"label":"Giáo dục","note":"Đầy đủ chương trình học, liên kết với lịch sử nghệ thuật Úc.","intro":"Heide I là một ngôi nhà nông thôn bằng gỗ mỏng mà John và Sunday Reed mua vào năm 1934. Họ tụ tập một nhóm các nghệ sĩ hiện đại chủ nghĩa ở đây, Nolan, Hester, Tucker, Perceval và những người khác, và từ năm 1946 đến 1947, Nolan vẽ loạt tranh Ned Kelly đầu tiên tại bàn ăn. Đây là nơi mà hiện đại chủ nghĩa Úc bắt đầu.","q":[{"q":"Heide Circle là gì?","a":"Nhóm các nghệ sĩ, nhà văn và tư tưởng gia mà Reed tụ tập từ những năm 1930, bao gồm Nolan, Joy Hester, Albert Tucker, John Perceval và sau này Mirka Mora và Charles Blackman. Heide trở thành nơi để tạo ra, tranh cãi và thúc đẩy nghệ thuật hiện đại ở Úc."},{"q":"Angry Penguins là gì?","a":"Một tạp chí hiện đại liên kết với Heide Circle, nổi tiếng vì vụ Ern Malley vào năm 1944, một trò lừa dối mà hai nhà thơ tạo ra một nghệ sĩ hiện đại giả để lừa biên tập viên. Những bài thơ đó đã được tranh cãi ngay tại ngôi nhà này."},{"q":"Tại sao việc bảo trợ lại quan trọng ở đây?","a":"Reed cho thấy cách hỗ trợ, một nơi ở, thức ăn và niềm tin có thể định hình một phong trào nghệ thuật quốc gia. Nếu không có sự bảo trợ của họ, nhiều phần của hiện đại chủ nghĩa Úc có lẽ sẽ không xảy ra. Đây là một nghiên cứu điển hình về nghệ thuật và địa điểm."},{"q":"Những nghệ sĩ nào?","a":"Heide Circle bao gồm Sidney Nolan, Joy Hester, Albert Tucker và John Perceval, và sau này Mirka Mora và Charles Blackman. Reed đã cho họ một nơi ở, thức ăn và niềm tin, và nghệ thuật hiện đại Úc phát triển từ đó."}]},"curatorial":{"label":"Quản lý bảo tàng","note":"Nguồn gốc và học thuật, dành cho nhân viên và nghiên cứu.","intro":"Heide I, ngôi nhà nông thôn cũ được John và Sunday Reed mua vào năm 1934 và cải tạo theo phong cách Pháp tỉnh lẻ, là nơi sinh ra của hiện đại chủ nghĩa Úc. loạt tranh Kelly đầu tiên của Nolan (1946-1947) đã được thực hiện tại đây và sau đó được Sunday Reed tặng cho Bảo tàng Quốc gia Úc vào năm 1976. Khi hồ sơ im lặng, tiếng nói này sẽ nói vậy thay vì tạo ra.","q":[{"q":"Nguồn gốc của loạt tranh Kelly?","a":"Được vẽ tại Heide năm 1946-1947; được giữ lại bởi Sunday Reed sau khi Nolan rời đi; đã tặng cho Quốc gia Bảo tàng Nghệ thuật Úc vào năm 1976, 'với tình yêu.' Hai mươi bảy bức tranh tạo thành loạt đầu tiên. (Xác nhận chi tiết catalogue với bản ghi của NGA trước khi trích dẫn.)"},{"q":"Gì được xác minh và gì chưa chắc chắn?","a":"Được xác minh: việc mua vào năm 1934, nhóm nghệ sĩ, loạt Kelly và món quà tặng cho Quốc gia Bảo tàng Nghệ thuật Úc vào năm 1976. Trong những nơi mà bản ghi không đề cập - cuộc trò chuyện cụ thể, chuyến thăm chưa được ghi chép - tiếng nói này nói rằng nó không biết thay vì tạo ra."},{"q":"Quyền đối với các tác phẩm liên quan?","a":"Heide thiết lập quyền và điều khoản tái sản xuất theo từng mục. Khái niệm này không hiển thị hình ảnh bị hạn chế bởi quyền; trong một triển lãm trực tiếp, quy tắc cấp mục và quy ước văn hóa kiểm soát những gì có thể được hiển thị hoặc nói, được thực thi khi nhập dữ liệu và tại điểm phát ngôn."},{"q":"Ai là Reed?","a":"John và Sunday Reed là nhà bảo trợ nghệ thuật và người sưu tập đã mua nông trại này vào năm 1934 và biến nó thành lò nung của chủ nghĩa hiện đại Úc. Đặc biệt là Sunday đã hình thành nhóm, và vào năm 1976 đã tặng loạt đầu tiên của Nolan về Kelly cho Quốc gia Bảo tàng Nghệ thuật Úc."}]}}},"el":{"static":{"pageTitle":"Heide I · Το Κτίριο · AUXIO Concept","tag":"AUXIO · Concept","credit":"Φωτογραφία · Heide I · Wikimedia Commons · Δημόσια ιδιοκτησία","title":"Heide I · Το Κτίριο","sub":"Χωρική Οικία · περίπου 1870, αγοράστηκε το 1934 · Γη της Wurundjeri Woi-wurrung","institution":"Εθνικό Μουσείο Τρέχουσας Τέχνης Heide · Bulleen, Naarm/Melbourne","metaTags":["Δημόσια ιδιοκτησία","Κατάλογος Δημοσίων Περιουσιών της Victoria","Επιδείξεις concept · όχι επίσημο περιεχόμενο Heide"],"story":"<strong>Heide I</strong> είναι η αρχική κατοικία με τους κλάδους όπου ξεκινά ο σύνολος ιστορίας. Στο 1934, οι φιλάνθρωποι τέχνης John και Sunday Reed αγόρασαν αυτή την πρώην γεωργική εκμεταλύτρωση μόλις πάνω στο έδαφος του Ποταμού Yarra και άποικισαν στο κτίριο για τα επόμενα τριάντα πέντε χρόνια. Κυκλωμένης με το τραπέζι του σπιτιού, συγκέντρωσαν κύκλο νέων μοδερνών αρχαικών ζωγράφων. Sidney Nolan γράψε την πρώτη σειρά <em>Ned Kelly</em> εδώ το 1946-47. Η μοδερνή αυστραλιανή τέχνη βρέθηκε ρίζες σε αυτό το μικρό σπίτι.","askLabel":"Ερώτηση για αυτό το θέμα · ένα αντικείμενο, τέσσερα φωνές","toneLabel":"Επιλέξτε μια φωνή","langLabel":"Γλώσσα","chatPlaceholder":"Ερωτήστε για αυτό το θέμα...","askButton":"Ερώτηση","audioTitle":"Ηχητικά και εργαλεία φωνής","audioHint":"Άνοιξε τα ρυθμίσεις","voiceLabel":"Γλώσσα και φωνή","autoRead":"Ανάγνωση απαντήσεων αυτόματα","audioStatusAuto":"Οι απαντήσεις εξακολουθούν να ακολουθούν τη γλώσσα που ζητάτε. Η μικροφωνημένη ήχη χρησιμοποιεί τις φωνές διαθέσιμες στον περιήγητα αυτό.","audioStatusFixed":"Απάντηση στη γλώσσα {language}. Η μικροφωνημένη ήχη θα προσπαθήσει να ταιριάζει αυτή τη γλώσσα; επιλέξτε μια διαφορετική φωνή κάτω.","noSpeech":"Αυτός ο περιηγητής δεν υποστηρίζει τη μικροφωνημένη ήχη. Δοκιμάστε Safari ή Chrome.","visitorTitle":"Απαντήσεις από τους επισκέπτες","visitorHint":"Αφήστε μια σημείωση","commentLabel":"Αφήστε μια απάντηση · η σημείωσή σας γίνεται μέρος του καταλόγου του συλλογήματος","commentPlaceholder":"Τι σας προκαλεί αυτό το αντικείμενο να σκεφτείτε ή να νιώσετε;","commentButton":"Υποβολή απάντησης","commentThanks":"Ευχαριστούμε · απάντηση καταγραφή","commentMeta":"Απαντήσεις από τους επισκέπτες · {date}","shareTitle":"Κοινωνική διακίνηση / αποθήκευση","shareHint":"Σύνδεσμοι και λήψεις","shareButtons":["Κοινωνική διακίνηση","Email","Αντιγράφος URL","Δημοσίευση"],"shareNote":"Σε κινητό όπλο, το μενού μοιρασίας μπορεί επίσης να αποθήκευσε αυτή τη σελίδα στα Αρχεία ή να την προσθέσει στο desktop σας.","objectTitle":"Κωδικός αντικειμένου","objectHint":"Χώραση","objectRows":[["Αντικείμενο","Heide I (Το Κάλφυτο), γεωργική επιχείρηση"],["Οι κατοίκοι","John και Sunday Reed, 1934-1981"],["Σημασία","Τόπος του Αυστραλιανού μοδερνισμού"],["Θέση","7 Templestowe Rd, Bulleen VIC"],["Επικαιροποίηση","Victorian Heritage Register"],["Δικαιώματα","Ανάθεση από το Heide · εικόνα στη δημόσια περιουσία"],["Πηγή εικόνας","Wikimedia Commons, δημόσια ιστογράφηση"]],"mapLabel":"Είστε εδώ","mapNote":"Ταπίστε στα μάρκερα για να βρείτε τον χώρο.","mapNodes":{"heide3":"ΓΑΛΛΕΡΙΕΣ","heide2":"HEIDE II","sculpture":"Πάγκος Σκουπίδων","cottage":"Κάλφυτο","garden":"Κήπος Κουζίνας","orchard":"Πέποι","yingabeal":"YINGABEAL"},"places":{"cottage":"Heide I · Το Κάλφυτο","garden":"Ο κήπος της Sunday","orchard":"Το πεπόι","yingabeal":"Yingabeal · δέντρο με σκάρισμα","sculpture":"Το πάρκο γλυπτών","heide2":"Heide II","heide3":"Heide III · αίθουσες"},"herePrefix":"Είστε εδώ · ","govTitle":"Στην περιοχή · Yingabeal, το δέντρο με τη μουσική","govBody":"Μόλις από εδώ βρίσκεται το Yingabeal, ένα παλαιό Wurundjeri σκάρισμεν κάθετο δέντρο όπου τα Songlines συναντούνται. Αυτή η ιστορία ανήκει στους Wurundjeri Woi-wurrung. Στο ARCHAI, τα κοινότητα πηγής μπορούν να ορίζουν τι μπορεί ένα αντικείμενο να λέει, και να εφαρμόσουν αυτά τα περιθώρια στη στιγμή που μιλάει, οπότε η φωνή παραμένει χαρακτηρισμένη από τους εκείνους, ή συγχωρεί να σιωπάει με το δικαίωμα τους.","aoc":"Heide βρίσκεται στο χώρο των Wurundjeri Woi-wurrung people of the Kulin Nation, πλησίον του Birrarung. Παραδιδόμεθα στους Αρχαίους και τους Επόμενους.","concept":"Επικοινωνία επιδιώξεων · δημιουργήθηκε από Rob Graham, PhD RMIT School of Design, για Heide × ARCHAI συζητήσεις · περιεχόμενο βασισμένο στη δημόσια ιστορία του Heide · το λογότυπο του Heide χρησιμοποιείται μόνο για εθνική συνδέση συζήτησης · ζωντανά απαντήσεις δημιουργούνται σε κλητήρα και βασίζονται στην εγγραφή πάνω.","footlineHtml":"<b>Υπερβολικά από το ARCHAI</b> · ιδιωτικό, χώρος-μέσα για την κουλτούρα AI","thinking":["Έλεγχος της εγγραφής Heide","Εξέταση του αρχείου αντικειμένων","Βρίσκοντας τη σαφέστερη απάντηση","Αναζήτηση των βασισμένων λεπτομερειών"],"responseWho":"Heide I · {voice} φωνή","liveTag":"✓ Ζωντανό · βασισμένο στην εγγραφή του Heide · qwen2.5, σε υπολογιστή Heide-κυβερνώμενο","offlineTag":"✓ Από την εγγραφή του Heide (ζωντανή φωνή offline · δείχνει καταλειμμένη απάντηση)","readAloud":"Διαβάστε με ήχο","stop":"Σταματήστε","freeFallback":"Εάν η ζωντανή φωνή είναι offline, μπορώ να απαντήσω μόνο από την εγγραφή μου. Είμαι Heide I, το κάλιτζο. John και Sunday Reed ζεστέκανε εδώ από το 1934; εδώ είχε γίνει η σύγχρονη Αυστραλιανή μοντερνισμός, και όπου Sidney Nolan οικοδομήθηκε την πρώτη σειρά Ned Kelly από 1946-47.","visitorName":"Επισκέπτης","copied":"Αναφύγιο","copyPrompt":"Συντάξτε αυτό το σύνδεσμο:","autoLangLabel":"Αυτόματο · ίσως με την ερώτησή μου","autoLangShort":"Αυτόματο","shareWebTitle":"Heide I · το κάλιτζο · ARCHAI","shareWebText":"Heide I, το κάλιτζο · ρωτήστε για τη φύση της Αυστραλιανής μοντερνισμός σε τέσσερις φωνές. ARCHAI × Heide επιδιώξεις δείμα"},"voices":{"guide":{"label":"Φύλλα οδηγίας","note":"Καλοκάρδιο και χαλαρό, και σαν να σας φέρει στην επόμενη τοποθεσία στο περίβλημα.","intro":"Καλωσήρθατε. Στάτε μπροστά από το Heide I, το αρχικό κτίριο και το κέντρο όλου του χώρου. John και Sunday Reed ζεστέκανε εδώ από το 1934, και εδώ είχε γίνει η σύγχρονη Αυστραλιανή μοντερνισμός, όπου ο νέος Sidney Nolan ήταν το πρώτο Ned Kelly series, ακριβώς στο δίντινγκ τραπέζι. Ανάληψη, και μετά ακολουθήστε τον χόμπ προς την κουζίνα της Sunday όταν είστε σε έτοιμο.","q":[{"q":"Πού πηγώνω επόμενα;","a":"Στείλτε αριστερά από το πρόθυρο μέσα στην κουζίνα της Sunday, η γκαρδένα που έφαγε όλους τους καλλιτέχνες που ήρθαν εδώ. Από εκεί ο κύκλος του Cottage συνεχίζεται μέσα στη γκαρδένα φρούτων, από εκεί προς το πάρκο γλυπτών και Heide II."},{"q":"Τι συνέβη εδώ;","a":"Εδώ οι Reeds συγκέντρωσαν τους καλλιτεχνικούς που έγιναν αυτοσχεδιάστες της αυστραλιανής μεταγενέστερης καλλητερασίας, και εδώ ο Nolan πίνξε στη σειρά του Kelly. Τριάντα-πέντε χρόνια τέχνης, διαλογισμών και δείπνων, όλα υπό αυτό το μικρό στρόφι."},{"q":"Πόσο χρονοδιαφορά η περίοδος περίπατου;","a":"Η κύκλωμα της κατοικίας είναι μια απλή δέκα-δεκαπέντε λεπτών περίοδος περίπατου, κυρίως ομαλή, με επιλογή πρόσβασης σε ένα δρόμο και αρκετά σκιάδια για να σταματήσετε."},{"q":"Τι δεν πρέπει να χάσω;","a":"Μην χάσετε το κήπο της Sunday έξυπνα μου, και τον περίπατο μέχρι το Διαθεματοθήκη. Αν έχετε χρόνο, το Heide II δείχνει πώς η οράσε των Reeds από αυτή την κατοικία μετατράπηκε σε σύγχρονη αρχιτεκτονική."}]},"child":{"label":"Παιδικά","note":"Αστεία και απλά, γεμάτα θαυμασμό, για τους νέους επισκέπτες.","intro":"Γειά σας! Είμαι το μικρό παντρελιάδικο καλλιτεχνική Heide. Πριν από πολύ, πολύ χρόνια, ένα ευγενές σύζυγο, John και Sunday, ζούσε μου, και πολλοί καλλιτέχνες ήρθαν να πίνξουν και να φάνε μαζί. Ένας από αυτούς, Sidney, πήγε να πίνξει τον διάσημο σφαγιαστή με το μεγάλο τετράγωνο κράνος, ακριβώς εδώ στο τραπέζι της κουζίνας. Μπορείτε να βρείτε το μαγικό κήπο που η Sunday αυξάνε;","q":[{"q":"Ποιοι ζούσαν εδώ;","a":"Ο John και η Sunday Reed ζούσαν εδώ! Η Sunday αυξάνε μεγάλο κήπο πλήρες λαχανικών και λωρίδων, και της αρέσε στη βοήθεια των καλλιτεχνών να φτιάξουν τα γραφήματα τους. Το σπίτι πάντα είχε ανθρώπους."},{"q":"Ποιός ήταν ο Ned Kelly;","a":"Ο Ned Kelly ήταν ένας πραγματικός σφαγιαστής που φορούσε πανάρμα και μεγάλο τετράγωνο χάλυβα κράνος, όπως ένας λέξαρ! Ο Sidney ο γραφικός αγάπησε την ιστορία του τόσο πολύ που τον είχε να πίνξει πολλές φορές, ακριβώς εδώ."},{"q":"Τι αυξάνε στο κήπο;","a":"Νόστιμα πράγματα! Λαχανικά, λωρίδες και φρούτα δέντρα, και πολλές ανθέμια. Οι καλλιτέχνες θα συλλέγουν τη νεόφυτη τροφή και όλοι θα φάνε μαζί. Μπορείτε να διακρίνετε τα φρούτα στο φρουτοδάσος;"},{"q":"Εμφέρε μου έναν λόγο","a":"Μια φορά, καλλιτέχνες πίνξανε όλη τη μέρα στα δωμάτια μου και τρώγανε μαζί σε ένα μεγάλο τραπέζι, με λαχανικά από το γήπεδο της Sunday. Ένας από αυτούς είχε να αγαπάει την ιστορία του σφαγιαστή τόσο πολύ που τον είχε να πίνξει μια και πάλι, ακριβώς εδώ!"}]},"education":{"label":"Εκπαίδευση","note":"Προετοιμασμένο για το πρόγραμμα, συνδεδεμένο με την ιστορία της αυστραλιανής τέχνης.","intro":"Το Heide I είναι ένα παντρελιάδικό σπίτι με λεπίδες που οι υποστηρικτές τέχνης John και Sunday Reed αγόρασαν το 1934. Συγκέντρωσαν μια γύρα σύγχρονων καλλιτεχνών εδώ, Nolan, Hester, Tucker, Perceval και άλλοι, και το 1946-47 ο Nolan πήγε να πίνξει την πρώτη σειρά του Kelly στο τραπέζι. Εδώ έκανε ρίζες η αυστραλιανή μεταγενέστερη καλλητερασία.","q":[{"q":"Τι ήταν η γύρα Heide;","a":"Η ομάδα των καλλιτεχνών, συγγραφέων και φιλοσόφων που οι Reeds συγκέντρωσαν από τη δεκαετία του '30, περιλαμβανομένων του Nolan, Joy Hester, Albert Tucker, John Perceval και μετά Mirka Mora και Charles Blackman. Η Heide γιατρώθηκε ως ένας τόπος να φτιάξει, να συζητήσει και να προωθήσει τη σύγχρονη τέχνη στην Αυστραλία."},{"q":"Τι ήταν το Angry Penguins;","a":"Μια σύγχρονη έκδοση που συνδέεται με τη γύρα Heide, διάσημη για την υπόθεση Ern Malley το 1944, η οποία ήταν ένα πλάνο όπου δύο ποιητές είχαν να φτιάξουν μια ψευδή σύγχρονη για να παίξουν τον εκδότη. Αυτά ακριβώς τα ποίηματα συζητήθηκαν εδώ."},{"q":"Γιατί λογοτεχνική υποστήριξη είναι σημαντική εδώ;","a":"Οι Reeds δείχνουν πώς η υποστήριξη, μια οικογένεια, τρόφιμα και πίστη, μπορεί να σχεδιάσει ένα εθνικό κινητήριο τέχνης. Χωρίς την υποστήριξή τους, πολύ από την αυστραλιανή μεταγενέστερη καλλητερασία δεν θα έχει συμβεί. Είναι ένα περίπτωμα στο τόπο και τέχνη."},{"q":"Ποιοί ήταν οι καλλιτέχνες;","a":"Η γύρα Heide περιλάμβανε τους Sidney Nolan, Joy Hester, Albert Tucker και John Perceval, και μετά Mirka Mora και Charles Blackman. Οι Reeds τους δώσανε ένα σπίτι, τρόφιμα και πίστη, και η αυστραλιανή μεταγενέστερη τέχνη άνοιξε από αυτό."}]},"curatorial":{"label":"Καθοδήγηση","note":"Προέλευση και επιστημονική μελέτη, για προσωπικό και έρευνες.","intro":"Το Heide I, το παλιό δάμαρο παντρελιάδικό σπίτι που αγόρασαν ο John και η Sunday Reed το 1934 και ενημέρωσαν με μια γαλλική-βιομηχανική στοιχείωση, είναι ο κύτταρος της αυστραλιανής μεταγενέστερης καλλητερασίας. Η πρώτη σειρά Kelly (1946-47) του Nolan εκτέθηκε εδώ και αργότερα δωρήθηκε από τη Sunday Reed στο National Gallery of Australia το 1976. Όπου το ρεκόρ είναι σιωπηλό, αυτή η φωνή θα πει όχι να κατασκευάσει.","q":[{"q":"Προέλευση της σειράς Kelly;","a":"Ζευγαρισμένο στο Heide το 1946-47; κρίθηκε αξιόλογο από τη Σunday Reed μετά την απόδοση του Nolan και δώθηκε στη National Gallery of Australia το 1976, 'με φίλια αφέτηση.' Είναι 27 ζωγραφιές στο πρώτο σειρά. (Επιβεβαιώστε τους καταλόγους υποδεικνύοντας την εγγραφή της NGA πριν αναφέρετε.)"},{"q":"Τι έχει επιβεβαιωθεί και τι δεν είναι σιγουρά;","a":"Επιβεβαιώσιμο: η αγορα για το 1934, ο κύκλος της τέχνης, η σειρά Kelly και η δωρεά του Nolan στη NGA το 1976. Αυτό που είναι ασιγουρώδες - τα ακριβή συζητήσεις, οι μη καθομιλημένες επισκέψεις - αυτό το φωνάκι λέει ότι δεν γνωρίζει πριν από την εφαντασία."},{"q":"Συμβουλευτικά δικαιώματα σε συνδεδεμένα έργα;","a":"Το Heide καθορίζει τα δικαιώματα και τους όρους ανάληψης για κάθε άντικειμένο. Αυτή η επιδείξεις δεν περιλαμβάνει εικόνες με συγκριμένα δικαιώματα; σε ένα ζωντανό χώρο, τα δικαιώματα και οι πολιτιστικές πρωτογενείς επιβάλουν τι μπορεί να φανεί ή να λεχθεί, απαιτήσεις στην εισαγωγή και στο σημείο που λέγεται."},{"q":"Τι έγινε τα Reeds;","a":"Ο John και η Sunday Reed ήταν φιλάνθρωποι τέχνης και συλλέκτες που αγόρασαν αυτή τη γεωργία το 1934 και έκαναν το Heide τον κρυπτώμα της αυστραλιανής μοδέρνας. Η Sunday συγκεκριμένα επηρέασε τον κύκλο, και το 1976 δώθηκε τη σειρά Kelly του Nolan στη National Gallery of Australia."}]}}},"it":{"static":{"pageTitle":"Heide I · La Capanna · CONCETTO AUXIO","tag":"CONCETTO AUXIO","credit":"Foto · Heide I · Wikimedia Commons · Dominio pubblico","title":"Heide I · La Capanna","sub":"Fattoria · c.1870, acquisita nel 1934 · Terra dei Wurundjeri Woi-wurrung","institution":"Museo Heide di Arte Moderna · Bulleen, Naarm/Melbourne","metaTags":["Immagine del dominio pubblico","Registro Patrimoniale Vicino","Demo concetto · non contenuto ufficiale di Heide"],"story":"<strong>Heide I</strong> è la casa colonica originale dove inizia tutta la storia. Nel 1934, i mecenati John e Sunday Reed acquistarono questa ex fattoria agricola accanto al fiume Yarra e vi abitarono per i successivi trentacinque anni. Intorno al loro tavolo da cucina riunirono un cerchio di giovani artisti modernisti. Sidney Nolan ha dipinto la prima serie <em>Ned Kelly</em> qui nel 1946-47. Il modernismo australiano si è radicato in questa piccola casa.","askLabel":"Chiedi a questo luogo · un oggetto, quattro voci","toneLabel":"Scegli una voce","langLabel":"Lingua","chatPlaceholder":"Chiedi a questo luogo qualcosa...","askButton":"Chiedi","audioTitle":"Audio & strumenti vocali","audioHint":"Apri controlli","voiceLabel":"Lingua e voce","autoRead":"Leggi automaticamente le risposte","audioStatusAuto":"Le risposte seguono la lingua in cui hai fatto la domanda. L'audio parlato utilizza le voci disponibili sul dispositivo.","audioStatusFixed":"La risposta è in {language}. L'audio parlato cercherà di adattarsi a quella lingua; scegli una voce diversa qui sotto se necessario.","noSpeech":"Questo browser non supporta l'audio parlato. Prova Safari o Chrome.","visitorTitle":"Risposta del visitatore","visitorHint":"Lascia un messaggio","commentLabel":"Lascia una risposta · il tuo messaggio diventa parte del registro della raccolta","commentPlaceholder":"Cosa ti fa pensare o sentire questo oggetto?","commentButton":"Invia la risposta","commentThanks":"Grazie · risposta registrata","commentMeta":"Risposta del visitatore · {date}","shareTitle":"Condividi / salva","shareHint":"Collegamenti e download","shareButtons":["Condividi","Email","Copiare link","Post"],"shareNote":"Sul dispositivo mobile, il menu condividi può anche salvare questa pagina in Files o aggiungerla alla schermata di avvio.","objectTitle":"Registro dell'oggetto","objectHint":"Radice","objectRows":[["Oggetto","Heide I (The Cottage), fattoria rurale"],["Occupanti","John e Sunday Reed, 1934-1981"],["Significato","Luogo di nascita del modernismo australiano"],["Località","7 Templestowe Rd, Bulleen VIC"],["Patrimonio","Registro del Patrimonio Vicino"],["Diritti","Interpretazione impostata da Heide · immagine nel dominio pubblico"],["Immagine sorgente","Wikimedia Commons, fotografia nel dominio pubblico"]],"mapLabel":"Sei qui","mapNote":"Tocca i segnalibri per orientarti sul sito.","mapNodes":{"heide3":"GALLERIE","heide2":"HEIDE II","sculpture":"PARCO SCULTORALE","cottage":"COTTAGE","garden":"GIARDINO CUCINA","orchard":"FRUTTAIOLI","yingabeal":"YINGABEAL"},"places":{"cottage":"Heide I · The Cottage","garden":"Il giardino di cucina di Sunday","orchard":"Il frutteto","yingabeal":"Yingabeal · albero segato","sculpture":"Il parco scultoreo","heide2":"Heide II","heide3":"Heide III · gallerie"},"herePrefix":"Sei qui · ","govTitle":"Vicino · Yingabeal, l'albero della canzone","govBody":"A breve distanza da qui si trova Yingabeal, un antico albero Wurundjeri segato dove le Songlines si incontrano. Questa storia appartiene ai Wurundjeri Woi-wurrung. In ARCHAI, le comunità di origine possono definire cosa possa dire un oggetto e far rispettare questi limiti nel momento in cui parla, così la voce rimane plasmata da loro o resta silenziosa per loro scelta.","aoc":"Heide sorge sul territorio dei Wurundjeri Woi-wurrung della Kulin Nation, accanto al Birrarung. Tributiamo omaggio ai Vecchi e alle Vecchie passati e presenti. La sovranità non è mai stata rinunciata.","concept":"Discussione concetto · realizzato da Rob Graham, PhD RMIT School of Design, per Heide × ARCHAI conversazioni · contenuto basato sulla storia pubblica di Heide · logo Heide utilizzato solo per co-branding della discussione · risposte generate in tempo reale su richiesta e basate sui dettagli sopra.","footlineHtml":"<b>Powered by ARCHAI</b> · sovrano, local-first AI patrimonio culturale<br>Voce dell'oggetto · governance di consenso · coscienza dei diritti · eseguito su hardware controllato da Heide","thinking":["Controllare il registro di Heide","Esaminare il file dell'oggetto","Trovare la risposta più chiara","Cercare i dettagli basati nella realtà"],"responseWho":"Heide I · voce {voice}","liveTag":"✓ Live · basata sul registro di Heide · qwen2.5, su hardware controllato da Heide","offlineTag":"✓ Dal registro di Heide (voce live offline · mostrando risposta curata)","readAloud":"Leggi ad alta voce","stop":"Ferma","freeFallback":"Se la voce live è offline, posso rispondere solo dal mio registro. Sono Heide I, il cottage. John e Sunday Reed abitarono qui dal 1934; questo è dove il modernismo australiano ha preso radice, e dove Sidney Nolan dipinse la prima serie Ned Kelly nel 1946-47.","visitorName":"Visitatore","copied":"Copiato","copyPrompt":"Copia questo link:","autoLangLabel":"Auto · adatta la mia domanda","autoLangShort":"Auto","shareWebTitle":"Heide I · The Cottage · ARCHAI","shareWebText":"Heide I, il Cottage · chiedi l'origine del modernismo australiano in quattro voci. Concetto demo ARCHAI × Heide."},"voices":{"guide":{"label":"Guida","note":"Accogliente e rassicurante, ti guida al prossimo punto della visita.","intro":"Benvenuto/a. Sei davanti a Heide I, la casa originale e il cuore del sito intero. John e Sunday Reed abitarono qui dal 1934, e questo è dove un giovane Sidney Nolan dipinse la sua prima serie Ned Kelly, proprio al tavolo da pranzo. Goditi l'atmosfera, poi segui il percorso fino al giardino di cucina di Sunday quando sei pronto/a.","q":[{"q":"Dove vado dopo?","a":"Prosegui a sinistra dal portico nel giardino di cucina di Sunday, il giardino che ha nutrito tutti gli artisti venuti qui. Da lì il percorso del Cottage porta all'orto, poi fuori verso il parco scultoreo e Heide II."},{"q":"Cosa è successo qui?","a":"Qui i Reeds hanno riunito gli artisti che divennero il modernismo australiano e dove Nolan ha dipinto la sua serie di Ned Kelly. Trentacinque anni di arte, dibattiti e cene, tutti sotto questo piccolo tetto."},{"q":"Quanto tempo impiega la passeggiata?","a":"Il percorso del Cottage è un tranquillo quindici a venti minuti a passo svelto, in gran parte pianeggiante, con opzione di sentiero accessibile e molte ombre dove fermarsi."},{"q":"Cosa non devo perdere?","a":"Non perdere il giardino della cucina di Sunday proprio accanto a me, e la passeggiata nel parco delle sculture. Se hai tempo, Heide II mostra come la visione dei Reeds è cresciuta da questa fattoria in architettura moderna."}]},"child":{"label":"Bambini","note":"Giocoso e semplice, pieno di meraviglia, per i giovani visitatori.","intro":"Ciao! Sono la piccola fattoria chiamata Heide. Molto tempo fa una gentile coppia, John e Sunday, viveva qui dentro insieme a molti artisti che venivano a dipingere e mangiare insieme. Uno di loro, Sidney, ha dipinto un famoso brigante con un grande elmo quadrato proprio alla tavola della cucina. Puoi trovare il giardino magico che Sunday ha coltivato?","q":[{"q":"Chi abitava qui?","a":"John e Sunday Reed vivevano qui! Sunday aveva un grande orto pieno di verdure e fiori, e amava aiutare gli artisti a creare le loro opere. La casa era sempre piena di gente."},{"q":"Chi era Ned Kelly?","a":"Ned Kelly era un vero brigante del passato che indossava l'armatura e un grande elmo quadrato d'acciaio come una scatola postale! Sidney il pittore amava tanto la sua storia da dipingerlo tante volte proprio qui."},{"q":"Cosa cresceva nel giardino?","a":"Delizie! Verdure, erbe e alberi fruttiferi, e molti fiori. Gli artisti raccoglievano cibo fresco e mangiavano insieme. Puoi vedere gli alberi da frutto nell'orto?"},{"q":"Raccontami una storia","a":"Una volta gli artisti dipingevano tutto il giorno nelle mie stanze e si riunivano a grandi tavolate, con verdure direttamente dall'orto di Sunday. Uno di loro amava tanto la storia di un brigante da dipingerlo ancora e ancora proprio qui!"}]},"education":{"label":"Educazione","note":"Pronta per il curriculum, collegata alla storia dell'arte australiana.","intro":"Heide I è una fattoria in legno acquistata dai mecenate John e Sunday Reed nel 1934. Qui hanno riunito un gruppo di artisti modernisti, tra cui Nolan, Hester, Tucker, Perceval e altri, e nel 1946-47 Nolan ha dipinto la sua prima serie Ned Kelly alla tavola della cucina. Questa è dove il modernismo australiano ha preso radice.","q":[{"q":"Cosa era il Heide Circle?","a":"Il gruppo di artisti, scrittori e pensatori riuniti dai Reeds dal 1930, incluso Nolan, Joy Hester, Albert Tucker, John Perceval e più tardi Mirka Mora e Charles Blackman. Heide è diventato un luogo per creare, discutere e promuovere l'arte moderna in Australia."},{"q":"Cosa era Angry Penguins?","a":"Una rivista modernista legata al Heide Circle, famosa per l'affare Ern Malley del 1944, uno scherzo dove due poeti hanno inventato un falso modernista per ingannare il direttore. Quei stessi poemi sono stati discussi in questa fattoria."},{"q":"Perché la patronage è importante qui?","a":"I Reeds mostrano come il supporto, una casa, cibo e fiducia possano plasmare un movimento artistico nazionale. Senza la loro patronage molta dell'arte modernista australiana non sarebbe mai successa. È uno studio di caso tra arte e luogo."},{"q":"Chi erano gli artisti?","a":"Il Heide Circle includeva Sidney Nolan, Joy Hester, Albert Tucker e John Perceval, e più tardi Mirka Mora e Charles Blackman. I Reeds hanno dato loro una casa, cibo e fiducia, e l'arte modernista australiana è cresciuta da questo."}]},"curatorial":{"label":"Curatoriale","note":"Provenienza e ricerca accademica per il personale e gli studiosi.","intro":"Heide I, la fattoria daireria acquistata da John e Sunday Reed nel 1934 e ristrutturata in stile francese-provinciale, è il crogiolo del modernismo australiano. La prima serie Kelly di Nolan (1946-47) è stata eseguita qui e successivamente donata da Sunday Reed alla National Gallery of Australia nel 1976. Dove la cronaca è silenziosa, questa voce lo dirà piuttosto che inventare.","q":[{"q":"Provenienza della serie Kelly?","a":"Pitturato a Heide 1946–47; conservato da Sunday Reed dopo la partenza di Nolan; donato da Sunday al National Gallery of Australia nel 1976, 'con amore.' Ventisette dipinti compongono la prima serie. (Confermare i dettagli del catalogo contro il record della NGA prima di citare.)"},{"q":"Cosa è verificato vs incerto?","a":"Verificato: l'acquisto del 1934, il circolo degli artisti, la serie Kelly e il suo dono alla NGA nel 1976. Dove il registro è silenzioso — conversazioni esatte, visite non documentate — questa voce dice che non sa piuttosto che inventare."},{"q":"Diritti sulle opere associate?","a":"Heide stabilisce i diritti e le condizioni di riproduzione per ogni oggetto. Questo concetto mostra nessuna immagine con restrizioni sui diritti; in una versione operativa, i diritti a livello di oggetto e protocolli culturali regolano ciò che può essere mostrato o detto, applicati all'ingresso e al punto di parola."},{"q":"Chi erano i Reeds?","a":"John e Sunday Reed furono patroni e collezionisti d'arte che acquistarono questa fattoria nel 1934 e la trasformarono nella culla del modernismo australiano. In particolare, fu Sunday a plasmare il circolo, e nel 1976 donò alla National Gallery of Australia la prima serie Kelly di Nolan."}]}}},"es":{"static":{"pageTitle":"Heide I · La Casa · AUXIO Concept","tag":"AUXIO · Concept","credit":"Foto · Heide I · Wikimedia Commons · Dominio público","title":"Heide I · La Casa","sub":"Casa de campo · c.1870, adquirida en 1934 · Tierra Wurundjeri Woi-wurrung","institution":"Museo Heide de Arte Moderna · Bulleen, Naarm/Melbourne","metaTags":["Imagen dominio público","Registro Victoriano del Patrimonio","Demostración conceptual · no es contenido oficial de Heide"],"story":"<strong>Heide I</strong> es la casa original de madera donde comienza toda la historia. En 1934, los mecenas John y Sunday Reed compraron esta antigua granja lechera junto al río Yarra y hicieron del cottage su hogar durante los siguientes treinta y cinco años. Alrededor de su mesa de cocina reunían un círculo de jóvenes artistas modernistas. Sidney Nolan pintó aquí la primera serie <em>Ned Kelly</em> en 1946-47. El modernismo australiano tomó raíz en esta pequeña casa.","askLabel":"Pregunta a este lugar · un objeto, cuatro voces","toneLabel":"Elige una voz","langLabel":"Idioma","chatPlaceholder":"Pregunta a este lugar cualquier cosa...","askButton":"Preguntar","audioTitle":"Herramientas de audio y voz","audioHint":"Abrir controles","voiceLabel":"Idioma y voz","autoRead":"Leer respuestas automáticamente","audioStatusAuto":"Las respuestas seguirán el idioma en que preguntas. El audio hablado usará las voces disponibles en este dispositivo.","audioStatusFixed":"Respondiendo en {language}. El audio hablado intentará coincidir con ese idioma; elige una voz diferente a continuación si es necesario.","noSpeech":"Este navegador no soporta audio hablado. Prueba Safari o Chrome.","visitorTitle":"Respuesta del visitante","visitorHint":"Deja un mensaje","commentLabel":"Deja una respuesta · tu nota se convierte en parte del registro de la colección","commentPlaceholder":"¿Qué te hace pensar o sentir este objeto?","commentButton":"Enviar respuesta","commentThanks":"Gracias · respuesta registrada","commentMeta":"Respuesta del visitante · {date}","shareTitle":"Compartir / guardar","shareHint":"Enlaces y descargas","shareButtons":["Compartir","Correo electrónico","Copiar enlace","Publicar"],"shareNote":"En el móvil, el menú de compartir también puede guardar esta página en Archivos o agregarla a tu pantalla de inicio.","objectTitle":"Registro del objeto","objectHint":"Raíces","objectRows":[["Objeto","Heide I (La Casita), granja"],["Ocupantes","John y Sunday Reed, 1934-1981"],["Significado","Nacimiento del modernismo australiano"],["Ubicación","7 Templestowe Rd, Bulleen VIC"],["Patrimonio","Registro de Patrimonio Vicentino"],["Derechos","Interpretación establecida por Heide · imagen en dominio público"],["Imagen fuente","Wikimedia Commons, fotografía en dominio público"]],"mapLabel":"Aquí está","mapNote":"Toca los marcadores para orientarte en el sitio.","mapNodes":{"heide3":"GALERÍAS","heide2":"HEIDE II","sculpture":"PARQUE DE ESCULTURAS","cottage":"LA CASITA","garden":"JARDIN DE LA COCINA","orchard":"HACIENDA FRUTAL","yingabeal":"YINGABEAL"},"places":{"cottage":"Heide I · La Casita","garden":"El jardín de la cocina de Sunday","orchard":"La hacienda frutal","yingabeal":"Yingabeal · árbol con cicatriz","sculpture":"El parque escultórico","heide2":"Heide II","heide3":"Heide III · galerías"},"herePrefix":"Usted está aquí · ","govTitle":"Cercano · Yingabeal, el Árbol del Canto","govBody":"A corta distancia de aquí se encuentra Yingabeal, un antiguo árbol marcado por cicatrices Wurundjeri donde las Songlines se encuentran. Esta historia pertenece a los Wurundjeri Woi-wurrung. En ARCHAI, las comunidades de origen pueden definir lo que puede decir un objeto y hacer cumplir esos límites en el momento en que habla, por lo que la voz permanece moldeada por ellos o se queda en silencio según su elección.","aoc":"Heide está ubicado en el Country de los Wurundjeri Woi-wurrung del Kulin Nation, junto al Birrarung. Honramos a los Ancianos pasados y presentes. La soberanía nunca fue cedida.","concept":"Concepto de discusión · construido por Rob Graham, PhD Escuela de Diseño RMIT, para Heide × ARCHAI conversaciones · contenido basado en la historia pública de Heide · el logotipo de Heide se usa solo para co-branding de discusión · las respuestas en vivo se generan a pedido y están fundamentadas en los detalles arriba.","footlineHtml":"<b>Impulsado por ARCHAI</b> · soberano, local-first cultural heritage AI<br>Voz del objeto · gobernanza basada en consentimiento · consciente de derechos · funciona en hardware controlado por Heide","thinking":["Revisando el registro de Heide","Examinando el archivo del objeto","Encontrando la respuesta más clara","Buscando los detalles fundamentados"],"responseWho":"Heide I · voz {voice}","liveTag":"✓ En vivo · fundamentado en el registro de Heide · qwen2.5, en hardware controlado por Heide","offlineTag":"✓ Del registro de Heide (voz en línea apagada · mostrando respuesta curada)","readAloud":"Leer en voz alta","stop":"Detener","freeFallback":"Si la voz en línea está apagada, solo puedo responder desde mi registro. Soy Heide I, el cottage. John y Sunday Reed vivieron aquí desde 1934; este es donde nació el modernismo australiano, y donde Sidney Nolan pintó la primera serie de Ned Kelly en 1946-47.","visitorName":"Visitante","copied":"Copiado","copyPrompt":"Copia este enlace:","autoLangLabel":"Auto · coincidir con mi pregunta","autoLangShort":"Auto","shareWebTitle":"Heide I · The Cottage · ARCHAI","shareWebText":"Heide I, el Cottage · pregúntale sobre el lugar de nacimiento del modernismo australiano en cuatro voces. Demostración de concepto ARCHAI × Heide."},"voices":{"guide":{"label":"Guía","note":"Cálido y acogedor, te guía al siguiente lugar en la ruta.","intro":"Bienvenido. Está frente a Heide I, la casa original y el corazón del sitio completo. John y Sunday Reed vivieron aquí desde 1934, y este es donde un joven Sidney Nolan pintó su primera serie de Ned Kelly, justo en la mesa de comedor. Disfrútelo, luego siga el camino hasta el jardín de cocina de Sunday cuando esté listo.","q":[{"q":"¿Dónde voy a continuación?","a":"Gire hacia la izquierda desde el porche al jardín de cocina de Sunday, el jardín que alimentaba a todos los artistas que vinieron aquí. Desde allí, el recorrido del Cottage continúa hasta el huerto y luego hacia el Parque Escultórico y Heide II."},{"q":"¿Qué pasó aquí?","a":"Aquí es donde los Reeds reunieron a los artistas que se convirtieron en el modernismo australiano y donde Nolan pintó su serie de Kelly. Treinta y cinco años de arte, discusiones y cenas, todos bajo este pequeño techo."},{"q":"¿Cuánto dura la caminata?","a":"El recorrido del Cottage es un paseo tranquilo de quince a veinte minutos a paso lento, en su mayoría llano, con una opción de camino accesible y muchas sombras para detenerse."},{"q":"¿Qué no debería perderme?","a":"No te pierdas el jardín de cocina de Sunday al lado mío, y la caminata hacia abajo por el Sculpture Park. Si tienes tiempo, Heide II muestra cómo la visión de los Reeds creció desde esta granja hasta la arquitectura moderna."}]},"child":{"label":"Niños","note":"Juguetón e sencillo, lleno de maravilla, para visitantes jóvenes.","intro":"¡Hola! Soy la pequeña granja llamada Heide. Hace mucho tiempo una pareja amable, John y Sunday, vivieron en mí, y muchos artistas vinieron a pintar y comer juntos. Uno de ellos, Sidney, pintó un famoso bandido del bosque con un casco cuadrado grande, justo en la mesa de la cocina. ¿Puedes encontrar el jardín mágico que creó Sunday?","q":[{"q":"¿Quién vivió aquí?","a":"John y Sunday Reed vivieron aquí¡Sunday cultivó un gran jardín lleno de vegetales y flores, y le encantaba ayudar a los artistas a hacer sus pinturas. La casa siempre estaba llena de gente."},{"q":"¿Quién era Ned Kelly?","a":"Ned Kelly fue un famoso bandido del bosque de hace mucho tiempo que usaba armadura y un casco cuadrado grande, como una caja de correo¡Sidney el pintor amaba tanto su historia que lo pintó muchas veces, justo aquí."},{"q":"¿Qué creció en el jardín?","a":"Cosas ricas¡Vegetales, hierbas y árboles frutales, y muchos flores. Los artistas recogían alimentos frescos y todos comían juntos. ¿Puedes ver los árboles frutales en el huerto?"},{"q":"Cuéntame una historia","a":"Una vez, los artistas pintaron todo el día en mis habitaciones y comieron juntos a una gran mesa, con vegetales recién recolectados del jardín de Sunday. Uno de ellos amaba tanto la historia de un bandido que lo pintó una y otra vez¡justo aquí!"}]},"education":{"label":"Educación","note":"Listo para el currículo, vinculado a la historia del arte australiano.","intro":"Heide I es una granja de tablones de madera que los mecenas John y Sunday Reed compraron en 1934. Aquí reunieron un círculo de artistas modernistas, Nolan, Hester, Tucker, Perceval y otros, y en 1946-47 Nolan pintó su primera serie de Ned Kelly a la mesa del comedor. Este es el lugar donde el modernismo australiano tomó raíz.","q":[{"q":"¿Qué fue el Círculo Heide?","a":"El grupo de artistas, escritores y pensadores que los Reeds reunieron desde los años 30, incluyendo Nolan, Joy Hester, Albert Tucker, John Perceval y más tarde Mirka Mora y Charles Blackman. Heide se convirtió en un lugar para hacer, discutir y promover el arte moderno en Australia."},{"q":"¿Qué fue Angry Penguins?","a":"Una revista modernista vinculada al Círculo de Heide, famosa por el asunto Ern Malley de 1944, una broma donde dos poetas inventaron un falso modernista para engañar a la editora. Esas mismas poesías fueron discutidas en esta cabaña."},{"q":"¿Por qué importa la mecena aquí?","a":"Los Reeds muestran cómo el apoyo, un hogar, comida y creencia pueden moldear un movimiento de arte nacional. Sin su mecenazgo gran parte del modernismo australiano no habría ocurrido. Es un estudio de caso en arte y lugar."},{"q":"¿Quiénes fueron los artistas?","a":"El Círculo Heide incluyó Sidney Nolan, Joy Hester, Albert Tucker y John Perceval, y más tarde Mirka Mora y Charles Blackman. Los Reeds les dieron un hogar, comida y creencia, y el arte moderno australiano creció de ello."}]},"curatorial":{"label":"Curatorial","note":"Procedencia y erudición, para personal y investigadores.","intro":"Heide I, la antigua granja lechera adquirida por John y Sunday Reed en 1934 y renovada en un estilo francés-provincial, es el crisol del modernismo australiano. La primera serie de Kelly (1946-47) fue ejecutada aquí y más tarde donada por Sunday Reed al National Gallery of Australia en 1976. Donde el registro sea silencioso, esta voz dirá que no inventa.","q":[{"q":"Procedencia de la serie Kelly?","a":"Pintado en Heide 1946–47; retuvo Sunday Reed después de la partida de Nolan; donado por Sunday al National Gallery of Australia en 1976, 'con amor.' Veintisiete pinturas componen la primera serie. (Confirme los detalles del catálogo contra el registro del NGA antes de citar.)"},{"q":"¿Qué es lo verificado vs lo incierto?","a":"Verificado: la compra de 1934, el círculo de artistas, la serie Kelly y su donación al NGA en 1976. Donde el registro no menciona — conversaciones exactas, visitas sin documentar — esta voz dice que no sabe en lugar de inventar."},{"q":"Derechos sobre las obras asociadas?","a":"Heide establece derechos y términos de reproducción por ítem. Este concepto muestra imágenes sin restricciones de derechos; en una implementación activa, los derechos a nivel de ítem y protocolos culturales regulan lo que puede mostrarse o decirse, aplicados al momento del ingreso y al punto de hablar."},{"q":"¿Quiénes fueron los Reeds?","a":"John y Sunday Reed eran mecenas y coleccionistas de arte que compraron esta granja en 1934 y la hicieron el crisol del modernismo australiano. Sunday en particular moldeó el círculo, y en 1976 donó la primera serie Kelly de Nolan al National Gallery of Australia."}]}}},"fr":{"static":{"pageTitle":"Heide I · La Cabane · CONCEPT AUXIO","tag":"CONCEPT AUXIO","credit":"Photo · Heide I · Wikimedia Commons · Domaine public","title":"Heide I · La Cabane","sub":"Maison de campagne · c.1870, acquise en 1934 · Terres Wurundjeri Woi-wurrung","institution":"Musée d'art moderne Heide · Bulleen, Naarm/Melbourne","metaTags":["Image du domaine public","Registre patrimonial victorien","Démonstration de concept · non officiel pour le musée Heide"],"story":"<strong>Heide I</strong> est la maison en planches originaire où l'histoire commence. En 1934, les mécènes John et Sunday Reed ont acheté cette ancienne ferme laitière à côté de la rivière Yarra et y ont fait leur foyer pendant les trente-cinq prochaines années. Autour de sa table de cuisine, ils rassemblaient un cercle d'artistes modernistes jeunes. Sidney Nolan a peint ici la première série <em>Ned Kelly</em> en 1946-47. Le modernisme australien s'est implanté dans cette petite maison.","askLabel":"Posez une question à cet endroit · un objet, quatre voix","toneLabel":"Choisissez une voix","langLabel":"Langue","chatPlaceholder":"Posez une question à cet endroit...","askButton":"Demander","audioTitle":"Outils audio et voix","audioHint":"Ouvrir les contrôles","voiceLabel":"Langue et voix","autoRead":"Lire automatiquement les réponses","audioStatusAuto":"Les réponses suivent la langue dans laquelle vous posez des questions. L'audio parlé utilise les voix disponibles sur ce dispositif.","audioStatusFixed":"Réponse en {language}. L'audio parlé essaiera de correspondre à cette langue ; choisissez une autre voix ci-dessous si nécessaire.","noSpeech":"Ce navigateur ne prend pas en charge l'audio parlé. Essayez Safari ou Chrome.","visitorTitle":"Réponse du visiteur","visitorHint":"Laisser un message","commentLabel":"Laisser une réponse · votre note devient partie du registre de la collection","commentPlaceholder":"Qu'est-ce que cet objet vous fait penser ou ressentir ?","commentButton":"Soumettre la réponse","commentThanks":"Merci · réponse enregistrée","commentMeta":"Réponse du visiteur · {date}","shareTitle":"Partager / sauvegarder","shareHint":"Liens et téléchargements","shareButtons":["Partager","Email","Copier le lien","Partager"],"shareNote":"Sur mobile, le menu Partager peut également sauvegarder cette page dans les Fichiers ou l'ajouter à votre écran d'accueil.","objectTitle":"Enregistrement de l’objet","objectHint":"Ancrage","objectRows":[["Objet","Heide I (The Cottage), ferme"],["Occupants","John et Sunday Reed, 1934-1981"],["Signification","Lieu de naissance du modernisme australien"],["Localisation","7 Templestowe Rd, Bulleen VIC"],["Patrimoine","Registre du patrimoine victorien"],["Droits","Interprétation établie par Heide · image domaine public"],["Image source","Wikimedia Commons, photographie de domaine public"]],"mapLabel":"Vous êtes ici","mapNote":"Appuyez sur les marqueurs pour vous orienter sur le site.","mapNodes":{"heide3":"GALLERIES","heide2":"HEIDE II","sculpture":"PARC D’ARTISTES SCULPTEURS","cottage":"MAISONNETTE","garden":"JARDIN POTAGER DE SUNDAY","orchard":"VERGER","yingabeal":"YINGABEAL"},"places":{"cottage":"Heide I · The Cottage","garden":"Le jardin potager de Sunday","orchard":"Le verger","yingabeal":"Yingabeal · arbre marqué","sculpture":"Le parc de sculptures","heide2":"Heide II","heide3":"Heide III · galeries"},"herePrefix":"Vous êtes ici · ","govTitle":"Voisinage · Yingabeal, l'Arbre Chanté","govBody":"À quelques pas d’ici se trouve Yingabeal, un ancien arbre Wurundjeri gravé où les Songlines se croisent. Cette histoire appartient aux peuples Wurundjeri Woi-wurrung. Dans ARCHAI, les communautés sources peuvent définir ce que peut dire un objet et imposer ces limites au moment où il parle, de sorte que la voix reste façonnée par elles ou se tait selon leur choix.","aoc":"Heide est située sur le territoire des peuples Wurundjeri Woi-wurrung du Kulin Nation, près du Birrarung. Nous rendons hommage aux anciens et à leurs descendants.","concept":"Concept de discussion · construit par Rob Graham, PhD École de design RMIT, pour Heide × ARCHAI conversations · contenu basé sur l’histoire publique de Heide · logo Heide utilisé uniquement pour la co-marque des discussions · les réponses en direct sont générées à la demande et fondées dans le détail ci-dessus.","footlineHtml":"<b>Propulsé par ARCHAI</b> · souverain, local-first IA du patrimoine culturel<br>Voix de l’objet · gouvernance par consentement · conscient des droits · s'exécute sur les appareils contrôlés par Heide","thinking":["Vérification du registre de Heide","Examen du fichier d'objet","Recherche de la réponse la plus claire","Cherche les détails fondés"],"responseWho":"Heide I · voix {voice}","liveTag":"✓ En direct · fondé dans le registre de Heide · qwen2.5, sur l'équipement contrôlé par Heide","offlineTag":"✓ Du registre de Heide (voix en ligne éteinte · affiche la réponse curatée)","readAloud":"Lire à voix haute","stop":"Arrêter","freeFallback":"Si la voix en direct est hors ligne, je ne peux répondre que d'après mon registre. Je suis Heide I, le cottage. John et Sunday Reed y ont vécu de 1934 ; c'est ici qu'a pris racine le modernisme australien, et où Sidney Nolan a peint la première série Ned Kelly en 1946-47.","visitorName":"Visiteur","copied":"Copié","copyPrompt":"Copiez ce lien :","autoLangLabel":"Auto · correspondre à ma question","autoLangShort":"Auto","shareWebTitle":"Heide I · Le Cottage · ARCHAI","shareWebText":"Heide I, le Cottage · demandez l'endroit de naissance du modernisme australien dans quatre voix. Démonstration conceptuelle Heide × ARCHAI."},"voices":{"guide":{"label":"Guide","note":"Chaleureux et accueillant, il vous guide vers la prochaine étape du parcours.","intro":"Bienvenue. Vous êtes devant Heide I, la maison d'origine et le cœur de l’ensemble du site. John et Sunday Reed y ont vécu de 1934, et c'est ici que Sidney Nolan a peint sa première série Ned Kelly, juste à la table de salle à manger. Prenez votre temps, puis suivez le chemin jusqu'au jardin de cuisine de Sunday quand vous serez prêt.","q":[{"q":"Où dois-je aller ensuite ?","a":"Prenez à gauche depuis la véranda dans le jardin de cuisine de Sunday, le jardin qui nourrissait tous les artistes venus ici. De là, le parcours du Cottage continue vers l’orchard, puis jusqu'au Parc de sculptures et Heide II."},{"q":"Qu'est-ce qui s'est passé ici ?","a":"C'est ici que les Reeds ont rassemblé des artistes devenus la modernité australienne et où Nolan a peint sa série sur Ned Kelly. Trente-cinq ans d'art, de débats et de repas, tous sous ce petit toit."},{"q":"Combien de temps pour le parcours ?","a":"Le circuit du Cottage est une promenade douce de quinze à vingt minutes au rythme tranquille, principalement plat, avec une option de sentier accessible et beaucoup d'ombre où s'arrêter."},{"q":"Qu'est-ce que je ne dois pas manquer ?","a":"Ne manquez pas le potager de Sunday juste à côté de moi, et la promenade dans le parc de sculptures. Si vous avez du temps, Heide II montre comment la vision des Reeds a grandi de cette ferme en architecture moderne."}]},"child":{"label":"Enfants","note":"Joyeux et simple, plein d'émerveillement, pour les jeunes visiteurs.","intro":"Bonjour ! Je suis la petite maison appelée Heide. Il y a très longtemps, un couple gentil, John et Sunday, vivait ici, et beaucoup d'artistes venaient peindre et manger ensemble. L'un d'eux, Sidney, a peint un célèbre hors-la-loi avec un grand casque carré, juste à la table de cuisine. Pouvez-vous trouver le jardin magique que Sunday a planté ?","q":[{"q":"Qui vivait ici ?","a":"John et Sunday Reed vivaient ici ! Sunday avait un grand potager plein de légumes et de fleurs, et elle aimait aider les artistes à faire leurs images. La maison était toujours pleine de gens."},{"q":"Qui était Ned Kelly ?","a":"Ned Kelly était un vrai hors-la-loi du passé qui portait une armure et un grand casque carré en fer comme une boîte aux lettres ! Sidney le peintre aimait tant son histoire qu'il l'a peinte encore et encore, ici."},{"q":"Qu'est-ce qui poussait dans le jardin ?","a":"Des choses délicieuses ! Des légumes, des herbes et des arbres fruitiers, et beaucoup de fleurs. Les artistes cueillaient les aliments frais et mangeaient tous ensemble. Pouvez-vous repérer les arbres fruitiers dans l'orchard ?"},{"q":"Raconte-moi une histoire","a":"Une fois, les artistes peignaient toute la journée dans mes pièces et mangeaient ensemble à une grande table, avec des légumes tout droit du potager de Sunday. L'un d'eux aimait tant l'histoire d'un hors-la-loi qu'il l'a peinte encore et encore, ici !"}]},"education":{"label":"Éducation","note":"Préparée pour le curriculum, liée à l'histoire de l'art australien.","intro":"Heide I est une ferme en planches achetée par les mécènes John et Sunday Reed en 1934. Ils ont rassemblé un cercle d'artistes modernistes ici, Nolan, Hester, Tucker, Perceval et d'autres, et en 1946-47 Nolan a peint sa première série sur Ned Kelly à la table de salle à manger. C'est ici que la modernité australienne a pris racine.","q":[{"q":"Qu'était le cercle Heide ?","a":"Le groupe d'artistes, d'écrivains et de penseurs rassemblé par les Reeds depuis les années 1930, y compris Nolan, Joy Hester, Albert Tucker, John Perceval et plus tard Mirka Mora et Charles Blackman. Heide est devenue un lieu pour créer, débattre et promouvoir l'art moderne en Australie."},{"q":"Qu'était Angry Penguins ?","a":"Un journal moderniste lié au cercle Heide, célèbre pour le coup d'éclat Ern Malley de 1944, une farce où deux poètes ont inventé un faux moderniste pour tromper l'éditeur. Ces mêmes poèmes ont été débattus dans cette maison."},{"q":"Pourquoi la mécénat est-il important ici ?","a":"Les Reeds montrent comment le soutien, un toit, de la nourriture et une croyance peuvent façonner un mouvement artistique national. Sans leur mécénat, beaucoup d'art moderne australien n'aurait peut-être pas eu lieu. C'est un cas d'étude sur l'art et le lieu."},{"q":"Qui étaient les artistes ?","a":"Le cercle Heide incluait Sidney Nolan, Joy Hester, Albert Tucker et John Perceval, et plus tard Mirka Mora et Charles Blackman. Les Reeds leur ont donné un toit, de la nourriture et une croyance, et l'art moderne australien en est né."}]},"curatorial":{"label":"Curatorial","note":"Provenance et recherche pour le personnel et les chercheurs.","intro":"Heide I, ancienne ferme laitière acquise par John et Sunday Reed en 1934 et rénovée dans un style français-provincial, est l'écrin de la modernité australienne. La première série Kelly (1946-47) y a été exécutée et plus tard offerte par Sunday Reed à la National Gallery of Australia en 1976. Lorsque le dossier est silencieux, cette voix le dira plutôt que d'inventer.","q":[{"q":"Provenance de la série Kelly ?","a":"Peint à Heide en 1946-47 ; conservé par Sunday Reed après le départ de Nolan ; offert par Sunday au National Gallery of Australia en 1976, « avec amour ». Vingt-sept peintures composent la première série. (Vérifiez les détails du catalogue contre l'enregistrement NGA avant citation.)"},{"q":"Qu'est-ce qui est vérifié vs incertain?","a":"Vérifié : l'achat de 1934, le cercle d'artistes, la série Kelly et son don à la National Gallery of Australia en 1976. Où le registre est silencieux — conversations exactes, visites non documentées — cette voix dit qu'elle ne sait pas plutôt que d'inventer."},{"q":"Quels droits sur les œuvres associées?","a":"Heide fixe les droits et les conditions de reproduction par objet. Ce concept n'affiche aucune image soumise à des restrictions de droits ; dans une démonstration en direct, les droits et protocoles culturels à l'ingestion et au point d'énonciation régissent ce qui peut être montré ou dit."},{"q":"Qui étaient les Reeds?","a":"John et Sunday Reed étaient des mécènes et collectionneurs d'art qui ont acheté cette ferme en 1934 et l'ont transformée en berceau du modernisme australien. Sunday en particulier a façonné le cercle, et en 1976 elle a offert la première série Kelly de Nolan au National Gallery of Australia."}]}}},"hi":{"static":{"pageTitle":"Heide I · The Cottage · AUXIO Concept","tag":"AUXIO · Concept","credit":"Photo · Heide I · Wikimedia Commons · सार्वजनिक नि:शुल्क","title":"Heide I · The Cottage","sub":"फ़र्महाउस · c.1870, 1934 में प्राप्त किया गया · Wurundjeri Woi-wurrung Country","institution":"Heide Museum of Modern Art · Bulleen, Naarm/Melbourne","metaTags":["सार्वजनिक नि:शुल्क छवि","विक्टोरियन हीरितेज रजिस्टर","कॉन्सेप्ट डेमो · अधिकारिक Heide संग्रह का नहीं"],"story":"<strong>Heide I</strong> यह पहला मौजूदा वेथरबोर्ड फ़र्महाउस है जहाँ समग्र कहानी शुरू होती है। 1934 में, कला प्रेरक John और Sunday Reed ने यह पिछला दूध की खेती का फ़र्म बारहा नदी के पास खरीदा था और इस कोटेज को अगले 35 साल तक अपना घर बनाया। उन्होंने अपने रेस्टौरेंट की डिनिंग टेबल पर एक समुदाय मॉडर्न आर्टिस्टों को जुटाया। Sidney Nolan 1946-47 में इसी घर में <em>Ned Kelly</em> सीरीज़ का पहला चित्रण किया है। ऑस्ट्रेलियन मॉडर्निज्म इस छोटे घर में बाहर आया।","askLabel":"इस स्थान से पूछें · एक वस्तु, चार ध्वनि","toneLabel":"ध्वनि का चयन करें","langLabel":"भाषा","chatPlaceholder":"इस स्थान से किसी भी बात पूछें...","askButton":"पूछें","audioTitle":"ऑडियो और ध्वनि टूल्स","audioHint":"कंट्रोल्स खोलें","voiceLabel":"भाषा और ध्वनि","autoRead":"अटैक्टिव प्रतिक्रियाओं की पढ़ाई","audioStatusAuto":"प्रतिक्रियाएं आपके पूछे हुए भाषा में फँसती हैं। बोलचाल ऑडियो इस डिवाइस पर उपलब्ध ब्राउजर ध्वनि के साथ मेल खाता है।","audioStatusFixed":"आपकी प्रतिक्रिया {language} में होगी। बोलचाल ऑडियो इस भाषा के अनुरूप होंगे; नीचे से एक अलग ध्वनि चुनें जब आवश्यक हो।","noSpeech":"यह ब्राउज़र बोलचाल ऑडियो का समर्थन नहीं करता है। Safari या Chrome पर प्रयास करें।","visitorTitle":"पर्यटक प्रतिक्रिया","visitorHint":"एक टिप्पणी छोड़ें","commentLabel":"एक प्रतिक्रिया छोड़ें · आपकी नोट संग्रह रिकॉर्ड में हिस्सा बन जाएगी","commentPlaceholder":"यह वस्तु क्या सोचते या भावनाओं को प्रेरित करती है?","commentButton":"प्रतिक्रिया दें","commentThanks":"धन्यवाद · प्रतिक्रिया रिकॉर्ड की गई","commentMeta":"पर्यटक प्रतिक्रिया · {date}","shareTitle":"शेयर / सहेजें","shareHint":"लिंक्स और डाउनलोड्स","shareButtons":["शेयर","ईमेल","कॉपी लिंक","पोस्ट"],"shareNote":"मोबाइल पर, साझा मेनू यह पेज को फ़ाइल्स में सेव कर सकता है या आपके होम स्क्रीन पर जोड़ सकता है।","objectTitle":"वस्तु रिकार्ड","objectHint":"ग्राउंडिंग","objectRows":[["वस्तु","Heide I (The Cottage), फ़ार्महाउस"],["बस्ती के निवासी","John and Sunday Reed, 1934-1981"],["प्रमुखता","ऑस्ट्रेलियन मोडर्निज़्म का जन्म स्थल"],["विकास स्थान","7 Templestowe Rd, Bulleen VIC"],["वैशिष्ट्य","विक्टोरियन हीरिटेज रजिस्टर"],["हक़","इंटरप्रिटेशन सेट द्वारा Heide · इमेज पब्लिक डोमेन"],["स्रोत छवि","Wikimedia Commons, पब्लिक डोमेन फ़ोटोग्राफ"]],"mapLabel":"आप यहाँ हैं","mapNote":"चिह्न के टैप करके साइट पर आपका स्थान जानें।","mapNodes":{"heide3":"गैलरी","heide2":"HEIDE II","sculpture":"स्कुल्प्चर पार्क","cottage":"कॉटेज","garden":"किचन गार्डन","orchard":"ऑर्चर्ड","yingabeal":"YINGABEAL"},"places":{"cottage":"Heide I · The Cottage","garden":"Sunday's किचन गार्डन","orchard":"ऑर्चर्ड","yingabeal":"यिंगाबीअल · चिकने हुई पेड़","sculpture":"शैल्पिक सर्कस","heide2":"हाइड ट्यू ट्वो","heide3":"हाइड ट्री · गैलरीज़"},"herePrefix":"आप यहाँ हैं · ","govTitle":"नजदीक का · यिंगाबीअल, संगीत का पेड़","govBody":"यहाँ से एक छोटी मार्गदरशन की दूरी पर है यिंगाबीअल, जो वरुणजीवि लेन-बढ़ाने का प्राचीन वरुणजीवि छेदित मार्कर पेड़ है। यह कथा वरुणजीवि वोइ-वूरंग लोगों के लिए है। ARCHAI में, स्रोत समुदाय प्रत्यक्ष रूप से निर्धारित कर सकता है कि एक वस्तु क्या कह सकती है, और उन प्रतिबंधों को लगभग वह मौजूदा समय में निर्धारित कर सकते हैं, जब वस्तु बोलने की योजना बनाए रखती है।","aoc":"हाइड वरुणजीवि वोइ-वूरंग लोगों के क्षेत्र पर स्थित है, कुलिन जनजाति के पास। हम गुरुजनों को श्रद्धांजलि देते हैं। सत्ता कभी अपसरण नहीं हुई है।","concept":"विचार अवधारणा · रोब ग्राहम, RMIT डिजाइन स्कूल PhD द्वारा बनाया गया है, हाइड × ARCHAI चर्चाएँ के लिए · महत्त्वपूर्ण हाइड प्रतिष्ठान की ऐतिहासिक जानकारी पर आधारित है · हाइड लोगो का उपयोग केवल चर्चाएँ के लिए किया जाता है · जीवंत जवाब अनुरोध पर ग्राउंडेड रिकॉर्ड में निर्मित होते हैं।","footlineHtml":"<b>ARCHAI के साथ चला जा रहा है</b> · स्वायत्त, स्थानीय पहुँच पर संस्कृति और महत्त्वपूर्ण कल्याण AI<br>वस्तु का आवाज · सहमति शासन · अधिकारों के बारे में जानकारी प्रदान करने वाला · हाइड-प्रबंधित सॉफ्टवेयर पर चलता है","thinking":["हाइड रिकॉर्ड को जांचना","वस्तु की फ़ाइल पर देखना","सबसे साफ-सुथरे जवाब को ढूंढना","ग्राउंडेड विवरणों में तलाश करना"],"responseWho":"हाइड ट्यू वन · {voice} आवाज़","liveTag":"✓ जीवंत · हाइड के रिकॉर्ड पर आधारित · qwen2.5, हाइड-प्रबंधित सॉफ्टवेयर पर चलता है","offlineTag":"✓ हाइड के रिकॉर्ड से (जीवंत आवाज़ ऑफ़लाइन · कुरेटेड जवाब दिखाने पर)","readAloud":"बोलचाल","stop":"रोको","freeFallback":"अगर जीवंत आवाज़ ऑफ़लाइन है, मैं केवल अपने रिकॉर्ड से जवाब दे सकता हूँ। मैं हाइड ट्यू वन हूँ, कोटेज। 1934 से जॉन और संडे रीड ने यहाँ रहा था; यहाँ ऑस्ट्रेलियाई मोडर्निस्म का जन्म हुआ, और 1946-47 में सिडनी नोलैन ने पहला नेद केली श्रृंखला यहाँ बनाई।","visitorName":"सवालकर्ता","copied":"कपी कर लो","copyPrompt":"यह लिंक कपी करें:","autoLangLabel":"ऑटो · मेरे सवाल के अनुरूप जवाब","autoLangShort":"ऑटो","shareWebTitle":"हाइड ट्यू वन · कोटेज · ARCHAI","shareWebText":"हाइड ट्यू वन, कोटेज · ऑस्ट्रेलियाई मोडर्निस्म का जन्म से पता चलाएं। ARCHAI × हाइड अवधारणा डीमो."},"voices":{"guide":{"label":"गाइड","note":"प्रसन्न और स्वागत, यह आपको लूप के अगले स्थान पर ले जाता है।","intro":"स्वागत। आप यहाँ हैं, हाइड ट्यू वन के सामने, मौलिक फ़ार्महाउस और पूरे साइट का हृदय। 1934 से जॉन और संडी रीड ने यहाँ रहे, और यहाँ एक छोटे सिडनी नोलैन का पहला नेद केली श्रृंखला बनाया। आपको इसे ध्यान से देखें, फिर जब तक तक पर्यटक गोदाम की ओर चलें।","q":[{"q":"अगला कहाँ जाऊँ?","a":"पॉचर से बाएं निकलकर, संडी के वाल्ड कुकीन गार्टन में प्रवेश करें। फिर अगला होता है और चलता जाता है स्कॉप्यचर पार्क और हाइड ट्री की ओर।"},{"q":"यहाँ क्या हुआ?","a":"यहीं रीड्स ने वहां जमा किए थे, जो बाद में ऑस्ट्रेलियन मॉडर्निज़्म बन गए, और नोलन ने अपनी केली सीरीज़ पेंट की। तीस पांच साल का कला, विवाद और भोजन, सब इस छोटे छत के नीचे हुआ।"},{"q":"पैदल चलने में कितना समय लगता है?","a":"कॉटेज लूप आसान पैस पर 15-20 मिनट की एक शांत चलने की यात्रा है, जो अधिकांश रूप से समतल है, और उपलब्ध पथ का विकलांग मार्ग चुनने की विकल्प और बहुत साँवली जगहें हैं।"},{"q":"मुझे क्या न छोड़ना?","a":"संदे's कीसन गार्डन को छोड़ने की कोई चोट नहीं, मेरे पास है, और स्कलप्चर पार्क में निम्नतम जाना। अगर आपके पास समय है, तो Heide II देखें, जहाँ रीड्स की विश्वास कैसे इस फ़ार्महाउस से मोडर्न आर्किटेक्चर में पलट गई।"}]},"child":{"label":"बच्चों के लिए","note":"खेलने योग्य और सरल, छोटे दौरे के लिए आश्चर्य से भरा हुआ।","intro":"नमस्ते! मैं Heide नामक इस छोटी फ़ार्महाउस हूँ। कई, कई साल पहले एक दयालु जोड़े, John और Sunday, मुझमें रहते थे, और कलाकारों की बहुत सी आवाजें यहाँ पेंटिंग और खाना खाने के लिए आती थी। उनमें से एक, Sidney, ने बड़े वर्गाकार हेलमेट वाले प्रसिद्ध बुशरेंजर को ठीक यहाँ रसोई मेज पर पेंट किया। क्या आप Sunday's ने बढ़ाया था उस अजीब गार्डन को खोज सकते हैं?","q":[{"q":"यहाँ कौन रहता था?","a":"John और Sunday Reed यहाँ रहते थे! Sunday ने एक बड़ी गार्डन बढ़ाई जिसमें सब्जियाँ और पौधे थे, और उसे कलाकारों को अपनी चित्रों को बनाने में मदद करना प्यार था। घर हमेशा लोगों से भरा रहता था।"},{"q":"Ned Kelly कौन था?","a":"Ned Kelly एक ऐसा वास्तविक बुशरेंजर था, जो पहले से ही चालीस और बड़े वर्गाकार आयरन हेलमेट का पहनना पसंद करता था, जैसे एक डिलीवरी बॉक्स! Sidney the painter ने इसकी कहानी इतनी प्यार की कि वह इसे फिर से और फिर से पेंट किया, ठीक यहाँ!"},{"q":"गार्डन में क्या बढ़ता था?","a":"मजेदार चीजें! सब्जियाँ, हरे पौधे और फल के पेड़, और बहुत सारे पौधे। कलाकार ताजा खाद्य पदार्थ चुनते थे और सब एकसाथ खाते थे। क्या आप orchard में फल के पेड़ों को देख सकते हैं?"},{"q":"मुझे एक कहानी बताओ","a":"एक समय, कलाकार इस घर में पूरा दिन पेंटिंग करते थे और एक बड़े टेबल पर खाते थे, सब्जियों को Sunday's garden से ले आया गया था। उनमें से एक ने एक बुशरेंजर की कहानी पेंट करने में इतना प्यार किया कि वह फिर से और फिर से उसे यहाँ पेंट किया!"}]},"education":{"label":"शिक्षण","note":"कैरिकुलम-आधारित, ऑस्ट्रेलियन कला इतिहास से जुड़ा।","intro":"Heide I 1934 में John और Sunday Reed द्वारा खरीदा गया एक वैठरबोर्ड फ़ार्महाउस है। वे यहाँ एक परिधि में मॉडर्निस्ट कलाकारों को जमा करते थे, Nolan, Hester, Tucker, Perceval और अन्य। 1946 से 47 तक Nolan ने इसी डिनिंग टेबल पर अपनी पहली Ned Kelly सीरीज़ को पेंट किया। यहाँ ही ऑस्ट्रेलियन मॉडर्निज़्म के बुनियादी तत्व बने।","q":[{"q":"Heide Circle क्या था?","a":"1930 से रीड्स द्वारा जमा की गई कलाकारों, लेखकों और चिंतकों की परिधि, Nolan, Joy Hester, Albert Tucker, John Perceval और बाद में Mirka Mora और Charles Blackman। Heide ने ऑस्ट्रेलिया में मॉडर्न कला को बनाने, विवाद करने और प्रचार करने की एक स्थान बना।"},{"q":"Angry Penguins क्या था?","a":"Heide circle से जुड़ा एक मॉडर्निस्ट जर्नल, 1944 Ern Malley affair के लिए प्रसिद्ध, जहाँ दो कवि एक फेक मॉडर्निस्ट का बनावट करके संपादक को भ्रमित करने की कोशिश की। ठीक इस कॉटेज में यह पद्य विवाद किए गए।"},{"q":"यहाँ पैट्रोनेज़ क्यों महत्वपूर्ण है?","a":"रीड्स ने दर्शन दिखाया कि समर्थन, एक घर, भोजन और विश्वास कैसे एक राष्ट्रीय कला आंदोलन को आकार दे सकते हैं। उनके पैट्रोनेज़ के बिना, ऑस्ट्रेलियन मॉडर्निज़्म की बहुत सारी चीजें होने की संभावना नहीं थी। यह कला और स्थान के मामले में एक अध्ययन है।"},{"q":"किस प्रकार के कलाकार थे?","a":"Heide Circle में Sidney Nolan, Joy Hester, Albert Tucker और John Perceval शामिल थे, और बाद में Mirka Mora और Charles Blackman। रीड्स ने उन्हें एक घर, भोजन और विश्वास दिया, और समृद्ध ऑस्ट्रेलियन कला इससे बढ़ी।"}]},"curatorial":{"label":"वकालती","note":"प्रोवेनांस और शोध, कर्मचारियों और शोधकर्ताओं के लिए।","intro":"Heide I, 1934 में John और Sunday Reed द्वारा खरीदा गया पूर्ववत् डैरी फ़ार्महाउस, जिसे फ्रेंच-प्रोविंशनल तरीके से रखा गया है, ऑस्ट्रेलियन मॉडर्निज़्म का पारंपरिक स्थान है। Nolan's पहली Kelly सीरीज़ (1946-47) इसी यहाँ पेंट की गई और बाद में 1976 में Sunday Reed ने National Gallery of Australia को उपहार का रूप दिया। जहाँ रिकॉर्ड सुन्दर है, इस आवाज़ वहीं कहेगी कि नहीं बल्कि नहीं बनाएगी।","q":[{"q":"Kelly सीरीज़ का प्रोवेनांस?","a":"<em>पेंटिंग हीडे में 1946-47 के दौरान की गई; नोलन के चलने के बाद संत्राम रीड द्वारा धारण की गई; 1976 में संत्राम नेशनल गैलरी ऑफ अस्ट्रेलिया को इसे दान कर दिया, 'इसके प्रेम के साथ.' पहली श्रृंखला में 27 पेंटिंग्स हैं. (एनजीए रिकॉर्ड को चेक करके कैटलॉग विवरण की पुष्टि करें.)</em>"},{"q":"<strong>पुष्टि किया गया है और अनिश्चित है?</strong>","a":"पुष्टि किया गया: 1934 की खरीद, कला प्रेमी समूह, केली श्रृंखला और इसके 1976 में एनजीए दान. जहाँ रिकॉर्ड खाली है - वास्तविक साकारण, अप्रमाणित यात्रा - इस आवाज़ कहती है कि यह नहीं जानता कि वे बनाए गए हैं।"},{"q":"सम्बंधित कार्यों पर अधिकार?","a":"हीडे आइटेम स्तर पर अधिकार और पुनर्निरूपण माध्यम का विचार लगता है। इस अवतरण में कोई अधिकार-अनुकूलित प्रतिमाएँ नहीं दिखाई जाती; वास्तविक उपयोग में, आइटम स्तर के अधिकार और संस्कृति प्रोटोकॉल बाधा लगाते हैं कि क्या दिखाया जा सकता है या कहा जा सकता है, इनजेस्ट और बोलने की बिंदु पर।"},{"q":"<em>रीड नामक कौन थे?</em>","a":"<strong>जॉन और संत्राम रीड एक्सट्रा-ऑस्ट्रेलियन मोडर्निजम के प्रणोदक और संग्रहकर्ता थे जो 1934 में इस खेती को खरीदे थे और इसे ऑस्ट्रेलियाई मोडर्निजम के प्रणाली का केंद्र बनाए। संत्राम विशेष रूप से समूह को आकार दिया और 1976 में नोलन की पहली केली श्रृंखला को नेशनल गैलरी ऑफ अस्ट्रेलिया को दान कर दिया।</strong>"}]}}},"ja":{"static":{"pageTitle":"Heide I · The Cottage · AUXIO コンセプト","tag":"AUXIO · コンセプト","credit":"Photo · Heide I · ウィキメディア・コモンズ · 公有领域","title":"Heide I · The Cottage","sub":"農家小屋 · 約1870年, 1934年に取得 · Wurundjeri Woi-wurrung 土地","institution":"Heide モダンアート美術館 · Bulleen, Naarm/Melbourne","metaTags":["公有领域画像","ビクトリア州遺産登録","コンセプトデモ · 公式Heideコンテンツではありません"],"story":"<strong>Heide I</strong> は、現代芸術の物語が始まる元の天板小屋です。1934年、アートパトロンのジョン・リードとサンデー・リード夫妻がこのヤラ川沿いの旧酪農場を購入し、この小屋を次に35年間の住居として選びました。彼らはそのダイニングテーブルを若き現代芸術家の中心地にしました。シドニー・ノーランは1946-47年にここで最初の <em>Ned Kelly</em> シリーズを描きました。オーストラリアの現代美術がこの小さな家で根付いたのです。","askLabel":"この場所に質問する · 一つの物体、四つの声","toneLabel":"声を選択","langLabel":"言語","chatPlaceholder":"この場所について何でも尋ねてください...","askButton":"質問","audioTitle":"音声と声のツール","audioHint":"コントロールを開く","voiceLabel":"言語と声","autoRead":"自動で返答を読み上げる","audioStatusAuto":"あなたの質問に対する返答はその言語で続きます。話された音声はこのデバイスに利用可能なブラウザの声を使用します。","audioStatusFixed":"{language} で返答しています。話された音声はその言語に合わせようとします；下記から異なる声を選択してください。","noSpeech":"このブラウザでは話された音声をサポートしていません。SafariやChromeをお試しください。","visitorTitle":"訪問者の反応","visitorHint":"メモを残す","commentLabel":"あなたのメモが収蔵記録の一部になります · レスポンスを残す","commentPlaceholder":"この物体はあなたに何を考えさせ、感じさせますか？","commentButton":"レスポンスを送信","commentThanks":"ありがとうございます · レスポンスが記録されました","commentMeta":"訪問者の反応 · {date}","shareTitle":"共有 / 保存","shareHint":"リンクとダウンロード","shareButtons":["共有","メール","リンクをコピー","投稿"],"shareNote":"モバイル端末では、このページをファイルに保存したりホーム画面に追加したりできます。","objectTitle":"オブジェクトレコード","objectHint":"土台","objectRows":[["オブジェクト","Heide I (The Cottage), 農家"],["居住者","John and Sunday Reed, 1934-1981"],["重要性","オーストラリアの現代美術の発祥地"],["場所","7 Templestowe Rd, Bulleen VIC"],["遺産","ヴィクトリア州遺産登録"],["権利","Heideによる解釈セット · 画像はパブリックドメイン"],["元画像","Wikimedia Commons, パブリックドメインの写真"]],"mapLabel":"ここにいます","mapNote":"マーカーをタップしてサイト全体で位置を確認します。","mapNodes":{"heide3":"ギャラリー","heide2":"HEIDE II","sculpture":"彫刻公園","cottage":"コテージ","garden":"キッチンガーデン","orchard":"果园","yingabeal":"Yingabeal"},"places":{"cottage":"Heide I · The Cottage","garden":"Sunday's kitchen garden","orchard":"The orchard","yingabeal":"イングベール · 切り傷の木","sculpture":"彫刻公園","heide2":"Heide II","heide3":"Heide III · 展示室"},"herePrefix":"あなたはここにいます · ","govTitle":"近くにある · イングベール、歌の木","govBody":"ここから徒歩で少し行ったところには、古代のウルンディージーの切り傷のある記念樹であるイングベールがあります。この物語はウルンディージー・ウォイワラングの人々に属しています。ARCHAIでは、ソースコミュニティがオブジェクトが何を言うべきかを定義し、それが話す瞬間にその制限を強制します。そのため、声はそれらのコミュニティによって形作られ続けます。","aoc":"Heideは、ウルンディージー・ウォイワラングの人々が住むクリン族の地に建っています。私たちの周りには、ビララング川があります。私たちは過去と現在の長老たちに敬意を表します。主権は放棄されたことはありません。","concept":"議論概念 · ロブ・グラハムによって作成、RMITデザイン学科博士課程、Heide × ARCHAI会話のために作成、内容はHeideの公開歴に基づいています、Heideロゴは共通ブランド用のみに使用、実際の返答はリクエスト時に生成されます。","footlineHtml":"<b>ARCHAIによって提供</b> · 主権を保持し、地元優先の文化遺産AI<br>オブジェクトの声 · 同意に基づくガバナンス · 権利に配慮 · Heide制御ハードウェア上で動作","thinking":["Heideの記録を確認する","オブジェクトファイルを見る","最も明確な答えを探す","根拠に基づいた詳細を検索する"],"responseWho":"Heide I · {voice} の声","liveTag":"✓ 実際 · Heideの記録に基づいて生成 · qwen2.5、Heide制御ハードウェア上で動作","offlineTag":"✓ Heideの記録から（実際の音声がオフラインの場合）","readAloud":"読み上げる","stop":"停止","freeFallback":"もし実際の音声がオフラインの場合、私はHeideの記録からしか答えられません。私はHeide I、コテージです。ジョンとサンデー・リードは1934年からここに住んでいました；これがオーストラリア現代美術の発祥地であり、シドニー・ノーランが1946-47年に最初のネッド・ケリーシリーズを描いた場所です。","visitorName":"訪問者","copied":"コピーしました","copyPrompt":"このリンクをコピー:","autoLangLabel":"自動 · 私の質問に合わせる","autoLangShort":"自動","shareWebTitle":"Heide I · コテージ · ARCHAI","shareWebText":"Heide I、コテージ · オーストラリア現代美術の発祥地を4つの声で尋ねます。ARCHAI × Heideコンセプトデモ"},"voices":{"guide":{"label":"ガイド","note":"暖かく歓迎し、次のループの場所へ案内します","intro":"ようこそ。あなたはHeide I、元の農家とこのサイト全体の中心に立っています。ジョンとサンデー・リードは1934年からここに住んでいました。そして、シドニー・ノーランが最初のネッド・ケリーシリーズを描いた場所です。その絵を見つめ、準備ができたらサンデーのキッチンガーデンへ進みましょう","q":[{"q":"次に行きたい場所は？","a":"コテージのポーチから左に進んでサンデーのキッチンガーデンへ行きましょう。そこには、ここを訪れたすべてのアーティストたちを養ったこの庭があります。その後、コテージループは果园へと続き、彫刻公園とHeide IIへと続いていきます"},{"q":"ここで何が起こったのですか？","a":"ここはリード夫妻がオーストラリアの現代美術を生み出すアーティストたちを集めた場所で、ノールンはここでケリーシリーズを描きました。35年間の芸術、議論、ディナーがこの小さな屋根の下で行われました。"},{"q":"どのくらい歩きますか？","a":"コテージループは、ゆったりとしたペースで15分から20分かかります。大半が平坦で、アクセシブルな道があり、多くの日陰スポットがあります。"},{"q":"見逃してはいけないものは何ですか？","a":"隣のサンデイのキッチンガーデンと彫刻公園を散歩するのをお忘れなく。時間があれば、リード夫妻のビジョンがこの農家から現代建築へとどのように成長したかを見るためにヘイドIIを見てください。<br>"}]},"child":{"label":"子供向け","note":"遊び心があり、シンプルで、若い訪問者に驚きを与える内容です。","intro":"こんにちは！私はヘイドと呼ばれる小さなコテージです。昔々、親切な夫婦のジョンとサンデイがここで暮らしていました。そしてたくさんのアーティストたちが集まり、一緒に絵を描いていました。その中の一人、サイディは大きな四角いヘルメットをつけた有名なブッシュレンジャーを描きました。あなたはサンデイが育てた魔法の庭を見つけられますか？","q":[{"q":"ここに誰が住んでいたのですか？","a":"ジョンとサンデイ・リード夫妻がここで暮らしていました！サンデイは大きな野菜や花々でいっぱいになったガーデンを作り、アーティストたちを助けていました。この家にはいつも人がたくさんいました。"},{"q":"ネッド・ケリーとは誰ですか？","a":"ネッド・ケリーは昔からある実際のブッシュレンジャーで、大きな四角い鉄製ヘルメットをつけている人です！サイディという画家は彼の物語が大好きで、何度もここで描きました。"},{"q":"ガーデンには何が育っていたのですか？","a":"おいしいものばかり！野菜やハーブ、果樹とたくさんの花々がありました。アーティストたちは新鮮な食材を摘んで一緒に食べていました。あなたは果樹園の果樹を見つけることができますか？"},{"q":"物語を教えてください","a":"かつてここではアーティストたちが一日中絵を描き、大きなテーブルで野菜を摘んだサンデイのガーデンから新鮮な食材を使って一緒に食事をしていました。その中の一人はブッシュレンジャーの物語が大好きで何度も何度もここで描きました！"}]},"education":{"label":"教育","note":"カリキュラムにリンクし、オーストラリアの美術史に関連しています。","intro":"ヘイドIは1934年にジョンとサンデイ・リード夫妻が購入した天板のある農家です。彼らはここにモダニストアーティストたちを招き、ノールン、ヒスター、タッカー、パーセヴァルらを集めていました。そして1946年から47年にかけて、ノールンはここで最初のネッド・ケリーシリーズを描きました。ここがオーストラリアの現代美術が始まった場所です。","q":[{"q":"ヘイドサークルとは何ですか？","a":"リード夫妻が1930年代から集めたアーティスト、作家、思想家たちのグループで、ノールン、ジョイ・ヒスター、アルベルト・タッカー、ジョン・パーセヴァルらが含まれています。ヘイドは現代美術を生み出す場所となりました。"},{"q":"Angry Penguinsとは何ですか？","a":"モダニスト雑誌で、1944年のErn Malley事件で有名です。この事件では2人の詩人が偽のモダニストを作り出し、編集者をだますという冗談が行われました。その詩はここで議論されました。"},{"q":"なぜ支援が重要なのでしょうか？","a":"リード夫妻は支援、家、食事、信念が国全体の美術運動にどのように影響を与えるかを示しています。彼らの支援がなければオーストラリアの現代美術は存在しなかったかもしれません。これはアートと場所についての研究例です。"},{"q":"アーティストたちは誰ですか？","a":"ヘイドサークルにはサイディ・ノールン、ジョイ・ヒスター、アルベルト・タッカー、ジョン・パーセヴァルが含まれています。後にミルカ・モラとチャールズ・ブラックマンも加わりました。リード夫妻は彼らに家を与え、食事を提供し、信念を持たせました。"}]},"curatorial":{"label":"キュレーション","note":"出典と研究者向けの学術的解説です。","intro":"ヘイドIは1934年にジョンとサンデイ・リードが購入した旧酪農家の農家で、フランス風の改装が施されました。ここではノールンの最初のケリーシリーズ（1946-47）が描かれ、後にサンデイ・リードによってオーストラリア国立美術館に寄贈されました。<br>","q":[{"q":"ケリーシリーズの出典は？","a":"Heideで描かれた1946-47年の作品；Nolanの離脱後、Sunday Reedが所有し続け、1976年にNational Gallery of Australiaに「愛を込めて」として寄贈された。<br>第一シリーズは27点から成る。"},{"q":"確認済みと不確かなものは何ですか？","a":"確認済み：1934年の購入、アーティストのサークル、Kellyシリーズ、およびその1976年のNGAへの寄贈。<br>記録にない部分 — 具体的な会話や文書化されていない訪問 — についてはこの声は知らないと述べる代わりに創作しない。"},{"q":"関連作品の権利？","a":"Heideでは各アイテムごとに権利と再製造条件を設定する。<br>このコンセプトでは著作権制限のある画像を表示しない；実際のデプロイメントでは、アイテムレベルでの権利や文化上の規範が何が表示可能かまたは言及可能かを決定し、インゲスト時に強制される。"},{"q":"Reedsとは誰ですか？","a":"JohnとSunday Reedはこの農場を1934年に購入し、オーストラリアの現代美術の中心地とした芸術愛好家で収集家だった。<br>Sundayは特にサークルを形成し、1976年にはNolanの最初のKellyシリーズをNational Gallery of Australiaに寄贈した。"}]}}},"ko":{"static":{"pageTitle":"헤이드 I · 텐트하우스 · AUXIO 콘셉트","tag":"AUXIO · 콘셉트","credit":"사진 · 헤이드 I · 위키미디어 공용 · 공공 도메인","title":"헤이드 I · 텐트하우스","sub":"농장집 · 1870년경, 1934년에 구입됨 · 워룬지 브리워런지 땅","institution":"헤이드 현대미술관 · 불린, 나암/멜버른","metaTags":["공공 도메인 이미지","빅토리아 문화유산 등록","컨셉 데모 · 공식 헤이드 콘텐츠 아님"],"story":"<strong>헤이드 I</strong>는 현대 미술의 모든 이야기가 시작된 원래의 날개집입니다. 1934년, 예술 후원자인 존과 선데이 리드 부부가 이전 우유농장을 사서 그 집을 35년 동안 거주했습니다. 그들은 주방 테이블 주변에서 젊은 현대주의 작가들을 모았습니다. 시드니 노런은 여기에서 첫 번째 <em>네드 켈리</em> 시리즈를 1946-47년에 그렸습니다.","askLabel":"이 장소에게 물어보기 · 한 개체, 네 가지 목소리","toneLabel":"목소리를 선택","langLabel":"언어","chatPlaceholder":"이 장소에 대해 무엇이든 물어보세요...","askButton":"질문하기","audioTitle":"오디오 및 음성 도구","audioHint":"컨트롤 열기","voiceLabel":"언어 및 목소리","autoRead":"자동으로 답변 읽기","audioStatusAuto":"답변은 질문한 언어로 따릅니다. 발화 오디오는 이 장치에서 사용 가능한 브라우저 음성을 사용합니다.","audioStatusFixed":"{language}로 답변합니다. 발화 오디오는 해당 언어를 시도하며, 필요한 경우 아래 목소리를 선택하세요.","noSpeech":"이 브라우저는 발화 오디오를 지원하지 않습니다. 사파리나 크롬을 사용해 보세요.","visitorTitle":"방문객 응답","visitorHint":"메모 남기기","commentLabel":"응답 남기기 · 당신의 메모가 수집 기록에 추가됩니다","commentPlaceholder":"이 개체가 당신에게 어떤 생각이나 감정을 불러일으키나요?","commentButton":"응답 제출","commentThanks":"감사합니다 · 응답 기록됨","commentMeta":"방문객 응답 · {date}","shareTitle":"공유 / 저장","shareHint":"링크 및 다운로드","shareButtons":["공유","이메일","링크 복사","게시"],"shareNote":"모바일에서 공유 메뉴는 이 페이지를 파일에 저장하거나 홈 화면에 추가할 수도 있습니다.","objectTitle":"물품 기록","objectHint":"근원","objectRows":[["물품","헤이드 I (더 캐츠)"],["거주자","존과 선데이 리드, 1934-1981"],["의미","오스트레일리아 현대주의의 탄생지"],["위치","7 템플스토우 로드, 불린 VIC"],["유산","빅토리아 주 유산 등록"],["권한","헤이드가 설정한 해석 · 이미지는 공용 도메인입니다"],["원본 이미지","Wikimedia Commons, 공용 도메인 사진"]],"mapLabel":"여기에서","mapNote":"지도의 마커를 클릭하여 사이트 전체를 확인하세요.","mapNodes":{"heide3":"갤러리","heide2":"HEIDE II","sculpture":"조각공원","cottage":"캐츠","garden":"키친 가든","orchard":"과수원","yingabeal":"YINGABEAL"},"places":{"cottage":"Heide I · The Cottage","garden":"Sunday's 키친 가든","orchard":"The orchard","yingabeal":" Yingabeal · 상처난 나무","sculpture":"조각 공원","heide2":"Heide II","heide3":"Heide III · 전시실"},"herePrefix":"여기 있습니다 · ","govTitle":"근처 · Yingabeal, 노래나무","govBody":"이곳에서 가까운 곳에 Wurundjeri의 고대 상처난 마커 나무인 Yingabeal이 있습니다. 여기서는 Songlines가 만나는 곳입니다. 이 이야기는 Wurundjeri Woi-wurrung 사람들에게 속해 있습니다. ARCHAI에서는 소스 커뮤니티가 물체가 무엇을 말할 수 있는지 정의하고, 그것들이 말하는 순간에 그 제한이 적용되도록 하여 그 목소리가 그들에게 의해 형성되거나 그들의 선택으로 침묵하게 됩니다.","aoc":"Heide는 Kulin Nation의 Wurundjeri Woi-wurrung 사람들이 살고 있는 땅 위에 서 있으며, Birrarung 옆에 있습니다. 우리는 과거와 현재의 장로들께 경의를 표합니다. 주권은 결코 양도되지 않았습니다.","concept":"토론 개념 · Rob Graham, RMIT School of Design 박사가 Heide × ARCHAI 대화를 위해 제작 · 내용은 공개된 Heide 역사에 기반함 · Heide 로고는 공동 브랜딩을 위한 용도로만 사용됨 · 실시간 답변은 요청 시 생성되며 위의 기록에 근거합니다.","footlineHtml":"<b>ARCHAI로 구동</b> · 주권, 지역 우선 문화유산 AI<br>물체 목소리 · 동의 관리 · 권리 인식 · Heide가 제어하는 하드웨어에서 실행","thinking":["Heide 기록 확인","물체 파일 검토","명확한 답변 찾기","근거 자세히 찾아보기"],"responseWho":"Heide I · {voice} 목소리","liveTag":"✓ 실시간 · Heide의 기록에 근거함 · qwen2.5, Heide가 제어하는 하드웨어에서 실행","offlineTag":"✓ Heide의 기록에서 (실시간 음성 오프라인 · 큐레이션된 답변 표시)","readAloud":"내용 읽기","stop":"중지","freeFallback":"실시간 목소리가 오프라인 상태라면, 저는 오직 내 기록으로만 답변할 수 있습니다. 저는 Heide I, 캐ottage입니다. John과 Sunday Reed는 1934년부터 여기에 살았으며, 이곳에서 Sidney Nolan이 1946-47년에 첫 번째 Ned Kelly 시리즈를 그렸습니다.","visitorName":"방문객","copied":"복사됨","copyPrompt":"링크 복사:","autoLangLabel":"자동 · 내 질문과 일치","autoLangShort":"자동","shareWebTitle":"Heide I · The Cottage · ARCHAI","shareWebText":"Heide I, 캐ottage · 4가지 목소리로 호주 현대미술의 발상지를 물어보세요. ARCHAI × Heide 개념 데모."},"voices":{"guide":{"label":"가이드","note":"따뜻하고 환영하며, 다음 장소로 안내합니다.","intro":"환영합니다. 당신은 Heide I, 원래의 농장 집 앞에 서 있습니다. 이곳은 전체 사이트의 중심입니다. John과 Sunday Reed는 1934년부터 여기에 살았으며, Sidney Nolan이 첫 번째 Ned Kelly 시리즈를 그린 곳입니다. 식탁에서 그림을 그렸습니다. 감상한 후 준비되면 Sunday의 주방 정원으로 가세요.","q":[{"q":"다음에 어디로 가야 하나요?","a":"현관에서 왼쪽으로 나와 Sunday의 담장 주방 정원으로 이동하세요. 이 정원은 여기에 온 모든 예술가들을 먹여 살렸습니다. 그 다음 캐ottage 루프는 과수원을 거쳐 조각 공원과 Heide II로 향합니다."},{"q":"여기에서 무엇이 일어났나요?","a":"이곳에서 레드 부부가 호주 모더니즘을 이룬 예술가들을 모았고, 노elan이 그의 케일리 시리즈를 그렸습니다. 예술, 논쟁, 저녁 식사 등 35년 동안 모든 것이 이 작은 지붕 아래에서 이루어졌습니다."},{"q":"산책은 얼마나 걸릴까요?","a":"The Cottage loop는 평탄한 길을 따라 느긋하게 걷는데 약 15분에서 20분 정도 소요되며, 접근 가능한 길과 그늘진 곳이 많아 잠시 쉴 수 있습니다."},{"q":"절대로 놓치지 말아야 할 것은 무엇인가요?","a":"Sunday의 주방 정원을 빼놓지 마세요. 바로 저기 있고, 조각 공원으로 내려가는 산책도 놓치지 마세요. 시간이 있다면 Heide II를 방문해 보세요. 이곳에서 레드 부부가 이 작은 농장 집에서 현대 건축물로 어떻게 발전했는지를 볼 수 있습니다."}]},"child":{"label":"Children","note":"재미있고 간단하며, 어린 방문객들에게 신비로움을 선사합니다.","intro":"안녕하세요! 저는 Heide라고 불리는 이 작은 농가입니다. 오래 전에 친절한 부부인 John과 Sunday가 저를 거주지로 삼았고, 많은 예술가들이 그림을 그리러 왔습니다. 그들 중 한 명인 Sidney는 큰 정사각형 헬멧을 쓴 유명한 강도를 주방 식탁에서 그렸습니다. Sunday가 가꾼 마법의 정원을 찾을 수 있나요?","q":[{"q":"누가 이곳에 살았나요?","a":"John과 Sunday Reed 부부가 이곳에 살았습니다! Sunday는 많은 채소와 꽃이 자라는 큰 정원을 가꾸었고, 예술가들이 그림을 그리는데 도움을 주는 것을 좋아했습니다. 집은 항상 사람들로 북적였습니다."},{"q":"Ned Kelly는 누구인가요?","a":"Ned Kelly는 오래 전에 철갑과 큰 정사각형의 철 헬멧을 착용한 실제 강도였습니다! Sidney 화가는 그의 이야기를 너무 좋아해서 이곳에서 수없이 그렸습니다."},{"q":"정원에는 무엇이 자랐나요?","a":"맛있는 것들이요! 채소, 향신료, 과일 나무와 많은 꽃들이 있었습니다. 예술가들은 신선한 식재료를 따서 함께 먹었어요. 과수원에 있는 과일 나무들을 찾아볼 수 있을까요?"},{"q":"이야기를 들려주세요","a":"옛날에는 이 방에서 하루 종일 그림을 그리고, Sunday의 정원에서 직접 가져온 채소로 큰 테이블에서 식사를 했습니다. 그들 중 한 명은 강도의 이야기를 너무 좋아해서 여기서 수없이 그렸습니다!"}]},"education":{"label":"Education","note":"호주 미술사와 연계된 교육 프로그램.","intro":"Heide I는 1934년 John과 Sunday Reed가 구입한 목조 농장 집입니다. 그들은 이곳에서 모더니즘 예술가들을 모았고, Nolan은 1946년부터 1947년까지 여기서 첫 번째 Ned Kelly 시리즈를 그렸습니다. 호주 모더니즘이 시작된 곳이 바로 여기입니다.","q":[{"q":"Heide Circle이란 무엇인가요?","a":"레드 부부가 1930년대부터 모았던 예술가, 작가 및 사상가들의 그룹으로 Nolan, Joy Hester, Albert Tucker, John Perceval을 비롯해 나중에는 Mirka Mora와 Charles Blackman도 포함되었습니다. Heide는 호주에서 현대 미술을 창조하고 논쟁하며 홍보하는 장소로 자리잡았습니다."},{"q":"Angry Penguins란 무엇인가요?","a":"Heide Circle과 연관된 모더니즘 잡지로 1944년 Ern Malley 사건으로 유명합니다. 이는 두 시인이 편집자를 속이기 위해 가짜 모더니스트를 만들어 낸 사기였습니다. 바로 그 시들은 이 작은 집에서 논쟁의 대상이 되었습니다."},{"q":"왜 후원이 중요한가요?","a":"레드 부부는 지원, 거주지, 음식, 그리고 믿음이 국가적 예술 운동을 어떻게 형성하는지 보여줍니다. 그들의 후원 없이는 호주의 많은 모더니즘이 일어나지 않았을 것입니다. 이는 미술과 장소에 대한 사례 연구입니다."},{"q":"누가 예술가들이었나요?","a":"Heide Circle에는 Sidney Nolan, Joy Hester, Albert Tucker, John Perceval이 포함되었고 나중에는 Mirka Mora와 Charles Blackman도 포함되었습니다. 레드 부부는 그들에게 거주지, 음식, 그리고 믿음을 제공했으며, 현대 호주의 미술은 여기서 시작되었습니다."}]},"curatorial":{"label":"Curatorial","note":"출처와 학문적 연구를 위한 직원 및 연구자들.","intro":"Heide I는 1934년 John과 Sunday Reed가 구입하고 프랑스 스타일로 개조한 전 유제품 농장 집입니다. 이곳은 호주 모더니즘의 발상지였습니다. Nolan의 첫 Kelly 시리즈 (1946-47)는 여기서 완성되었고 나중에 Sunday Reed가 1976년 National Gallery of Australia에 기증했습니다. 기록이 없을 때 이 목소리는 그렇게 말할 것입니다.","q":[{"q":"Kelly 시리즈의 출처는 무엇인가요?","a":"헤이데에서 1946-47년에 그린 작품; 노랜의 떠남 이후 일레인 리드가 소장하였으며, 1976년 일레인 리드가 국립미술관에 기증했습니다. '사랑을 담아.' 첫 시리즈는 총 27점으로 구성됩니다."},{"q":"확인된 내용과 불확실한 내용은 무엇이 있는가?","a":"확인된 사항: 1934년 구매, 작가 그룹, 켈리 시리즈 및 1976년 국립미술관 기증. 기록에 언급되지 않은 부분 - 정확한 대화, 문서화되지 않은 방문 등 - 이 목소리는 알 수 없다고 말합니다."},{"q":"연결된 작품의 권리는?","a":"헤이데는 각 항목별로 권리와 재생산 조건을 설정합니다. 이 개념은 저작권 제한 이미지를 포함하지 않습니다; 실제 배포에서는 항목 단위의 권리 및 문화적 프로토콜이 표시하거나 언급할 수 있는 내용을 제어하며, 입력 시점과 발언 시점에서 적용됩니다."},{"q":"리드 부부는 누구인가?","a":"존 리드와 일레인 리드는 이 농장(1934년에 구매)을 현대 미술의 중심지로 만든 예술 후원자 및 수집가들입니다. 특히 일레인이 그룹을 형성했으며, 1976년 노랜의 첫 번째 켈리 시리즈를 국립미술관에 기증했습니다."}]}}}});
+;
+
+let uiLang='en';
+let uiTranslationPromise=null;
+
+function cloneCopy(obj){return JSON.parse(JSON.stringify(obj));}
+function mergeCopy(base,extra){
+  if(Array.isArray(base)) return Array.isArray(extra)?extra:base;
+  if(base&&typeof base==='object'){
+    const out={...base};
+    if(extra&&typeof extra==='object'){
+      Object.keys(extra).forEach(key=>{out[key]=mergeCopy(base[key],extra[key]);});
+    }
+    return out;
+  }
+  return extra===undefined?base:extra;
+}
+function escapeHTML(value){
+  return String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+}
+function formatCopy(template,values={}){
+  return String(template||'').replace(/\{(\w+)\}/g,(_,key)=>values[key]??'');
+}
+function currentCopy(){return UI_COPY[uiLang]||UI_COPY.en;}
+function currentStatic(){return currentCopy().static||UI_COPY.en.static;}
+function voiceCopy(lens=current){
+  return (currentCopy().voices&&currentCopy().voices[lens])||UI_COPY.en.voices[lens]||VOICES[lens];
+}
+function setText(selector,text){
+  const el=document.querySelector(selector);
+  if(el&&text!==undefined) el.textContent=text;
+}
+function setHTML(selector,html){
+  const el=document.querySelector(selector);
+  if(el&&html!==undefined) el.innerHTML=html;
+}
+function setPlaceholder(selector,text){
+  const el=document.querySelector(selector);
+  if(el&&text!==undefined) el.setAttribute('placeholder',text);
+}
+function setListText(selector,values){
+  document.querySelectorAll(selector).forEach((el,index)=>{
+    if(values&&values[index]!==undefined) el.textContent=values[index];
+  });
+}
+function updateAutoReadLabel(text){
+  const label=document.querySelector('label.v-check');
+  if(!label||!autoReadEl) return;
+  let span=label.querySelector('[data-ui="auto-read-label"]');
+  if(!span){
+    label.textContent='';
+    label.appendChild(autoReadEl);
+    label.appendChild(document.createTextNode(' '));
+    span=document.createElement('span');
+    span.dataset.ui='auto-read-label';
+    label.appendChild(span);
+  }
+  span.textContent=text;
+}
+function updatePanelSummary(index,title,hint){
+  const summary=document.querySelectorAll('details.v-panel summary')[index];
+  if(!summary) return;
+  const titleEl=summary.querySelector('.v-panel-title');
+  const hintEl=summary.querySelector('.v-panel-hint');
+  if(titleEl) titleEl.textContent=title;
+  if(hintEl) hintEl.textContent=hint;
+}
+function updateObjectRows(rows){
+  document.querySelectorAll('.v-meta-row').forEach((row,index)=>{
+    const data=rows&&rows[index];
+    if(!data) return;
+    const key=row.querySelector('span:first-child');
+    const value=row.querySelector('span:last-child');
+    if(key) key.textContent=data[0];
+    if(value) value.textContent=data[1];
+  });
+}
+function updateMapLabels(){
+  const s=currentStatic();
+  document.querySelectorAll('.map-node').forEach(node=>{
+    const key=node.dataset.key;
+    const label=node.querySelector('text');
+    if(label&&s.mapNodes&&s.mapNodes[key]) label.textContent=s.mapNodes[key];
+  });
+  setText('.v-map-note',s.mapNote);
+  setLocation(currentLocation);
+}
+function applyLocale(){
+  const s=currentStatic();
+  const langCode=uiLang==='auto'?'en':uiLang;
+  document.documentElement.lang=LOCALE_BY_LANG[langCode]||langCode||'en';
+  document.documentElement.dir=langCode==='ar'?'rtl':'ltr';
+  document.body.classList.toggle('is-cjk',['zh','ja','ko'].includes(langCode));
+  document.body.classList.toggle('is-rtl',langCode==='ar');
+
+  document.title=s.pageTitle;
+  setText('.v-tag',s.tag);
+  setText('.v-credit',s.credit);
+  setText('.v-title',s.title);
+  setText('.v-sub',s.sub);
+  setText('.v-institution',s.institution);
+  setListText('.v-meta-tag',s.metaTags);
+  setHTML('.v-story',s.story);
+  setText('.v-ask-label',s.askLabel);
+  setText('.v-tone-label',s.toneLabel);
+  if(langSelectEl){
+    langSelectEl.setAttribute('aria-label',s.langLabel);
+    langSelectEl.title=s.langLabel;
+  }
+  setPlaceholder('#chatInput',s.chatPlaceholder);
+  setText('.v-chat-send',s.askButton);
+  updatePanelSummary(0,s.audioTitle,s.audioHint);
+  updatePanelSummary(1,s.visitorTitle,s.visitorHint);
+  updatePanelSummary(2,s.shareTitle,s.shareHint);
+  updatePanelSummary(3,s.objectTitle,s.objectHint);
+  setText('label[for="voiceSelect"]',s.voiceLabel);
+  updateAutoReadLabel(s.autoRead);
+  setText('.v-comment-label',s.commentLabel);
+  setPlaceholder('#commentInput',s.commentPlaceholder);
+  setText('#commentBtn',s.commentButton);
+  setListText('.v-share-btn',s.shareButtons);
+  setText('.v-share-note',s.shareNote);
+  updateObjectRows(s.objectRows);
+  setText('.v-map-label',s.mapLabel);
+  updateMapLabels();
+  setText('.v-gov .t',s.govTitle);
+  setText('.v-gov p',s.govBody);
+  setText('.v-aoc',s.aoc);
+  setText('.v-concept',s.concept);
+  setHTML('.v-footline',s.footlineHtml);
+  updateAudioStatus();
+}
+function jsonFromReply(raw){
+  const text=String(raw||'').trim();
+  try{return JSON.parse(text);}catch(e){}
+  const match=text.match(/\{[\s\S]*\}/);
+  if(!match) throw new Error('No JSON object in translation response');
+  return JSON.parse(match[0]);
+}
+async function translateUiCopy(code){
+  const target=langName(code);
+  const payload=cloneCopy(UI_COPY.en);
+  const systemPrompt=[
+    'You translate museum interface JSON for an accessible cultural heritage prototype.',
+    'Return strict JSON only, matching the input shape exactly.',
+    'Translate labels, buttons, notes, questions and answers into '+target+'.',
+    'Keep proper names unchanged: Heide, ARCHAI, AUXIO, John Reed, Sunday Reed, Sidney Nolan, Ned Kelly, Wurundjeri Woi-wurrung, Birrarung, Yingabeal, Naarm/Melbourne.',
+    'Do not add new facts, dates, claims or interpretation.'
+  ].join(' ');
+  const res=await fetch(CHAT_ENDPOINT,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({systemPrompt,userPrompt:JSON.stringify(payload),history:[]})
+  });
+  if(!res.ok) throw new Error('Translation request failed');
+  const data=await res.json();
+  const raw=data?.message?.content||data?.response||data?.text||'';
+  return mergeCopy(UI_COPY.en,jsonFromReply(raw));
+}
+async function ensureUiCopy(code){
+  if(!code||code==='auto') code='en';
+  if(UI_COPY[code]) return UI_COPY[code];
+  if(uiTranslationPromise) return uiTranslationPromise;
+  uiTranslationPromise=translateUiCopy(code)
+    .then(copy=>{UI_COPY[code]=copy;return copy;})
+    .catch(err=>{console.warn('Global interface translation unavailable',err);UI_COPY[code]=mergeCopy(UI_COPY.en,{});return UI_COPY[code];})
+    .finally(()=>{uiTranslationPromise=null;});
+  return uiTranslationPromise;
+}
+
 const tonesEl=document.getElementById('tones');
 const noteEl=document.getElementById('toneNote');
 const introEl=document.getElementById('intro');
@@ -435,7 +811,9 @@ function setLocation(key){
   const m=document.getElementById('hereMarker');
   if(m) m.setAttribute('transform','translate('+p.x+','+p.y+')');
   const hl=document.getElementById('hereLabel');
-  if(hl) hl.textContent='You are here · '+p.label;
+  const s=currentStatic();
+  const label=(s.places&&s.places[key])||p.label;
+  if(hl) hl.textContent=(s.herePrefix||'You are here · ')+label;
   document.querySelectorAll('.map-node').forEach(n=>n.classList.toggle('active', n.dataset.key===key));
 }
 
@@ -452,7 +830,7 @@ function sysPrompt(){
 
 function render(lens){
   current=lens;
-  const d=VOICES[lens];
+  const d=voiceCopy(lens);
   noteEl.textContent=d.note;
   introEl.textContent=d.intro;
   respEl.innerHTML='';
@@ -464,32 +842,38 @@ function render(lens){
     c.onclick=()=>{[...chipsEl.children].forEach(x=>x.classList.remove('active'));c.classList.add('active');ask(item.q,item.a);};
     chipsEl.appendChild(c);
   });
-  [...tonesEl.children].forEach(b=>b.classList.toggle('active',b.dataset.lens===lens));
+  [...tonesEl.children].forEach(b=>{
+    const v=voiceCopy(b.dataset.lens);
+    if(v) b.textContent=v.label;
+    b.classList.toggle('active',b.dataset.lens===lens);
+  });
+  applyLocale();
 }
 
 let thinkingTimer=null;
 const THINKING_PHRASES=['Consulting Heide’s record','Reviewing the object file','Finding the clearest answer','Looking through the details'];
 function showThinking(){
-  respEl.innerHTML='<span class="v-thinking"><span class="thinking-label">'+THINKING_PHRASES[0]+'</span><span class="v-thinking-dots"><span></span><span></span><span></span></span></span>';
+  const phrases=currentStatic().thinking||THINKING_PHRASES;
+  respEl.innerHTML='<span class="v-thinking"><span class="thinking-label">'+escapeHTML(phrases[0])+'</span><span class="v-thinking-dots"><span></span><span></span><span></span></span></span>';
   let i=0;
   clearInterval(thinkingTimer);
   thinkingTimer=setInterval(()=>{
-    i=(i+1)%THINKING_PHRASES.length;
+    i=(i+1)%phrases.length;
     const el=respEl.querySelector('.thinking-label');
-    if(el) el.textContent=THINKING_PHRASES[i]; else clearInterval(thinkingTimer);
+    if(el) el.textContent=phrases[i]; else clearInterval(thinkingTimer);
   },2100);
 }
 function clearThinking(){ clearInterval(thinkingTimer); thinkingTimer=null; }
 function renderAnswer(text, live){
   clearThinking();
   lastReply=text;
-  const tag = live
-    ? '✓ Live · grounded in Heide’s record · qwen2.5, on Heide-controlled hardware'
-    : '✓ From Heide’s record (live voice offline — showing the curated reply)';
-  respEl.innerHTML='<span class="who">Heide I · '+VOICES[current].label+' voice</span>'
-    + text.replace(/</g,'&lt;')
-    + '<div class="v-readrow"><button class="v-readbtn" id="readBtn" onclick="toggleRead()">Read aloud</button></div>'
-    + '<span class="grounded">'+tag+'</span>';
+  const s=currentStatic();
+  const tag=live?s.liveTag:s.offlineTag;
+  const who=formatCopy(s.responseWho,{voice:voiceCopy(current).label});
+  respEl.innerHTML='<span class="who">'+escapeHTML(who)+'</span>'
+    + escapeHTML(text).replace(/\n/g,'<br>')
+    + '<div class="v-readrow"><button class="v-readbtn" id="readBtn" onclick="toggleRead()">'+escapeHTML(s.readAloud)+'</button></div>'
+    + '<span class="grounded">'+escapeHTML(tag)+'</span>';
   if(autoReadEl.checked) speak(text);
 }
 
@@ -511,7 +895,7 @@ async function ask(q, curated){
     if(reply){ history.push({role:'assistant',content:reply}); renderAnswer(reply,true); return; }
     throw new Error('empty');
   }catch(e){
-    const fallback = curated || ("I can only answer from my record while my live voice is offline. Here is what I hold: I am Heide I, the Cottage — home of John and Sunday Reed from 1934, birthplace of Australian modernism, and where Sidney Nolan painted his first Ned Kelly series in 1946 to 47.");
+    const fallback = curated || currentStatic().freeFallback;
     history.push({role:'assistant',content:fallback});
     renderAnswer(fallback,false);
   }
@@ -547,25 +931,34 @@ function loadVoices(){
 function currentVoice(){ return allVoices()[voiceSelectEl.value|0] || null; }
 const langSelectEl=document.getElementById('langSelect');
 const LANGS=[
-  {code:'auto',label:'Auto — match my question'},
-  {code:'en',label:'English'},
-  {code:'zh',label:'中文 · Chinese'},
-  {code:'ar',label:'العربية · Arabic'},
-  {code:'vi',label:'Tiếng Việt · Vietnamese'},
-  {code:'el',label:'Ελληνικά · Greek'},
-  {code:'it',label:'Italiano · Italian'},
-  {code:'es',label:'Español · Spanish'},
-  {code:'fr',label:'Français · French'},
-  {code:'hi',label:'हिन्दी · Hindi'},
-  {code:'ja',label:'日本語 · Japanese'},
-  {code:'ko',label:'한국어 · Korean'}
+  {code:'en',label:'English',short:'EN'},
+  {code:'zh',label:'中文 · Chinese',short:'中文'},
+  {code:'ar',label:'العربية · Arabic',short:'عربي'},
+  {code:'vi',label:'Tiếng Việt',short:'VI'},
+  {code:'el',label:'Ελληνικά',short:'EL'},
+  {code:'it',label:'Italiano',short:'IT'},
+  {code:'es',label:'Español',short:'ES'},
+  {code:'fr',label:'Français',short:'FR'},
+  {code:'hi',label:'हिन्दी',short:'हिं'},
+  {code:'ja',label:'日本語',short:'日本'},
+  {code:'ko',label:'한국어',short:'한국'}
 ];
-function populateLangs(){ if(langSelectEl) langSelectEl.innerHTML=LANGS.map(l=>'<option value="'+l.code+'">'+l.label+'</option>').join(''); }
+function populateLangs(selected){
+  if(!langSelectEl) return;
+  const value=selected||langSelectEl.value||'auto';
+  const s=currentStatic();
+  langSelectEl.innerHTML=LANGS.map(l=>{
+    const label=l.code==='auto'?(s.autoLangShort||l.short):l.short;
+    return '<option value="'+l.code+'" title="'+escapeHTML(l.label)+'">'+escapeHTML(label)+'</option>';
+  }).join('');
+  langSelectEl.value=value;
+}
 function updateAudioStatus(){
   if(!audioStatusEl) return;
+  const s=currentStatic();
   audioStatusEl.textContent = answerLang
-    ? ('Answering in '+answerLang+'. Read-aloud uses a matching voice; pick another below if you like.')
-    : 'Answers follow the language you ask in. Read-aloud uses your device’s built-in voices.';
+    ? formatCopy(s.audioStatusFixed,{language:answerLang})
+    : s.audioStatusAuto;
 }
 function pickVoiceForLang(code){
   if(!canSpeak || !voiceSelectEl.options.length) return;
@@ -574,76 +967,91 @@ function pickVoiceForLang(code){
   if(idx<0 && code!=='auto') idx = all.findIndex(v=>/^en/i.test(v.lang));
   if(idx>=0) voiceSelectEl.value=String(idx);
 }
-function onLangChange(){
+async function onLangChange(){
   const code=langSelectEl?langSelectEl.value:'auto';
   answerLang=(code==='auto')?null:langName(code);
+  uiLang=(code==='auto')?'en':code;
+  try{ localStorage.setItem(UI_LANG_KEY,code); }catch(e){}
   pickVoiceForLang(code);
+  await ensureUiCopy(uiLang);
+  populateLangs(code);
+  render(current);
+  renderComments();
   updateAudioStatus();
 }
 function onVoiceChange(){ updateAudioStatus(); }
 function speak(text){
-  if(!canSpeak){ audioStatusEl.textContent='This browser has no speech support — try Safari or Chrome.'; return; }
+  if(!canSpeak){ audioStatusEl.textContent=currentStatic().noSpeech; return; }
   window.speechSynthesis.cancel();
   const u=new SpeechSynthesisUtterance(text);
   const v=currentVoice(); if(v) u.voice=v;
   u.rate=0.98; u.pitch=1; u.lang=(v&&v.lang)||'en-AU';
   const btn=document.getElementById('readBtn');
-  u.onstart=()=>{ if(btn){btn.classList.add('on');btn.textContent='Stop';} };
-  u.onend=()=>{ if(btn){btn.classList.remove('on');btn.textContent='Read aloud';} };
+  u.onstart=()=>{ if(btn){btn.classList.add('on');btn.textContent=currentStatic().stop;} };
+  u.onend=()=>{ if(btn){btn.classList.remove('on');btn.textContent=currentStatic().readAloud;} };
   window.speechSynthesis.speak(u);
 }
-function stopSpeak(){ if(canSpeak) window.speechSynthesis.cancel(); const btn=document.getElementById('readBtn'); if(btn){btn.classList.remove('on');btn.textContent='Read aloud';} }
+function stopSpeak(){ if(canSpeak) window.speechSynthesis.cancel(); const btn=document.getElementById('readBtn'); if(btn){btn.classList.remove('on');btn.textContent=currentStatic().readAloud;} }
 function toggleRead(){ if(canSpeak && window.speechSynthesis.speaking){ stopSpeak(); } else { speak(lastReply); } }
 populateLangs();
+try{
+  const savedLang=localStorage.getItem(UI_LANG_KEY);
+  if(savedLang&&LANGS.some(l=>l.code===savedLang)&&langSelectEl) langSelectEl.value=savedLang;
+}catch(e){}
 if(canSpeak){ voiceSelectEl.addEventListener('change', onVoiceChange); loadVoices(); window.speechSynthesis.onvoiceschanged=loadVoices; }
 else { document.getElementById('audioTools').style.display='none'; }
-updateAudioStatus();
 
 const COMMENT_KEY='heide_cottage_comments';
 function renderComments(){
   const box=document.getElementById('prevComments'); if(!box) return;
   let local=[]; try{ local=JSON.parse(localStorage.getItem(COMMENT_KEY))||[]; }catch(e){}
-  box.innerHTML=local.map(c=>'<div class="v-prev-comment"><div class="v-prev-comment-text">'+String(c.text).replace(/</g,'&lt;')+'</div><div class="v-prev-comment-meta">Visitor · '+c.time+'</div></div>').join('');
+  const s=currentStatic();
+  box.innerHTML=local.map(c=>{
+    const meta=formatCopy(s.commentMeta,{date:c.time});
+    return '<div class="v-prev-comment"><div class="v-prev-comment-text">'+escapeHTML(c.text)+'</div><div class="v-prev-comment-meta">'+escapeHTML(meta)+'</div></div>';
+  }).join('');
 }
 function submitComment(){
   const input=document.getElementById('commentInput');
   const text=input.value.trim(); if(!text) return;
   const btn=document.getElementById('commentBtn');
   let local=[]; try{ local=JSON.parse(localStorage.getItem(COMMENT_KEY))||[]; }catch(e){}
-  const time=new Date().toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
+  const locale=LOCALE_BY_LANG[uiLang]||document.documentElement.lang||'en-AU';
+  const time=new Date().toLocaleDateString(locale,{day:'numeric',month:'short',year:'numeric'});
   local.unshift({text, time});
   try{ localStorage.setItem(COMMENT_KEY, JSON.stringify(local)); }catch(e){}
   input.value='';
-  btn.textContent='Thank you — response recorded'; btn.style.color='var(--accent2)'; btn.style.borderColor='var(--accent2)';
+  btn.textContent=currentStatic().commentThanks; btn.style.color='var(--accent2)'; btn.style.borderColor='var(--accent2)';
   renderComments();
-  setTimeout(()=>{ btn.textContent='Submit Response'; btn.style.color=''; btn.style.borderColor=''; }, 3000);
+  setTimeout(()=>{ btn.textContent=currentStatic().commentButton; btn.style.color=''; btn.style.borderColor=''; }, 3000);
 }
 
 // ── SHARE / SAVE ───────────────────────────────────────────────────
 const PAGE_URL = window.location.href;
-const SHARE_TITLE = 'Heide I — The Cottage · ARCHAI';
-const SHARE_TEXT = 'Heide I, the Cottage — talk to the place where Australian modernism began, in four voices. An ARCHAI × Heide concept.';
+function shareTitle(){ return currentStatic().shareWebTitle; }
+function shareText(){ return currentStatic().shareWebText; }
 function shareNative(){
-  if(navigator.share){ navigator.share({title:SHARE_TITLE,text:SHARE_TEXT,url:PAGE_URL}).catch(()=>{}); }
+  if(navigator.share){ navigator.share({title:shareTitle(),text:shareText(),url:PAGE_URL}).catch(()=>{}); }
   else { copyLink(document.getElementById('shareNativeBtn')); }
 }
 function shareEmail(){
-  const s=encodeURIComponent(SHARE_TITLE);
-  const b=encodeURIComponent(SHARE_TEXT+'\n\n'+PAGE_URL);
+  const s=encodeURIComponent(shareTitle());
+  const b=encodeURIComponent(shareText()+'\n\n'+PAGE_URL);
   window.location.href='mailto:?subject='+s+'&body='+b;
 }
 function copyLink(btn){
-  const flash=()=>{ if(btn){const o=btn.textContent;btn.textContent='Copied';setTimeout(()=>{btn.textContent=o;},1600);} };
-  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(PAGE_URL).then(flash).catch(()=>prompt('Copy this link:',PAGE_URL)); }
-  else { prompt('Copy this link:',PAGE_URL); }
+  const flash=()=>{ if(btn){const o=btn.textContent;btn.textContent=currentStatic().copied;setTimeout(()=>{btn.textContent=o;},1600);} };
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(PAGE_URL).then(flash).catch(()=>prompt(currentStatic().copyPrompt,PAGE_URL)); }
+  else { prompt(currentStatic().copyPrompt,PAGE_URL); }
 }
 function shareX(){
-  window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(SHARE_TEXT)+'&url='+encodeURIComponent(PAGE_URL),'_blank','noopener');
+  window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(shareText())+'&url='+encodeURIComponent(PAGE_URL),'_blank','noopener');
 }
 
 render('guide');
 setLocation(currentLocation);
 renderComments();
+onLangChange();
 </script>
 </body>
 </html>
