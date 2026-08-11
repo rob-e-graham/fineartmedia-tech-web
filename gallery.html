@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARCHAI Collections — talk to the world's open art</title>
+<meta name="description" content="Browse open museum and gallery collections and talk to the works, in your own words. Powered by ARCHAI, sovereign local-first cultural-heritage AI.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0b0a;--surface:#141412;--surface2:#1b1b18;--border:#232320;--border2:#33332e;
+  --text:#ece7db;--text2:#a8a293;--text3:#6a655a;
+  --accent:#c8a96e;--accent2:#8fbcb0;
+  --mono:'DM Mono',monospace;--serif:'Cormorant Garamond',Georgia,serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--serif);font-weight:300;min-height:100vh;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+/* HEADER */
+.hdr{position:sticky;top:0;z-index:50;background:rgba(11,11,10,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 20px}
+.hdr-row{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo{font-family:var(--serif);font-size:1.1rem;letter-spacing:6px;text-transform:uppercase;font-weight:300;white-space:nowrap}
+.logo span{font-style:italic;color:var(--accent)}
+.logo small{display:block;font-family:var(--mono);font-size:.44rem;letter-spacing:2.5px;color:var(--text3);margin-top:2px}
+.controls{display:flex;gap:10px;flex:1;min-width:240px;flex-wrap:wrap;justify-content:flex-end}
+.sel,.searchbox{background:var(--surface);border:1px solid var(--border2);color:var(--text);font-family:var(--mono);font-size:.62rem;letter-spacing:.5px;padding:9px 12px;border-radius:3px;outline:none}
+.sel{cursor:pointer;max-width:230px}
+.searchwrap{display:flex;flex:1;min-width:220px;max-width:460px}
+.searchbox{flex:1;border-radius:3px 0 0 3px;border-right:none;font-family:var(--serif);font-size:1rem}
+.searchbox::placeholder{color:var(--text3)}
+.searchbtn{background:var(--accent);color:#1a160d;border:none;font-family:var(--mono);font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;padding:0 16px;border-radius:0 3px 3px 0;cursor:pointer}
+/* INTRO */
+.intro{max-width:1280px;margin:0 auto;padding:26px 20px 6px}
+.intro h1{font-size:2rem;font-weight:400;line-height:1.1}
+.intro p{color:var(--text2);font-size:1.05rem;margin-top:6px;max-width:640px;line-height:1.5}
+.intro .hint{font-family:var(--mono);font-size:.56rem;letter-spacing:1px;text-transform:uppercase;color:var(--accent2);margin-top:12px}
+/* GRID */
+.status{max-width:1280px;margin:0 auto;padding:12px 20px;font-family:var(--mono);font-size:.6rem;letter-spacing:1px;text-transform:uppercase;color:var(--text3)}
+.grid{max-width:1280px;margin:0 auto;padding:6px 20px 60px;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden;cursor:pointer;transition:border-color .15s,transform .15s;display:flex;flex-direction:column}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.card-img{width:100%;aspect-ratio:1/1;background:var(--surface2);object-fit:cover;display:block}
+.card-body{padding:11px 12px 13px}
+.card-title{font-size:1.02rem;line-height:1.2;color:var(--text)}
+.card-meta{font-family:var(--mono);font-size:.5rem;letter-spacing:.6px;text-transform:uppercase;color:var(--text3);margin-top:6px;line-height:1.5}
+.card-inst{color:var(--accent2)}
+.empty{grid-column:1/-1;text-align:center;color:var(--text3);font-family:var(--mono);font-size:.62rem;letter-spacing:1px;padding:50px 0}
+/* OVERLAY */
+.overlay{position:fixed;inset:0;z-index:100;background:rgba(6,6,5,.86);backdrop-filter:blur(6px);display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:24px 16px}
+.overlay.open{display:flex}
+.sheet{background:var(--bg);border:1px solid var(--border2);border-radius:6px;max-width:920px;width:100%;margin:auto;display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
+@media(max-width:720px){.sheet{grid-template-columns:1fr}}
+.sheet-img{background:var(--surface2);min-height:280px;display:flex;align-items:center;justify-content:center}
+.sheet-img img{width:100%;height:100%;max-height:520px;object-fit:contain;display:block}
+.sheet-body{padding:24px 22px;display:flex;flex-direction:column}
+.close{position:absolute;top:20px;right:22px;background:var(--surface);border:1px solid var(--border2);color:var(--text2);width:32px;height:32px;border-radius:50%;cursor:pointer;font-family:var(--mono);font-size:.8rem;z-index:2}
+.s-inst{font-family:var(--mono);font-size:.54rem;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent2)}
+.s-title{font-size:1.7rem;line-height:1.1;font-weight:400;margin:8px 0 4px}
+.s-sub{font-family:var(--mono);font-size:.56rem;letter-spacing:1px;text-transform:uppercase;color:var(--text2);margin-bottom:12px}
+.s-desc{font-size:1rem;line-height:1.55;color:var(--text2);max-height:150px;overflow:auto;margin-bottom:16px}
+.s-divider{height:1px;background:var(--border);margin:6px 0 14px}
+.ask-label{font-family:var(--mono);font-size:.54rem;letter-spacing:2px;text-transform:uppercase;color:var(--accent2);margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.chip{font-family:var(--mono);font-size:.56rem;padding:7px 10px;border:1px solid var(--border2);color:var(--text2);border-radius:2px;background:var(--surface);cursor:pointer;transition:all .15s}
+.chip:hover{border-color:var(--accent);color:var(--text)}
+.chatrow{display:flex;gap:8px}
+.chatin{flex:1;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-family:var(--serif);font-size:1rem;padding:11px 13px;border-radius:3px;outline:none}
+.chatin:focus{border-color:var(--accent)}
+.sendbtn{background:var(--accent2);color:#0e1512;border:none;font-family:var(--mono);font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;padding:0 15px;border-radius:3px;cursor:pointer}
+.answer{margin-top:14px;font-size:1.05rem;line-height:1.6;color:var(--text)}
+.answer:empty{display:none}
+.answer .who{display:block;font-family:var(--mono);font-size:.5rem;letter-spacing:1.6px;text-transform:uppercase;color:var(--accent);margin-bottom:7px}
+.answer .grounded{display:block;font-family:var(--mono);font-size:.46rem;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-top:11px}
+.think{font-family:var(--mono);font-size:.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent2)}
+.think .d{animation:bl 1.3s infinite both}.think .d:nth-child(2){animation-delay:.2s}.think .d:nth-child(3){animation-delay:.4s}
+@keyframes bl{0%,80%,100%{opacity:.25}40%{opacity:1}}
+footer{max-width:1280px;margin:0 auto;padding:22px 20px 40px;border-top:1px solid var(--border);font-family:var(--mono);font-size:.52rem;letter-spacing:1px;color:var(--text3);text-transform:uppercase;line-height:1.9}
+footer b{color:var(--text2);font-weight:400}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-row">
+    <div class="logo">ARC<span>H</span>AI<small>Collections · talk to the art</small></div>
+    <div class="controls">
+      <select class="sel" id="collSel" onchange="onCollection()"></select>
+      <div class="searchwrap">
+        <input class="searchbox" id="q" type="text" placeholder="Search by meaning — “the sea at dusk”, “quiet interiors”…" enterkeyhint="search">
+        <button class="searchbtn" onclick="runSearch()">Search</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="intro">
+  <h1>Talk to the world's open art</h1>
+  <p>Browse open collections from museums and galleries around the world, and ask any work a question in your own words. Every answer is grounded in the record.</p>
+  <div class="hint">◑ Semantic search · 27 institutions · conversational, not keyword</div>
+</div>
+
+<div class="status" id="status">Loading…</div>
+<div class="grid" id="grid"></div>
+
+<footer>
+  <b>Runs on ARCHAI</b> — sovereign, local-first cultural-heritage AI · grounded answers, no invention · CC / open-access collections<br>
+  Research project · Rob Graham, RMIT Design PhD · fineartmedia.tech/archai
+</footer>
+
+<!-- OBJECT OVERLAY -->
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeObj()">
+  <div class="sheet" id="sheet">
+    <button class="close" onclick="closeObj()">✕</button>
+    <div class="sheet-img" id="sImg"></div>
+    <div class="sheet-body">
+      <div class="s-inst" id="sInst"></div>
+      <div class="s-title" id="sTitle"></div>
+      <div class="s-sub" id="sSub"></div>
+      <div class="s-desc" id="sDesc"></div>
+      <div class="s-divider"></div>
+      <div class="ask-label">Ask this work</div>
+      <div class="chips" id="chips"></div>
+      <div class="chatrow">
+        <input class="chatin" id="chatin" type="text" placeholder="Ask anything…" enterkeyhint="send">
+        <button class="sendbtn" onclick="askFree()">Ask</button>
+      </div>
+      <div class="answer" id="answer"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API='https://archai-api.fineartmedia.tech/api/proxy';
+// image-rich open collections, friendly labels
+const COLLECTIONS=[
+  {code:'archai_cma',label:'Cleveland Museum of Art'},
+  {code:'archai_met',label:'The Metropolitan Museum of Art'},
+  {code:'archai_aic',label:'Art Institute of Chicago'},
+  {code:'archai_rijks',label:'Rijksmuseum'},
+  {code:'archai_smithsonian',label:'Smithsonian'},
+  {code:'archai_nga',label:'National Gallery of Art'},
+  {code:'archai_wellcome',label:'Wellcome Collection'},
+  {code:'archai_qagoma',label:'QAGOMA'},
+  {code:'archai_acmi',label:'ACMI · Moving Image'},
+  {code:'archai_va',label:'Victoria & Albert Museum'},
+  {code:'archai_auckland',label:'Auckland Museum'},
+  {code:'archai_tepapa',label:'Te Papa Tongarewa'}
+];
+let current=COLLECTIONS[0].code;
+let history=[];
+
+const $=id=>document.getElementById(id);
+const selEl=$('collSel'), gridEl=$('grid'), statusEl=$('status');
+selEl.innerHTML=COLLECTIONS.map(c=>`<option value="${c.code}">${c.label}</option>`).join('');
+
+function instLabel(code){return (COLLECTIONS.find(c=>c.code===code)||{}).label||'';}
+function imgOf(p){return p.media_thumbnail||p.media_medium||p.image_url||p.primaryImageSmall||'';}
+function bigImg(p){return p.media_large||p.media_medium||p.media_thumbnail||imgOf(p);}
+function hasImg(p){return p.media_available!==false && !!imgOf(p);}
+
+async function fetchJSON(url,body){
+  const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  return r.json();
+}
+function renderCards(items){
+  const withImg=items.filter(hasImg);
+  if(!withImg.length){gridEl.innerHTML='<div class="empty">No works with images here — try another collection or search.</div>';return;}
+  gridEl.innerHTML=withImg.map((p,i)=>`
+    <div class="card" onclick='openObj(${i})'>
+      <img class="card-img" loading="lazy" src="${imgOf(p)}" alt="" onerror="this.style.visibility='hidden'">
+      <div class="card-body">
+        <div class="card-title">${esc((p.title||'Untitled')).slice(0,90)}</div>
+        <div class="card-meta"><span class="card-inst">${esc(instLabel(current))}</span>${p.date_range?' · '+esc(p.date_range):''}</div>
+      </div>
+    </div>`).join('');
+  window._items=withImg;
+}
+function esc(s){return String(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+async function loadBrowse(){
+  statusEl.textContent='Loading '+instLabel(current)+'…';
+  try{
+    const d=await fetchJSON(API+'/qdrant/scroll',{collection:current,limit:48});
+    const pts=(d.result&&d.result.points)||d.points||[];
+    const items=pts.map(p=>p.payload||{});
+    renderCards(items);
+    statusEl.textContent=(window._items?window._items.length:0)+' works · browsing '+instLabel(current);
+  }catch(e){statusEl.textContent='Could not reach the collection. The ARCHAI backend may be offline.';gridEl.innerHTML='';}
+}
+async function runSearch(){
+  const q=$('q').value.trim();
+  if(!q){loadBrowse();return;}
+  statusEl.textContent='Searching “'+q+'” in '+instLabel(current)+'…';
+  try{
+    const e=await fetchJSON(API+'/embed',{prompt:q});
+    const vec=e.embedding;
+    if(!vec||!vec.length)throw new Error('no vector');
+    const d=await fetchJSON(API+'/qdrant/search',{collection:current,vector:vec,limit:48});
+    const pts=(d.result)||d.points||[];
+    const items=pts.map(p=>p.payload||{});
+    renderCards(items);
+    statusEl.textContent=(window._items?window._items.length:0)+' results for “'+q+'” · '+instLabel(current);
+  }catch(err){statusEl.textContent='Search unavailable right now — showing the collection instead.';loadBrowse();}
+}
+function onCollection(){current=selEl.value;$('q').value='';loadBrowse();}
+$('q').addEventListener('keydown',e=>{if(e.key==='Enter')runSearch();});
+
+// ── OBJECT + CONVERSATION ──
+let obj=null;
+function openObj(i){
+  obj=window._items[i];
+  $('sImg').innerHTML=bigImg(obj)?`<img src="${bigImg(obj)}" alt="" onerror="this.parentNode.style.minHeight='0'">`:'';
+  $('sInst').textContent=instLabel(current);
+  $('sTitle').textContent=obj.title||'Untitled';
+  $('sSub').textContent=[obj.object_type,obj.date_range,obj.registration_number].filter(Boolean).join(' · ');
+  $('sDesc').textContent=obj.description||obj.wall_description||'';
+  history=[];
+  $('answer').innerHTML='';$('chatin').value='';
+  const qs=['What are you?','Tell me your story','Why do you matter?','What am I looking at?'];
+  $('chips').innerHTML=qs.map(q=>`<div class="chip" onclick="ask('${q.replace(/'/g,"\\'")}')">${q}</div>`).join('');
+  $('overlay').classList.add('open');
+}
+function closeObj(){$('overlay').classList.remove('open');}
+function buildPrompt(){
+  const p=obj;
+  const rec=[
+    'Title: '+(p.title||'Untitled'),
+    p.object_type?'Type: '+p.object_type:'',
+    p.date_range?'Date: '+p.date_range:'',
+    p.category?'Category: '+p.category:'',
+    'Institution: '+instLabel(current),
+    p.museum_location?'Location: '+p.museum_location:'',
+    p.description?'Description: '+p.description:'',
+    p.wall_description?'Wall text: '+p.wall_description:'',
+    p.fun_fact?'Fun fact: '+p.fun_fact:'',
+    p.did_you_know?'Did you know: '+p.did_you_know:''
+  ].filter(Boolean).join('\n');
+  return `You are "${p.title||'this artwork'}", ${p.object_type?('a '+p.object_type+' '):''}in the collection of ${instLabel(current)}. Speak in the first person as the object itself, warm and clear, in plain language (not academic), three to four sentences. If the visitor writes in another language, reply fully in that language. Only use facts from your record; if the record does not cover something, say you do not know rather than invent.\n\nRECORD:\n${rec}`;
+}
+function showThinking(){$('answer').innerHTML='<span class="think">Consulting my record<span class="d">.</span><span class="d">.</span><span class="d">.</span></span>';}
+function showAnswer(t){
+  $('answer').innerHTML='<span class="who">'+esc((obj.title||'This work'))+'</span>'+esc(t)+'<span class="grounded">✓ Grounded in the record · '+esc(instLabel(current))+'</span>';
+}
+async function ask(q){
+  q=(q||'').trim();if(!q)return;
+  showThinking();history.push({role:'user',content:q});
+  try{
+    const d=await fetchJSON(API+'/chat',{systemPrompt:buildPrompt(),userPrompt:q.slice(0,480),history:history.slice(0,-1).slice(-8)});
+    const reply=d&&d.message&&d.message.content&&d.message.content.trim();
+    if(reply){history.push({role:'assistant',content:reply});showAnswer(reply);}
+    else throw new Error('empty');
+  }catch(e){
+    showAnswer((obj.description||obj.wall_description||'I can only speak from my record, and the live voice is offline right now.').slice(0,400));
+  }
+}
+function askFree(){const v=$('chatin').value.trim();if(!v)return;$('chatin').value='';ask(v);}
+$('chatin').addEventListener('keydown',e=>{if(e.key==='Enter')askFree();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeObj();});
+
+loadBrowse();
+</script>
+</body>
+</html>
