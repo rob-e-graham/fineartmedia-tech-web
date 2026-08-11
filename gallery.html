@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ARCHAI Collections — talk to the world's open art</title>
-<meta name="description" content="Browse open museum and gallery collections and talk to the works, in your own words. Powered by ARCHAI, sovereign local-first cultural-heritage AI.">
+<title>ARCHAIX — talk to the collection</title>
+<meta name="description" content="ARCHAIX: talk to a whole collection, and to each object (AUXIO). Curators publish sections of the collection; visitors ask it anything, grounded in the record. Powered by ARCHAI, sovereign local-first cultural-heritage AI.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -35,6 +35,11 @@ a{color:inherit}
 .intro h1{font-size:2rem;font-weight:400;line-height:1.1}
 .intro p{color:var(--text2);font-size:1.05rem;margin-top:6px;max-width:640px;line-height:1.5}
 .intro .hint{font-family:var(--mono);font-size:.56rem;letter-spacing:1px;text-transform:uppercase;color:var(--accent2);margin-top:12px}
+.reply{max-width:1280px;margin:0 auto;padding:0 20px}
+.reply:empty{display:none}
+.reply-inner{background:var(--surface);border:1px solid var(--border2);border-left:2px solid var(--accent);border-radius:4px;padding:16px 18px;margin-top:10px;font-size:1.08rem;line-height:1.55;color:var(--text);white-space:pre-wrap}
+.reply-who{display:block;font-family:var(--mono);font-size:.5rem;letter-spacing:1.6px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.reply-think{font-family:var(--mono);font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent2)}
 /* GRID */
 .status{max-width:1280px;margin:0 auto;padding:12px 20px;font-family:var(--mono);font-size:.6rem;letter-spacing:1px;text-transform:uppercase;color:var(--text3)}
 .grid{max-width:1280px;margin:0 auto;padding:6px 20px 60px;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
@@ -83,23 +88,24 @@ footer b{color:var(--text2);font-weight:400}
 
 <div class="hdr">
   <div class="hdr-row">
-    <div class="logo">ARC<span>H</span>AI<small>Collections · talk to the art</small></div>
+    <div class="logo">ARCHAI<span>X</span><small>Talk to the collection · AUXIO for each work</small></div>
     <div class="controls">
       <select class="sel" id="collSel" onchange="onCollection()"></select>
       <div class="searchwrap">
-        <input class="searchbox" id="q" type="text" placeholder="Search by meaning — “the sea at dusk”, “quiet interiors”…" enterkeyhint="search">
-        <button class="searchbtn" onclick="runSearch()">Search</button>
+        <input class="searchbox" id="q" type="text" placeholder="Ask the collection — “works about the sea and ships”…" enterkeyhint="send">
+        <button class="searchbtn" onclick="askCollection()">Ask</button>
       </div>
     </div>
   </div>
 </div>
 
 <div class="intro">
-  <h1>Talk to the world's open art</h1>
-  <p>Browse open collections from museums and galleries around the world, and ask any work a question in your own words. Every answer is grounded in the record.</p>
-  <div class="hint">◑ Semantic search · 27 institutions · conversational, not keyword</div>
+  <h1>Talk to the collection</h1>
+  <p>Ask the whole collection a question and it answers, surfacing the works it means. Then open any work and talk to it directly. Every answer is grounded in the record.</p>
+  <div class="hint">◑ ARCHAIX talks to the collection · AUXIO talks to each object · 27 institutions</div>
 </div>
 
+<div class="reply" id="reply"></div>
 <div class="status" id="status">Loading…</div>
 <div class="grid" id="grid"></div>
 
@@ -155,9 +161,11 @@ const selEl=$('collSel'), gridEl=$('grid'), statusEl=$('status');
 selEl.innerHTML=COLLECTIONS.map(c=>`<option value="${c.code}">${c.label}</option>`).join('');
 
 function instLabel(code){return (COLLECTIONS.find(c=>c.code===code)||{}).label||'';}
-function imgOf(p){return p.media_thumbnail||p.media_medium||p.image_url||p.primaryImageSmall||'';}
+function imgOf(p){return p.media_thumbnail||p.media_medium||p.image||p.image_url||p.primaryImageSmall||'';}
 function bigImg(p){return p.media_large||p.media_medium||p.media_thumbnail||imgOf(p);}
 function hasImg(p){return p.media_available!==false && !!imgOf(p);}
+function instOf(o){return o.source_institution||o.institution||instLabel(o.collection)||instLabel(current);}
+function descOf(o){return o.description||o.wall_description||'';}
 
 async function fetchJSON(url,body){
   const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
@@ -171,7 +179,7 @@ function renderCards(items){
       <img class="card-img" loading="lazy" src="${imgOf(p)}" alt="" onerror="this.style.visibility='hidden'">
       <div class="card-body">
         <div class="card-title">${esc((p.title||'Untitled')).slice(0,90)}</div>
-        <div class="card-meta"><span class="card-inst">${esc(instLabel(current))}</span>${p.date_range?' · '+esc(p.date_range):''}</div>
+        <div class="card-meta"><span class="card-inst">${esc(instOf(p))}</span>${p.date_range?' · '+esc(p.date_range):''}</div>
       </div>
     </div>`).join('');
   window._items=withImg;
@@ -188,33 +196,35 @@ async function loadBrowse(){
     statusEl.textContent=(window._items?window._items.length:0)+' works · browsing '+instLabel(current);
   }catch(e){statusEl.textContent='Could not reach the collection. The ARCHAI backend may be offline.';gridEl.innerHTML='';}
 }
-async function runSearch(){
+async function askCollection(){
   const q=$('q').value.trim();
   if(!q){loadBrowse();return;}
-  statusEl.textContent='Searching “'+q+'” in '+instLabel(current)+'…';
+  $('reply').innerHTML='<div class="reply-inner"><span class="reply-who">ARCHAIX · talking to the collection</span><span class="reply-think">Reading the collection<span> .</span></span></div>';
+  statusEl.textContent='Asking the collection…';
   try{
-    const e=await fetchJSON(API+'/embed',{prompt:q});
-    const vec=e.embedding;
-    if(!vec||!vec.length)throw new Error('no vector');
-    const d=await fetchJSON(API+'/qdrant/search',{collection:current,vector:vec,limit:48});
-    const pts=(d.result)||d.points||[];
-    const items=pts.map(p=>p.payload||{});
-    renderCards(items);
-    statusEl.textContent=(window._items?window._items.length:0)+' results for “'+q+'” · '+instLabel(current);
-  }catch(err){statusEl.textContent='Search unavailable right now — showing the collection instead.';loadBrowse();}
+    const d=await fetchJSON(API+'/curator/converse',{message:q.slice(0,480),history:[]});
+    const reply=(d.message||d.reply||'').trim();
+    const objs=(d.objects||d.results||[]);
+    $('reply').innerHTML='<div class="reply-inner"><span class="reply-who">ARCHAIX · '+(objs.length?('surfacing '+objs.length+' works'):'the collection')+'</span>'+esc(reply)+'</div>';
+    renderCards(objs);
+    statusEl.textContent=(window._items?window._items.length:0)+' works to open · click any to talk to it (AUXIO)';
+  }catch(err){
+    $('reply').innerHTML='<div class="reply-inner">The collection voice is offline right now — showing the collection instead.</div>';
+    loadBrowse();
+  }
 }
-function onCollection(){current=selEl.value;$('q').value='';loadBrowse();}
-$('q').addEventListener('keydown',e=>{if(e.key==='Enter')runSearch();});
+function onCollection(){current=selEl.value;$('q').value='';$('reply').innerHTML='';loadBrowse();}
+$('q').addEventListener('keydown',e=>{if(e.key==='Enter')askCollection();});
 
 // ── OBJECT + CONVERSATION ──
 let obj=null;
 function openObj(i){
   obj=window._items[i];
   $('sImg').innerHTML=bigImg(obj)?`<img src="${bigImg(obj)}" alt="" onerror="this.parentNode.style.minHeight='0'">`:'';
-  $('sInst').textContent=instLabel(current);
+  $('sInst').textContent=instOf(obj);
   $('sTitle').textContent=obj.title||'Untitled';
-  $('sSub').textContent=[obj.object_type,obj.date_range,obj.registration_number].filter(Boolean).join(' · ');
-  $('sDesc').textContent=obj.description||obj.wall_description||'';
+  $('sSub').textContent=[obj.object_type,obj.date_range,obj.registration_number||obj.registration].filter(Boolean).join(' · ');
+  $('sDesc').textContent=descOf(obj);
   history=[];
   $('answer').innerHTML='';$('chatin').value='';
   const qs=['What are you?','Tell me your story','Why do you matter?','What am I looking at?'];
@@ -229,18 +239,18 @@ function buildPrompt(){
     p.object_type?'Type: '+p.object_type:'',
     p.date_range?'Date: '+p.date_range:'',
     p.category?'Category: '+p.category:'',
-    'Institution: '+instLabel(current),
+    'Institution: '+instOf(p),
     p.museum_location?'Location: '+p.museum_location:'',
     p.description?'Description: '+p.description:'',
     p.wall_description?'Wall text: '+p.wall_description:'',
     p.fun_fact?'Fun fact: '+p.fun_fact:'',
     p.did_you_know?'Did you know: '+p.did_you_know:''
   ].filter(Boolean).join('\n');
-  return `You are "${p.title||'this artwork'}", ${p.object_type?('a '+p.object_type+' '):''}in the collection of ${instLabel(current)}. Speak in the first person as the object itself, warm and clear, in plain language (not academic), three to four sentences. If the visitor writes in another language, reply fully in that language. Only use facts from your record; if the record does not cover something, say you do not know rather than invent.\n\nRECORD:\n${rec}`;
+  return `You are "${p.title||'this artwork'}", ${p.object_type?('a '+p.object_type+' '):''}in the collection of ${instOf(p)}. Speak in the first person as the object itself, warm and clear, in plain language (not academic), three to four sentences. If the visitor writes in another language, reply fully in that language. Only use facts from your record; if the record does not cover something, say you do not know rather than invent.\n\nRECORD:\n${rec}`;
 }
 function showThinking(){$('answer').innerHTML='<span class="think">Consulting my record<span class="d">.</span><span class="d">.</span><span class="d">.</span></span>';}
 function showAnswer(t){
-  $('answer').innerHTML='<span class="who">'+esc((obj.title||'This work'))+'</span>'+esc(t)+'<span class="grounded">✓ Grounded in the record · '+esc(instLabel(current))+'</span>';
+  $('answer').innerHTML='<span class="who">'+esc((obj.title||'This work'))+'</span>'+esc(t)+'<span class="grounded">✓ Grounded in the record · '+esc(instOf(obj))+'</span>';
 }
 async function ask(q){
   q=(q||'').trim();if(!q)return;
