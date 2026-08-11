@@ -166,6 +166,7 @@ function bigImg(p){return p.media_large||p.media_medium||p.media_thumbnail||imgO
 function hasImg(p){return p.media_available!==false && !!imgOf(p);}
 function instOf(o){return o.source_institution||o.institution||instLabel(o.collection)||instLabel(current);}
 function descOf(o){return o.description||o.wall_description||'';}
+function cleanReply(t){return String(t||'').replace(/^#{1,6}\s*/gm,'').replace(/\*\*/g,'').replace(/(^|[^*])\*(?!\*)/g,'$1').replace(/^\s*[-–]\s+/gm,'• ').replace(/\n{3,}/g,'\n\n').trim();}
 
 async function fetchJSON(url,body){
   const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
@@ -205,7 +206,7 @@ async function askCollection(){
     const d=await fetchJSON(API+'/curator/converse',{message:q.slice(0,480),history:[]});
     const reply=(d.message||d.reply||'').trim();
     const objs=(d.objects||d.results||[]);
-    $('reply').innerHTML='<div class="reply-inner"><span class="reply-who">ARCHAIX · '+(objs.length?('surfacing '+objs.length+' works'):'the collection')+'</span>'+esc(reply)+'</div>';
+    $('reply').innerHTML='<div class="reply-inner"><span class="reply-who">ARCHAIX · '+(objs.length?('surfacing '+objs.length+' works'):'the collection')+'</span>'+esc(cleanReply(reply))+'</div>';
     renderCards(objs);
     statusEl.textContent=(window._items?window._items.length:0)+' works to open · click any to talk to it (AUXIO)';
   }catch(err){
