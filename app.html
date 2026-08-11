@@ -94,11 +94,51 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
 .tab-count{font-size:0.52rem;background:var(--surface2);padding:1px 5px;border-radius:2px;}
 .tab.restricted{opacity:0.32;pointer-events:none;}
 .tab.t-famtec.active{color:var(--accent4);border-bottom-color:var(--accent4);}
+.tab.t-shows.active{color:var(--accent);border-bottom-color:var(--accent);}
 
 /* PANELS */
 .panel{display:none;}.panel.active{display:block;}
 /* Public read-only demo: hide staff-only controls (writes, publishing, admin links). */
 body.public-demo [data-staff-only]{display:none!important;}
+
+/* ONLINE SHOWS PANEL */
+.shows-layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;min-height:calc(100vh - 132px);}
+.shows-main{padding:30px 42px;border-right:1px solid var(--border);overflow-y:auto;}
+.shows-side{padding:24px 22px;overflow-y:auto;max-height:calc(100vh - 132px);}
+.shows-hero{border:1px solid rgba(200,169,110,0.28);background:linear-gradient(135deg,rgba(200,169,110,0.08),rgba(143,188,176,0.035));padding:22px 24px;margin-bottom:18px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:start;}
+.shows-title{font-family:var(--serif);font-size:1.9rem;font-weight:300;line-height:1.05;margin-bottom:8px;color:var(--text);}
+.shows-sub{font-size:0.84rem;line-height:1.75;color:var(--text2);max-width:850px;}
+.shows-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end;}
+.show-builder-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:18px;}
+.show-field{display:flex;flex-direction:column;gap:5px;}
+.show-field.full{grid-column:1 / -1;}
+.show-field label{font-family:var(--mono);font-size:0.5rem;letter-spacing:1.7px;text-transform:uppercase;color:var(--text3);}
+.show-input,.show-textarea{width:100%;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-family:var(--mono);font-size:0.62rem;padding:9px 10px;outline:none;}
+.show-textarea{min-height:86px;resize:vertical;font-family:var(--serif);font-size:0.88rem;line-height:1.55;font-style:italic;}
+.show-input:focus,.show-textarea:focus{border-color:var(--accent);}
+.show-room{border-top:1px solid var(--border);padding-top:17px;margin-top:17px;}
+.show-room-head{display:grid;grid-template-columns:auto minmax(180px,260px) minmax(0,1fr);gap:16px;margin-bottom:12px;align-items:start;}
+.show-room-num{font-family:var(--mono);font-size:0.58rem;color:var(--accent);letter-spacing:2px;}
+.show-room-title{font-family:var(--serif);font-size:1.35rem;line-height:1.05;color:var(--text);}
+.show-room-copy{font-size:0.76rem;line-height:1.65;color:var(--text2);}
+.show-object-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}
+.show-object{border:1px solid var(--border);background:var(--surface);min-width:0;overflow:hidden;}
+.show-thumb{aspect-ratio:4/3;background:var(--surface2);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.show-thumb img{width:100%;height:100%;object-fit:contain;display:block;}
+.show-object-body{padding:9px 10px;}
+.show-object-title{font-family:var(--serif);font-size:0.84rem;line-height:1.22;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.show-object-meta{font-family:var(--mono);font-size:0.48rem;color:var(--text3);line-height:1.55;text-transform:uppercase;letter-spacing:0.8px;margin-top:5px;}
+.show-audit-card{border:1px solid var(--border);background:var(--surface);padding:13px 14px;margin-bottom:10px;}
+.show-audit-stat{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--border);padding:7px 0;font-family:var(--mono);font-size:0.56rem;color:var(--text3);}
+.show-audit-stat:last-child{border-bottom:none;}
+.show-audit-stat b{color:var(--text2);font-weight:400;text-align:right;}
+.show-source-row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:0.52rem;color:var(--text3);line-height:1.45;}
+.show-source-row:last-child{border-bottom:none;}
+.show-source-row b{color:var(--text2);font-weight:400;}
+.show-source-row .ok{color:var(--ok);}
+.show-source-row .held{color:var(--warn);}
+@media(max-width:1100px){.shows-layout{grid-template-columns:1fr}.shows-main{border-right:none}.shows-side{max-height:none;border-top:1px solid var(--border)}.show-object-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.shows-hero{grid-template-columns:1fr}.shows-actions{justify-content:flex-start}}
+@media(max-width:680px){.shows-main{padding:22px 16px}.show-builder-grid,.show-room-head{grid-template-columns:1fr}.show-field.full{grid-column:auto}}
 
 /* SHARED */
 .section-label{font-family:var(--mono);font-size:0.56rem;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:9px;}
@@ -704,6 +744,10 @@ body.public-demo [data-staff-only]{display:none!important;}
   </div>
   <div class="tab t-vocab" data-roles="admin,curator,collections" onclick="switchTab('vocab',this)">Vocabulary &amp; Thesaurus</div>
   <div class="tab t-connect" data-roles="admin,curator,collections" onclick="switchTab('connect',this)">Connect Collection</div>
+  <div class="tab t-shows" data-roles="admin,curator,collections,volunteer" onclick="switchTab('shows',this)">
+    <div class="tab-dot" style="background:var(--accent)"></div>Online Shows
+    <span class="tab-count" id="showsTabCount">1</span>
+  </div>
   <div class="tab t-visitor" data-roles="admin,curator,collections,technician,volunteer,visitor" onclick="switchTab('visitor',this)">Visitor View</div>
   <div class="tab t-famtec" data-roles="admin,curator,collections,technician,volunteer" onclick="switchTab('famtec',this)">FAMTEC Exchange</div>
   <div class="tab t-objdetail" id="tab-objdetail" data-roles="admin,curator,collections,technician,volunteer" onclick="switchTab('objdetail',this)" style="display:none">
@@ -1084,6 +1128,40 @@ body.public-demo [data-staff-only]{display:none!important;}
         <div class="section-label" style="margin:12px 0 6px;">Run (on the ARCHAI host)</div>
         <pre id="ccCmdOut" style="background:var(--surface);border:1px solid var(--border);padding:14px;font-size:0.52rem;line-height:1.65;overflow:auto;max-height:220px;white-space:pre-wrap;"></pre>
       </details>
+    </div>
+  </div>
+</div>
+
+<!-- ████ ONLINE SHOWS PANEL ████ -->
+<div class="panel" id="panel-shows">
+  <div class="shows-layout">
+    <div class="shows-main">
+      <div class="shows-hero">
+        <div>
+          <div class="section-label" style="margin-bottom:6px;">ARCHAIX Online Show Builder</div>
+          <div class="shows-title">Build a museum-grade online exhibition from approved records.</div>
+          <div class="shows-sub">This loaded example shows how a GLAM team can set a banner, logo and curatorial text, then publish selected objects from ARCHAI as an image-led online show where each work opens into a grounded AUXIO conversation.</div>
+        </div>
+        <div class="shows-actions">
+          <a class="btn primary" href="gallery.html?show=acts-of-intelligence" target="_blank">Open Live Show</a>
+          <button class="btn" type="button" onclick="loadOnlineShowExample(true)">Reload Example</button>
+        </div>
+      </div>
+
+      <div class="show-builder-grid">
+        <div class="show-field"><label>Show logo</label><input id="showLogoInput" class="show-input" value="ARCHAIX"></div>
+        <div class="show-field"><label>Banner label</label><input id="showBannerInput" class="show-input" value="GLAM online show demo"></div>
+        <div class="show-field"><label>Exhibition title</label><input id="showTitleInput" class="show-input" value="Acts of Intelligence"></div>
+        <div class="show-field"><label>Subtitle</label><input id="showSubtitleInput" class="show-input" value="Objects, bodies and machines from clockwork to AI"></div>
+        <div class="show-field full"><label>Curatorial statement</label><textarea id="showStatementInput" class="show-textarea">Acts of Intelligence brings together 100 works from across connected cultural collections to trace a longer history of agency: objects that sense, signal, remember, calculate, move and appear to answer back.</textarea></div>
+      </div>
+
+      <div id="onlineShowExample">
+        <div style="font-family:var(--mono);font-size:0.58rem;color:var(--text3);letter-spacing:0.12em;text-transform:uppercase;">Loading example show…</div>
+      </div>
+    </div>
+    <div class="shows-side">
+      <div id="onlineShowAudit"></div>
     </div>
   </div>
 </div>
@@ -2265,19 +2343,19 @@ function collectionStopSpeaking() {
 // ── ROLE DEFINITIONS ────────────────────────────────────────────
 const ROLE_DEFS = {
   admin:       { label:'Admin',              note:'Admin access · user management, infra config, pipeline controls, all data',
-                 tabs:['curator','nodel','nfc','vocab','connect','visitor','famtec','objdetail'] },
+                 tabs:['curator','nodel','nfc','vocab','connect','shows','visitor','famtec','objdetail'] },
   curator:     { label:'Curator',            note:'Curator access · collection editing, AUXIO publishing, vocab tools',
-                 tabs:['curator','nodel','nfc','vocab','connect','visitor','famtec','objdetail'] },
+                 tabs:['curator','nodel','nfc','vocab','connect','shows','visitor','famtec','objdetail'] },
   collections: { label:'Collections Officer', note:'Collections Officer · data entry, upload/tagging, AUXIO assignment',
-                 tabs:['curator','nfc','vocab','connect','visitor','famtec','objdetail'] },
+                 tabs:['curator','nfc','vocab','connect','shows','visitor','famtec','objdetail'] },
   technician:  { label:'Technician / AV',    note:'Technician / AV · Nodel operations and technical record visibility',
                  tabs:['nodel','visitor','famtec','objdetail'] },
   volunteer:   { label:'Volunteer',          note:'Volunteer · read-only collection lookup, AUXIO preview, visitor support',
-                 tabs:['curator','nfc','visitor','famtec'] },
+                 tabs:['curator','nfc','shows','visitor','famtec'] },
   visitor:     { label:'Visitor',            note:'Visitor mode · public-facing preview only',
                  tabs:['visitor'] },
   demo:        { label:'Public Demo',         note:'Public read-only demo · explore every part of ARCHAI. Search, converse, and browse freely; editing and publishing are disabled.',
-                 tabs:['curator','nodel','nfc','vocab','connect','visitor','famtec','objdetail'] }
+                 tabs:['curator','nodel','nfc','vocab','connect','shows','visitor','famtec','objdetail'] }
 };
 
 // ── FAMTEC DATA ─────────────────────────────────────────────────
@@ -3200,6 +3278,7 @@ function switchTab(name, el) {
     const firstEmpty = NFC_TAGS.find(t => !t.objectId) || NFC_TAGS[0];
     selectNFC(firstEmpty.code);
   }
+  if (name === 'shows') loadOnlineShowExample();
 }
 function setChip(el) { el.closest('.filter-group').querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); }
 function togglePill(el) { el.classList.toggle('active'); }
@@ -5400,6 +5479,126 @@ function escHTML(s) {
 
 function escQ(s) {
   return String(s).replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ONLINE SHOWS — ARCHAIX example gallery/audit
+// ═══════════════════════════════════════════════════════════════════
+let ONLINE_SHOW_EXAMPLE = null;
+
+function showWorkImage(w) {
+  return w.big || w.img || w.media_large || w.media_medium || w.media_thumbnail || '';
+}
+
+async function loadOnlineShowExample(force) {
+  const target = document.getElementById('onlineShowExample');
+  if (!target) return;
+  if (ONLINE_SHOW_EXAMPLE && !force) {
+    renderOnlineShowExample();
+    return;
+  }
+  target.innerHTML = '<div style="font-family:var(--mono);font-size:0.58rem;color:var(--text3);letter-spacing:0.12em;text-transform:uppercase;">Loading example show…</div>';
+  try {
+    const res = await fetch('/shows/acts-of-intelligence.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    ONLINE_SHOW_EXAMPLE = await res.json();
+  } catch (err) {
+    target.innerHTML = '<div style="font-family:var(--mono);font-size:0.62rem;color:var(--warn);line-height:1.7;">Could not load /shows/acts-of-intelligence.json. Check the local web server and published show file.</div>';
+    renderOnlineShowAudit(null);
+    return;
+  }
+  renderOnlineShowExample();
+}
+
+function renderOnlineShowExample() {
+  const show = ONLINE_SHOW_EXAMPLE;
+  const target = document.getElementById('onlineShowExample');
+  if (!show || !target) return;
+
+  const logo = document.getElementById('showLogoInput');
+  const banner = document.getElementById('showBannerInput');
+  const title = document.getElementById('showTitleInput');
+  const subtitle = document.getElementById('showSubtitleInput');
+  const statement = document.getElementById('showStatementInput');
+  if (logo) logo.value = (show.banner && show.banner.logo) || 'ARCHAIX';
+  if (banner) banner.value = (show.banner && show.banner.label) || 'GLAM online show demo';
+  if (title) title.value = show.title || '';
+  if (subtitle) subtitle.value = show.subtitle || '';
+  if (statement) statement.value = String(show.statement || '').split(/\n\s*\n/)[0] || '';
+
+  target.innerHTML = (show.sections || []).map((section, idx) => {
+    const works = section.works || [];
+    return `<section class="show-room">
+      <div class="show-room-head">
+        <div class="show-room-num">0${idx + 1}</div>
+        <div class="show-room-title">${escHTML(section.title || 'Room')}</div>
+        <div class="show-room-copy">${escHTML(section.intro || '')}${section.question ? `<div style="font-family:var(--mono);font-size:0.52rem;color:var(--accent2);text-transform:uppercase;letter-spacing:1.2px;margin-top:8px;">${escHTML(section.question)}</div>` : ''}</div>
+      </div>
+      <div class="show-object-grid">${works.map(w => `
+        <div class="show-object">
+          <div class="show-thumb">${showWorkImage(w) ? `<img src="${escHTML(showWorkImage(w))}" alt="${escHTML(w.title || '')}" loading="lazy" onerror="this.closest('.show-object').classList.add('img-missing');this.remove()">` : '<span style="font-family:var(--mono);font-size:0.5rem;color:var(--text3);">No image</span>'}</div>
+          <div class="show-object-body">
+            <div class="show-object-title">${escHTML(w.title || 'Untitled')}</div>
+            <div class="show-object-meta">${escHTML(w.institution || '')}${w.object_type ? ' · ' + escHTML(w.object_type) : ''}</div>
+          </div>
+        </div>`).join('')}</div>
+    </section>`;
+  }).join('');
+
+  renderOnlineShowAudit(show);
+}
+
+function renderOnlineShowAudit(show) {
+  const el = document.getElementById('onlineShowAudit');
+  if (!el) return;
+  if (!show) {
+    el.innerHTML = '<div class="show-audit-card"><div class="sb-title">Show Audit</div><div style="font-size:0.72rem;line-height:1.7;color:var(--text3);">No show loaded.</div></div>';
+    return;
+  }
+  const works = (show.sections || []).flatMap(s => s.works || []);
+  const institutions = new Set(works.map(w => w.institution).filter(Boolean));
+  const types = new Set(works.map(w => w.object_type).filter(Boolean));
+  const imageReady = works.filter(w => showWorkImage(w)).length;
+  const sourceCounts = Object.entries((show.audit && show.audit.source_counts) || {}).sort((a, b) => b[1] - a[1]);
+  const readySources = ((show.audit && show.audit.image_ready_sources) || []).filter(s => s.selected > 0);
+  const heldSources = (show.audit && show.audit.metadata_or_media_held_sources) || [];
+
+  el.innerHTML = `
+    <div class="show-audit-card">
+      <div class="sb-title">Loaded Show</div>
+      <div class="show-audit-stat"><span>Works</span><b>${works.length}</b></div>
+      <div class="show-audit-stat"><span>Image-backed</span><b>${imageReady}/${works.length}</b></div>
+      <div class="show-audit-stat"><span>Institutions</span><b>${institutions.size}</b></div>
+      <div class="show-audit-stat"><span>Object types</span><b>${types.size}</b></div>
+      <div class="show-audit-stat"><span>Rooms</span><b>${(show.sections || []).length}</b></div>
+    </div>
+    <div class="show-audit-card">
+      <div class="sb-title">Section Mix</div>
+      ${(show.sections || []).map(s => `<div class="show-audit-stat"><span>${escHTML(s.title || '')}</span><b>${(s.works || []).length}</b></div>`).join('')}
+    </div>
+    <div class="show-audit-card">
+      <div class="sb-title">Selected Sources</div>
+      ${sourceCounts.map(([source, count]) => `<div class="show-source-row"><span>${escHTML(source.replace(/^archai_/, ''))}</span><b class="ok">${count}</b></div>`).join('')}
+    </div>
+    <div class="show-audit-card">
+      <div class="sb-title">Image-Ready Partners</div>
+      ${readySources.map(s => {
+        const verified = s.browser_verified_candidates ?? s.image_ready ?? s.ready ?? '';
+        const records = s.records ?? s.total_records ?? '';
+        const detail = records
+          ? `verified ${verified} / records ${records}`
+          : (verified ? `browser-verified candidates ${verified}` : 'browser verified');
+        return `<div class="show-source-row"><span>${escHTML(s.label || s.collection)}<br><span style="color:var(--text3);">${escHTML(detail)}</span></span><b class="ok">${s.selected}</b></div>`;
+      }).join('')}
+    </div>
+    <div class="show-audit-card">
+      <div class="sb-title">Linked, Held For Review</div>
+      ${heldSources.map(s => `<div class="show-source-row"><span><b>${escHTML(s.label || s.collection)}</b><br>${escHTML(s.reason || '')}</span><span class="held">Held</span></div>`).join('')}
+    </div>
+    <div class="show-audit-card">
+      <div class="sb-title">Selection Policy</div>
+      <div style="font-size:0.72rem;line-height:1.75;color:var(--text2);">${escHTML((show.audit && show.audit.selection_policy) || show.selection_note || '')}</div>
+    </div>`;
 }
 
 if ('serviceWorker' in navigator) {
