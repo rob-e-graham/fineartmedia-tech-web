@@ -77,6 +77,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
 .v-chat-input:focus{border-color:var(--accent)}
 .v-chat-send{font-family:var(--mono);font-size:.6rem;letter-spacing:1.5px;text-transform:uppercase;background:var(--accent2);color:#12140d;border:none;padding:0 18px;border-radius:3px;cursor:pointer}
 .v-chat-send:active{background:var(--accent)}
+.v-mic{display:flex;align-items:center;justify-content:center;width:46px;flex:0 0 auto;background:var(--surface);border:1px solid var(--border2);color:var(--text2);border-radius:3px;cursor:pointer;transition:color .15s,border-color .15s,background .15s}
+.v-mic:hover{color:var(--text);border-color:var(--accent2)}
+.v-mic.listening{color:#12140d;background:var(--accent2);border-color:var(--accent2);animation:micPulse 1.3s ease-out infinite}
+.v-mic[hidden]{display:none}
+@keyframes micPulse{0%{box-shadow:0 0 0 0 rgba(143,188,176,.5)}70%{box-shadow:0 0 0 8px rgba(143,188,176,0)}100%{box-shadow:0 0 0 0 rgba(143,188,176,0)}}
 
 /* RESPONSE + audio */
 .v-response{margin-top:14px;font-size:1.05rem;line-height:1.62;color:var(--text)}
@@ -241,6 +246,9 @@ details.v-panel summary::-webkit-details-marker{display:none}
     <div class="v-chips" id="chips"></div>
     <div class="v-chat-row">
       <input class="v-chat-input" id="chatInput" type="text" maxlength="480" placeholder="Ask this place anything…" enterkeyhint="send">
+      <button class="v-mic" id="micBtn" type="button" onclick="toggleVoiceInput()" aria-label="Ask by voice" title="Ask by voice">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2.5" width="6" height="11" rx="3"></rect><path d="M5.5 11a6.5 6.5 0 0 0 13 0"></path><line x1="12" y1="17.5" x2="12" y2="21"></line><line x1="8.5" y1="21" x2="15.5" y2="21"></line></svg>
+      </button>
       <button class="v-chat-send" onclick="askFree()">Ask</button>
     </div>
     <div class="v-response" id="response"></div>
@@ -874,7 +882,8 @@ function renderAnswer(text, live){
     + escapeHTML(text).replace(/\n/g,'<br>')
     + '<div class="v-readrow"><button class="v-readbtn" id="readBtn" onclick="toggleRead()">'+escapeHTML(s.readAloud)+'</button></div>'
     + '<span class="grounded">'+escapeHTML(tag)+'</span>';
-  if(autoReadEl.checked) speak(text);
+  if(autoReadEl.checked||speakNext) speak(text);
+  speakNext=false;
 }
 
 async function ask(q, curated){
@@ -1000,6 +1009,58 @@ try{
 }catch(e){}
 if(canSpeak){ voiceSelectEl.addEventListener('change', onVoiceChange); loadVoices(); window.speechSynthesis.onvoiceschanged=loadVoices; }
 else { document.getElementById('audioTools').style.display='none'; }
+
+// ── VOICE INPUT (Web Speech API — ask AUXIO by voice, like standard AUXIO) ──
+const REC_LANG={en:'en-AU',zh:'zh-CN',ar:'ar-SA',vi:'vi-VN',el:'el-GR',it:'it-IT',es:'es-ES',fr:'fr-FR',hi:'hi-IN',ja:'ja-JP',ko:'ko-KR'};
+const LISTENING_LABEL={en:'Listening…',zh:'聆听中…',ar:'الاستماع…',vi:'Đang nghe…',el:'Ακρόαση…',it:'In ascolto…',es:'Escuchando…',fr:'Écoute…',hi:'सुन रहा है…',ja:'聞き取り中…',ko:'듣는 중…'};
+const micBtn=document.getElementById('micBtn');
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let recognition=null, listening=false, speakNext=false, micDraft='', micSubmitted=false;
+function recLangCode(){ return REC_LANG[uiLang||'en']||REC_LANG.en; }
+function micUnsupported(){ if(micBtn) micBtn.hidden=true; }
+if(!SR){ micUnsupported(); }
+function setMicListening(on){
+  listening=on;
+  if(!micBtn) return;
+  micBtn.classList.toggle('listening',on);
+  micBtn.setAttribute('aria-label', on?'Listening — tap to stop':'Ask by voice');
+  if(on){ micBtn.dataset.ph=inputEl.placeholder; inputEl.placeholder=(LISTENING_LABEL[uiLang]||LISTENING_LABEL.en); }
+  else if(micBtn.dataset.ph!==undefined){ inputEl.placeholder=micBtn.dataset.ph; }
+}
+function ensureRecognition(){
+  if(recognition) return recognition;
+  if(!SR) return null;
+  const r=new SR();
+  r.interimResults=true; r.maxAlternatives=1; r.continuous=false;
+  r.onstart=()=>{ micSubmitted=false; micDraft=''; setMicListening(true); };
+  r.onresult=e=>{
+    const t=Array.from(e.results||[]).map(x=>(x[0]&&x[0].transcript)||'').join(' ').trim();
+    if(!t) return;
+    micDraft=t; inputEl.value=t;
+    const isFinal=Array.from(e.results||[]).some(x=>x.isFinal);
+    if(isFinal && !micSubmitted){ micSubmitted=true; submitVoice(t); }
+  };
+  r.onerror=()=>{ setMicListening(false); };
+  r.onend=()=>{
+    setMicListening(false);
+    if(micDraft && !micSubmitted){ micSubmitted=true; submitVoice(micDraft); }
+  };
+  recognition=r; return r;
+}
+function submitVoice(t){
+  inputEl.value='';
+  [...chipsEl.children].forEach(x=>x.classList.remove('active'));
+  speakNext=true;                 // read the answer aloud after a spoken question
+  ask(t,null);
+}
+function toggleVoiceInput(){
+  if(listening){ if(recognition) recognition.stop(); return; }
+  const r=ensureRecognition();
+  if(!r){ micUnsupported(); return; }
+  r.lang=recLangCode();
+  try{ if(canSpeak) window.speechSynthesis.cancel(); r.start(); }
+  catch(e){ /* recognition already running */ }
+}
 
 const COMMENT_KEY='heide_cottage_comments';
 function renderComments(){
