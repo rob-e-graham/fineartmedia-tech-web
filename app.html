@@ -5524,28 +5524,74 @@ function renderOnlineShowExample() {
   if (banner) banner.value = (show.banner && show.banner.label) || 'GLAM online show demo';
   if (title) title.value = show.title || '';
   if (subtitle) subtitle.value = show.subtitle || '';
-  if (statement) statement.value = String(show.statement || '').split(/\n\s*\n/)[0] || '';
+  if (statement) statement.value = String(show.statement || '');
 
-  target.innerHTML = (show.sections || []).map((section, idx) => {
+  const toolbar = `<div class="show-editor-bar" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:6px 0 18px;padding:12px 14px;border:1px solid var(--border);border-radius:4px;background:var(--surface);">
+    <span style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent2);">Curator edit mode</span>
+    <span style="font-family:var(--mono);font-size:0.5rem;color:var(--text3);flex:1;min-width:200px;line-height:1.6;">Edit the section titles, intros and each work&rsquo;s exhibition blurb below. Export, then commit to <code>shows/${escHTML(show.id || 'show')}.json</code> to publish. (Backend is a read-only demo, so publishing is a file commit.)</span>
+    <button class="btn primary" type="button" onclick="downloadShowJSON()">Export show JSON</button>
+    <button class="btn" type="button" onclick="copyShowJSON()">Copy JSON</button>
+  </div>`;
+
+  target.innerHTML = toolbar + (show.sections || []).map((section, idx) => {
     const works = section.works || [];
     return `<section class="show-room">
       <div class="show-room-head">
         <div class="show-room-num">0${idx + 1}</div>
-        <div class="show-room-title">${escHTML(section.title || 'Room')}</div>
-        <div class="show-room-copy">${escHTML(section.intro || '')}${section.question ? `<div style="font-family:var(--mono);font-size:0.52rem;color:var(--accent2);text-transform:uppercase;letter-spacing:1.2px;margin-top:8px;">${escHTML(section.question)}</div>` : ''}</div>
+        <div style="flex:1;min-width:0;">
+          <input class="show-input" data-sec-title="${idx}" value="${escHTML(section.title || 'Room')}" placeholder="Section title" style="font-size:0.92rem;font-weight:600;letter-spacing:0.01em;">
+          <textarea class="show-textarea" data-sec-intro="${idx}" placeholder="Section intro / wall text" style="margin-top:6px;min-height:52px;">${escHTML(section.intro || '')}</textarea>
+        </div>
       </div>
-      <div class="show-object-grid">${works.map(w => `
+      <div class="show-object-grid">${works.map((w, j) => `
         <div class="show-object">
           <div class="show-thumb">${showWorkImage(w) ? `<img src="${escHTML(showWorkImage(w))}" alt="${escHTML(w.title || '')}" loading="lazy" onerror="this.closest('.show-object').classList.add('img-missing');this.remove()">` : '<span style="font-family:var(--mono);font-size:0.5rem;color:var(--text3);">No image</span>'}</div>
           <div class="show-object-body">
             <div class="show-object-title">${escHTML(w.title || 'Untitled')}</div>
             <div class="show-object-meta">${escHTML(w.institution || '')}${w.object_type ? ' · ' + escHTML(w.object_type) : ''}</div>
+            <textarea data-blurb="${idx}:${j}" placeholder="How this work connects to the exhibition (shown in AUXIO)…" style="width:100%;margin-top:8px;min-height:66px;background:var(--bg);border:1px solid var(--border);color:var(--text2);font-family:var(--serif);font-size:0.84rem;line-height:1.5;padding:8px 10px;border-radius:3px;resize:vertical;outline:none;">${escHTML(w.curatorial_link || '')}</textarea>
           </div>
         </div>`).join('')}</div>
     </section>`;
   }).join('');
 
   renderOnlineShowAudit(show);
+}
+
+// ── Online-show curator editing: read the editable fields back into the show, export/publish ──
+function collectShowEdits() {
+  const show = ONLINE_SHOW_EXAMPLE;
+  if (!show) return null;
+  const val = id => { const el = document.getElementById(id); return el ? el.value : undefined; };
+  if (val('showTitleInput') !== undefined) show.title = val('showTitleInput');
+  if (val('showSubtitleInput') !== undefined) show.subtitle = val('showSubtitleInput');
+  if (val('showStatementInput') !== undefined) show.statement = val('showStatementInput');
+  show.banner = show.banner || {};
+  if (val('showLogoInput') !== undefined) show.banner.logo = val('showLogoInput');
+  if (val('showBannerInput') !== undefined) show.banner.label = val('showBannerInput');
+  document.querySelectorAll('[data-sec-title]').forEach(el => { const i = +el.getAttribute('data-sec-title'); if (show.sections && show.sections[i]) show.sections[i].title = el.value; });
+  document.querySelectorAll('[data-sec-intro]').forEach(el => { const i = +el.getAttribute('data-sec-intro'); if (show.sections && show.sections[i]) show.sections[i].intro = el.value; });
+  document.querySelectorAll('[data-blurb]').forEach(el => { const [i, j] = el.getAttribute('data-blurb').split(':').map(Number); if (show.sections && show.sections[i] && show.sections[i].works[j]) show.sections[i].works[j].curatorial_link = el.value; });
+  if (show.count !== undefined) show.count = (show.sections || []).reduce((n, s) => n + (s.works || []).length, 0);
+  renderOnlineShowAudit(show);
+  return show;
+}
+function downloadShowJSON() {
+  const show = collectShowEdits();
+  if (!show) return;
+  const blob = new Blob([JSON.stringify(show, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (show.id || 'show') + '.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+async function copyShowJSON() {
+  const show = collectShowEdits();
+  if (!show) return;
+  const text = JSON.stringify(show, null, 2);
+  try { await navigator.clipboard.writeText(text); alert('Show JSON copied to clipboard.\nCommit it to shows/' + (show.id || 'show') + '.json to publish.'); }
+  catch (e) { downloadShowJSON(); }
 }
 
 function renderOnlineShowAudit(show) {
