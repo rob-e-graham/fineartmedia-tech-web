@@ -1156,6 +1156,24 @@ body.public-demo [data-staff-only]{display:none!important;}
         <div class="show-field full"><label>Curatorial statement</label><textarea id="showStatementInput" class="show-textarea">Acts of Intelligence brings together 100 works from across connected cultural collections to trace a longer history of agency: objects that sense, signal, remember, calculate, move and appear to answer back.</textarea></div>
       </div>
 
+      <details class="soul-editor" open style="margin:6px 0 14px;border:1px solid var(--border);border-radius:4px;background:var(--surface);">
+        <summary style="cursor:pointer;padding:12px 14px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+          <span style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent2);">Voice &amp; Soul · soul.md</span>
+          <span style="font-family:var(--mono);font-size:0.5rem;color:var(--text3);">the persona, tone &amp; guardrails for this collection&rsquo;s ARCHAI + AUXIO voice</span>
+        </summary>
+        <div style="padding:2px 14px 16px;">
+          <div style="font-family:var(--mono);font-size:0.5rem;color:var(--text3);line-height:1.75;margin-bottom:10px;">
+            The human-authored voice layer, applied on top of the grounded record. It shapes <em>how</em> the collection speaks; it never overrides the facts. Edit it, then export <code>soul.md</code> to version and apply it to your ARCHAI and AUXIO interfaces.
+          </div>
+          <textarea id="soulInput" class="show-textarea" spellcheck="false" style="min-height:300px;font-family:var(--mono);font-size:0.62rem;line-height:1.75;white-space:pre;overflow-wrap:normal;" placeholder="# soul.md — the voice of this collection…"></textarea>
+          <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+            <button class="btn primary" type="button" onclick="downloadSoulMd()">Export soul.md</button>
+            <button class="btn" type="button" onclick="copySoulMd()">Copy soul.md</button>
+            <button class="btn" type="button" onclick="resetSoulMd()">Reset to template</button>
+          </div>
+        </div>
+      </details>
+
       <div id="onlineShowExample">
         <div style="font-family:var(--mono);font-size:0.58rem;color:var(--text3);letter-spacing:0.12em;text-transform:uppercase;">Loading example show…</div>
       </div>
@@ -5525,6 +5543,8 @@ function renderOnlineShowExample() {
   if (title) title.value = show.title || '';
   if (subtitle) subtitle.value = show.subtitle || '';
   if (statement) statement.value = String(show.statement || '');
+  const soulEl = document.getElementById('soulInput');
+  if (soulEl) soulEl.value = show.soul || defaultSoulMd(show);
 
   const toolbar = `<div class="show-editor-bar" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:6px 0 18px;padding:12px 14px;border:1px solid var(--border);border-radius:4px;background:var(--surface);">
     <span style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent2);">Curator edit mode</span>
@@ -5572,9 +5592,70 @@ function collectShowEdits() {
   document.querySelectorAll('[data-sec-title]').forEach(el => { const i = +el.getAttribute('data-sec-title'); if (show.sections && show.sections[i]) show.sections[i].title = el.value; });
   document.querySelectorAll('[data-sec-intro]').forEach(el => { const i = +el.getAttribute('data-sec-intro'); if (show.sections && show.sections[i]) show.sections[i].intro = el.value; });
   document.querySelectorAll('[data-blurb]').forEach(el => { const [i, j] = el.getAttribute('data-blurb').split(':').map(Number); if (show.sections && show.sections[i] && show.sections[i].works[j]) show.sections[i].works[j].curatorial_link = el.value; });
+  const soulEl = document.getElementById('soulInput'); if (soulEl) show.soul = soulEl.value;
   if (show.count !== undefined) show.count = (show.sections || []).reduce((n, s) => n + (s.works || []).length, 0);
   renderOnlineShowAudit(show);
   return show;
+}
+
+// ── Voice / Soul (soul.md): the human-authored persona + guardrails layer ──
+function defaultSoulMd(show) {
+  const name = (show && show.title) || 'this collection';
+  return `# soul.md — the voice of ${name}
+
+## Who is speaking
+- AUXIO (a single work): the object speaks in the first person, as itself.
+- ARCHAI / ARCHAIX (the whole collection): a warm curatorial voice answers on the collection's behalf.
+
+## Grounding — never negotiable
+Speak ONLY from the object's verified record and the institution's own materials.
+If the record does not cover something, say so plainly. Never invent facts, dates,
+attributions, provenance or quotes. Do not guess.
+
+## Tone & register
+Warm, clear and unhurried. Plain language, not academic jargon. Two to four sentences
+unless more is asked for. Curious and generous — invite the next question.
+
+## Audience & access
+Write for a general public, including newcomers, children and non-specialists.
+If the visitor writes in another language, reply fully in that language.
+
+## Never say
+- Speculation dressed as fact, or fluent guesses to fill a gap.
+- Monetary valuations or authentication opinions.
+- Personal data about living people.
+- Culturally restricted knowledge — defer to community protocols and the curator.
+
+## Cultural protocol
+Follow the institution's cultural-safety guidance (CARE Principles / Local Contexts).
+For First Nations material, use community-approved language, and where a record is flagged
+as restricted, decline gently and point to the appropriate custodians.
+
+## When in doubt
+Be honest about the limits of what is known. It is always better to say
+"the record doesn't tell us that" than to invent an answer.`;
+}
+function soulValue() { const el = document.getElementById('soulInput'); return el ? el.value : ''; }
+function soulFileName() { const s = ONLINE_SHOW_EXAMPLE; const id = (s && s.id) || 'collection'; return id + '.soul.md'; }
+function downloadSoulMd() {
+  const text = soulValue(); if (!text.trim()) return;
+  if (ONLINE_SHOW_EXAMPLE) ONLINE_SHOW_EXAMPLE.soul = text;
+  const blob = new Blob([text], { type: 'text/markdown' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = soulFileName();
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+async function copySoulMd() {
+  const text = soulValue(); if (!text.trim()) return;
+  if (ONLINE_SHOW_EXAMPLE) ONLINE_SHOW_EXAMPLE.soul = text;
+  try { await navigator.clipboard.writeText(text); alert('soul.md copied to clipboard.'); }
+  catch (e) { downloadSoulMd(); }
+}
+function resetSoulMd() {
+  const el = document.getElementById('soulInput'); if (!el) return;
+  if (!confirm('Reset soul.md to the template? Your current text will be replaced.')) return;
+  el.value = defaultSoulMd(ONLINE_SHOW_EXAMPLE);
 }
 function downloadShowJSON() {
   const show = collectShowEdits();
