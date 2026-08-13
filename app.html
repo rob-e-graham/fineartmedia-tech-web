@@ -5913,7 +5913,11 @@ function renderOnlineShowAudit(show) {
   const institutions = new Set(works.map(w => w.institution).filter(Boolean));
   const types = new Set(works.map(w => w.object_type).filter(Boolean));
   const imageReady = works.filter(w => showWorkImage(w)).length;
-  const sourceCounts = Object.entries((show.audit && show.audit.source_counts) || {}).sort((a, b) => b[1] - a[1]);
+  const sourceCounts = Object.entries(works.reduce((counts, work) => {
+    const source = work.collection || work.institution || 'Unspecified source';
+    counts[source] = (counts[source] || 0) + 1;
+    return counts;
+  }, {})).sort((a, b) => b[1] - a[1]);
   const readySources = ((show.audit && show.audit.image_ready_sources) || []).filter(s => s.selected > 0);
   const heldSources = (show.audit && show.audit.metadata_or_media_held_sources) || [];
 
