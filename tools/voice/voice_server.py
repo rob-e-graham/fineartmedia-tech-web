@@ -82,6 +82,8 @@ class VoiceHandler(http.server.BaseHTTPRequestHandler):
 
     def origin_allowed(self):
         origin = self.request_origin()
+        if self.headers.get("CF-Connecting-IP", "").strip():
+            return origin in ALLOWED_ORIGINS
         return not origin or origin in ALLOWED_ORIGINS
 
     def route_path(self):

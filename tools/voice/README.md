@@ -32,7 +32,8 @@ The expected response includes `"ok": true`, `"tts": "piper"`, and the installed
 The public tunnel can be checked separately:
 
 ```sh
-curl -s https://archai-api.fineartmedia.tech/voice/health
+curl -s -H 'Origin: https://fineartmedia.tech' \
+  https://archai-api.fineartmedia.tech/voice/health
 ```
 
 The tunnel configuration routes only `/voice/*` to this service. The bridge also enforces an origin allowlist, request-size limits, bounded concurrency and per-address rate limits. Keep the final catch-all backend rule below the voice rule.
