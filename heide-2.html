@@ -116,7 +116,7 @@ const VOICE_SERVER='http://127.0.0.1:8123';
 const $=id=>document.getElementById(id);
 const inputEl=$('chatIn'),respEl=$('resp'),micBtn=$('micBtn'),voiceSel=$('voiceSel'),autoReadEl=$('autoRead');
 let lastReply='',history=[],sovereign=false,srvVoices=[];
-const VOICE_LABELS={alba:'Ada · Female, 30s · Gallery guide',lessac:'Nora · Female, 40s · Archivist',northern:'Ted · Male, 50s · Projectionist'};
+const VOICE_LABELS={alba:'Ada · Female, 30s · Gallery guide',cori:'Cate · Female, 40s · Curator',amy:'Amy · Female, 20s · Education host',lessac:'Nora · Female, 40s · Archivist',ryan:'Ryan · Male, 30s · Narrator',alan:'Alan · Male, 60s · Historian',northern:'Ted · Male, 50s · Projectionist'};
 
 function sysPrompt(){
   return `You are "Heide I (The Cottage)", the original weatherboard farmhouse at Heide Museum of Modern Art in Bulleen/Naarm. Speak in the first person, warm and clear, in plain language (not academic), three to four sentences. You know: John and Sunday Reed bought this old dairy farm in 1934 and lived here to 1981; around your kitchen table gathered a circle of young modernists; Sidney Nolan painted his first Ned Kelly series here in 1946 to 1947; you are the birthplace of Australian modernism. Only use these facts and what a visitor can plainly see; if asked something you don't hold, say you don't know rather than invent. If the visitor writes in another language, reply fully in that language. This is a concept demo.`;
