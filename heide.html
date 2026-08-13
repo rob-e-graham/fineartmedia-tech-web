@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0d0f0b">
 <title>Heide I — The Cottage · AUXIO concept</title>
@@ -81,6 +81,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
 .v-mic:hover:not(:disabled){color:var(--text);border-color:var(--accent2)}
 .v-mic:disabled{opacity:.45;cursor:default}
 .v-mic.listening{color:#12140d;background:var(--accent2);border-color:var(--accent2);animation:micPulse 1.3s ease-out infinite}
+.v-mic.busy{opacity:.62;cursor:wait}
 .v-voicehintrow{min-height:0}
 .v-voicehintrow:empty,.v-voicehint:empty{display:none}
 .v-voicehint{display:inline-block;margin-top:7px;font-family:var(--mono);font-size:.52rem;letter-spacing:.5px;color:var(--text3)}
@@ -112,9 +113,20 @@ details.v-audio summary::-webkit-details-marker{display:none}
 .v-audio-row{display:flex;align-items:center;gap:9px;margin-top:10px;flex-wrap:wrap}
 .v-audio-row label{font-family:var(--mono);font-size:.5rem;letter-spacing:1px;text-transform:uppercase;color:var(--text3)}
 .v-voice-select{flex:1;min-width:150px;background:var(--bg);border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:.6rem;padding:8px 10px;border-radius:3px;outline:none}
+.v-voice-preview{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:34px;background:transparent;border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:.52rem;letter-spacing:1px;text-transform:uppercase;padding:7px 11px;border-radius:3px;cursor:pointer}
+.v-voice-preview:hover{border-color:var(--accent);color:var(--text)}
 .v-check{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.56rem;letter-spacing:.5px;color:var(--text2);cursor:pointer}
 .v-check input{accent-color:var(--accent);width:15px;height:15px}
 .v-audio-status{font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--text3);margin-top:10px;line-height:1.45}
+.v-engine-status{display:flex;align-items:flex-start;gap:9px;margin-top:11px;padding-top:11px;border-top:1px solid var(--border)}
+.v-engine-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);flex:0 0 auto;margin-top:5px}
+.v-engine-dot.ready{background:var(--accent2);box-shadow:0 0 0 3px rgba(183,196,137,.12)}
+.v-engine-copy{font-family:var(--mono);font-size:.49rem;line-height:1.65;letter-spacing:.35px;color:var(--text3)}
+.v-engine-copy b{color:var(--text2);font-weight:400}
+
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent2);outline-offset:3px}
+
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.v-hero,.v-content,.v-mic.listening,.v-thinking-dots span,.map-here-ring{animation:none!important}}
 
 /* PANELS */
 details.v-panel{border:1px solid var(--border);border-radius:4px;margin-bottom:12px;background:var(--surface)}
@@ -234,8 +246,8 @@ details.v-panel summary::-webkit-details-marker{display:none}
 
     <div class="v-divider"></div>
 
-    <div class="v-ask-label">Ask this place — one object, four voices</div>
-    <div class="v-tone-label">Choose a voice</div>
+    <div class="v-ask-label">Ask this place · one object, four perspectives</div>
+    <div class="v-tone-label">Choose an interpretive lens</div>
     <div class="v-tone-buttons" id="tones">
       <button class="v-tone active" data-lens="guide">Guide</button>
       <button class="v-tone" data-lens="child">Children</button>
@@ -254,21 +266,26 @@ details.v-panel summary::-webkit-details-marker{display:none}
       </button>
       <button class="v-chat-send" onclick="askFree()">Ask</button>
     </div>
-    <div class="v-voicehintrow"><span class="v-voicehint" id="voiceHint"></span></div>
-    <div class="v-response" id="response"></div>
+    <div class="v-voicehintrow"><span class="v-voicehint" id="voiceHint" role="status" aria-live="polite"></span></div>
+    <div class="v-response" id="response" role="status" aria-live="polite"></div>
 
     <!-- AUDIO / VOICE TOOLS (AUXIO-style) -->
-    <details class="v-panel" id="audioTools">
-      <summary><span class="v-panel-title">Audio &amp; voice tools</span><span class="v-panel-hint">Open controls</span></summary>
+    <details class="v-panel" id="audioTools" open>
+      <summary><span class="v-panel-title">Spoken voice</span><span class="v-panel-hint" id="voicePanelHint">Choose &amp; preview</span></summary>
       <div class="v-audio-body">
         <div class="v-audio-row">
-          <label for="voiceSelect">Language &amp; voice</label>
+          <label for="voiceSelect">Voice profile</label>
           <select id="voiceSelect" class="v-voice-select"></select>
+          <button class="v-voice-preview" id="voicePreview" type="button" onclick="previewVoice()" aria-label="Preview selected voice">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 9 9 9 14 4 14 20 9 15 5 15 5 9"></polygon><path d="M18 8a6 6 0 0 1 0 8"></path></svg>
+            <span id="voicePreviewLabel">Preview</span>
+          </button>
         </div>
         <div class="v-audio-row">
           <label class="v-check"><input type="checkbox" id="autoRead"> Read answers aloud automatically</label>
         </div>
-        <div class="v-audio-status" id="audioStatus">Uses your device’s built-in speech. Whisper + Coqui is the production path for AUXIO, running on Heide-controlled hardware.</div>
+        <div class="v-audio-status" id="audioStatus">Choose how this interpretation is spoken.</div>
+        <div class="v-engine-status"><span class="v-engine-dot" id="voiceEngineDot" aria-hidden="true"></span><span class="v-engine-copy" id="voiceEngineStatus" role="status" aria-live="polite">Checking the local voice service...</span></div>
       </div>
     </details>
 
@@ -276,7 +293,7 @@ details.v-panel summary::-webkit-details-marker{display:none}
       <summary><span class="v-panel-title">Visitor response</span><span class="v-panel-hint">Leave a note</span></summary>
       <div class="v-panel-body">
         <div class="v-comment">
-          <div class="v-comment-label">Leave a response — your note joins the collection record</div>
+          <div class="v-comment-label">Leave a response · saved on this device for the concept demo</div>
           <textarea class="v-comment-input" id="commentInput" placeholder="What did this object make you think or feel?"></textarea>
           <button class="v-comment-btn" id="commentBtn" onclick="submitComment()">Submit Response</button>
           <div class="v-prev-comments" id="prevComments"></div>
@@ -305,7 +322,7 @@ details.v-panel summary::-webkit-details-marker{display:none}
         <div class="v-meta-row"><span class="v-meta-key">Significance</span><span class="v-meta-value">Birthplace of Australian modernism</span></div>
         <div class="v-meta-row"><span class="v-meta-key">Location</span><span class="v-meta-value">7 Templestowe Rd, Bulleen VIC</span></div>
         <div class="v-meta-row"><span class="v-meta-key">Heritage</span><span class="v-meta-value">Victorian Heritage Register</span></div>
-        <div class="v-meta-row"><span class="v-meta-key">Rights</span><span class="v-meta-value">Interpretation set by Heide · image PD</span></div>
+        <div class="v-meta-row"><span class="v-meta-key">Rights</span><span class="v-meta-value">Concept interpretation · image public domain</span></div>
         <div class="v-meta-row"><span class="v-meta-key">Source image</span><span class="v-meta-value">Wikimedia Commons (public domain)</span></div>
       </div>
     </details>
@@ -347,7 +364,7 @@ details.v-panel summary::-webkit-details-marker{display:none}
 
     <div class="v-footbrand">
       <div class="v-archai">ARC<span>H</span>AI</div>
-      <div class="v-footline"><b>Runs on ARCHAI</b> — sovereign, local-first cultural-heritage AI<br>Object voice · Consent-governed · Rights-aware · Stays on Heide’s hardware</div>
+      <div class="v-footline"><b>Powered by ARCHAI</b> · sovereign, local-first cultural heritage AI<br>Object voice · consent governance · rights-aware · designed for institution-controlled hardware</div>
     </div>
 
   </div>
@@ -447,24 +464,25 @@ const UI_COPY={
       institution:'Heide Museum of Modern Art · Bulleen, Naarm/Melbourne',
       metaTags:['Public domain image','Victorian Heritage Register','Concept demo · not official Heide content'],
       story:'<strong>Heide I</strong> is the original weatherboard farmhouse where the whole story begins. In 1934, art patrons John and Sunday Reed bought this former dairy farm beside the Yarra River and made the cottage their home for the next thirty-five years. Around its kitchen table they gathered a circle of young modernist artists. Sidney Nolan painted the first <em>Ned Kelly</em> series here in 1946-47. Australian modernism took root in this small house.',
-      askLabel:'Ask this place · one object, four voices',
-      toneLabel:'Choose a voice',
+      askLabel:'Ask this place · one object, four perspectives',
+      toneLabel:'Choose an interpretive lens',
       langLabel:'Language',
       chatPlaceholder:'Ask this place anything...',
       askButton:'Ask',
-      audioTitle:'Audio & voice tools',
-      audioHint:'Open controls',
-      voiceLabel:'Language & voice',
+      audioTitle:'Spoken voice',
+      audioHint:'Choose & preview',
+      voiceLabel:'Voice profile',
+      voicePreview:'Preview',
       autoRead:'Read replies automatically',
-      audioStatusAuto:'Replies follow the language you ask in. Spoken audio uses the browser voices available on this device.',
-      audioStatusFixed:'Replying in {language}. Spoken audio will try to match that language; choose a different voice below if needed.',
+      audioStatusAuto:'The interpretive lens shapes what is said. The voice profile shapes how it is spoken.',
+      audioStatusFixed:'Replying in {language}. Spoken audio will use the closest compatible voice available on this device.',
       noSpeech:'This browser does not support spoken audio. Try Safari or Chrome.',
       visitorTitle:'Visitor response',
       visitorHint:'Leave a note',
-      commentLabel:'Leave a response · your note becomes part of the collection record',
+      commentLabel:'Leave a response · saved on this device for the concept demo',
       commentPlaceholder:'What does this object make you think or feel?',
       commentButton:'Submit response',
-      commentThanks:'Thank you · response recorded',
+      commentThanks:'Thank you · response saved on this device',
       commentMeta:'Visitor response · {date}',
       shareTitle:'Share / save',
       shareHint:'Links and downloads',
@@ -478,7 +496,7 @@ const UI_COPY={
         ['Significance','Birthplace of Australian modernism'],
         ['Location','7 Templestowe Rd, Bulleen VIC'],
         ['Heritage','Victorian Heritage Register'],
-        ['Rights','Interpretation set by Heide · image public domain'],
+        ['Rights','Concept interpretation · image public domain'],
         ['Source image','Wikimedia Commons, public domain photograph']
       ],
       mapLabel:'You are here',
@@ -490,10 +508,10 @@ const UI_COPY={
       govBody:'A short walk from here is Yingabeal, an ancient Wurundjeri scarred marker tree where Songlines meet. This story belongs to Wurundjeri Woi-wurrung people. In ARCHAI, source communities can define what an object may say, and have those limits enforced at the moment it speaks, so the voice remains shaped by them, or stays silent by their choice.',
       aoc:'Heide stands on the Country of the Wurundjeri Woi-wurrung people of the Kulin Nation, beside the Birrarung. We pay respect to Elders past and present. Sovereignty was never ceded.',
       concept:'Discussion concept · built by Rob Graham, RMIT School of Design PhD, for Heide × ARCHAI conversations · content grounded in public Heide history · Heide logo used only for co-branding discussion · live replies are generated on request and grounded in the record above.',
-      footlineHtml:'<b>Powered by ARCHAI</b> · sovereign, local-first cultural heritage AI<br>Object voice · consent governance · rights-aware · runs on Heide-controlled hardware',
+      footlineHtml:'<b>Powered by ARCHAI</b> · sovereign, local-first cultural heritage AI<br>Object voice · consent governance · rights-aware · designed for institution-controlled hardware',
       thinking:['Checking the Heide record','Looking at the object file','Finding the clearest answer','Searching the grounded details'],
-      responseWho:'Heide I · {voice} voice',
-      liveTag:'✓ Live · grounded in Heide’s record · qwen2.5, on Heide-controlled hardware',
+      responseWho:'Heide I · {voice} lens',
+      liveTag:'✓ Live concept · bounded by the public Heide record above · ARCHAI research server',
       offlineTag:'✓ From Heide’s record (live voice offline · showing curated reply)',
       readAloud:'Read aloud',
       stop:'Stop',
@@ -504,7 +522,7 @@ const UI_COPY={
       autoLangLabel:'Auto · match my question',
       autoLangShort:'Auto',
       shareWebTitle:'Heide I · The Cottage · ARCHAI',
-      shareWebText:'Heide I, the Cottage · ask the birthplace of Australian modernism in four voices. ARCHAI × Heide concept demo.'
+      shareWebText:'Heide I, the Cottage · explore the birthplace of Australian modernism through four interpretive perspectives. ARCHAI × Heide concept demo.'
     },
     voices:voiceUiFromVoices()
   },
@@ -742,6 +760,7 @@ function applyLocale(){
   updatePanelSummary(2,s.shareTitle,s.shareHint);
   updatePanelSummary(3,s.objectTitle,s.objectHint);
   setText('label[for="voiceSelect"]',s.voiceLabel);
+  setText('#voicePreviewLabel',s.voicePreview||UI_COPY.en.static.voicePreview);
   updateAutoReadLabel(s.autoRead);
   setText('.v-comment-label',s.commentLabel);
   setPlaceholder('#commentInput',s.commentPlaceholder);
@@ -917,33 +936,73 @@ function askFree(){ const v=inputEl.value.trim(); if(!v) return; inputEl.value='
 inputEl.addEventListener('keydown',e=>{if(e.key==='Enter')askFree();});
 tonesEl.addEventListener('click',e=>{const b=e.target.closest('.v-tone');if(b)render(b.dataset.lens);});
 
-// ── AUDIO (Web Speech API) ─────────────────────────────────────────
+// ── SPOKEN VOICE · local Piper when available, curated device fallback ──
+const VOICE_SERVER='http://127.0.0.1:8123';
+const PIPER_VOICE_LABELS={
+  alba:'Ada · warm gallery guide',
+  cori:'Cate · expressive curator',
+  amy:'Amy · gentle education host',
+  lessac:'Nora · clear archivist',
+  ryan:'Ryan · warm narrator',
+  alan:'Alan · measured historian',
+  northern:'Ted · characterful projectionist'
+};
+const PIPER_PREVIEW='Welcome to Heide I. I am one of the local voices that can bring this place and its record into conversation.';
+const BROWSER_VOICE_EXCLUDE=/Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Good News|Jester|Junior|Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox/i;
 const canSpeak = typeof window.speechSynthesis !== 'undefined';
 const voiceSelectEl=document.getElementById('voiceSelect');
 const autoReadEl=document.getElementById('autoRead');
 const audioStatusEl=document.getElementById('audioStatus');
+const voiceEngineDot=document.getElementById('voiceEngineDot');
+const voiceEngineStatus=document.getElementById('voiceEngineStatus');
+const voicePreviewBtn=document.getElementById('voicePreview');
+const voicePreviewLabel=document.getElementById('voicePreviewLabel');
+let localVoiceReady=false,localVoiceNames=[],voiceAudio=null;
 const LANG_NAMES={en:'English',zh:'Chinese',fr:'French',de:'German',es:'Spanish',it:'Italian',ja:'Japanese',ko:'Korean',ar:'Arabic',hi:'Hindi',pt:'Portuguese',ru:'Russian',nl:'Dutch',vi:'Vietnamese',th:'Thai',id:'Indonesian',el:'Greek',tr:'Turkish',pl:'Polish',sv:'Swedish',he:'Hebrew',fi:'Finnish',da:'Danish',nb:'Norwegian',no:'Norwegian',cs:'Czech',ro:'Romanian',hu:'Hungarian',uk:'Ukrainian',ms:'Malay',fa:'Persian',ta:'Tamil',bn:'Bengali',sk:'Slovak',hr:'Croatian',ca:'Catalan'};
 let _dn=null; try{ _dn=new Intl.DisplayNames(['en'],{type:'language'}); }catch(e){}
 function langName(code){ code=(code||'').toLowerCase(); let n=null; if(_dn){ try{n=_dn.of(code);}catch(e){} } return (n&&n.toLowerCase()!==code)?n:(LANG_NAMES[code]||code.toUpperCase()); }
 let answerLang=null; // null = reply in the language the visitor uses
 function allVoices(){ return canSpeak?window.speechSynthesis.getVoices():[]; }
-function loadVoices(){
-  if(!canSpeak) return;
-  const all=allVoices(); if(!all.length) return;
-  const groups={};
-  all.forEach((v,idx)=>{ const base=((v.lang||'').split(/[-_]/)[0]||'other').toLowerCase(); (groups[base]=groups[base]||[]).push({v,idx}); });
-  const codes=Object.keys(groups).sort((a,b)=>{ if(a==='en')return -1; if(b==='en')return 1; return langName(a).localeCompare(langName(b)); });
-  voiceSelectEl.innerHTML=codes.map(code=>{
-    const opts=groups[code].map(({v,idx})=>`<option value="${idx}">${v.name} · ${v.lang}</option>`).join('');
-    return `<optgroup label="${langName(code)}">${opts}</optgroup>`;
-  }).join('');
-  const auIdx=all.findIndex(v=>/^en-AU/i.test(v.lang));
-  if(auIdx>=0) voiceSelectEl.value=String(auIdx);
-  onVoiceChange();
+function curatedBrowserVoices(){
+  return allVoices().map((v,idx)=>({v,idx})).filter(({v})=>!BROWSER_VOICE_EXCLUDE.test(v.name||''));
 }
-function currentVoice(){ return allVoices()[voiceSelectEl.value|0] || null; }
+function loadBrowserVoices(preferredCode){
+  if(!canSpeak) return false;
+  const curated=curatedBrowserVoices(); if(!curated.length) return false;
+  const code=(preferredCode&&preferredCode!=='auto')?preferredCode:'en';
+  const candidates=curated
+    .filter(({v})=>{const base=((v.lang||'').split(/[-_]/)[0]||'').toLowerCase();return base===code||(code!=='en'&&base==='en');})
+    .map(item=>{
+      const base=((item.v.lang||'').split(/[-_]/)[0]||'').toLowerCase();
+      let score=base===code?200:20;
+      if(code==='en'&&/^en-AU/i.test(item.v.lang))score+=100;
+      if(code==='en'&&/^en-GB/i.test(item.v.lang))score+=60;
+      if(/natural/i.test(item.v.name||''))score+=35;
+      if(item.v.localService)score+=12;
+      if(item.v.default)score+=8;
+      return {...item,score};
+    })
+    .sort((a,b)=>b.score-a.score)
+    .slice(0,6);
+  voiceSelectEl.innerHTML=candidates.map(({v,idx})=>`<option value="browser:${idx}">${escapeHTML(v.name)} · ${escapeHTML(v.lang)}</option>`).join('');
+  const match=candidates[0]||curated.find(({v})=>/^en-AU/i.test(v.lang))||curated[0];
+  if(match) voiceSelectEl.value='browser:'+match.idx;
+  onVoiceChange();
+  return true;
+}
+function loadPiperVoices(){
+  if(!localVoiceReady||!localVoiceNames.length) return false;
+  voiceSelectEl.innerHTML='<optgroup label="Local Piper voices">'+localVoiceNames.map(id=>`<option value="piper:${escapeHTML(id)}">${escapeHTML(PIPER_VOICE_LABELS[id]||id)}</option>`).join('')+'</optgroup>';
+  return true;
+}
+function currentBrowserVoice(){
+  const value=voiceSelectEl.value||'';
+  return value.startsWith('browser:')?allVoices()[Number(value.slice(8))]||null:null;
+}
+function selectedPiperVoice(){ const value=voiceSelectEl.value||''; return value.startsWith('piper:')?value.slice(6):null; }
 const langSelectEl=document.getElementById('langSelect');
 const LANGS=[
+  {code:'auto',label:'Auto · match my question',short:'AUTO'},
   {code:'en',label:'English',short:'EN'},
   {code:'zh',label:'中文 · Chinese',short:'中文'},
   {code:'ar',label:'العربية · Arabic',short:'عربي'},
@@ -969,16 +1028,11 @@ function populateLangs(selected){
 function updateAudioStatus(){
   if(!audioStatusEl) return;
   const s=currentStatic();
-  audioStatusEl.textContent = answerLang
-    ? formatCopy(s.audioStatusFixed,{language:answerLang})
-    : s.audioStatusAuto;
+  audioStatusEl.textContent=answerLang?formatCopy(s.audioStatusFixed,{language:answerLang}):s.audioStatusAuto;
 }
 function pickVoiceForLang(code){
-  if(!canSpeak || !voiceSelectEl.options.length) return;
-  const all=allVoices();
-  let idx = (code==='auto'||code==='en') ? all.findIndex(v=>/^en-AU/i.test(v.lang)) : all.findIndex(v=>((v.lang||'').split(/[-_]/)[0].toLowerCase())===code);
-  if(idx<0 && code!=='auto') idx = all.findIndex(v=>/^en/i.test(v.lang));
-  if(idx>=0) voiceSelectEl.value=String(idx);
+  if(localVoiceReady&&(code==='auto'||code==='en')) loadPiperVoices();
+  else loadBrowserVoices(code);
 }
 async function onLangChange(){
   const code=langSelectEl?langSelectEl.value:'auto';
@@ -993,26 +1047,93 @@ async function onLangChange(){
   updateAudioStatus();
 }
 function onVoiceChange(){ updateAudioStatus(); }
-function speak(text){
+function languageCodeFromText(text){
+  if(answerLang){ const hit=Object.entries(LANG_NAMES).find(([,name])=>name===answerLang); if(hit)return hit[0]; }
+  if(/[\u4e00-\u9fff]/.test(text))return 'zh'; if(/[\u3040-\u30ff]/.test(text))return 'ja';
+  if(/[\uac00-\ud7af]/.test(text))return 'ko'; if(/[\u0600-\u06ff]/.test(text))return 'ar';
+  if(/[\u0900-\u097f]/.test(text))return 'hi'; return uiLang&&uiLang!=='auto'?uiLang:'en';
+}
+function bestBrowserVoice(code){
+  const preferred=currentBrowserVoice();
+  if(preferred&&((preferred.lang||'').split(/[-_]/)[0].toLowerCase())===code)return preferred;
+  const curated=curatedBrowserVoices();
+  return (curated.find(({v})=>((v.lang||'').split(/[-_]/)[0].toLowerCase())===code)
+    ||curated.find(({v})=>/^en-AU/i.test(v.lang))||curated[0])?.v||null;
+}
+async function piperSpeak(text,voiceId){
+  const r=await fetch(VOICE_SERVER+'/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:String(text).slice(0,1400),voice:voiceId||'alba'})});
+  if(!r.ok) throw new Error('Local voice unavailable');
+  const blob=await r.blob(); voiceAudio=new Audio(URL.createObjectURL(blob));
+  return new Promise((resolve,reject)=>{voiceAudio.onended=resolve;voiceAudio.onerror=reject;voiceAudio.play().catch(reject);});
+}
+function setPreviewPlaying(on){
+  if(!voicePreviewBtn||!voicePreviewLabel)return;
+  voicePreviewBtn.dataset.playing=on?'true':'false';
+  voicePreviewBtn.classList.toggle('on',on);
+  voicePreviewLabel.textContent=on?currentStatic().stop:(currentStatic().voicePreview||UI_COPY.en.static.voicePreview);
+  voicePreviewBtn.setAttribute('aria-label',on?'Stop voice preview':'Preview selected voice');
+}
+async function speak(text){
+  stopSpeak();
+  const code=languageCodeFromText(text),piperId=selectedPiperVoice();
+  const btn=document.getElementById('readBtn');
+  if(localVoiceReady&&piperId&&code==='en'){
+    if(btn){btn.classList.add('on');btn.textContent=currentStatic().stop;}
+    setPreviewPlaying(true);
+    try{await piperSpeak(text,piperId);}
+    catch(e){localVoiceReady=false;setVoiceEngineState(false);return speakWithBrowser(text,code);}
+    finally{setPreviewPlaying(false);if(btn){btn.classList.remove('on');btn.textContent=currentStatic().readAloud;}}
+    return;
+  }
+  speakWithBrowser(text,code);
+}
+function speakWithBrowser(text,code){
   if(!canSpeak){ audioStatusEl.textContent=currentStatic().noSpeech; return; }
   window.speechSynthesis.cancel();
   const u=new SpeechSynthesisUtterance(text);
-  const v=currentVoice(); if(v) u.voice=v;
+  const v=bestBrowserVoice(code); if(v) u.voice=v;
   u.rate=0.98; u.pitch=1; u.lang=(v&&v.lang)||'en-AU';
   const btn=document.getElementById('readBtn');
-  u.onstart=()=>{ if(btn){btn.classList.add('on');btn.textContent=currentStatic().stop;} };
-  u.onend=()=>{ if(btn){btn.classList.remove('on');btn.textContent=currentStatic().readAloud;} };
+  u.onstart=()=>{setPreviewPlaying(true);if(btn){btn.classList.add('on');btn.textContent=currentStatic().stop;} };
+  u.onend=()=>{setPreviewPlaying(false);if(btn){btn.classList.remove('on');btn.textContent=currentStatic().readAloud;} };
   window.speechSynthesis.speak(u);
 }
-function stopSpeak(){ if(canSpeak) window.speechSynthesis.cancel(); const btn=document.getElementById('readBtn'); if(btn){btn.classList.remove('on');btn.textContent=currentStatic().readAloud;} }
-function toggleRead(){ if(canSpeak && window.speechSynthesis.speaking){ stopSpeak(); } else { speak(lastReply); } }
+function stopSpeak(){
+  if(voiceAudio){try{voiceAudio.pause();if(voiceAudio.src.startsWith('blob:'))URL.revokeObjectURL(voiceAudio.src);}catch(e){}voiceAudio=null;}
+  if(canSpeak)window.speechSynthesis.cancel();
+  setPreviewPlaying(false);
+  const btn=document.getElementById('readBtn'); if(btn){btn.classList.remove('on');btn.textContent=currentStatic().readAloud;}
+}
+function toggleRead(){ if((voiceAudio&&!voiceAudio.paused)||(canSpeak&&window.speechSynthesis.speaking))stopSpeak(); else speak(lastReply); }
+function previewVoice(){
+  if(voicePreviewBtn?.dataset.playing==='true'){stopSpeak();return;}
+  const sample=uiLang==='en'?PIPER_PREVIEW:(voiceCopy(current).intro||PIPER_PREVIEW).replace(/<[^>]+>/g,' ').slice(0,240);
+  speak(sample);
+}
+function setVoiceEngineState(ready){
+  localVoiceReady=ready;
+  voiceEngineDot.classList.toggle('ready',ready);
+  voiceEngineStatus.innerHTML=ready
+    ? '<b>Private voice ready on this Mac.</b> Whisper listens and Piper speaks locally. Audio stays on this machine; the transcript is sent to the ARCHAI research server for the demo reply.'
+    : '<b>Device voice active.</b> This shared demo uses speech features available in the visitor\'s browser. A museum installation can run Whisper and Piper entirely on institution-controlled hardware.';
+}
+async function detectVoiceEngine(){
+  try{
+    const r=await fetch(VOICE_SERVER+'/health',{cache:'no-store',signal:AbortSignal.timeout(1800)}); const data=await r.json();
+    if(!r.ok||!data.ok)throw new Error('offline');
+    localVoiceNames=(data.voices||[]).filter(id=>PIPER_VOICE_LABELS[id]);
+    setVoiceEngineState(Boolean(localVoiceNames.length));
+  }catch(e){localVoiceNames=[];setVoiceEngineState(false);}
+  pickVoiceForLang(langSelectEl?.value||'en');
+}
 populateLangs();
 try{
   const savedLang=localStorage.getItem(UI_LANG_KEY);
   if(savedLang&&LANGS.some(l=>l.code===savedLang)&&langSelectEl) langSelectEl.value=savedLang;
 }catch(e){}
-if(canSpeak){ voiceSelectEl.addEventListener('change', onVoiceChange); loadVoices(); window.speechSynthesis.onvoiceschanged=loadVoices; }
-else { document.getElementById('audioTools').style.display='none'; }
+voiceSelectEl.addEventListener('change',onVoiceChange);
+if(canSpeak)window.speechSynthesis.onvoiceschanged=()=>{if(!localVoiceReady)loadBrowserVoices(langSelectEl?.value||'en');};
+detectVoiceEngine();
 
 // ── VOICE INPUT (Web Speech API — ask AUXIO by voice, like standard AUXIO) ──
 const REC_LANG={en:'en-AU',zh:'zh-CN',ar:'ar-SA',vi:'vi-VN',el:'el-GR',it:'it-IT',es:'es-ES',fr:'fr-FR',hi:'hi-IN',ja:'ja-JP',ko:'ko-KR'};
@@ -1021,9 +1142,13 @@ const micBtn=document.getElementById('micBtn');
 const voiceHintEl=document.getElementById('voiceHint');
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 let recognition=null, listening=false, speakNext=false, micDraft='', micSubmitted=false;
+let localRecorder=null,localAudioChunks=[],localAudioStream=null;
 function recLangCode(){ return REC_LANG[uiLang||'en']||REC_LANG.en; }
-function micUnsupported(){ if(micBtn){ micBtn.disabled=true; micBtn.title='Voice questions work in Chrome, Edge or Safari'; } if(voiceHintEl) voiceHintEl.textContent='Voice questions work in Chrome, Edge or Safari.'; }
-if(!SR){ micUnsupported(); }
+function micUnsupported(){
+  if(micBtn){micBtn.disabled=true;micBtn.title='Type your question on this device';}
+  if(voiceHintEl)voiceHintEl.textContent='Voice capture is not available in this browser. You can still type your question and hear the reply.';
+}
+if(!SR&&!navigator.mediaDevices?.getUserMedia){micUnsupported();}
 function setMicListening(on){
   listening=on;
   if(!micBtn) return;
@@ -1058,13 +1183,45 @@ function submitVoice(t){
   speakNext=true;                 // read the answer aloud after a spoken question
   ask(t,null);
 }
-function toggleVoiceInput(){
+async function startLocalVoiceInput(){
+  if(!navigator.mediaDevices?.getUserMedia||typeof MediaRecorder==='undefined'){startBrowserVoiceInput();return;}
+  try{
+    localAudioStream=await navigator.mediaDevices.getUserMedia({audio:true});
+    localAudioChunks=[];
+    localRecorder=new MediaRecorder(localAudioStream);
+    localRecorder.ondataavailable=e=>{if(e.data&&e.data.size)localAudioChunks.push(e.data);};
+    localRecorder.onstart=()=>{setMicListening(true);if(voiceHintEl)voiceHintEl.textContent='Listening locally · tap the microphone to finish';};
+    localRecorder.onstop=async()=>{
+      setMicListening(false);micBtn.classList.add('busy');micBtn.disabled=true;
+      if(voiceHintEl)voiceHintEl.textContent='Transcribing locally with Whisper...';
+      localAudioStream?.getTracks().forEach(track=>track.stop());localAudioStream=null;
+      try{
+        const audio=new Blob(localAudioChunks,{type:localRecorder.mimeType||'audio/webm'});
+        const r=await fetch(VOICE_SERVER+'/stt',{method:'POST',headers:{'Content-Type':'application/octet-stream'},body:audio});
+        const data=await r.json();const transcript=String(data.text||'').trim();
+        if(!r.ok||!transcript)throw new Error('No speech captured');
+        inputEl.value=transcript;if(voiceHintEl)voiceHintEl.textContent='Question captured locally';submitVoice(transcript);
+      }catch(e){if(voiceHintEl)voiceHintEl.textContent='I could not hear that clearly. Please try again or type your question.';}
+      finally{micBtn.classList.remove('busy');micBtn.disabled=false;localRecorder=null;localAudioChunks=[];}
+    };
+    localRecorder.start();
+  }catch(e){
+    localAudioStream?.getTracks().forEach(track=>track.stop());localAudioStream=null;
+    if(voiceHintEl)voiceHintEl.textContent='Microphone access was not enabled. You can still type your question.';
+  }
+}
+function startBrowserVoiceInput(){
   if(listening){ if(recognition) recognition.stop(); return; }
   const r=ensureRecognition();
   if(!r){ micUnsupported(); return; }
   r.lang=recLangCode();
   try{ if(canSpeak) window.speechSynthesis.cancel(); r.start(); }
   catch(e){ /* recognition already running */ }
+}
+function toggleVoiceInput(){
+  if(localRecorder&&localRecorder.state==='recording'){localRecorder.stop();return;}
+  if(localVoiceReady&&uiLang==='en'){startLocalVoiceInput();return;}
+  startBrowserVoiceInput();
 }
 
 const COMMENT_KEY='heide_cottage_comments';
