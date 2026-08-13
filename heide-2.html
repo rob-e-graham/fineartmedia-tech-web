@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heide I · The Cottage · AUXIO v2 (sovereign voice)</title>
+<meta name="description" content="Heide Cottage AUXIO, version 2 — talk to the Cottage with a fully on-device voice: Whisper listens, Piper speaks, nothing leaves the machine. Concept demo.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c0d0a;--surface:#15160f;--border:#262619;--border2:#37372a;--text:#efe9d8;--text2:#a7a08a;--text3:#6b6552;--accent:#c8a96e;--accent2:#8fbcae;--mono:'DM Mono',monospace;--serif:'Cormorant Garamond',Georgia,serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--serif);font-weight:300;min-height:100vh;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px}
+.hdr{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:20px 22px;max-width:760px;margin:0 auto;flex-wrap:wrap}
+.brand{font-family:var(--mono);font-weight:500;letter-spacing:.34em;text-transform:uppercase;font-size:.85rem}
+.tag{font-family:var(--mono);font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text3)}
+.hero{padding:26px 22px 6px;max-width:760px;margin:0 auto}
+.eyebrow{font-family:var(--mono);font-size:.54rem;letter-spacing:.26em;text-transform:uppercase;color:var(--accent2)}
+.title{font-size:clamp(2.4rem,8vw,3.6rem);font-weight:500;line-height:1;margin:12px 0 4px}
+.subtitle{font-style:italic;color:var(--accent);font-size:clamp(1rem,3.2vw,1.35rem)}
+.concept{display:inline-block;margin-top:14px;font-family:var(--mono);font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);border:1px solid var(--border2);border-radius:2px;padding:6px 9px}
+.story{font-size:1.12rem;line-height:1.62;color:var(--text2);margin-top:18px}
+.story b{color:var(--text);font-weight:400}
+.divider{height:1px;background:var(--border);margin:22px auto;max-width:760px}
+.vbanner{max-width:760px;margin:0 auto;padding:0 22px}
+.vbanner-in{display:flex;gap:10px;align-items:center;flex-wrap:wrap;border:1px solid var(--border2);border-radius:4px;padding:11px 14px;background:var(--surface)}
+.vdot{width:8px;height:8px;border-radius:50%;background:var(--text3);flex:0 0 auto}
+.vdot.on{background:var(--accent2);box-shadow:0 0 0 3px rgba(143,188,174,.18)}
+.vstatus{font-family:var(--mono);font-size:.52rem;letter-spacing:.06em;color:var(--text2);flex:1;min-width:180px}
+.vstatus b{color:var(--text)}
+.ask-label{font-family:var(--mono);font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent2);margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.chip{font-family:var(--serif);font-style:italic;font-size:1rem;padding:7px 12px;border:1px solid var(--border2);color:var(--text2);border-radius:2px;background:transparent;cursor:pointer;transition:all .15s}
+.chip:hover{border-color:var(--accent);color:var(--text)}
+.chat-row{display:flex;gap:8px;align-items:stretch}
+.chat-in{flex:1;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-family:var(--serif);font-size:1.05rem;padding:12px 14px;border-radius:3px;outline:none}
+.chat-in:focus{border-color:var(--accent)}
+.mic{width:48px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border2);color:var(--text2);border-radius:3px;cursor:pointer;transition:all .15s}
+.mic:hover:not(:disabled){color:var(--text);border-color:var(--accent2)}
+.mic:disabled{opacity:.45;cursor:default}
+.mic.rec{color:#141414;background:#d9736b;border-color:#d9736b;animation:pulse 1.2s infinite}
+.mic.busy{opacity:.6}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(217,115,107,.5)}70%{box-shadow:0 0 0 8px rgba(217,115,107,0)}100%{box-shadow:0 0 0 0 rgba(217,115,107,0)}}
+.send{background:var(--accent);color:#181206;border:none;font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;padding:0 17px;border-radius:3px;cursor:pointer}
+.resp{margin-top:16px;font-size:1.1rem;line-height:1.62;color:var(--text)}
+.resp:empty{display:none}
+.resp .who{display:block;font-family:var(--mono);font-size:.5rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.resp .ground{display:block;font-family:var(--mono);font-size:.46rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-top:12px}
+.readbtn{margin-top:12px;font-family:var(--mono);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;background:transparent;border:1px solid var(--border2);color:var(--text2);border-radius:3px;padding:8px 12px;cursor:pointer}
+.readbtn.on{color:#141414;background:var(--accent2);border-color:var(--accent2)}
+.think{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent2)}
+.think b{animation:bl 1.3s infinite both}.think b:nth-child(2){animation-delay:.2s}.think b:nth-child(3){animation-delay:.4s}
+@keyframes bl{0%,80%,100%{opacity:.25}40%{opacity:1}}
+details.panel{border:1px solid var(--border);border-radius:4px;margin:16px 0 0;background:var(--surface)}
+details.panel summary{list-style:none;cursor:pointer;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
+details.panel summary::-webkit-details-marker{display:none}
+.panel-t{font-family:var(--mono);font-size:.54rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text2)}
+.panel-h{font-family:var(--mono);font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)}
+.panel-b{padding:2px 14px 16px}
+.row{display:flex;gap:10px;align-items:center;margin:9px 0;flex-wrap:wrap}
+.row label{font-family:var(--mono);font-size:.54rem;letter-spacing:.06em;color:var(--text2);min-width:120px}
+.vsel{flex:1;min-width:180px;background:var(--bg);border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:.6rem;padding:9px 10px;border-radius:3px;outline:none}
+.note{font-family:var(--mono);font-size:.5rem;letter-spacing:.04em;color:var(--text3);line-height:1.9;margin-top:8px}
+footer{max-width:760px;margin:44px auto 0;padding:22px 22px 44px;border-top:1px solid var(--border);font-family:var(--mono);font-size:.5rem;letter-spacing:.08em;color:var(--text3);text-transform:uppercase;line-height:2}
+footer b{color:var(--text2);font-weight:400}
+</style>
+</head>
+<body>
+<header class="hdr"><div class="brand">HEIDE</div><span class="tag">AUXIO v2 · sovereign voice</span></header>
+
+<section class="hero">
+  <div class="eyebrow">Heide I · The Cottage</div>
+  <h1 class="title">Talk to the Cottage</h1>
+  <div class="subtitle">Speak aloud. It listens, and answers, without the cloud.</div>
+  <div class="concept">Concept demo · private · not official Heide content</div>
+  <p class="story"><b>Heide I</b> is the weatherboard farmhouse where the story begins. In 1934 John and Sunday Reed made this old dairy their home, and around its kitchen table gathered a circle of young modernists. In 1946–47 Sidney Nolan painted his first Ned Kelly series here. This version answers with a <b>fully on-device voice</b>: Whisper listens, Piper speaks, and no audio ever leaves the machine.</p>
+</section>
+
+<div class="vbanner"><div class="vbanner-in">
+  <span class="vdot" id="vdot"></span>
+  <span class="vstatus" id="vstatus">Checking for the sovereign voice engine…</span>
+</div></div>
+
+<div class="divider"></div>
+
+<section class="wrap">
+  <div class="ask-label">Ask the Cottage — press the mic and speak, or type</div>
+  <div class="chips" id="chips"></div>
+  <div class="chat-row">
+    <input class="chat-in" id="chatIn" type="text" maxlength="480" placeholder="Ask the Cottage anything…" enterkeyhint="send">
+    <button class="mic" id="micBtn" type="button" onclick="toggleMic()" aria-label="Ask by voice" title="Ask by voice">
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2.5" width="6" height="11" rx="3"></rect><path d="M5.5 11a6.5 6.5 0 0 0 13 0"></path><line x1="12" y1="17.5" x2="12" y2="21"></line><line x1="8.5" y1="21" x2="15.5" y2="21"></line></svg>
+    </button>
+    <button class="send" onclick="askFree()">Ask</button>
+  </div>
+  <div class="resp" id="resp"></div>
+
+  <details class="panel" open>
+    <summary><span class="panel-t">Voice &amp; audio</span><span class="panel-h">choose a voice</span></summary>
+    <div class="panel-b">
+      <div class="row"><label for="voiceSel">Voice</label><select id="voiceSel" class="vsel"></select></div>
+      <div class="row"><label><input type="checkbox" id="autoRead" checked> Read answers aloud</label></div>
+      <div class="note" id="voiceNote">This v2 uses the production path when it can reach the local engine: <b>Whisper</b> for listening and <b>Piper</b> for the voice, both open source and fully on-device, so no audio ever leaves the building. Voices can be swapped per object or gallery, or cloned from your own visitor-services actors (Coqui XTTS). If the local engine isn't running, it falls back to the browser's built-in speech.</div>
+    </div>
+  </details>
+</section>
+
+<footer><b>Runs on ARCHAI</b> — sovereign, local-first cultural-heritage AI · grounded in the record, no invention<br>Whisper (STT) + Piper / Coqui (TTS), on-device · private concept demo · fineartmedia.tech/archai</footer>
+
+<script>
+const CHAT='https://archai-api.fineartmedia.tech/api/proxy/chat';
+const VOICE_SERVER='http://127.0.0.1:8123';
+const $=id=>document.getElementById(id);
+const inputEl=$('chatIn'),respEl=$('resp'),micBtn=$('micBtn'),voiceSel=$('voiceSel'),autoReadEl=$('autoRead');
+let lastReply='',history=[],sovereign=false,srvVoices=[];
+const VOICE_LABELS={alba:'Ada · Female, 30s · Gallery guide',lessac:'Nora · Female, 40s · Archivist',northern:'Ted · Male, 50s · Projectionist'};
+
+function sysPrompt(){
+  return `You are "Heide I (The Cottage)", the original weatherboard farmhouse at Heide Museum of Modern Art in Bulleen/Naarm. Speak in the first person, warm and clear, in plain language (not academic), three to four sentences. You know: John and Sunday Reed bought this old dairy farm in 1934 and lived here to 1981; around your kitchen table gathered a circle of young modernists; Sidney Nolan painted his first Ned Kelly series here in 1946 to 1947; you are the birthplace of Australian modernism. Only use these facts and what a visitor can plainly see; if asked something you don't hold, say you don't know rather than invent. If the visitor writes in another language, reply fully in that language. This is a concept demo.`;
+}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function showThinking(){respEl.innerHTML='<span class="think">Consulting my record<b>.</b><b>.</b><b>.</b></span>';}
+function showAnswer(t,live){
+  lastReply=t;
+  respEl.innerHTML='<span class="who">Heide I · The Cottage</span>'+esc(t).replace(/\n/g,'<br>')
+    +'<div><button class="readbtn" id="readBtn" onclick="toggleRead()">Read aloud</button></div>'
+    +'<span class="ground">'+(live?'✓ Grounded in the record':'Offline · a curated answer')+'</span>';
+  if(autoReadEl.checked||window._speakNext){speak(t);window._speakNext=false;}
+}
+async function ask(q){
+  q=(q||'').trim(); if(!q)return; stopSpeak(); showThinking(); history.push({role:'user',content:q});
+  try{
+    const ctrl=new AbortController(); const t=setTimeout(()=>ctrl.abort(),30000);
+    const r=await fetch(CHAT,{method:'POST',headers:{'Content-Type':'application/json'},signal:ctrl.signal,
+      body:JSON.stringify({systemPrompt:sysPrompt(),userPrompt:q.slice(0,480),history:history.slice(0,-1).slice(-8)})});
+    clearTimeout(t); const d=await r.json();
+    const reply=d&&d.message&&d.message.content&&d.message.content.trim();
+    if(reply){history.push({role:'assistant',content:reply});showAnswer(reply,true);return;}
+    throw new Error('empty');
+  }catch(e){ showAnswer("I'm the old Cottage at Heide, where John and Sunday Reed gathered their circle of modernists, and where Sidney Nolan painted his first Ned Kelly series. My live voice is resting just now, but the walls remember plenty.",false); }
+}
+function askFree(){const v=inputEl.value.trim();if(!v)return;inputEl.value='';[...$('chips').children].forEach(c=>c.classList.remove('active'));ask(v);}
+inputEl.addEventListener('keydown',e=>{if(e.key==='Enter')askFree();});
+const QS=['What are you?','Tell me about the Ned Kelly paintings','Who were John and Sunday Reed?','Why do you matter?'];
+$('chips').innerHTML=QS.map(q=>`<button class="chip" onclick="ask('${q.replace(/'/g,"\\'")}')">${q}</button>`).join('');
+
+// ── voice output: sovereign (Piper) when available, else browser ──
+const canSpeak=typeof window.speechSynthesis!=='undefined';
+let audioEl=null;
+function currentVoiceId(){return voiceSel.value;}
+async function speak(text){
+  stopSpeak();
+  if(sovereign){
+    try{
+      const r=await fetch(VOICE_SERVER+'/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:text.slice(0,1400),voice:currentVoiceId()})});
+      if(!r.ok)throw new Error('tts');
+      const buf=await r.blob(); audioEl=new Audio(URL.createObjectURL(buf));
+      const b=$('readBtn'); if(b){b.classList.add('on');b.textContent='Stop';}
+      audioEl.onended=()=>{if(b){b.classList.remove('on');b.textContent='Read aloud';}};
+      audioEl.play(); return;
+    }catch(e){ /* fall through to browser */ }
+  }
+  if(!canSpeak)return; speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text); const bv=(window._browserVoices||[])[voiceSel.value|0]; if(bv){u.voice=bv;u.lang=bv.lang;} u.rate=.98;
+  const b=$('readBtn'); u.onstart=()=>{if(b){b.classList.add('on');b.textContent='Stop';}}; u.onend=()=>{if(b){b.classList.remove('on');b.textContent='Read aloud';}};
+  speechSynthesis.speak(u);
+}
+function stopSpeak(){ if(audioEl){try{audioEl.pause();}catch(e){}audioEl=null;} if(canSpeak)speechSynthesis.cancel(); const b=$('readBtn'); if(b){b.classList.remove('on');b.textContent='Read aloud';} }
+function toggleRead(){ if((audioEl&&!audioEl.paused)||(canSpeak&&speechSynthesis.speaking))stopSpeak(); else speak(lastReply); }
+
+// ── voice input: sovereign (record → Whisper) when available, else browser SR ──
+let mediaRec=null,chunks=[],recording=false;
+async function toggleMic(){
+  if(recording){ if(mediaRec)mediaRec.stop(); return; }
+  if(sovereign){ startRecording(); return; }
+  startBrowserSR();
+}
+async function startRecording(){
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    mediaRec=new MediaRecorder(stream); chunks=[];
+    mediaRec.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};
+    mediaRec.onstart=()=>{recording=true;micBtn.classList.add('rec');inputEl.dataset.ph=inputEl.placeholder;inputEl.placeholder='Recording… tap the mic to stop';};
+    mediaRec.onstop=async()=>{
+      recording=false;micBtn.classList.remove('rec');micBtn.classList.add('busy');inputEl.placeholder='Transcribing (Whisper)…';
+      stream.getTracks().forEach(t=>t.stop());
+      try{
+        const blob=new Blob(chunks,{type:mediaRec.mimeType||'audio/webm'});
+        const r=await fetch(VOICE_SERVER+'/stt',{method:'POST',headers:{'Content-Type':'application/octet-stream'},body:blob});
+        const d=await r.json(); const text=(d.text||'').trim();
+        micBtn.classList.remove('busy'); inputEl.placeholder=inputEl.dataset.ph||'Ask the Cottage anything…';
+        if(text){inputEl.value=text; window._speakNext=true; ask(text);}
+      }catch(e){ micBtn.classList.remove('busy'); inputEl.placeholder='Voice engine unreachable — type instead'; }
+    };
+    mediaRec.start();
+  }catch(e){ inputEl.placeholder='Microphone was blocked'; }
+}
+// browser fallback STT
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let sr=null,draft='',submitted=false;
+function startBrowserSR(){
+  if(!SR){inputEl.placeholder='Voice needs Chrome, Edge or Safari — type instead';return;}
+  if(sr){sr.stop();return;}
+  sr=new SR(); sr.lang='en-AU'; sr.interimResults=true; sr.continuous=false; draft='';submitted=false;
+  sr.onstart=()=>{recording=true;micBtn.classList.add('rec');inputEl.placeholder='Listening…';};
+  sr.onresult=e=>{const t=Array.from(e.results||[]).map(x=>(x[0]&&x[0].transcript)||'').join(' ').trim();if(!t)return;draft=t;inputEl.value=t;if(Array.from(e.results).some(x=>x.isFinal)&&!submitted){submitted=true;window._speakNext=true;ask(t);}};
+  sr.onerror=()=>{recording=false;micBtn.classList.remove('rec');};
+  sr.onend=()=>{recording=false;micBtn.classList.remove('rec');sr=null;if(draft&&!submitted){submitted=true;window._speakNext=true;ask(draft);}};
+  sr.start();
+}
+
+// ── detect the sovereign engine + populate voices ──
+function populateBrowserVoices(){
+  if(!canSpeak)return; const all=speechSynthesis.getVoices().filter(v=>/^en(-|_|$)/i.test(v.lang)); if(!all.length)return;
+  window._browserVoices=all; voiceSel.innerHTML=all.map((v,i)=>`<option value="${i}">${v.name} · ${v.lang}</option>`).join('');
+  const au=all.findIndex(v=>/en-AU/i.test(v.lang)); if(au>=0)voiceSel.value=String(au);
+}
+async function detectSovereign(){
+  try{
+    const r=await fetch(VOICE_SERVER+'/health',{cache:'no-store'}); const d=await r.json();
+    if(d&&d.ok){ sovereign=true; srvVoices=d.voices||['alba'];
+      voiceSel.innerHTML=srvVoices.map(v=>`<option value="${v}">${VOICE_LABELS[v]||v}</option>`).join('');
+      $('vdot').classList.add('on');
+      $('vstatus').innerHTML='<b>Sovereign voice active</b> — Whisper listens, Piper speaks, on this machine. Nothing leaves the building.';
+      return;
+    }
+    throw new Error('no');
+  }catch(e){
+    sovereign=false; populateBrowserVoices();
+    $('vstatus').innerHTML='Local engine not reachable — using the <b>browser voice</b> for now (run the ARCHAI voice server for the full on-device Whisper + Piper path).';
+  }
+}
+if(canSpeak){ populateBrowserVoices(); speechSynthesis.onvoiceschanged=populateBrowserVoices; }
+detectSovereign();
+</script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACMI · The Object Wall · AUXIO concept</title>
+<meta name="description" content="A concept AUXIO for ACMI's object wall — talk to the whole wall in your own words, and hear it answer. Powered by ARCHAI, sovereign local-first cultural-heritage AI. Concept demo, not official ACMI content.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0b0c;--surface:#151517;--surface2:#1c1c20;--border:#26262b;--border2:#37373e;
+  --text:#efeae0;--text2:#a7a29a;--text3:#6c6a66;
+  --accent:#f2c14e;--accent2:#7fb6c9;
+  --mono:'DM Mono',monospace;--serif:'Cormorant Garamond',Georgia,serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--serif);font-weight:300;min-height:100vh;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px}
+img{max-width:100%;display:block}
+/* header */
+.hdr{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:20px 22px;max-width:760px;margin:0 auto;flex-wrap:wrap}
+.logo-chip{background:#fff;border-radius:4px;padding:8px 10px;display:flex;align-items:center;height:40px}
+.logo-chip img{height:24px;width:auto}
+.hdr-tag{font-family:var(--mono);font-size:.5rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text3)}
+/* hero */
+.hero{padding:26px 22px 6px;max-width:760px;margin:0 auto}
+.eyebrow{font-family:var(--mono);font-size:.54rem;letter-spacing:.28em;text-transform:uppercase;color:var(--accent2)}
+.title{font-size:clamp(2.6rem,9vw,4rem);font-weight:500;line-height:.98;margin:12px 0 4px}
+.subtitle{font-style:italic;color:var(--accent);font-size:clamp(1.1rem,3.4vw,1.5rem);line-height:1.15}
+.concept{display:inline-block;margin-top:16px;font-family:var(--mono);font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);border:1px solid var(--border2);border-radius:2px;padding:6px 9px}
+.story{font-size:1.16rem;line-height:1.62;color:var(--text2);margin-top:20px}
+.story b{color:var(--text);font-weight:400}
+.divider{height:1px;background:var(--border);margin:24px auto;max-width:760px}
+/* ask */
+.ask-label{font-family:var(--mono);font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent2);margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.chip{font-family:var(--serif);font-style:italic;font-size:1rem;padding:7px 12px;border:1px solid var(--border2);color:var(--text2);border-radius:2px;background:transparent;cursor:pointer;transition:all .15s}
+.chip:hover{border-color:var(--accent);color:var(--text)}
+.chat-row{display:flex;gap:8px;align-items:stretch}
+.chat-in{flex:1;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-family:var(--serif);font-size:1.05rem;padding:12px 14px;border-radius:3px;outline:none}
+.chat-in:focus{border-color:var(--accent)}
+.mic{width:48px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border2);color:var(--text2);border-radius:3px;cursor:pointer;transition:all .15s}
+.mic:hover:not(:disabled){color:var(--text);border-color:var(--accent2)}
+.mic:disabled{opacity:.45;cursor:default}
+.mic.listening{color:#141414;background:var(--accent2);border-color:var(--accent2);animation:pulse 1.3s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(127,182,201,.5)}70%{box-shadow:0 0 0 8px rgba(127,182,201,0)}100%{box-shadow:0 0 0 0 rgba(127,182,201,0)}}
+.send{background:var(--accent);color:#181206;border:none;font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;padding:0 17px;border-radius:3px;cursor:pointer}
+.resp{margin-top:16px;font-size:1.1rem;line-height:1.62;color:var(--text)}
+.resp:empty{display:none}
+.resp .who{display:block;font-family:var(--mono);font-size:.5rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.resp .ground{display:block;font-family:var(--mono);font-size:.46rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-top:12px}
+.readbtn{margin-top:12px;font-family:var(--mono);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;background:transparent;border:1px solid var(--border2);color:var(--text2);border-radius:3px;padding:8px 12px;cursor:pointer}
+.readbtn.on{color:#141414;background:var(--accent2);border-color:var(--accent2)}
+.think{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent2)}
+.think b{animation:bl 1.3s infinite both}.think b:nth-child(2){animation-delay:.2s}.think b:nth-child(3){animation-delay:.4s}
+@keyframes bl{0%,80%,100%{opacity:.25}40%{opacity:1}}
+/* panels */
+details.panel{border:1px solid var(--border);border-radius:4px;margin:16px 0 0;background:var(--surface)}
+details.panel summary{list-style:none;cursor:pointer;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
+details.panel summary::-webkit-details-marker{display:none}
+.panel-t{font-family:var(--mono);font-size:.54rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text2)}
+.panel-h{font-family:var(--mono);font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)}
+.panel-b{padding:2px 14px 16px}
+.row{display:flex;gap:10px;align-items:center;margin:8px 0;flex-wrap:wrap}
+.row label{font-family:var(--mono);font-size:.54rem;letter-spacing:.06em;color:var(--text2);min-width:120px}
+.vsel{flex:1;min-width:180px;background:var(--bg);border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:.6rem;padding:9px 10px;border-radius:3px;outline:none}
+.note{font-family:var(--mono);font-size:.5rem;letter-spacing:.04em;color:var(--text3);line-height:1.8;margin-top:8px}
+.meta-row{display:flex;gap:12px;padding:5px 0;border-bottom:1px solid var(--border)}
+.meta-k{font-family:var(--mono);font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);min-width:110px}
+.meta-v{font-size:1rem;color:var(--text2)}
+footer{max-width:760px;margin:44px auto 0;padding:22px 22px 44px;border-top:1px solid var(--border);font-family:var(--mono);font-size:.5rem;letter-spacing:.08em;color:var(--text3);text-transform:uppercase;line-height:2}
+footer b{color:var(--text2);font-weight:400}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo-chip"><img src="acmi-logo.jpg" alt="ACMI" onerror="this.parentNode.innerHTML='<span style=&quot;font-family:var(--mono);font-weight:500;letter-spacing:.1em;color:#111&quot;>ACMI</span>'"></div>
+  <span class="hdr-tag">AUXIO · concept</span>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">ACMI · The Story of the Moving Image</div>
+  <h1 class="title">The Object Wall</h1>
+  <div class="subtitle">One wall. A century of moving images. Ask it anything.</div>
+  <div class="concept">Concept demo · not official ACMI content</div>
+  <p class="story">From floor to ceiling, <b>the object wall</b> gathers the machines and ephemera of the moving image — magic lanterns and hand-cranked cameras, projectors and televisions, game consoles, props and the small strange things that screens leave behind. Rather than a label on each case, <b>one AUXIO speaks for the whole wall</b>. Ask it a question in your own words, out loud or typed, and it answers in a voice you choose, grounded only in ACMI's records.</p>
+</section>
+
+<div class="divider"></div>
+
+<section class="wrap">
+  <div class="ask-label">Ask the object wall — one voice for the whole wall</div>
+  <div class="chips" id="chips"></div>
+  <div class="chat-row">
+    <input class="chat-in" id="chatIn" type="text" maxlength="480" placeholder="Ask the wall anything…" enterkeyhint="send">
+    <button class="mic" id="micBtn" type="button" onclick="toggleVoice()" aria-label="Ask by voice" title="Ask by voice">
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2.5" width="6" height="11" rx="3"></rect><path d="M5.5 11a6.5 6.5 0 0 0 13 0"></path><line x1="12" y1="17.5" x2="12" y2="21"></line><line x1="8.5" y1="21" x2="15.5" y2="21"></line></svg>
+    </button>
+    <button class="send" onclick="askFree()">Ask</button>
+  </div>
+  <div class="resp" id="resp"></div>
+
+  <details class="panel" id="audioPanel" open>
+    <summary><span class="panel-t">Voice &amp; audio</span><span class="panel-h">choose a voice</span></summary>
+    <div class="panel-b">
+      <div class="row"><label for="voiceSel">Voice</label><select id="voiceSel" class="vsel"></select></div>
+      <div class="row"><label><input type="checkbox" id="autoRead" checked> Read answers aloud</label></div>
+      <div class="note" id="voiceNote">Using your device's built-in speech for this concept. The production path is fully on-device and open source: <b>Whisper</b> for listening, <b>Piper / Coqui</b> for the voice, so no audio ever leaves the building. Voices can be swapped per object, per gallery, or cloned from your own visitor-services actors.</div>
+    </div>
+  </details>
+
+  <details class="panel">
+    <summary><span class="panel-t">Object record</span><span class="panel-h">grounding</span></summary>
+    <div class="panel-b">
+      <div class="meta-row"><span class="meta-k">Display</span><span class="meta-v">The object wall, The Story of the Moving Image</span></div>
+      <div class="meta-row"><span class="meta-k">Institution</span><span class="meta-v">ACMI · Australian Centre for the Moving Image</span></div>
+      <div class="meta-row"><span class="meta-k">Location</span><span class="meta-v">Fed Square, Naarm / Melbourne</span></div>
+      <div class="meta-row"><span class="meta-k">Holds</span><span class="meta-v">Cameras, projectors, screens, consoles, props &amp; screen ephemera</span></div>
+      <div class="meta-row"><span class="meta-k">Voice</span><span class="meta-v">One AUXIO for the whole wall, grounded in the record</span></div>
+    </div>
+  </details>
+</section>
+
+<footer>
+  <b>Runs on ARCHAI</b> — sovereign, local-first cultural-heritage AI · grounded in the record, no invention<br>
+  Concept demonstration for discussion with ACMI · not official ACMI content · fineartmedia.tech/archai
+</footer>
+
+<script>
+const CHAT='https://archai-api.fineartmedia.tech/api/proxy/chat';
+const $=id=>document.getElementById(id);
+const inputEl=$('chatIn'), respEl=$('resp'), micBtn=$('micBtn'), voiceSel=$('voiceSel'), autoReadEl=$('autoRead');
+let lastReply='', history=[];
+
+// grounding — the wall speaks for itself, only from the record
+function sysPrompt(){
+  return `You are "The Object Wall" at ACMI (the Australian Centre for the Moving Image) in Naarm/Melbourne, part of the free permanent exhibition "The Story of the Moving Image". You speak in the first person, as the wall itself — a floor-to-ceiling display of moving-image objects across history: magic lanterns, hand-cranked and early cameras, film projectors, televisions, video and game consoles, screen props and everyday ephemera of cinema and television.
+Speak warmly and plainly, like a good gallery host, three to four sentences, no jargon. You may describe the kinds of objects on the wall and the story of the moving image in general terms. Do NOT invent specific provenance, dates, accession numbers or claims about individual named objects you cannot be sure of; if asked for a specific detail you don't hold, say so honestly and invite the visitor to look closer or ask a guide. If the visitor writes in another language, reply fully in that language. This is a concept demo, so if pressed on exact holdings, gently note that the live version would be grounded in ACMI's own catalogue.`;
+}
+function showThinking(){respEl.innerHTML='<span class="think">Listening to the wall<b>.</b><b>.</b><b>.</b></span>';}
+function showAnswer(t,live){
+  lastReply=t;
+  respEl.innerHTML='<span class="who">The Object Wall · ACMI</span>'+esc(t).replace(/\n/g,'<br>')
+    +'<div><button class="readbtn" id="readBtn" onclick="toggleRead()">Read aloud</button></div>'
+    +'<span class="ground">'+(live?'✓ Grounded in the record':'Offline · a curated answer')+'</span>';
+  if(autoReadEl.checked||window._speakNext){ speak(t); window._speakNext=false; }
+}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+async function ask(q){
+  q=(q||'').trim(); if(!q) return;
+  stopSpeak(); showThinking(); history.push({role:'user',content:q});
+  try{
+    const ctrl=new AbortController(); const t=setTimeout(()=>ctrl.abort(),30000);
+    const r=await fetch(CHAT,{method:'POST',headers:{'Content-Type':'application/json'},signal:ctrl.signal,
+      body:JSON.stringify({systemPrompt:sysPrompt(),userPrompt:q.slice(0,480),history:history.slice(0,-1).slice(-8)})});
+    clearTimeout(t); const d=await r.json();
+    const reply=d&&d.message&&d.message.content&&d.message.content.trim();
+    if(reply){history.push({role:'assistant',content:reply});showAnswer(reply,true);return;}
+    throw new Error('empty');
+  }catch(e){
+    showAnswer("I'm the wall of moving-image objects at ACMI — cameras, projectors, screens and the odd surprise, a century of how pictures learned to move. My live voice is resting right now, but stand close and look: every object here is a small machine for making or holding an image.",false);
+  }
+}
+function askFree(){const v=inputEl.value.trim();if(!v)return;inputEl.value='';[...$('chips').children].forEach(c=>c.classList.remove('active'));ask(v);}
+inputEl.addEventListener('keydown',e=>{if(e.key==='Enter')askFree();});
+const QS=['What are you?','Tell me a story from the wall','Where does the moving image begin?','What is the strangest object here?'];
+$('chips').innerHTML=QS.map(q=>`<button class="chip" onclick="ask('${q.replace(/'/g,"\\'")}')">${q}</button>`).join('');
+
+// ── audio: choose a voice (on-device now; Whisper+Piper/Coqui in production) ──
+const canSpeak=typeof window.speechSynthesis!=='undefined';
+function loadVoices(){
+  if(!canSpeak) return;
+  const all=speechSynthesis.getVoices().filter(v=>/^en(-|_|$)/i.test(v.lang));
+  if(!all.length) return;
+  voiceSel.innerHTML=all.map((v,i)=>`<option value="${i}">${v.name} · ${v.lang}</option>`).join('');
+  const au=all.findIndex(v=>/en-AU/i.test(v.lang)); if(au>=0) voiceSel.value=String(au);
+  window._voices=all;
+}
+function currentVoice(){return (window._voices||[])[voiceSel.value|0]||null;}
+function speak(text){
+  if(!canSpeak) return; speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text); const v=currentVoice(); if(v){u.voice=v;u.lang=v.lang;}
+  u.rate=0.98;u.pitch=1;
+  const b=$('readBtn'); u.onstart=()=>{if(b){b.classList.add('on');b.textContent='Stop';}};
+  u.onend=()=>{if(b){b.classList.remove('on');b.textContent='Read aloud';}};
+  speechSynthesis.speak(u);
+}
+function stopSpeak(){if(canSpeak)speechSynthesis.cancel();const b=$('readBtn');if(b){b.classList.remove('on');b.textContent='Read aloud';}}
+function toggleRead(){if(canSpeak&&speechSynthesis.speaking)stopSpeak();else speak(lastReply);}
+if(canSpeak){loadVoices();speechSynthesis.onvoiceschanged=loadVoices;} else {$('audioPanel').style.display='none';}
+
+// ── ask by voice (Whisper is the production path; this uses the browser engine) ──
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let rec=null,listening=false,draft='',submitted=false;
+if(!SR){ micBtn.disabled=true; micBtn.title='Voice questions work in Chrome, Edge or Safari'; }
+function setListening(on){ listening=on; micBtn.classList.toggle('listening',on);
+  if(on){micBtn.dataset.ph=inputEl.placeholder;inputEl.placeholder='Listening…';}
+  else if(micBtn.dataset.ph!==undefined){inputEl.placeholder=micBtn.dataset.ph;} }
+function ensureRec(){ if(rec)return rec; if(!SR)return null;
+  const r=new SR(); r.lang='en-AU'; r.interimResults=true; r.maxAlternatives=1; r.continuous=false;
+  r.onstart=()=>{submitted=false;draft='';setListening(true);};
+  r.onresult=e=>{const t=Array.from(e.results||[]).map(x=>(x[0]&&x[0].transcript)||'').join(' ').trim();
+    if(!t)return; draft=t; inputEl.value=t;
+    if(Array.from(e.results||[]).some(x=>x.isFinal)&&!submitted){submitted=true;submitVoice(t);}};
+  r.onerror=()=>setListening(false);
+  r.onend=()=>{setListening(false); if(draft&&!submitted){submitted=true;submitVoice(draft);}};
+  rec=r; return r; }
+function submitVoice(t){inputEl.value='';window._speakNext=true;ask(t);}
+function toggleVoice(){ if(listening){if(rec)rec.stop();return;}
+  const r=ensureRec(); if(!r)return; try{if(canSpeak)speechSynthesis.cancel();r.start();}catch(e){} }
+</script>
+</body>
+</html>
