@@ -1,0 +1,17 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "9F72SM2FBF.au.com.famtec.auxio"
+        ],
+        "components": [
+          {
+            "/": "/aux/*",
+            "comment": "Open published AUXIO object pages in the AUXIO iOS app."
+          }
+        ]
+      }
+    ]
+  }
+}

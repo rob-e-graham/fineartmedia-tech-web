@@ -128,6 +128,23 @@ body.public-demo [data-staff-only]{display:none!important;}
 .show-object-body{padding:9px 10px;}
 .show-object-title{font-family:var(--serif);font-size:0.84rem;line-height:1.22;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .show-object-meta{font-family:var(--mono);font-size:0.48rem;color:var(--text3);line-height:1.55;text-transform:uppercase;letter-spacing:0.8px;margin-top:5px;}
+.show-object-actions{display:flex;justify-content:flex-end;gap:6px;margin:8px 0 -1px;}
+.show-remove{border:1px solid rgba(192,95,78,0.36);background:transparent;color:rgba(225,130,112,0.9);font-family:var(--mono);font-size:0.48rem;letter-spacing:1px;text-transform:uppercase;padding:6px 8px;cursor:pointer;border-radius:2px;}
+.show-remove:hover,.show-remove:focus{border-color:rgba(225,130,112,0.8);color:#efaa9b;outline:none;}
+.show-selector{border:1px solid var(--border);background:var(--surface);padding:14px;margin:0 0 18px;}
+.show-selector-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:12px;}
+.show-selector-title{font-family:var(--serif);font-size:1.15rem;line-height:1.2;color:var(--text);}
+.show-selector-note{font-family:var(--mono);font-size:0.5rem;line-height:1.65;color:var(--text3);max-width:680px;margin-top:4px;}
+.show-selector-form{display:grid;grid-template-columns:minmax(180px,1fr) minmax(170px,240px) minmax(150px,220px) auto;gap:8px;}
+.show-selector-results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px;}
+.show-candidate{display:grid;grid-template-columns:72px minmax(0,1fr);gap:10px;border:1px solid var(--border);padding:8px;background:var(--bg);min-width:0;}
+.show-candidate-thumb{width:72px;aspect-ratio:1;background:var(--surface2);overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.show-candidate-thumb img{width:100%;height:100%;object-fit:contain;display:block;}
+.show-candidate-title{font-family:var(--serif);font-size:0.78rem;line-height:1.25;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.show-candidate-meta{font-family:var(--mono);font-size:0.45rem;line-height:1.5;color:var(--text3);text-transform:uppercase;letter-spacing:0.6px;margin:4px 0 7px;}
+.show-candidate .btn{font-size:0.48rem;padding:5px 8px;}
+.show-candidate .btn:disabled{opacity:.38;cursor:not-allowed;}
+.show-selector-status{font-family:var(--mono);font-size:0.5rem;line-height:1.6;color:var(--text3);margin-top:9px;min-height:1.6em;}
 .show-audit-card{border:1px solid var(--border);background:var(--surface);padding:13px 14px;margin-bottom:10px;}
 .show-audit-stat{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--border);padding:7px 0;font-family:var(--mono);font-size:0.56rem;color:var(--text3);}
 .show-audit-stat:last-child{border-bottom:none;}
@@ -137,8 +154,8 @@ body.public-demo [data-staff-only]{display:none!important;}
 .show-source-row b{color:var(--text2);font-weight:400;}
 .show-source-row .ok{color:var(--ok);}
 .show-source-row .held{color:var(--warn);}
-@media(max-width:1100px){.shows-layout{grid-template-columns:1fr}.shows-main{border-right:none}.shows-side{max-height:none;border-top:1px solid var(--border)}.show-object-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.shows-hero{grid-template-columns:1fr}.shows-actions{justify-content:flex-start}}
-@media(max-width:680px){.shows-main{padding:22px 16px}.show-builder-grid,.show-room-head{grid-template-columns:1fr}.show-field.full{grid-column:auto}}
+@media(max-width:1100px){.shows-layout{grid-template-columns:1fr}.shows-main{border-right:none}.shows-side{max-height:none;border-top:1px solid var(--border)}.show-object-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.shows-hero{grid-template-columns:1fr}.shows-actions{justify-content:flex-start}.show-selector-results{grid-template-columns:repeat(2,minmax(0,1fr))}.show-selector-form{grid-template-columns:minmax(180px,1fr) minmax(150px,220px) auto}.show-selector-form select:nth-of-type(2){grid-column:1/3}}
+@media(max-width:680px){.shows-main{padding:22px 16px}.show-builder-grid,.show-room-head{grid-template-columns:1fr}.show-field.full{grid-column:auto}.show-selector-head{display:block}.show-selector-form,.show-selector-results{grid-template-columns:1fr}.show-selector-form select:nth-of-type(2){grid-column:auto}.show-candidate{grid-template-columns:64px minmax(0,1fr)}.show-candidate-thumb{width:64px}}
 
 /* SHARED */
 .section-label{font-family:var(--mono);font-size:0.56rem;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:9px;}
@@ -1155,6 +1172,24 @@ body.public-demo [data-staff-only]{display:none!important;}
         <div class="show-field"><label>Subtitle</label><input id="showSubtitleInput" class="show-input" value="Objects, bodies and machines from clockwork to AI"></div>
         <div class="show-field full"><label>Curatorial statement</label><textarea id="showStatementInput" class="show-textarea">Acts of Intelligence brings together 100 works from across connected cultural collections to trace a longer history of agency: objects that sense, signal, remember, calculate, move and appear to answer back.</textarea></div>
       </div>
+
+      <section class="show-selector" data-staff-only>
+        <div class="show-selector-head">
+          <div>
+            <div class="show-selector-title">Select works from the connected collection</div>
+            <div class="show-selector-note">Search the ARCHAI curator index, choose a room, then add an image-ready record. Duplicate objects are blocked. Clearly restricted media cannot be added; mixed or preview rights remain visibly flagged for review.</div>
+          </div>
+          <div id="showSelectionCount" class="section-label" style="margin:3px 0 0;white-space:nowrap;">0 works</div>
+        </div>
+        <div class="show-selector-form">
+          <input id="showObjectSearch" class="show-input" type="search" placeholder="Search objects, makers, materials or ideas" onkeydown="if(event.key==='Enter'){event.preventDefault();searchOnlineShowObjects();}">
+          <select id="showRoomSelect" class="show-input" aria-label="Exhibition room"></select>
+          <select id="showCollectionSelect" class="show-input" aria-label="Source collection"><option value="">All connected collections</option></select>
+          <button class="btn primary" type="button" onclick="searchOnlineShowObjects()">Search</button>
+        </div>
+        <div id="showSelectorStatus" class="show-selector-status">Search reaches the full image-ready curator index, not only the 100 works already in this example.</div>
+        <div id="showSelectorResults" class="show-selector-results"></div>
+      </section>
 
       <details class="soul-editor" open style="margin:6px 0 14px;border:1px solid var(--border);border-radius:4px;background:var(--surface);">
         <summary style="cursor:pointer;padding:12px 14px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
@@ -4254,6 +4289,20 @@ function odSaveCurrentObjectToProject() {
   odSetActionStatus(existing >= 0 ? 'Project item updated' : 'Saved to project');
 }
 
+function odOpenCurrentObjectInShowBuilder() {
+  const objectKey = window._odCurrentId;
+  const object = objectKey ? OBJECTS[objectKey] : null;
+  if (!object) return;
+  const tab = [...document.querySelectorAll('.tab')].find((item) => item.classList.contains('t-shows'));
+  switchTab('shows', tab);
+  setTimeout(() => {
+    const input = document.getElementById('showObjectSearch');
+    if (input) input.value = getDisplayTitle(object._mv || {}, object.title || '');
+    searchOnlineShowObjects(objectKey);
+    document.querySelector('.show-selector')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 120);
+}
+
 function odRemoveProjectObject(canonicalId) {
   const project = odReadProject();
   project.objects = project.objects.filter(item => item.canonical_id !== canonicalId);
@@ -4403,6 +4452,7 @@ function openObjectDetail(objKey) {
   linksEl.innerHTML += `<button class="btn primary" onclick="makeAuxioFromObject(window._odCurrentId)">✦ Make AUXIO</button>`;
   linksEl.innerHTML += `<button class="btn" onclick="odShareCurrentObject()">Share / Copy</button>`;
   linksEl.innerHTML += `<button class="btn" data-staff-only onclick="odSaveCurrentObjectToProject()">Save to Project</button>`;
+  linksEl.innerHTML += `<button class="btn" data-staff-only onclick="odOpenCurrentObjectInShowBuilder()">Add to Online Show</button>`;
   linksEl.innerHTML += `<button class="btn" onclick="odSpeakObjectSummary()">Read Summary</button>`;
   linksEl.innerHTML += `<a data-staff-only href="http://localhost:8055/admin" target="_blank" class="btn" style="font-size:0.55rem">Edit in Directus →</a>`;
   linksEl.innerHTML += `<span class="od-action-status" id="od-action-status"></span>`;
@@ -5503,9 +5553,183 @@ function escQ(s) {
 // ONLINE SHOWS — ARCHAIX example gallery/audit
 // ═══════════════════════════════════════════════════════════════════
 let ONLINE_SHOW_EXAMPLE = null;
+let ONLINE_SHOW_SEARCH_RESULTS = [];
 
 function showWorkImage(w) {
   return w.big || w.img || w.media_large || w.media_medium || w.media_thumbnail || '';
+}
+
+function showWorkCanonicalId(work = {}) {
+  return String(work.canonical_id || work.source_record_id || work.source_url || '').trim();
+}
+
+function showContainsWork(show, work) {
+  const canonicalId = showWorkCanonicalId(work);
+  return (show?.sections || []).some((section) => (section.works || []).some((existing) => {
+    const existingId = showWorkCanonicalId(existing);
+    if (canonicalId && existingId) return canonicalId === existingId;
+    return existing.title === work.title && existing.institution === work.institution;
+  }));
+}
+
+function showWorkFromObjectKey(objectKey) {
+  const object = OBJECTS[objectKey];
+  if (!object) return null;
+  const payload = object._mv || {};
+  const image = pickSearchImage(payload);
+  const rights = getObjectRightsInfo(payload);
+  const source = object._source || payload._source_collection || 'archai_pilot';
+  return {
+    canonical_id: payload.canonical_id || object.id || objectKey,
+    source_record_id: payload.source_record_id || payload.registration_number || object.dams || '',
+    title: getDisplayTitle(payload, object.title || 'Untitled object'),
+    artist: payload.artist || payload.maker || payload.creator || '',
+    institution: payload.source_institution || getCollectionLabel(source).name || object.location || '',
+    collection: source,
+    object_type: payload.object_type || object.type || payload.discipline || '',
+    date: payload.date_range || object.year || '',
+    medium: payload.medium || payload.materials || '',
+    description: payload.description || object.ai || '',
+    img: image,
+    big: image,
+    source_url: payload.source_url || '',
+    licence: payload.licence || payload.media_rights_title || '',
+    media_rights_basis: payload.media_rights_basis || payload.rights_notes || '',
+    curatorial_link: '',
+    _rights_status: rights.status,
+  };
+}
+
+function updateOnlineShowSelectionControls() {
+  const show = ONLINE_SHOW_EXAMPLE;
+  const roomSelect = document.getElementById('showRoomSelect');
+  const collectionSelect = document.getElementById('showCollectionSelect');
+  const countEl = document.getElementById('showSelectionCount');
+  if (!show) return;
+  const count = (show.sections || []).reduce((total, section) => total + (section.works || []).length, 0);
+  if (countEl) countEl.textContent = count + (count === 1 ? ' work' : ' works');
+  if (roomSelect) {
+    const current = roomSelect.value;
+    roomSelect.innerHTML = (show.sections || []).map((section, index) => `<option value="${index}">${String(index + 1).padStart(2, '0')} · ${escHTML(section.title || 'Room')}</option>`).join('');
+    if (current && [...roomSelect.options].some((option) => option.value === current)) roomSelect.value = current;
+  }
+  if (collectionSelect) {
+    const current = collectionSelect.value;
+    const collections = [...new Set(Object.values(OBJECTS).map((object) => object._source).filter(Boolean))]
+      .sort((a, b) => getCollectionLabel(a).name.localeCompare(getCollectionLabel(b).name));
+    collectionSelect.innerHTML = '<option value="">All connected collections</option>' + collections.map((collection) => `<option value="${escHTML(collection)}">${escHTML(getCollectionLabel(collection).name)}</option>`).join('');
+    if (current && collections.includes(current)) collectionSelect.value = current;
+  }
+}
+
+function renderOnlineShowSearchResults(results = ONLINE_SHOW_SEARCH_RESULTS) {
+  ONLINE_SHOW_SEARCH_RESULTS = results;
+  const container = document.getElementById('showSelectorResults');
+  if (!container) return;
+  if (!results.length) {
+    container.innerHTML = '';
+    return;
+  }
+  container.innerHTML = results.map((result) => {
+    const work = showWorkFromObjectKey(result.objectKey);
+    if (!work) return '';
+    const duplicate = showContainsWork(ONLINE_SHOW_EXAMPLE, work);
+    const restricted = work._rights_status === 'Restricted';
+    const blocked = duplicate || restricted;
+    return `<div class="show-candidate">
+      <div class="show-candidate-thumb">${work.img ? `<img src="${escHTML(work.img)}" alt="" loading="lazy" onerror="this.remove()">` : '<span style="font-family:var(--mono);font-size:0.46rem;color:var(--text3);">No image</span>'}</div>
+      <div>
+        <div class="show-candidate-title">${escHTML(work.title)}</div>
+        <div class="show-candidate-meta">${escHTML([work.institution, work.object_type, work.date, work._rights_status].filter(Boolean).join(' · '))}</div>
+        <button class="btn${blocked ? '' : ' primary'}" type="button" ${blocked ? 'disabled' : ''} onclick="addOnlineShowWork('${escQ(result.objectKey)}')">${duplicate ? 'Already in show' : restricted ? 'Media restricted' : 'Add to room'}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function searchOnlineShowObjects(preferredObjectKey) {
+  const input = document.getElementById('showObjectSearch');
+  const status = document.getElementById('showSelectorStatus');
+  const collection = document.getElementById('showCollectionSelect')?.value || '';
+  const query = (input?.value || '').trim();
+  if (preferredObjectKey && OBJECTS[preferredObjectKey]) {
+    renderOnlineShowSearchResults([{ objectKey: preferredObjectKey }]);
+    if (status) status.textContent = 'Current record ready to add. Choose a room before adding.';
+    return;
+  }
+  if (!query) {
+    if (status) status.textContent = 'Enter an object, maker, material, place or idea to search the curator index.';
+    renderOnlineShowSearchResults([]);
+    return;
+  }
+  if (status) status.textContent = `Searching the connected curator index for “${query}”…`;
+  try {
+    const semantic = await proxyCuratorSearch(query, 18, collection);
+    const results = [];
+    const seen = new Set();
+    for (const result of semantic) {
+      const payload = result.payload || {};
+      const image = pickSearchImage(payload);
+      if (!image) continue;
+      const objectKey = ensureSearchObject(payload);
+      const work = showWorkFromObjectKey(objectKey);
+      const canonicalId = showWorkCanonicalId(work || {});
+      if (!work || (canonicalId && seen.has(canonicalId))) continue;
+      if (canonicalId) seen.add(canonicalId);
+      results.push({ objectKey, score: result.score || 0 });
+    }
+    renderOnlineShowSearchResults(results);
+    if (status) status.textContent = results.length
+      ? `${results.length} image-ready records found. Rights status remains visible before selection.`
+      : 'No image-ready records found. Try a broader term or another collection.';
+  } catch (error) {
+    const terms = normalizeSearchText(query).split(' ').filter(Boolean);
+    const fallback = Object.entries(OBJECTS).filter(([objectKey, object]) => {
+      if (collection && object._source !== collection) return false;
+      if (!hasUsableObjectImage(object._mv || {})) return false;
+      const haystack = normalizeSearchText([object.title, object.type, object.year, object.ai, object._mv?.artist, object._mv?.maker, object._mv?.medium, object._mv?.description].filter(Boolean).join(' '));
+      return terms.every((term) => haystack.includes(term));
+    }).slice(0, 18).map(([objectKey]) => ({ objectKey, score: 0 }));
+    renderOnlineShowSearchResults(fallback);
+    if (status) status.textContent = `${fallback.length} local text matches found. Semantic search was unavailable.`;
+  }
+}
+
+function addOnlineShowWork(objectKey) {
+  const show = collectShowEdits();
+  const work = showWorkFromObjectKey(objectKey);
+  const roomIndex = Number(document.getElementById('showRoomSelect')?.value || 0);
+  const status = document.getElementById('showSelectorStatus');
+  if (!show || !work || !show.sections?.[roomIndex]) return;
+  if (showContainsWork(show, work)) {
+    if (status) status.textContent = 'That object is already in this show.';
+    return;
+  }
+  if (work._rights_status === 'Restricted') {
+    if (status) status.textContent = 'This image is marked restricted and cannot be added to the public show.';
+    return;
+  }
+  delete work._rights_status;
+  show.sections[roomIndex].works = show.sections[roomIndex].works || [];
+  show.sections[roomIndex].works.push(work);
+  show.count = show.sections.reduce((total, section) => total + (section.works || []).length, 0);
+  renderOnlineShowExample();
+  renderOnlineShowSearchResults();
+  if (status) status.textContent = `Added “${work.title}” to ${show.sections[roomIndex].title}. Export the show JSON when the selection is ready.`;
+}
+
+function removeOnlineShowWork(roomIndex, workIndex) {
+  const show = collectShowEdits();
+  const room = show?.sections?.[roomIndex];
+  const work = room?.works?.[workIndex];
+  if (!show || !room || !work) return;
+  if (!confirm(`Remove “${work.title || 'this work'}” from ${room.title || 'the show'}?`)) return;
+  room.works.splice(workIndex, 1);
+  show.count = show.sections.reduce((total, section) => total + (section.works || []).length, 0);
+  renderOnlineShowExample();
+  renderOnlineShowSearchResults();
+  const status = document.getElementById('showSelectorStatus');
+  if (status) status.textContent = `Removed “${work.title || 'Untitled object'}” from the working show.`;
 }
 
 async function loadOnlineShowExample(force) {
@@ -5545,6 +5769,7 @@ function renderOnlineShowExample() {
   if (statement) statement.value = String(show.statement || '');
   const soulEl = document.getElementById('soulInput');
   if (soulEl) soulEl.value = show.soul || defaultSoulMd(show);
+  updateOnlineShowSelectionControls();
 
   const toolbar = `<div class="show-editor-bar" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:6px 0 18px;padding:12px 14px;border:1px solid var(--border);border-radius:4px;background:var(--surface);">
     <span style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent2);">Curator edit mode</span>
@@ -5570,12 +5795,14 @@ function renderOnlineShowExample() {
             <div class="show-object-title">${escHTML(w.title || 'Untitled')}</div>
             <div class="show-object-meta">${escHTML(w.institution || '')}${w.object_type ? ' · ' + escHTML(w.object_type) : ''}</div>
             <textarea data-blurb="${idx}:${j}" placeholder="How this work connects to the exhibition (shown in AUXIO)…" style="width:100%;margin-top:8px;min-height:66px;background:var(--bg);border:1px solid var(--border);color:var(--text2);font-family:var(--serif);font-size:0.84rem;line-height:1.5;padding:8px 10px;border-radius:3px;resize:vertical;outline:none;">${escHTML(w.curatorial_link || '')}</textarea>
+            <div class="show-object-actions" data-staff-only><button class="show-remove" type="button" onclick="removeOnlineShowWork(${idx},${j})">Remove</button></div>
           </div>
         </div>`).join('')}</div>
     </section>`;
   }).join('');
 
   renderOnlineShowAudit(show);
+  updateOnlineShowSelectionControls();
 }
 
 // ── Online-show curator editing: read the editable fields back into the show, export/publish ──
