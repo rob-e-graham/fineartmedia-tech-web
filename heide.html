@@ -947,6 +947,15 @@ const PIPER_VOICE_LABELS={
   alan:'Alan · measured historian',
   northern:'Ted · characterful projectionist'
 };
+const PIPER_PREVIEW_FILES={
+  alba:'assets/voice-previews/ada-gallery-guide.wav',
+  cori:'assets/voice-previews/cate-curator.wav',
+  amy:'assets/voice-previews/amy-education.wav',
+  lessac:'assets/voice-previews/nora-archivist.wav',
+  ryan:'assets/voice-previews/ryan-narrator.wav',
+  alan:'assets/voice-previews/alan-historian.wav',
+  northern:'assets/voice-previews/ted-projectionist.wav'
+};
 const PIPER_PREVIEW='Welcome to Heide I. I am one of the local voices that can bring this place and its record into conversation.';
 const BROWSER_VOICE_EXCLUDE=/Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Good News|Jester|Junior|Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox/i;
 const canSpeak = typeof window.speechSynthesis !== 'undefined';
@@ -958,6 +967,7 @@ const voiceEngineStatus=document.getElementById('voiceEngineStatus');
 const voicePreviewBtn=document.getElementById('voicePreview');
 const voicePreviewLabel=document.getElementById('voicePreviewLabel');
 let localVoiceReady=false,localVoiceNames=[],voiceAudio=null;
+const previewOnly=new URLSearchParams(window.location.search).has('previewVoice');
 const LANG_NAMES={en:'English',zh:'Chinese',fr:'French',de:'German',es:'Spanish',it:'Italian',ja:'Japanese',ko:'Korean',ar:'Arabic',hi:'Hindi',pt:'Portuguese',ru:'Russian',nl:'Dutch',vi:'Vietnamese',th:'Thai',id:'Indonesian',el:'Greek',tr:'Turkish',pl:'Polish',sv:'Swedish',he:'Hebrew',fi:'Finnish',da:'Danish',nb:'Norwegian',no:'Norwegian',cs:'Czech',ro:'Romanian',hu:'Hungarian',uk:'Ukrainian',ms:'Malay',fa:'Persian',ta:'Tamil',bn:'Bengali',sk:'Slovak',hr:'Croatian',ca:'Catalan'};
 let _dn=null; try{ _dn=new Intl.DisplayNames(['en'],{type:'language'}); }catch(e){}
 function langName(code){ code=(code||'').toLowerCase(); let n=null; if(_dn){ try{n=_dn.of(code);}catch(e){} } return (n&&n.toLowerCase()!==code)?n:(LANG_NAMES[code]||code.toUpperCase()); }
@@ -995,11 +1005,17 @@ function loadPiperVoices(){
   voiceSelectEl.innerHTML='<optgroup label="Local Piper voices">'+localVoiceNames.map(id=>`<option value="piper:${escapeHTML(id)}">${escapeHTML(PIPER_VOICE_LABELS[id]||id)}</option>`).join('')+'</optgroup>';
   return true;
 }
+function loadPiperPreviewVoices(){
+  const ids=Object.keys(PIPER_PREVIEW_FILES);
+  voiceSelectEl.innerHTML='<optgroup label="Piper voice previews">'+ids.map(id=>`<option value="preview:${escapeHTML(id)}">${escapeHTML(PIPER_VOICE_LABELS[id]||id)}</option>`).join('')+'</optgroup>';
+  return true;
+}
 function currentBrowserVoice(){
   const value=voiceSelectEl.value||'';
   return value.startsWith('browser:')?allVoices()[Number(value.slice(8))]||null:null;
 }
 function selectedPiperVoice(){ const value=voiceSelectEl.value||''; return value.startsWith('piper:')?value.slice(6):null; }
+function selectedPreviewVoice(){ const value=voiceSelectEl.value||''; return value.startsWith('preview:')?value.slice(8):null; }
 const langSelectEl=document.getElementById('langSelect');
 const LANGS=[
   {code:'auto',label:'Auto · match my question',short:'AUTO'},
@@ -1032,6 +1048,7 @@ function updateAudioStatus(){
 }
 function pickVoiceForLang(code){
   if(localVoiceReady&&(code==='auto'||code==='en')) loadPiperVoices();
+  else if((code==='auto'||code==='en')) loadPiperPreviewVoices();
   else loadBrowserVoices(code);
 }
 async function onLangChange(){
@@ -1107,6 +1124,14 @@ function stopSpeak(){
 function toggleRead(){ if((voiceAudio&&!voiceAudio.paused)||(canSpeak&&window.speechSynthesis.speaking))stopSpeak(); else speak(lastReply); }
 function previewVoice(){
   if(voicePreviewBtn?.dataset.playing==='true'){stopSpeak();return;}
+  const previewId=selectedPreviewVoice();
+  if(previewId&&PIPER_PREVIEW_FILES[previewId]){
+    stopSpeak();setPreviewPlaying(true);voiceAudio=new Audio(PIPER_PREVIEW_FILES[previewId]);
+    voiceAudio.onended=()=>{voiceAudio=null;setPreviewPlaying(false);};
+    voiceAudio.onerror=()=>{voiceAudio=null;setPreviewPlaying(false);speak(PIPER_PREVIEW);};
+    voiceAudio.play().catch(()=>{voiceAudio=null;setPreviewPlaying(false);speak(PIPER_PREVIEW);});
+    return;
+  }
   const sample=uiLang==='en'?PIPER_PREVIEW:(voiceCopy(current).intro||PIPER_PREVIEW).replace(/<[^>]+>/g,' ').slice(0,240);
   speak(sample);
 }
@@ -1115,9 +1140,10 @@ function setVoiceEngineState(ready){
   voiceEngineDot.classList.toggle('ready',ready);
   voiceEngineStatus.innerHTML=ready
     ? '<b>Private voice ready on this Mac.</b> Whisper listens and Piper speaks locally. Audio stays on this machine; the transcript is sent to the ARCHAI research server for the demo reply.'
-    : '<b>Device voice active.</b> This shared demo uses speech features available in the visitor\'s browser. A museum installation can run Whisper and Piper entirely on institution-controlled hardware.';
+    : '<b>Piper voice previews available.</b> Choose and audition the local voice cast. Full replies use the visitor\'s device voice here; a museum installation can generate every reply with Whisper and Piper on institution-controlled hardware.';
 }
 async function detectVoiceEngine(){
+  if(previewOnly){localVoiceNames=[];setVoiceEngineState(false);pickVoiceForLang(langSelectEl?.value||'en');return;}
   try{
     const r=await fetch(VOICE_SERVER+'/health',{cache:'no-store',signal:AbortSignal.timeout(1800)}); const data=await r.json();
     if(!r.ok||!data.ok)throw new Error('offline');
@@ -1132,7 +1158,7 @@ try{
   if(savedLang&&LANGS.some(l=>l.code===savedLang)&&langSelectEl) langSelectEl.value=savedLang;
 }catch(e){}
 voiceSelectEl.addEventListener('change',onVoiceChange);
-if(canSpeak)window.speechSynthesis.onvoiceschanged=()=>{if(!localVoiceReady)loadBrowserVoices(langSelectEl?.value||'en');};
+if(canSpeak)window.speechSynthesis.onvoiceschanged=()=>{if(!localVoiceReady)pickVoiceForLang(langSelectEl?.value||'en');};
 detectVoiceEngine();
 
 // ── VOICE INPUT (Web Speech API — ask AUXIO by voice, like standard AUXIO) ──
