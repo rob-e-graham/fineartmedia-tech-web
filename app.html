@@ -1590,7 +1590,7 @@ function populateCollectionFilter(counts) {
 }
 
 async function proxyCuratorSearch(query, limit = 20, collection = '') {
-  const body = { query, limit };
+  const body = { query, limit, imageReady: true, diversify: !collection };
   if (collection) body.collection = collection;
   const r = await fetch(`${BACKEND_BASE}/api/proxy/curator/search`, {
     method: 'POST',
@@ -3102,6 +3102,15 @@ function renderSemanticResults(query, results, labelText) {
       ? summaryBase.slice(0, 150) + (summaryBase.length > 150 ? '…' : '')
       : (cues.length ? 'Matched themes: ' + cues.join(' · ') : 'Metadata-ready result from the live collection.');
     const matchLine = cues.length ? 'Matched on: ' + cues.join(' · ') : '';
+    const relationshipLabels = {
+      direct: 'Explicit AI metadata',
+      related: 'Computational / robotic history',
+      contextual: 'Contextual curatorial lead',
+      semantic: 'Semantic match'
+    };
+    const relationship = result.match?.relationship || '';
+    const evidence = result.match?.evidence || [];
+    const evidenceLine = evidence.length ? 'Metadata evidence: ' + evidence.join(' · ') : matchLine;
     const matchScore = result.score ? Math.round(result.score * 100) + '%' : '—';
 
     return `<div class="result-card" onclick="openObj('${objectKey}')">
@@ -3114,10 +3123,11 @@ function renderSemanticResults(query, results, labelText) {
         <div class="r-title">${escHTML(getDisplayTitle(payload))}</div>
         <div class="r-meta">${escHTML(metaParts.join(' · '))}</div>
         <div class="r-summary">${escHTML(summary)}</div>
-        ${matchLine ? `<div class="r-summary" style="margin-top:6px;font-style:normal;color:var(--text3)">Matched on: ${escHTML(cues.join(' · '))}</div>` : ''}
+        ${evidenceLine ? `<div class="r-summary" style="margin-top:6px;font-style:normal;color:var(--text3)">${escHTML(evidenceLine)}</div>` : ''}
         <div class="tag-row">
           <span class="tag" style="border-color:${collection.border};color:${collection.colour}">${collection.short}</span>
           <span class="tag" style="border-color:${rights.color};color:${rights.color}">${rights.status}</span>
+          ${relationship ? `<span class="tag">${escHTML(relationshipLabels[relationship] || relationship)}</span>` : ''}
           ${payload.discipline ? '<span class="tag">' + escHTML(payload.discipline) + '</span>' : ''}
         </div>
       </div>
@@ -4081,6 +4091,13 @@ function renderConvoResults(objects) {
   container.innerHTML = imageReadyObjects.map(obj => {
     const label = COLLECTION_LABELS[obj.collection] || COLLECTION_LABELS.archai_pilot;
     const rights = getObjectRightsInfo(obj);
+    const relationshipLabels = {
+      direct: 'Explicit AI metadata',
+      related: 'Computational / robotic history',
+      contextual: 'Contextual curatorial lead',
+      semantic: 'Semantic match'
+    };
+    const relationship = obj.match?.relationship || '';
     const objKey = ensureConvoObject(obj);
     const objImage = pickSearchImage(OBJECTS[objKey]._mv || {});
     const thumbInner = objImage
@@ -4095,6 +4112,7 @@ function renderConvoResults(objects) {
         <div class="tag-row">
           <span class="tag" style="border-color:${label.border};color:${label.colour}">${label.short}</span>
           ${rights.detail !== 'Source rights not yet specified' ? `<span class="tag" style="border-color:${rights.color};color:${rights.color}">${rights.status}</span>` : ''}
+          ${relationship ? `<span class="tag">${escHTML(relationshipLabels[relationship] || relationship)}</span>` : ''}
         </div>
       </div>
       <div>
