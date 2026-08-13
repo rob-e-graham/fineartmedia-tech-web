@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Local Whisper + Piper bridge for the ARCHAI/AUXIO voice demonstration."""
+"""Local speech bridge for the ARCHAI/AUXIO voice demonstration."""
 
 import http.server
+import importlib.util
 import json
 import os
 import pathlib
@@ -9,13 +10,17 @@ import subprocess
 import tempfile
 import threading
 import time
+import wave
 from collections import defaultdict, deque
 from socketserver import ThreadingTCPServer
 
 
 VOICE_DIR = pathlib.Path(os.environ.get("ARCHAI_VOICE_DIR", "/private/tmp/voice"))
 WHISPER = os.environ.get("ARCHAI_WHISPER_CLI", "/opt/homebrew/bin/whisper-cli")
-WHISPER_MODEL = VOICE_DIR / "ggml-base.en.bin"
+PIPER_PYTHON = os.environ.get("ARCHAI_PIPER_PYTHON", "/usr/bin/python3")
+WHISPER_MODEL = pathlib.Path(
+    os.environ.get("ARCHAI_WHISPER_MODEL", str(VOICE_DIR / "ggml-base.bin"))
+)
 PORT = int(os.environ.get("ARCHAI_VOICE_PORT", "8123"))
 MAX_STT_BYTES = int(os.environ.get("ARCHAI_VOICE_MAX_STT_BYTES", str(8 * 1024 * 1024)))
 MAX_TTS_BYTES = int(os.environ.get("ARCHAI_VOICE_MAX_TTS_BYTES", str(16 * 1024)))
@@ -48,11 +53,70 @@ VOICES = {
     "alan": VOICE_DIR / "en_GB-alan-medium.onnx",
     "northern": VOICE_DIR / "en_GB-northern_english_male-medium.onnx",
 }
+CLONED_VOICES = {
+    "rob_au": {
+        "reference": VOICE_DIR.parent / "references" / "rob-graham-en-au.wav",
+        "languages": {"en"},
+    },
+}
+CHATTERBOX_MODEL_ID = os.environ.get(
+    "ARCHAI_CHATTERBOX_MODEL", "mlx-community/chatterbox-multilingual-v3"
+)
+CHATTERBOX_LANGUAGES = {
+    "ar", "da", "de", "el", "en", "es", "fi", "fr", "he", "hi", "it",
+    "ja", "ko", "ms", "nl", "no", "pl", "pt", "ru", "sv", "sw", "tr", "zh",
+}
+CHATTERBOX_LOCK = threading.Lock()
+CHATTERBOX_MODEL = None
 
 
 def voice_available(voice_id):
+    if voice_id in CLONED_VOICES:
+        reference = CLONED_VOICES[voice_id]["reference"]
+        return bool(reference.exists() and importlib.util.find_spec("mlx_audio"))
     model = VOICES.get(voice_id)
     return bool(model and model.exists() and model.with_suffix(model.suffix + ".json").exists())
+
+
+def chatterbox_model():
+    global CHATTERBOX_MODEL
+    if CHATTERBOX_MODEL is None:
+        from mlx_audio.tts.utils import load_model
+
+        CHATTERBOX_MODEL = load_model(CHATTERBOX_MODEL_ID)
+    return CHATTERBOX_MODEL
+
+
+def write_pcm_wav(path, samples, sample_rate):
+    import numpy as np
+
+    pcm = np.clip(np.asarray(samples).reshape(-1), -1.0, 1.0)
+    pcm = (pcm * 32767.0).astype(np.int16)
+    with wave.open(str(path), "wb") as output:
+        output.setnchannels(1)
+        output.setsampwidth(2)
+        output.setframerate(sample_rate)
+        output.writeframes(pcm.tobytes())
+
+
+def generate_cloned_voice(text, voice_id, language, wav_path):
+    voice = CLONED_VOICES[voice_id]
+    if language not in voice["languages"]:
+        raise RuntimeError("The selected voice has not been approved for this language")
+    with CHATTERBOX_LOCK:
+        model = chatterbox_model()
+        result = next(
+            model.generate(
+                text=text,
+                ref_audio=str(voice["reference"]),
+                lang_code=language,
+                exaggeration=0.18,
+                cfg_weight=0.35,
+                temperature=0.7,
+                verbose=False,
+            )
+        )
+        write_pcm_wav(wav_path, result.audio, model.sample_rate)
 
 
 def client_key(handler):
@@ -94,6 +158,10 @@ class VoiceHandler(http.server.BaseHTTPRequestHandler):
             return path[len(PUBLIC_PREFIX) :]
         return path
 
+    def is_public_request(self):
+        path = self.path.split("?", 1)[0].rstrip("/") or "/"
+        return path == PUBLIC_PREFIX or path.startswith(PUBLIC_PREFIX + "/")
+
     def send_cors(self):
         origin = self.request_origin()
         if origin in ALLOWED_ORIGINS:
@@ -130,13 +198,29 @@ class VoiceHandler(http.server.BaseHTTPRequestHandler):
             if not within_rate_limit(self, "health"):
                 self.send_json(429, {"ok": False, "error": "Please try again shortly"})
                 return
+            cloned_voice_ids = () if self.is_public_request() else tuple(CLONED_VOICES)
             self.send_json(
                 200,
                 {
                     "ok": True,
-                    "stt": "whisper.cpp base.en",
-                    "tts": "piper",
-                    "voices": [voice_id for voice_id in VOICES if voice_available(voice_id)],
+                    "stt": "whisper.cpp base multilingual",
+                    "tts": "local",
+                    "voices": [
+                        voice_id
+                        for voice_id in (*cloned_voice_ids, *VOICES)
+                        if voice_available(voice_id)
+                    ],
+                    "multilingual_voices": [
+                        voice_id for voice_id in cloned_voice_ids if voice_available(voice_id)
+                    ],
+                    "tts_languages": sorted(CHATTERBOX_LANGUAGES),
+                    "validated_tts_languages": sorted(
+                        {
+                            language
+                            for voice in CLONED_VOICES.values()
+                            for language in voice["languages"]
+                        }
+                    ),
                 },
             )
             return
@@ -188,6 +272,7 @@ class VoiceHandler(http.server.BaseHTTPRequestHandler):
         source.write(body)
         source.close()
         wav_path = pathlib.Path(source.name + ".wav")
+        transcript_path = pathlib.Path(str(wav_path) + ".json")
         try:
             converted = subprocess.run(
                 ["ffmpeg", "-y", "-i", source.name, "-ar", "16000", "-ac", "1", str(wav_path)],
@@ -198,7 +283,20 @@ class VoiceHandler(http.server.BaseHTTPRequestHandler):
             if converted.returncode != 0:
                 raise RuntimeError("Audio conversion failed")
             result = subprocess.run(
-                [WHISPER, "-m", str(WHISPER_MODEL), "-f", str(wav_path), "-nt"],
+                [
+                    WHISPER,
+                    "-m",
+                    str(WHISPER_MODEL),
+                    "-f",
+                    str(wav_path),
+                    "-l",
+                    "auto",
+                    "-nt",
+                    "-np",
+                    "-oj",
+                    "-of",
+                    str(wav_path),
+                ],
                 capture_output=True,
                 text=True,
                 check=False,
@@ -206,31 +304,47 @@ class VoiceHandler(http.server.BaseHTTPRequestHandler):
             )
             if result.returncode != 0:
                 raise RuntimeError("Local transcription failed")
-            self.send_json(200, {"text": " ".join(result.stdout.split()).strip()})
+            transcript = json.loads(transcript_path.read_text())
+            text = " ".join(
+                str(segment.get("text") or "").strip()
+                for segment in transcript.get("transcription", [])
+            ).strip()
+            language = str(transcript.get("result", {}).get("language") or "").lower()
+            self.send_json(200, {"text": text, "language": language})
         finally:
             pathlib.Path(source.name).unlink(missing_ok=True)
             wav_path.unlink(missing_ok=True)
+            transcript_path.unlink(missing_ok=True)
 
     def handle_tts(self, body):
         request = json.loads(body or b"{}")
         text = " ".join(str(request.get("text") or "").split())[:1500]
         voice_id = str(request.get("voice") or "alba")
-        model = VOICES.get(voice_id) if voice_available(voice_id) else VOICES["alba"]
-        if not text or not voice_available("alba"):
-            raise RuntimeError("Piper text or model is unavailable")
+        language = str(request.get("language") or "en").lower().split("-", 1)[0]
+        if not text:
+            raise RuntimeError("Speech text is unavailable")
+        if self.is_public_request() and voice_id in CLONED_VOICES:
+            self.send_json(403, {"ok": False, "error": "This consented voice is preview-only online"})
+            return
         wav = tempfile.NamedTemporaryFile(suffix=".wav", delete=False, dir=VOICE_DIR)
         wav.close()
         wav_path = pathlib.Path(wav.name)
         try:
-            result = subprocess.run(
-                ["python3", "-m", "piper", "-m", str(model), "-f", str(wav_path)],
-                input=text.encode(),
-                capture_output=True,
-                check=False,
-                timeout=45,
-            )
-            if result.returncode != 0:
-                raise RuntimeError("Local speech generation failed")
+            if voice_id in CLONED_VOICES and voice_available(voice_id):
+                generate_cloned_voice(text, voice_id, language, wav_path)
+            else:
+                model = VOICES.get(voice_id) if voice_available(voice_id) else VOICES["alba"]
+                if not voice_available("alba"):
+                    raise RuntimeError("Piper model is unavailable")
+                result = subprocess.run(
+                    [PIPER_PYTHON, "-m", "piper", "-m", str(model), "-f", str(wav_path)],
+                    input=text.encode(),
+                    capture_output=True,
+                    check=False,
+                    timeout=45,
+                )
+                if result.returncode != 0:
+                    raise RuntimeError("Local speech generation failed")
             audio = wav_path.read_bytes()
             self.send_response(200)
             self.send_cors()

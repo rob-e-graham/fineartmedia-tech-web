@@ -102,6 +102,13 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
 .v-readbtn{font-family:var(--mono);font-size:.5rem;letter-spacing:1.2px;text-transform:uppercase;background:transparent;border:1px solid var(--border2);color:var(--text2);padding:6px 11px;border-radius:100px;cursor:pointer;display:inline-flex;gap:6px;align-items:center;transition:all .15s}
 .v-readbtn:hover{border-color:var(--accent);color:var(--text)}
 .v-readbtn.on{border-color:var(--accent);color:var(--accent2)}
+.v-readbtn.voice-busy{cursor:wait}
+.v-voice-motion{display:none;align-items:flex-end;gap:3px;height:19px;color:var(--accent2);font-family:var(--mono);font-size:.48rem;letter-spacing:1px;text-transform:uppercase}
+.v-voice-motion.on{display:inline-flex}
+.v-voice-bars{display:inline-flex;align-items:center;gap:2px;height:14px}
+.v-voice-bars span{display:block;width:2px;height:5px;background:currentColor;animation:voicebar .85s ease-in-out infinite}
+.v-voice-bars span:nth-child(2){animation-delay:.12s}.v-voice-bars span:nth-child(3){animation-delay:.24s}.v-voice-bars span:nth-child(4){animation-delay:.36s}
+@keyframes voicebar{0%,100%{height:4px;opacity:.45}50%{height:13px;opacity:1}}
 
 /* AUDIO TOOLS (collapsible, AUXIO-style) */
 details.v-audio{border:1px solid var(--border);border-radius:4px;margin:16px 0 0;background:var(--surface)}
@@ -126,7 +133,7 @@ details.v-audio summary::-webkit-details-marker{display:none}
 
 button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent2);outline-offset:3px}
 
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.v-hero,.v-content,.v-mic.listening,.v-thinking-dots span,.map-here-ring{animation:none!important}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.v-hero,.v-content,.v-mic.listening,.v-thinking-dots span,.v-voice-bars span,.map-here-ring{animation:none!important}}
 
 /* PANELS */
 details.v-panel{border:1px solid var(--border);border-radius:4px;margin-bottom:12px;background:var(--surface)}
@@ -515,6 +522,8 @@ const UI_COPY={
       offlineTag:'✓ From Heide’s record (live voice offline · showing curated reply)',
       readAloud:'Read aloud',
       stop:'Stop',
+      voicePreparing:'Preparing voice',
+      voiceSpeaking:'Speaking',
       freeFallback:"If the live voice is offline, I can only answer from my record. I am Heide I, the cottage. John and Sunday Reed lived here from 1934; this is where Australian modernism took root, and where Sidney Nolan painted the first Ned Kelly series in 1946-47.",
       visitorName:'Visitor',
       copied:'Copied',
@@ -903,7 +912,7 @@ function renderAnswer(text, live){
   const who=formatCopy(s.responseWho,{voice:voiceCopy(current).label});
   respEl.innerHTML='<span class="who">'+escapeHTML(who)+'</span>'
     + escapeHTML(text).replace(/\n/g,'<br>')
-    + '<div class="v-readrow"><button class="v-readbtn" id="readBtn" onclick="toggleRead()">'+escapeHTML(s.readAloud)+'</button></div>'
+    + '<div class="v-readrow"><button class="v-readbtn" id="readBtn" onclick="toggleRead()">'+escapeHTML(s.readAloud)+'</button><span class="v-voice-motion" id="voiceMotion" role="status" aria-live="polite"><span class="v-voice-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span class="v-voice-motion-label"></span></span></div>'
     + '<span class="grounded">'+escapeHTML(tag)+'</span>';
   if(autoReadEl.checked||speakNext) speak(text);
   speakNext=false;
@@ -944,6 +953,7 @@ const VOICE_SERVERS=[
   {url:REMOTE_VOICE_SERVER,mode:'remote'}
 ];
 const PIPER_VOICE_LABELS={
+  rob_au:'Rob · Australian English · consented preview',
   alba:'Ada · warm gallery guide',
   cori:'Cate · expressive curator',
   amy:'Amy · gentle education host',
@@ -953,6 +963,7 @@ const PIPER_VOICE_LABELS={
   northern:'Ted · characterful projectionist'
 };
 const PIPER_PREVIEW_FILES={
+  rob_au:'assets/voice-previews/rob-australian-consented-preview.wav',
   alba:'assets/voice-previews/ada-gallery-guide.wav',
   cori:'assets/voice-previews/cate-curator.wav',
   amy:'assets/voice-previews/amy-education.wav',
@@ -972,12 +983,14 @@ const voiceEngineStatus=document.getElementById('voiceEngineStatus');
 const voicePreviewBtn=document.getElementById('voicePreview');
 const voicePreviewLabel=document.getElementById('voicePreviewLabel');
 let localVoiceReady=false,localVoiceNames=[],voiceAudio=null,activeVoiceServer='',voiceBridgeMode='';
+let multilingualVoiceNames=[],liveTtsLanguages=[];
 const previewOnly=new URLSearchParams(window.location.search).has('previewVoice');
 const forceRemoteVoice=new URLSearchParams(window.location.search).has('remoteVoice');
 const LANG_NAMES={en:'English',zh:'Chinese',fr:'French',de:'German',es:'Spanish',it:'Italian',ja:'Japanese',ko:'Korean',ar:'Arabic',hi:'Hindi',pt:'Portuguese',ru:'Russian',nl:'Dutch',vi:'Vietnamese',th:'Thai',id:'Indonesian',el:'Greek',tr:'Turkish',pl:'Polish',sv:'Swedish',he:'Hebrew',fi:'Finnish',da:'Danish',nb:'Norwegian',no:'Norwegian',cs:'Czech',ro:'Romanian',hu:'Hungarian',uk:'Ukrainian',ms:'Malay',fa:'Persian',ta:'Tamil',bn:'Bengali',sk:'Slovak',hr:'Croatian',ca:'Catalan'};
 let _dn=null; try{ _dn=new Intl.DisplayNames(['en'],{type:'language'}); }catch(e){}
 function langName(code){ code=(code||'').toLowerCase(); let n=null; if(_dn){ try{n=_dn.of(code);}catch(e){} } return (n&&n.toLowerCase()!==code)?n:(LANG_NAMES[code]||code.toUpperCase()); }
 let answerLang=null; // null = reply in the language the visitor uses
+let lastDetectedSpeechLanguage='';
 function allVoices(){ return canSpeak?window.speechSynthesis.getVoices():[]; }
 function curatedBrowserVoices(){
   return allVoices().map((v,idx)=>({v,idx})).filter(({v})=>!BROWSER_VOICE_EXCLUDE.test(v.name||''));
@@ -1006,9 +1019,13 @@ function loadBrowserVoices(preferredCode){
   onVoiceChange();
   return true;
 }
-function loadPiperVoices(){
+function loadPiperVoices(code='en'){
   if(!localVoiceReady||!localVoiceNames.length) return false;
-  voiceSelectEl.innerHTML='<optgroup label="Local Piper voices">'+localVoiceNames.map(id=>`<option value="piper:${escapeHTML(id)}">${escapeHTML(PIPER_VOICE_LABELS[id]||id)}</option>`).join('')+'</optgroup>';
+  const names=code==='en'||code==='auto'?localVoiceNames:localVoiceNames.filter(id=>multilingualVoiceNames.includes(id));
+  if(!names.length)return false;
+  const previews=Object.keys(PIPER_PREVIEW_FILES).filter(id=>!names.includes(id));
+  voiceSelectEl.innerHTML='<optgroup label="Live local voices">'+names.map(id=>`<option value="piper:${escapeHTML(id)}">${escapeHTML(PIPER_VOICE_LABELS[id]||id)}</option>`).join('')+'</optgroup>'
+    +(previews.length?'<optgroup label="Consented preview">'+previews.map(id=>`<option value="preview:${escapeHTML(id)}">${escapeHTML(PIPER_VOICE_LABELS[id]||id)}</option>`).join('')+'</optgroup>':'');
   return true;
 }
 function loadPiperPreviewVoices(){
@@ -1053,7 +1070,8 @@ function updateAudioStatus(){
   audioStatusEl.textContent=answerLang?formatCopy(s.audioStatusFixed,{language:answerLang}):s.audioStatusAuto;
 }
 function pickVoiceForLang(code){
-  if(localVoiceReady&&(code==='auto'||code==='en')) loadPiperVoices();
+  if(localVoiceReady&&liveTtsLanguages.includes(code)&&loadPiperVoices(code)) return;
+  if(localVoiceReady&&(code==='auto'||code==='en')) loadPiperVoices(code);
   else if((code==='auto'||code==='en')) loadPiperPreviewVoices();
   else loadBrowserVoices(code);
 }
@@ -1074,7 +1092,8 @@ function languageCodeFromText(text){
   if(answerLang){ const hit=Object.entries(LANG_NAMES).find(([,name])=>name===answerLang); if(hit)return hit[0]; }
   if(/[\u4e00-\u9fff]/.test(text))return 'zh'; if(/[\u3040-\u30ff]/.test(text))return 'ja';
   if(/[\uac00-\ud7af]/.test(text))return 'ko'; if(/[\u0600-\u06ff]/.test(text))return 'ar';
-  if(/[\u0900-\u097f]/.test(text))return 'hi'; return uiLang&&uiLang!=='auto'?uiLang:'en';
+  if(/[\u0900-\u097f]/.test(text))return 'hi';
+  return lastDetectedSpeechLanguage||(uiLang&&uiLang!=='auto'?uiLang:'en');
 }
 function bestBrowserVoice(code){
   const preferred=currentBrowserVoice();
@@ -1083,11 +1102,24 @@ function bestBrowserVoice(code){
   return (curated.find(({v})=>((v.lang||'').split(/[-_]/)[0].toLowerCase())===code)
     ||curated.find(({v})=>/^en-AU/i.test(v.lang))||curated[0])?.v||null;
 }
-async function piperSpeak(text,voiceId){
+function setVoiceActivity(state){
+  const motion=document.getElementById('voiceMotion');
+  const btn=document.getElementById('readBtn');
+  if(!motion)return;
+  const active=state==='preparing'||state==='speaking';
+  const s=currentStatic();
+  motion.classList.toggle('on',active);
+  const label=motion.querySelector('.v-voice-motion-label');
+  if(label)label.textContent=state==='preparing'?(s.voicePreparing||UI_COPY.en.static.voicePreparing):(s.voiceSpeaking||UI_COPY.en.static.voiceSpeaking);
+  if(btn){btn.classList.toggle('voice-busy',state==='preparing');btn.classList.toggle('on',active);btn.textContent=active?s.stop:s.readAloud;}
+}
+async function piperSpeak(text,voiceId,language){
   if(!activeVoiceServer)throw new Error('Voice service unavailable');
-  const r=await fetch(activeVoiceServer+'/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:String(text).slice(0,1400),voice:voiceId||'alba'})});
+  setVoiceActivity('preparing');
+  const r=await fetch(activeVoiceServer+'/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:String(text).slice(0,1400),voice:voiceId||'alba',language:language||'en'})});
   if(!r.ok) throw new Error('Piper voice unavailable');
   const blob=await r.blob(); voiceAudio=new Audio(URL.createObjectURL(blob));
+  setVoiceActivity('speaking');
   return new Promise((resolve,reject)=>{voiceAudio.onended=resolve;voiceAudio.onerror=reject;voiceAudio.play().catch(reject);});
 }
 function setPreviewPlaying(on){
@@ -1101,12 +1133,12 @@ async function speak(text){
   stopSpeak();
   const code=languageCodeFromText(text),piperId=selectedPiperVoice();
   const btn=document.getElementById('readBtn');
-  if(localVoiceReady&&piperId&&code==='en'){
+  if(localVoiceReady&&piperId&&liveTtsLanguages.includes(code)&&(code==='en'||multilingualVoiceNames.includes(piperId))){
     if(btn){btn.classList.add('on');btn.textContent=currentStatic().stop;}
     setPreviewPlaying(true);
-    try{await piperSpeak(text,piperId);}
+    try{await piperSpeak(text,piperId,code);}
     catch(e){localVoiceReady=false;setVoiceEngineState(false);return speakWithBrowser(text,code);}
-    finally{setPreviewPlaying(false);if(btn){btn.classList.remove('on');btn.textContent=currentStatic().readAloud;}}
+    finally{setVoiceActivity('idle');setPreviewPlaying(false);if(btn){btn.classList.remove('on');btn.textContent=currentStatic().readAloud;}}
     return;
   }
   speakWithBrowser(text,code);
@@ -1118,13 +1150,14 @@ function speakWithBrowser(text,code){
   const v=bestBrowserVoice(code); if(v) u.voice=v;
   u.rate=0.98; u.pitch=1; u.lang=(v&&v.lang)||'en-AU';
   const btn=document.getElementById('readBtn');
-  u.onstart=()=>{setPreviewPlaying(true);if(btn){btn.classList.add('on');btn.textContent=currentStatic().stop;} };
-  u.onend=()=>{setPreviewPlaying(false);if(btn){btn.classList.remove('on');btn.textContent=currentStatic().readAloud;} };
+  u.onstart=()=>{setVoiceActivity('speaking');setPreviewPlaying(true);if(btn){btn.classList.add('on');btn.textContent=currentStatic().stop;} };
+  u.onend=()=>{setVoiceActivity('idle');setPreviewPlaying(false);if(btn){btn.classList.remove('on');btn.textContent=currentStatic().readAloud;} };
   window.speechSynthesis.speak(u);
 }
 function stopSpeak(){
   if(voiceAudio){try{voiceAudio.pause();if(voiceAudio.src.startsWith('blob:'))URL.revokeObjectURL(voiceAudio.src);}catch(e){}voiceAudio=null;}
   if(canSpeak)window.speechSynthesis.cancel();
+  setVoiceActivity('idle');
   setPreviewPlaying(false);
   const btn=document.getElementById('readBtn'); if(btn){btn.classList.remove('on');btn.textContent=currentStatic().readAloud;}
 }
@@ -1133,10 +1166,10 @@ function previewVoice(){
   if(voicePreviewBtn?.dataset.playing==='true'){stopSpeak();return;}
   const previewId=selectedPreviewVoice();
   if(previewId&&PIPER_PREVIEW_FILES[previewId]){
-    stopSpeak();setPreviewPlaying(true);voiceAudio=new Audio(PIPER_PREVIEW_FILES[previewId]);
-    voiceAudio.onended=()=>{voiceAudio=null;setPreviewPlaying(false);};
-    voiceAudio.onerror=()=>{voiceAudio=null;setPreviewPlaying(false);speak(PIPER_PREVIEW);};
-    voiceAudio.play().catch(()=>{voiceAudio=null;setPreviewPlaying(false);speak(PIPER_PREVIEW);});
+    stopSpeak();setPreviewPlaying(true);setVoiceActivity('speaking');voiceAudio=new Audio(PIPER_PREVIEW_FILES[previewId]);
+    voiceAudio.onended=()=>{voiceAudio=null;setVoiceActivity('idle');setPreviewPlaying(false);};
+    voiceAudio.onerror=()=>{voiceAudio=null;setVoiceActivity('idle');setPreviewPlaying(false);speak(PIPER_PREVIEW);};
+    voiceAudio.play().catch(()=>{voiceAudio=null;setVoiceActivity('idle');setPreviewPlaying(false);speak(PIPER_PREVIEW);});
     return;
   }
   const sample=uiLang==='en'?PIPER_PREVIEW:(voiceCopy(current).intro||PIPER_PREVIEW).replace(/<[^>]+>/g,' ').slice(0,240);
@@ -1146,16 +1179,16 @@ function setVoiceEngineState(ready){
   localVoiceReady=ready;
   voiceEngineDot.classList.toggle('ready',ready);
   if(ready&&voiceBridgeMode==='local'){
-    voiceEngineStatus.innerHTML='<b>Private voice ready on this Mac.</b> Whisper listens and Piper speaks locally. Audio stays on this machine; the transcript is sent to the ARCHAI research server for the demo reply.';
+    voiceEngineStatus.innerHTML='<b>Private voice ready on this Mac.</b> Multilingual Whisper listens; local voices include Piper and consented voice prototypes. Audio stays on this machine; the transcript is sent to the ARCHAI research server for the demo reply.';
   }else if(ready&&voiceBridgeMode==='remote'){
-    voiceEngineStatus.innerHTML='<b>Live Piper voice connected.</b> Whisper and Piper run on the ARCHAI demonstration Mac. Microphone audio is sent over encrypted HTTPS for transcription, is not deliberately retained, and generated speech is streamed back to this device.';
+    voiceEngineStatus.innerHTML='<b>Live local voice connected.</b> Multilingual Whisper and local speech models run on the ARCHAI demonstration Mac. Microphone audio is sent over encrypted HTTPS for transcription, is not deliberately retained, and generated speech is streamed back to this device.';
   }else{
     voiceEngineStatus.innerHTML='<b>Piper voice previews available.</b> Choose and audition the local voice cast. Full replies use the visitor\'s device voice here; a museum installation can generate every reply with Whisper and Piper on institution-controlled hardware.';
   }
 }
 async function detectVoiceEngine(){
   if(previewOnly){localVoiceNames=[];activeVoiceServer='';voiceBridgeMode='';setVoiceEngineState(false);pickVoiceForLang(langSelectEl?.value||'en');return;}
-  localVoiceNames=[];activeVoiceServer='';voiceBridgeMode='';
+  localVoiceNames=[];multilingualVoiceNames=[];liveTtsLanguages=[];activeVoiceServer='';voiceBridgeMode='';
   for(const candidate of VOICE_SERVERS){
     if(forceRemoteVoice&&candidate.mode==='local')continue;
     try{
@@ -1163,7 +1196,7 @@ async function detectVoiceEngine(){
       const r=await fetch(candidate.url+'/health',{cache:'no-store',signal:AbortSignal.timeout(timeout)}); const data=await r.json();
       if(!r.ok||!data.ok)throw new Error('offline');
       const names=(data.voices||[]).filter(id=>PIPER_VOICE_LABELS[id]);
-      if(names.length){localVoiceNames=names;activeVoiceServer=candidate.url;voiceBridgeMode=candidate.mode;break;}
+      if(names.length){localVoiceNames=names;multilingualVoiceNames=(data.multilingual_voices||[]).filter(id=>names.includes(id));liveTtsLanguages=['auto',...(data.validated_tts_languages||['en'])];activeVoiceServer=candidate.url;voiceBridgeMode=candidate.mode;break;}
     }catch(e){/* try the next voice bridge */}
   }
   setVoiceEngineState(Boolean(localVoiceNames.length));
@@ -1243,6 +1276,7 @@ async function startLocalVoiceInput(){
         const r=await fetch(activeVoiceServer+'/stt',{method:'POST',headers:{'Content-Type':'application/octet-stream'},body:audio});
         const data=await r.json();const transcript=String(data.text||'').trim();
         if(!r.ok||!transcript)throw new Error('No speech captured');
+        if(data.language&&LANG_NAMES[data.language])lastDetectedSpeechLanguage=data.language;
         inputEl.value=transcript;if(voiceHintEl)voiceHintEl.textContent=voiceBridgeMode==='local'?'Question captured locally':'Question transcribed securely';submitVoice(transcript);
       }catch(e){if(voiceHintEl)voiceHintEl.textContent='I could not hear that clearly. Please try again or type your question.';}
       finally{micBtn.classList.remove('busy');micBtn.disabled=false;localRecorder=null;localAudioChunks=[];}
@@ -1263,7 +1297,7 @@ function startBrowserVoiceInput(){
 }
 function toggleVoiceInput(){
   if(localRecorder&&localRecorder.state==='recording'){localRecorder.stop();return;}
-  if(localVoiceReady&&uiLang==='en'){startLocalVoiceInput();return;}
+  if(localVoiceReady){startLocalVoiceInput();return;}
   startBrowserVoiceInput();
 }
 
