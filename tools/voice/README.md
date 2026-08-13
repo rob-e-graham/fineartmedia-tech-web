@@ -38,7 +38,7 @@ curl -s -H 'Origin: https://fineartmedia.tech' \
 
 The tunnel configuration routes only `/voice/*` to this service. The bridge also enforces an origin allowlist, request-size limits, bounded concurrency and per-address rate limits. Keep the final catch-all backend rule below the voice rule.
 
-On this Mac the bridge is installed as the `com.famtec.archai-voice` LaunchAgent. launchd runs a private copy from `~/.local/share/archai-voice` because macOS background services cannot reliably read an interactive user's Desktop folder. After changing `voice_server.py`, copy it there and restart the service:
+On this Mac the bridge is installed as the `com.famtec.archai-voice` LaunchAgent. launchd runs a private copy from `~/.local/share/archai-voice` because macOS background services cannot reliably read an interactive user's Desktop folder. Its model directory is `~/.local/share/archai-voice/models`, outside macOS's temporary storage. After changing `voice_server.py`, copy it there and restart the service:
 
 ```sh
 cp tools/voice/voice_server.py ~/.local/share/archai-voice/voice_server.py
