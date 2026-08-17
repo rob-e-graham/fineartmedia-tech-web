@@ -3,134 +3,230 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Object Wall · AUXIO concept</title>
-<meta name="description" content="A concept AUXIO for a wall of moving-image objects — one voice for the whole wall, with a map of the objects and on-device voice. Powered by ARCHAI. Concept demo.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#000000">
+<title>ACMI · The Object Wall · AUXIO concept</title>
+<meta name="description" content="A concept AUXIO for ACMI's object wall — one voice for the whole wall, ask it aloud or in text, in the language you choose. Powered by ARCHAI, sovereign local-first cultural-heritage AI. Concept demo, not official ACMI content.">
 <meta name="robots" content="noindex,nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0b0b0c;--surface:#151517;--surface2:#1c1c20;--border:#26262b;--border2:#37373e;--text:#efeae0;--text2:#a7a29a;--text3:#6c6a66;--accent:#f2c14e;--accent2:#7fb6c9;--mono:'DM Mono',monospace;--serif:'Cormorant Garamond',Georgia,serif;}
+:root{
+  --bg:#000; --bg2:#0a0a0a; --panel:#0e0e0e; --panel2:#141414;
+  --line:#222; --line2:#3a3a3a;
+  --ink:#fff; --ink2:#b2b2b2; --ink3:#6d6d6d;
+  --mono:'DM Mono',ui-monospace,monospace; --grot:'Archivo',Helvetica,Arial,sans-serif;
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:var(--serif);font-weight:300;min-height:100vh;-webkit-font-smoothing:antialiased}
-.wrap{max-width:820px;margin:0 auto;padding:0 22px}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html,body{scrollbar-width:none;-ms-overflow-style:none}
+html::-webkit-scrollbar,body::-webkit-scrollbar{width:0;height:0;display:none}
+body{background:var(--bg);color:var(--ink);font-family:var(--grot);font-weight:400;min-height:100dvh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body.is-rtl{direction:rtl}
 img{max-width:100%;display:block}
-.hdr{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:20px 22px;max-width:820px;margin:0 auto;flex-wrap:wrap}
-.logo-chip{background:#fff;border-radius:4px;padding:8px 10px;display:flex;align-items:center;height:40px}
-.logo-chip img{height:24px;width:auto}
-.hdr-tag{font-family:var(--mono);font-size:.5rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text3)}
-.hero{padding:24px 22px 6px;max-width:820px;margin:0 auto}
-.eyebrow{font-family:var(--mono);font-size:.54rem;letter-spacing:.28em;text-transform:uppercase;color:var(--accent2)}
-.title{font-size:clamp(2.6rem,9vw,4rem);font-weight:500;line-height:.98;margin:12px 0 4px}
-.subtitle{font-style:italic;color:var(--accent);font-size:clamp(1.1rem,3.4vw,1.5rem);line-height:1.15}
-.concept{display:inline-block;margin-top:14px;font-family:var(--mono);font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);border:1px solid var(--border2);border-radius:2px;padding:6px 9px}
-.story{font-size:1.14rem;line-height:1.62;color:var(--text2);margin-top:18px}
-.story b{color:var(--text);font-weight:400}
-/* wall photo slot */
-.wallphoto{max-width:820px;margin:20px auto 0;padding:0 22px}
-.wallphoto img{width:100%;border-radius:5px;border:1px solid var(--border)}
-/* object map */
-.mapwrap{max-width:820px;margin:22px auto 0;padding:0 22px}
-.map-cap{font-family:var(--mono);font-size:.52rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent2);margin-bottom:10px}
-.map svg{width:100%;height:auto;border:1px solid var(--border);border-radius:5px;background:#0e0e10}
-.map-note{font-family:var(--mono);font-size:.5rem;letter-spacing:.05em;color:var(--text3);margin-top:8px;line-height:1.7}
-.divider{height:1px;background:var(--border);margin:24px auto;max-width:820px}
-.ask-label{font-family:var(--mono);font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent2);margin-bottom:12px}
-.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
-.chip{font-family:var(--serif);font-style:italic;font-size:1rem;padding:7px 12px;border:1px solid var(--border2);color:var(--text2);border-radius:2px;background:transparent;cursor:pointer;transition:all .15s}
-.chip:hover{border-color:var(--accent);color:var(--text)}
+.stage{width:100%;min-height:100dvh}
+.shell{width:100%;max-width:460px;margin:0 auto;background:var(--bg);position:relative;min-height:100dvh;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+
+/* HEADER */
+.hdr{padding:16px 20px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:100}
+.logo{height:38px;width:auto;display:block}
+.hdr-tools{display:flex;align-items:center;gap:7px}
+.tag{font-family:var(--mono);font-size:.46rem;color:var(--ink3);letter-spacing:.22em;text-transform:uppercase;padding:0 9px;border:1px solid var(--line2);white-space:nowrap;height:26px;display:inline-flex;align-items:center}
+.langsel{height:26px;max-width:118px;background:transparent;border:1px solid var(--line2);color:var(--ink2);font-family:var(--mono);font-size:.46rem;letter-spacing:.12em;text-transform:uppercase;padding:0 8px;border-radius:0;outline:none;cursor:pointer}
+.langsel:focus{border-color:var(--ink)}
+.langsel option{background:#000;color:#fff}
+
+/* HERO — type-led, ACMI editorial */
+.hero{padding:34px 20px 8px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--mono);font-size:.52rem;letter-spacing:.26em;text-transform:uppercase;color:var(--ink2)}
+.title{font-family:var(--grot);font-weight:800;font-size:clamp(1.85rem,8.5vw,3.6rem);line-height:1;letter-spacing:-.03em;margin:14px 0 0;text-transform:uppercase;white-space:nowrap;overflow:hidden}
+.subtitle{font-family:var(--grot);font-weight:400;font-size:clamp(1rem,4vw,1.2rem);line-height:1.2;margin-top:12px;color:var(--ink2)}
+.concept{display:inline-block;margin-top:16px;font-family:var(--mono);font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);border:1px solid var(--line2);padding:6px 9px}
+
+/* HERO IMAGE — the space helmet */
+.heroimg{position:relative;width:100%;background:#0d0d0d;display:flex;align-items:center;justify-content:center;overflow:hidden;max-height:52vh;border-bottom:1px solid var(--line)}
+.hero-cta{position:absolute;left:16px;bottom:14px;z-index:2;font-family:var(--mono);font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:#000;background:#fff;border:none;padding:9px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:background .15s}
+.hero-cta:hover{background:var(--ink2)}
+.hero-cta svg{width:12px;height:12px}
+.heroimg img{width:100%;height:100%;max-height:52vh;object-fit:contain;display:block;animation:fade 1s ease both}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.credit{font-family:var(--mono);font-size:.44rem;color:var(--ink3);letter-spacing:.08em;text-transform:uppercase;padding:7px 20px 0;text-align:right}
+
+/* CONTENT */
+.content{padding:22px 20px 40px}
+.story{font-size:1.06rem;line-height:1.6;color:var(--ink2);font-weight:400}
+.story b{color:var(--ink);font-weight:600}
+
+/* OBJECT MAP */
+.mapwrap{margin:22px 0 0}
+.map-cap{font-family:var(--mono);font-size:.5rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink2);margin-bottom:9px}
+.map svg{width:100%;height:auto;border:1px solid var(--line);background:#050505}
+.map-note{font-family:var(--mono);font-size:.48rem;letter-spacing:.03em;color:var(--ink3);margin-top:8px;line-height:1.75}
+
+.divider{height:1px;background:var(--line);margin:26px 0}
+
+/* ASK */
+.ask-label{font-family:var(--mono);font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);margin-bottom:13px}
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.chip{font-family:var(--mono);font-size:.56rem;letter-spacing:.03em;line-height:1.35;padding:0 13px;min-height:48px;border:1px solid var(--line2);color:var(--ink2);cursor:pointer;background:var(--panel);transition:all .14s;display:flex;align-items:center;text-align:left}
+.chip:hover{border-color:var(--ink);color:var(--ink)}
+.chip.active{background:var(--ink);border-color:var(--ink);color:#000}
 .chat-row{display:flex;gap:8px;align-items:stretch}
-.chat-in{flex:1;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-family:var(--serif);font-size:1.05rem;padding:12px 14px;border-radius:3px;outline:none}
-.chat-in:focus{border-color:var(--accent)}
-.mic{width:48px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border2);color:var(--text2);border-radius:3px;cursor:pointer;transition:all .15s}
-.mic:hover:not(:disabled){color:var(--text);border-color:var(--accent2)}
+.chat-in{flex:1;background:var(--panel);border:1px solid var(--line2);color:var(--ink);font-family:var(--grot);font-size:1rem;padding:12px 14px;outline:none}
+.chat-in::placeholder{color:var(--ink3)}
+.chat-in:focus{border-color:var(--ink)}
+.mic{width:48px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:var(--panel);border:1px solid var(--line2);color:var(--ink2);cursor:pointer;transition:all .15s}
+.mic:hover:not(:disabled){color:var(--ink);border-color:var(--ink)}
 .mic:disabled{opacity:.45;cursor:default}
-.mic.rec{color:#141414;background:#d9736b;border-color:#d9736b;animation:pulse 1.2s infinite}
+.mic.rec{color:#000;background:#fff;border-color:#fff;animation:pulse 1.2s infinite}
 .mic.busy{opacity:.6}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(217,115,107,.5)}70%{box-shadow:0 0 0 8px rgba(217,115,107,0)}100%{box-shadow:0 0 0 0 rgba(217,115,107,0)}}
-.send{background:var(--accent);color:#181206;border:none;font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;padding:0 17px;border-radius:3px;cursor:pointer}
-.resp{margin-top:16px;font-size:1.1rem;line-height:1.62;color:var(--text)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.45)}70%{box-shadow:0 0 0 8px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+.send{background:var(--ink);color:#000;border:none;font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;padding:0 17px;cursor:pointer;font-weight:500}
+.send:active{opacity:.8}
+
+/* RESPONSE */
+.resp{margin-top:16px;font-size:1.05rem;line-height:1.6;color:var(--ink)}
 .resp:empty{display:none}
-.resp .who{display:block;font-family:var(--mono);font-size:.5rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
-.resp .ground{display:block;font-family:var(--mono);font-size:.46rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-top:12px}
-.readbtn{margin-top:12px;font-family:var(--mono);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;background:transparent;border:1px solid var(--border2);color:var(--text2);border-radius:3px;padding:8px 12px;cursor:pointer}
-.readbtn.on{color:#141414;background:var(--accent2);border-color:var(--accent2)}
-.think{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent2)}
+.resp .who{display:block;font-family:var(--mono);font-size:.5rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink2);margin-bottom:8px}
+.resp .ground{display:block;font-family:var(--mono);font-size:.44rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-top:12px}
+.readbtn{margin-top:12px;font-family:var(--mono);font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;background:transparent;border:1px solid var(--line2);color:var(--ink2);padding:8px 12px;cursor:pointer}
+.readbtn.on{color:#000;background:#fff;border-color:#fff}
+.think{font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink2)}
 .think b{animation:bl 1.3s infinite both}.think b:nth-child(2){animation-delay:.2s}.think b:nth-child(3){animation-delay:.4s}
 @keyframes bl{0%,80%,100%{opacity:.25}40%{opacity:1}}
-.vbanner{max-width:820px;margin:16px auto 0;padding:0 22px}
-.vbanner-in{display:flex;gap:10px;align-items:center;flex-wrap:wrap;border:1px solid var(--border2);border-radius:4px;padding:10px 13px;background:var(--surface)}
-.vdot{width:8px;height:8px;border-radius:50%;background:var(--text3);flex:0 0 auto}
-.vdot.on{background:var(--accent2);box-shadow:0 0 0 3px rgba(127,182,201,.18)}
-.vstatus{font-family:var(--mono);font-size:.52rem;letter-spacing:.05em;color:var(--text2);flex:1;min-width:180px}
-.vstatus b{color:var(--text)}
-details.panel{border:1px solid var(--border);border-radius:4px;margin:16px 0 0;background:var(--surface)}
-details.panel summary{list-style:none;cursor:pointer;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
+.vbars{display:none;align-items:flex-end;gap:2px;height:15px;color:var(--ink2)}
+.vbars.on{display:inline-flex}
+.vbars i{display:block;width:2px;height:5px;background:currentColor;animation:vbar .9s ease-in-out infinite}
+.vbars i:nth-child(2){animation-delay:.12s}.vbars i:nth-child(3){animation-delay:.24s}.vbars i:nth-child(4){animation-delay:.36s}.vbars i:nth-child(5){animation-delay:.48s}.vbars i:nth-child(6){animation-delay:.6s}
+@keyframes vbar{0%,100%{height:4px;opacity:.45}50%{height:15px;opacity:1}}
+
+/* VOICE BANNER */
+.vbanner{margin:16px 0 0}
+.vbanner-in{display:flex;gap:10px;align-items:center;flex-wrap:wrap;border:1px solid var(--line2);padding:10px 13px;background:var(--panel)}
+.vdot{width:8px;height:8px;border-radius:50%;background:var(--ink3);flex:0 0 auto}
+.vdot.on{background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.16)}
+.vstatus{font-family:var(--mono);font-size:.5rem;letter-spacing:.04em;color:var(--ink2);flex:1;min-width:180px;line-height:1.6}
+.vstatus b{color:var(--ink)}
+
+/* PANELS */
+details.panel{border:1px solid var(--line);margin:12px 0 0;background:var(--panel)}
+details.panel summary{list-style:none;cursor:pointer;padding:13px 14px;display:flex;justify-content:space-between;align-items:center}
 details.panel summary::-webkit-details-marker{display:none}
-.panel-t{font-family:var(--mono);font-size:.54rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text2)}
-.panel-h{font-family:var(--mono);font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)}
+.panel-t{font-family:var(--mono);font-size:.54rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
+.panel-h{font-family:var(--mono);font-size:.46rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
 .panel-b{padding:2px 14px 16px}
-.row{display:flex;gap:10px;align-items:center;margin:9px 0;flex-wrap:wrap}
-.row label{font-family:var(--mono);font-size:.54rem;letter-spacing:.06em;color:var(--text2);min-width:120px}
-.vsel{flex:1;min-width:180px;background:var(--bg);border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:.6rem;padding:9px 10px;border-radius:3px;outline:none}
-.note{font-family:var(--mono);font-size:.5rem;letter-spacing:.04em;color:var(--text3);line-height:1.9;margin-top:8px}
-.meta-row{display:flex;gap:12px;padding:5px 0;border-bottom:1px solid var(--border)}
-.meta-k{font-family:var(--mono);font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);min-width:110px}
-.meta-v{font-size:1rem;color:var(--text2)}
-footer{max-width:820px;margin:44px auto 0;padding:22px 22px 44px;border-top:1px solid var(--border);font-family:var(--mono);font-size:.5rem;letter-spacing:.08em;color:var(--text3);text-transform:uppercase;line-height:2}
-footer b{color:var(--text2);font-weight:400}
+.row{display:flex;gap:10px;align-items:center;margin:10px 0;flex-wrap:wrap}
+.row label{font-family:var(--mono);font-size:.52rem;letter-spacing:.06em;color:var(--ink2);min-width:110px;text-transform:uppercase}
+.vsel{flex:1;min-width:170px;background:#000;border:1px solid var(--line2);color:var(--ink2);font-family:var(--mono);font-size:.58rem;padding:9px 10px;outline:none}
+.check{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.54rem;letter-spacing:.04em;color:var(--ink2);cursor:pointer;text-transform:none}
+.check input{accent-color:#fff;width:15px;height:15px}
+.note{font-family:var(--mono);font-size:.48rem;letter-spacing:.03em;color:var(--ink3);line-height:1.9;margin-top:8px}
+.note b{color:var(--ink2)}
+.meta-row{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--line)}
+.meta-row:last-child{border-bottom:none}
+.meta-k{font-family:var(--mono);font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);min-width:104px}
+.meta-v{font-size:.98rem;color:var(--ink2)}
+
+footer{padding:30px 20px 46px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.48rem;letter-spacing:.08em;color:var(--ink3);text-transform:uppercase;line-height:2.1}
+footer b{color:var(--ink2);font-weight:400}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid #fff;outline-offset:3px}
+@media (prefers-reduced-motion:reduce){.mic.rec{animation:none}}
 </style>
 </head>
 <body>
+<div class="stage"><div class="shell">
+
 <header class="hdr">
-  <div class="logo-chip"><img src="acmi-logo.jpg" alt="ACMI" onerror="this.parentNode.innerHTML='<span style=&quot;font-family:var(--mono);font-weight:500;letter-spacing:.1em;color:#111&quot;>ACMI</span>'"></div>
-  <span class="hdr-tag">AUXIO · concept</span>
+  <img class="logo" src="acmi-wordmark.jpg" alt="ACMI" onerror="this.outerHTML='<span style=&quot;font-family:var(--grot);font-weight:800;font-size:1.3rem;letter-spacing:.02em&quot;>acmi</span>'">
+  <div class="hdr-tools">
+    <select class="langsel" id="langSel" aria-label="Language">
+      <option value="auto">Auto</option>
+      <option value="en" selected>EN</option>
+      <option value="zh">中文</option>
+      <option value="ar">عربي</option>
+      <option value="vi">Tiếng Việt</option>
+      <option value="el">Ελληνικά</option>
+      <option value="it">Italiano</option>
+      <option value="es">Español</option>
+      <option value="fr">Français</option>
+      <option value="hi">हिन्दी</option>
+      <option value="ja">日本語</option>
+      <option value="ko">한국어</option>
+    </select>
+    <span class="tag">AUXIO</span>
+  </div>
 </header>
 
+<div class="heroimg"><img id="heroImg" src="acmi-wall.jpg" alt="The object wall at ACMI — a floor-to-ceiling display of moving-image objects" style="cursor:pointer" onclick="talkToHero()"
+  onerror="if(!this.dataset.f){this.dataset.f=1;this.src='https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/AEO177013_ZoetropeWithIllustratedAnimationStrips_Front.jpg.1200x1200_q85.jpg';}else{this.closest('.heroimg').style.display='none';}"></div>
+<div class="credit" id="heroCredit">The object wall · ACMI · The Story of the Moving Image</div>
+
 <section class="hero">
-  <div class="eyebrow">ACMI · The Story of the Moving Image</div>
-  <h1 class="title">The Object Wall</h1>
-  <div class="subtitle">One wall. A century of moving images. Ask it anything.</div>
-  <div class="concept">Concept demo · not official ACMI content</div>
-  <p class="story">From floor to ceiling, <b>the object wall</b> gathers the machines and ephemera of the moving image — magic lanterns and hand-cranked cameras, projectors and televisions, game consoles, props and the small strange things screens leave behind. Rather than a label on every case, <b>one AUXIO speaks for the whole wall</b>. Ask it aloud or in text, and it answers in a voice you choose, grounded only in ACMI's records.</p>
+  <div class="eyebrow" id="hEyebrow" data-i18n="eyebrow">The Story of the Moving Image</div>
+  <h1 class="title" id="hTitle">The Object Wall</h1>
+  <div class="subtitle" id="hSub">One wall. A century of moving images. Ask it anything.</div>
+  <div class="concept" data-i18n="concept">Concept demo · a proposal by Fine Art Media · not official ACMI content</div>
 </section>
 
-<!-- real wall photo drops in here; falls back to the map if absent -->
-<div class="wallphoto" id="wallPhoto" style="display:none"><img src="acmi-wall.jpg" alt="The object wall at ACMI" onerror="document.getElementById('wallPhoto').style.display='none'"></div>
+<section class="content">
+  <p class="story" id="hStory">From floor to ceiling, <b>the object wall</b> gathers the machines that first taught pictures to move — zoetropes and praxinoscopes, magic lanterns and Muybridge’s motion studies, the spinning drums and mirror-toys of pre-cinema, through to contemporary works that spin them anew. Rather than a label on every case, <b>one AUXIO speaks for the whole wall</b>. Ask it aloud or in text, in the language you choose, grounded only in ACMI's records.</p>
 
-<div class="mapwrap">
-  <div class="map-cap">Map of the wall — tap a case to focus your question</div>
-  <div class="map"><svg viewBox="0 0 820 300" xmlns="http://www.w3.org/2000/svg" id="wallMap" role="img" aria-label="Schematic map of the object wall"></svg></div>
-  <div class="map-note">A schematic stand-in until the real wall photo and object plan drop in. In the live version this map is generated from ACMI's own object positions, so tapping a case tells the AUXIO exactly where the visitor is looking.</div>
-</div>
+  <details class="panel" open style="margin-top:18px;">
+    <summary><span class="panel-t" data-i18n="mapcap_t">The wall</span><span class="panel-h">tap an object to talk to it</span></summary>
+    <div class="panel-b">
+      <div id="wallGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px;"></div>
+      <div class="map-note" style="margin-top:8px;">Objects from ACMI's moving-image collection — tap any to talk to it, hover to reveal colour.</div>
+    </div>
+  </details>
 
-<div class="divider"></div>
+  <div class="divider"></div>
 
-<section class="wrap">
-  <div class="ask-label">Ask the object wall — one voice for the whole wall</div>
+  <div class="ask-label" data-i18n="asklabel">Ask the object wall</div>
+  <div style="font-family:var(--mono);font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;" data-i18n="personalabel">Persona — loaded prompt &amp; voice</div>
+  <div id="personaRow" style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;"></div>
   <div class="chips" id="chips"></div>
   <div class="chat-row">
     <input class="chat-in" id="chatIn" type="text" maxlength="480" placeholder="Ask the wall anything…" enterkeyhint="send">
     <button class="mic" id="micBtn" type="button" onclick="toggleMic()" aria-label="Ask by voice" title="Ask by voice">
       <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2.5" width="6" height="11" rx="3"></rect><path d="M5.5 11a6.5 6.5 0 0 0 13 0"></path><line x1="12" y1="17.5" x2="12" y2="21"></line><line x1="8.5" y1="21" x2="15.5" y2="21"></line></svg>
     </button>
-    <button class="send" onclick="askFree()">Ask</button>
+    <button class="send" data-i18n="ask" onclick="askFree()">Ask</button>
   </div>
   <div class="resp" id="resp"></div>
 
   <div class="vbanner"><div class="vbanner-in"><span class="vdot" id="vdot"></span><span class="vstatus" id="vstatus">Checking for the sovereign voice engine…</span></div></div>
 
   <details class="panel" open>
-    <summary><span class="panel-t">Voice &amp; audio</span><span class="panel-h">choose a voice</span></summary>
+    <summary><span class="panel-t" data-i18n="voicepanel">Voice &amp; audio</span><span class="panel-h" data-i18n="voicehint">choose a voice</span></summary>
     <div class="panel-b">
       <div class="row"><label for="voiceSel">Voice</label><select id="voiceSel" class="vsel"></select></div>
-      <div class="row"><label><input type="checkbox" id="autoRead" checked> Read answers aloud</label></div>
-      <div class="note">Production path when the local engine is running: <b>Whisper</b> listens, <b>Piper</b> speaks, fully on-device, no audio leaves the building. Voices can be swapped per gallery, or cloned from ACMI's own visitor-services actors (Coqui XTTS), and the same cloned voice can answer in many languages. Falls back to the browser voice if the engine isn't reachable.</div>
+      <div class="row"><label class="check"><input type="checkbox" id="autoRead" checked> <span data-i18n="readaloud">Read answers aloud</span></label></div>
     </div>
   </details>
 
   <details class="panel">
-    <summary><span class="panel-t">Object record</span><span class="panel-h">grounding</span></summary>
+    <summary><span class="panel-t" data-i18n="msgpanel">Leave a message</span><span class="panel-h" data-i18n="msghint">for the curators</span></summary>
+    <div class="panel-b">
+      <textarea id="msgInput" placeholder="Share a memory, a question, or what this brought to mind…" style="width:100%;min-height:74px;background:#000;border:1px solid var(--line2);color:var(--ink);font-family:var(--grot);font-size:.95rem;padding:11px;outline:none;resize:vertical;"></textarea>
+      <button class="send" type="button" style="margin-top:9px;" data-i18n="msgsend" onclick="sendMessage()">Send</button>
+      <div class="note" id="msgNote">Your note goes to the curatorial team for review — never shown publicly.</div>
+    </div>
+  </details>
+
+  <details class="panel">
+    <summary><span class="panel-t" data-i18n="sharepanel">Share</span><span class="panel-h" data-i18n="sharehint">this object</span></summary>
+    <div class="panel-b">
+      <div class="row" style="gap:7px;">
+        <button class="readbtn" type="button" data-i18n="sharebtn" onclick="shareNative()">Share…</button>
+        <button class="readbtn" type="button" data-i18n="copybtn" onclick="shareObj()">Copy link</button>
+      </div>
+      <div class="note" id="shareNote">Share what you are looking at — the link opens straight to this object.</div>
+    </div>
+  </details>
+
+  <details class="panel">
+    <summary><span class="panel-t" data-i18n="recordpanel">Object record</span><span class="panel-h" data-i18n="recordhint">grounding</span></summary>
     <div class="panel-b">
       <div class="meta-row"><span class="meta-k">Display</span><span class="meta-v">The object wall, The Story of the Moving Image</span></div>
       <div class="meta-row"><span class="meta-k">Institution</span><span class="meta-v">ACMI · Australian Centre for the Moving Image</span></div>
@@ -140,54 +236,121 @@ footer b{color:var(--text2);font-weight:400}
   </details>
 </section>
 
-<footer><b>Runs on ARCHAI</b> — sovereign, local-first cultural-heritage AI · grounded in the record, no invention<br>Whisper (STT) + Piper / Coqui (TTS), on-device · concept demo for ACMI · not official ACMI content · fineartmedia.tech/archai</footer>
+<footer><b>The Object Wall</b> — an AUXIO experience, grounded in the record<br>Runs on ARCHAI · sovereign, local-first cultural-heritage AI · on-device voice<br>A concept by Fine Art Media · independent proposal, not affiliated with or endorsed by ACMI · fineartmedia.tech</footer>
+
+</div></div>
 
 <script>
 const CHAT='https://archai-api.fineartmedia.tech/api/proxy/chat';
 const VOICE_SERVER='http://127.0.0.1:8123';
 const $=id=>document.getElementById(id);
-const inputEl=$('chatIn'),respEl=$('resp'),micBtn=$('micBtn'),voiceSel=$('voiceSel'),autoReadEl=$('autoRead');
-let lastReply='',history=[],sovereign=false,focusZone='';
-const VOICE_LABELS={alba:'Ada · Female, 30s · Gallery guide',cori:'Cate · Female, 40s · Curator',amy:'Amy · Female, 20s · Education host',lessac:'Nora · Female, 40s · Archivist',ryan:'Ryan · Male, 30s · Narrator',alan:'Alan · Male, 60s · Historian',northern:'Ted · Male, 50s · Projectionist'};
+const inputEl=$('chatIn'),respEl=$('resp'),micBtn=$('micBtn'),voiceSel=$('voiceSel'),autoReadEl=$('autoRead'),langSel=$('langSel');
+let lastReply='',history=[],sovereign=false,focusZone='',focusGround='';
+const VOICE_LABELS={rob_au:'Rob · Male · Australian (cloned voice)',alba:'Ada · Female · British (Piper)',cori:'Cate · Female · British (Piper)',amy:'Amy · Female · American (Piper)',lessac:'Nora · Female · American (Piper)',ryan:'Ryan · Male · American (Piper)',alan:'Alan · Male · British (Piper)',northern:'Ted · Male · British (Piper)'};
 
-// ── the object map (schematic; tap a case to focus) ──
-const CASES=[
- 'Magic lanterns','Early cameras','Projectors','Televisions','The Countdown sign',
- 'Film reels','Movie cameras','Home video','Game consoles','Drive-In sign',
- 'Phones & screens','Props & costumes','PEZ & ephemera','Radios','Speakers',
- 'Photographs','Posters','Toys & tie-ins','Editing gear','Screens today'];
-function buildMap(){
-  const cols=5,rows=4,W=820,H=300,pad=14,gx=8,gy=8;
-  const cw=(W-pad*2-gx*(cols-1))/cols, ch=(H-pad*2-gy*(rows-1))/rows;
-  let s='';
-  CASES.forEach((label,i)=>{
-    const c=i%cols,r=(i/cols)|0, x=pad+c*(cw+gx), y=pad+r*(ch+gy);
-    const amber=(i*7)%5<2;
-    s+=`<g class="case" style="cursor:pointer" onclick="setFocus('${label.replace(/'/g,"")}',this)">`
-     +`<rect x="${x}" y="${y}" width="${cw}" height="${ch}" rx="3" fill="${amber?'rgba(242,193,78,.10)':'#161618'}" stroke="${amber?'rgba(242,193,78,.5)':'#33333a'}" stroke-width="1"></rect>`
-     +`<text x="${x+cw/2}" y="${y+ch/2+3}" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="${amber?'#f2c14e':'#9a978f'}">${label}</text></g>`;
-  });
-  $('wallMap').innerHTML=s;
+// ── the object wall — real objects from the collection; tap to focus ──
+const WALL=[{"t": "Zoetrope", "d": "19th c.", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/AEO177013_ZoetropeWithIllustratedAnimationStrips_Front.jpg.1200x1200_q85.jpg", "sub": "Optical toy · animation drum", "info": "An animation device: a slitted cylinder holding printed paper strips. Spin it, look through the slits, and a sequence of drawings springs into a single moving image."}, {"t": "Praxinoscope", "d": "1876", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/AEO175951_Praxinoscope_Front.jpg.1200x1200_q85.jpg", "sub": "Charles-Émile Reynaud · 1876", "info": "A 19th-century optical toy invented in 1876 by Charles-Émile Reynaud. A strip of twelve frames sits in a spinning cylinder while mirrors at the centre reveal a single image in motion."}, {"t": "Praxinoscope Théâtre", "d": "", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/AEO177313_RaynaudPraxinoscopeTheatre_34_Left_resaved.jpg.1200x1200_q85.jpg", "sub": "Charles-Émile Reynaud", "info": "Reynaud developed his praxinoscope into a small theatre, letting viewers mix printed backgrounds and character reels to build more sophisticated animated scenes and stories."}, {"t": "Théâtre Optique", "d": "1892", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/FC180128_FC022.jpg.1200x1200_q85.jpg", "sub": "Charles-Émile Reynaud · 1892", "info": "In 1892 Charles-Émile Reynaud debuted his grandest invention, the Théâtre Optique, in Paris. It projected moving pictures hand-painted onto long perforated strips of gelatine, animation on a screen years before cinema."}, {"t": "Toupie-fantoche", "d": "1881", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/P181400_ToupieFantoche.jpg.1200x1200_q85.jpg", "sub": "Charles-Émile Reynaud · 1881", "info": "In 1881 Reynaud simplified his own praxinoscope into a portable spinning top, the toupie-fantoche. Give it a spin and butterflies flutter, dogs jump through hoops and drummer boys drum."}, {"t": "Cuphead zoetrope", "d": "2020", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/P181399_CupheadZoetrope_FullFront.jpg.1200x1200_q85.jpg", "sub": "Studio MDHR · 2020", "info": "The cheeky characters of Studio MDHR’s Cuphead videogame spring into action in this contemporary incarnation of the popular 19th-century invention, the zoetrope."}, {"t": "Muybridge motion study", "d": "1887", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/P180308_G016.jpg.1200x1200_q85.jpg", "sub": "Eadweard Muybridge · 1887", "info": "Eadweard Muybridge laid the foundation of the moving image. Using multiple cameras triggered by trip wires, he captured a galloping horse in sequential frames, reproduced them in a zoetrope, and created the world’s first moving photographs."}, {"t": "Musée Grévin poster", "d": "1892", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/FC180127_FC021.jpg.1200x1200_q85.jpg", "sub": "Pantomimes Lumineuses · 1892", "info": "The inaugural poster for the Pantomimes Lumineuses at the Musée Grévin, 1892, where Reynaud projected hand-painted animated films to a paying public, years before cinema arrived."}, {"t": "Magic lantern slide", "d": "", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/AEO186355_ToyMagicLanternSlide_SnowWhiteWithPrince.jpg.1200x1200_q85.jpg", "sub": "Toy magic-lantern slide", "info": "A hand-painted toy magic-lantern slide. Slid into a lantern and lit, it threw a glowing picture onto the wall, a favourite home entertainment long before cinema."}];
+const I18N={"en": {"eyebrow": "The Story of the Moving Image", "title": "The Object Wall", "subtitle": "One wall. A century of moving images. Ask it anything.", "story": "From floor to ceiling, the object wall gathers the machines that first taught pictures to move — zoetropes and praxinoscopes, magic lanterns and Muybridge’s motion studies, the spinning drums and mirror-toys of pre-cinema, through to contemporary works that spin them anew. Rather than a label on every case, one AUXIO speaks for the whole wall. Ask it aloud or in text, in the language you choose, grounded only in ACMI’s records.", "concept": "Concept demo · a proposal by Fine Art Media · not official ACMI content", "mapcap": "The wall — tap any object to talk to it", "asklabel": "Ask the object wall", "personalabel": "Persona — loaded prompt & voice", "p_curator": "Curator", "p_guide": "Guide", "p_education": "Education", "p_technical": "Technical", "placeholder": "Ask the object wall anything…", "ask": "Ask", "voicepanel": "Voice & audio", "voicehint": "choose a voice", "readaloud": "Read answers aloud", "msgpanel": "Leave a message", "msghint": "for the curators", "msgsend": "Send", "msgnote": "Your note goes to the curatorial team for review — never shown publicly.", "sharepanel": "Share", "sharehint": "this object", "sharebtn": "Share…", "copybtn": "Copy link", "recordpanel": "Object record", "recordhint": "grounding", "o0_t": "Zoetrope", "o0_sub": "Optical toy · animation drum", "o0_info": "An animation device: a slitted cylinder holding printed paper strips. Spin it, look through the slits, and a sequence of drawings springs into a single moving image.", "o1_t": "Praxinoscope", "o1_sub": "Charles-Émile Reynaud · 1876", "o1_info": "A 19th-century optical toy invented in 1876 by Charles-Émile Reynaud. A strip of twelve frames sits in a spinning cylinder while mirrors at the centre reveal a single image in motion.", "o2_t": "Praxinoscope Théâtre", "o2_sub": "Charles-Émile Reynaud", "o2_info": "Reynaud developed his praxinoscope into a small theatre, letting viewers mix printed backgrounds and character reels to build more sophisticated animated scenes and stories.", "o3_t": "Théâtre Optique", "o3_sub": "Charles-Émile Reynaud · 1892", "o3_info": "In 1892 Charles-Émile Reynaud debuted his grandest invention, the Théâtre Optique, in Paris. It projected moving pictures hand-painted onto long perforated strips of gelatine, animation on a screen years before cinema.", "o4_t": "Toupie-fantoche", "o4_sub": "Charles-Émile Reynaud · 1881", "o4_info": "In 1881 Reynaud simplified his own praxinoscope into a portable spinning top, the toupie-fantoche. Give it a spin and butterflies flutter, dogs jump through hoops and drummer boys drum.", "o5_t": "Cuphead zoetrope", "o5_sub": "Studio MDHR · 2020", "o5_info": "The cheeky characters of Studio MDHR’s Cuphead videogame spring into action in this contemporary incarnation of the popular 19th-century invention, the zoetrope.", "o6_t": "Muybridge motion study", "o6_sub": "Eadweard Muybridge · 1887", "o6_info": "Eadweard Muybridge laid the foundation of the moving image. Using multiple cameras triggered by trip wires, he captured a galloping horse in sequential frames, reproduced them in a zoetrope, and created the world’s first moving photographs.", "o7_t": "Musée Grévin poster", "o7_sub": "Pantomimes Lumineuses · 1892", "o7_info": "The inaugural poster for the Pantomimes Lumineuses at the Musée Grévin, 1892, where Reynaud projected hand-painted animated films to a paying public, years before cinema arrived.", "o8_t": "Magic lantern slide", "o8_sub": "Toy magic-lantern slide", "o8_info": "A hand-painted toy magic-lantern slide. Slid into a lantern and lit, it threw a glowing picture onto the wall, a favourite home entertainment long before cinema."}, "zh": {"eyebrow": "移动影像的故事", "title": "物件墙", "subtitle": "一面墙。一个世纪的动态图像。向它提问。", "story": "从地板到天花板，物件墙汇集了首次让图片动起来的机器——走马盘、幻影镜、魔法灯箱和Muybridge的运动研究，还有电影之前的旋转鼓和镜子玩具，一直到当代作品重新诠释它们。与其在每个展示柜上贴标签，一个AUXIO为整面墙代言。你可以用你选择的语言大声提问或输入文字，只需基于ACMI的记录。", "concept": "概念演示 · Fine Art Media 提案 · 非官方 ACMI 内容", "mapcap": "墙面 — 点击任何物件与它对话", "asklabel": "询问物件墙", "personalabel": "角色设定 — 加载提示和声音", "p_curator": "策展人", "p_guide": "导览员", "p_education": "教育", "p_technical": "技术", "placeholder": "向物件墙提问任何问题……", "ask": "询问", "voicepanel": "语音与音频", "voicehint": "选择一个声音", "readaloud": "朗读答案", "msgpanel": "留言", "msghint": "给策展人", "msgsend": "发送", "msgnote": "您的笔记将提交给策展团队审核 — 永远不会公开显示。", "sharepanel": "分享", "sharehint": "这个物件", "sharebtn": "分享……", "copybtn": "复制链接", "recordpanel": "物件记录", "recordhint": "基础信息", "o0_t": "走马盘", "o0_sub": "光学玩具 · 动画鼓", "o0_info": "一种动画装置：一个带有印刷纸带的有孔圆筒。旋转它，透过孔隙看过去，一系列图画就会变成单一动态影像。", "o1_t": "幻影镜", "o1_sub": "Charles-Émile Reynaud · 1876", "o1_info": "一种19世纪的光学玩具，由Charles-Émile Reynaud于1876年发明。一条十二帧的带子坐在旋转圆筒中，而中心的镜子揭示出一个动态影像。", "o2_t": "幻影镜剧场", "o2_sub": "Charles-Émile Reynaud", "o2_info": "Reynaud将他的幻影镜发展成一个小剧院，让观众混合印刷背景和角色带子来构建更复杂的动画场景和故事。", "o3_t": "光学剧院", "o3_sub": "Charles-Émile Reynaud · 1892", "o3_info": "在1892年，Charles-Émile Reynaud在巴黎首次展示了他最伟大的发明——光学剧院。它投影出手绘到长穿孔带子上的移动图片，在电影出现之前几年就实现了动画屏幕。", "o4_t": "旋转顶", "o4_sub": "Charles-Émile Reynaud · 1881", "o4_info": "在1881年，Reynaud简化了自己的幻影镜成一个便携式旋转顶——toupie-fantoche。转动它，蝴蝶飞舞、狗穿过圈环和鼓手击鼓。", "o5_t": "Cuphead走马盘", "o5_sub": "Studio MDHR · 2020", "o5_info": "在这一当代版本的19世纪流行发明——走马盘中，Studio MDHR的Cuphead游戏中的俏皮角色活了起来。", "o6_t": "Muybridge运动研究", "o6_sub": "Eadweard Muybridge · 1887", "o6_info": "Eadweard Muybridge为移动影像奠定了基础。使用多台由触发线控制的相机，他捕捉了一匹马在连续帧中的奔跑，并将其复制到走马盘中，创造了世界上第一张动态照片。", "o7_t": "Musée Grévin海报", "o7_sub": "Pantomimes Lumineuses · 1892", "o7_info": "1892年在Musée Grévin举办的Pantomimes Lumineuses的首张海报，Reynaud在此处向付费观众放映手绘动画电影，在电影院出现之前。", "o8_t": "魔法灯箱幻灯片", "o8_sub": "玩具魔法灯箱幻灯片", "o8_info": "一张手工绘制的玩具魔法灯箱幻灯片。插入灯箱并点亮，它将发光的画面投射到墙上，在电影院出现之前一直是家庭娱乐的最爱。"}, "ar": {"eyebrow": "قصة الصورة المتحركة", "title": "جدار القطع", "subtitle": "جدار واحد. قرن من الصور المتحركة. اسأل عنه أي شيء.", "story": "من الأرض إلى السقف، يجمع جدار القطع الآلات التي علمت الصور بالحركة لأول مرة - الزوتروب والبراكينسكوب، والأقنعة السحرية ودراسات الحركة لميوبريدج، وأدوات ما قبل السينما الدوارة والعاب المرآة، حتى الأعمال الحديثة التي تعيد صياغتها. بدلاً من الملصق في كل صندوق، يتحدث AUXIO عن الجدار بأكمله. اسأل بصوت عالٍ أو بالنص، بلغة تختارها، متأسساً فقط على سجلات ACMI.", "concept": "عرض مفاهيمي · مقترح من Fine Art Media · ليس محتوى رسمي لـ ACMI", "mapcap": "الجدار — اضغط على أي قطعة للتحدث إليها", "asklabel": "اسأل جدار القطع", "personalabel": "شخصية — حملت الإشارة وصوت", "p_curator": "مدير متحف", "p_guide": "مرشد", "p_education": "تعليم", "p_technical": "تقني", "placeholder": "اسأل جدار القطع أي شيء...", "ask": "أسأل", "voicepanel": "الصوت والصوت", "voicehint": "اختر صوتًا", "readaloud": "اقرأ الإجابات بصوت عالٍ", "msgpanel": "أترك رسالة", "msghint": "للمديرين", "msgsend": "إرسال", "msgnote": "ملاحظتك تذهب إلى فريق التحرير للاستعراض - لن يتم عرضها علنًا أبداً.", "sharepanel": "شارك", "sharehint": "هذا القطعة", "sharebtn": "مشاركة...", "copybtn": "نسخ الرابط", "recordpanel": "سجّل القطعة", "recordhint": "الأساس", "o0_t": "زوتروب", "o0_sub": "لعبه بصريه · طبلة الرسم المتحركة", "o0_info": "جهاز للرسوم المتحركة: أسطوانة ذات فتحات تحتوي على شرائط ورقية مطبوعة. دوّره، انظر من خلال الفتحات، وسيظهر سلسلة من الرسوم المتحركة كصورة واحدة في حركة.", "o1_t": "براكينسكوب", "o1_sub": "شارل-إميل رينوار · 1876", "o1_info": "لعبه بصريه اخترعت عام 1876 من قبل شارل-إميل رينوار. يجلس شريط يتكون من 12 إطارًا في أسطوانة دوّارة بينما تكشف المرآة في الوسط عن صورة واحدة في حركة.", "o2_t": "براكينسكوب مسرح", "o2_sub": "شارل-إميل رينوار", "o2_info": "أدخل رينوار براكينسكوبه إلى مسرح صغير، مما يسمح للمشاهدين بتقليب الخلفيات المطبوعة والشرائط الشخصية لبناء مشاهد وأنصاف أفلام أكثر تعقيدًا.", "o3_t": "مسرح بصري", "o3_sub": "شارل-إميل رينوار · 1892", "o3_info": "في عام 1892 قدم شارل-إميل رينوار اختراعه الأكبر، مسرح البصريات، في باريس. ألقى الضوء على الصور المتحركة يدوياً مرسومة على شرائط طويلة مثقبة من الجيلاتين، الرسوم المتحركة على الشاشة قبل عقود من ظهور السينما.", "o4_t": "توبيه فانتوش", "o4_sub": "شارل-إميل رينوار · 1881", "o4_info": "في عام 1881 بسط رينوار براكينسكوبه إلى كرة دوّارة محمولة، التوبيه فانتوش. دوّره وسترى الفراشات ترفرف، الكلاب تقفز في الحلقات والجندية يعزفون.", "o5_t": "زوتروب كابهيد", "o5_sub": "استوديو MDHR · 2020", "o5_info": "الشخصيات المضحكة من لعبة الفيديو كابهيد لاستوديو MDHR تتحرك في هذه النسخة الحديثة من الـزوتروب، اختراع القرن التاسع عشر الشائع.", "o6_t": "دراسة حركة ميوبريدج", "o6_sub": "إدوارد ميوبريدج · 1887", "o6_info": "أرسى إدوارد ميوبريدج أسس الصورة المتحركة. باستخدام كاميرات متعددة تطلقها الأوتار، أسرد حصانًا يركض في صور متتالية، ونسخها في زوتروب، وأوجد أول صور متحركة في العالم.", "o7_t": "ملصق متحف غريفين", "o7_sub": "التمثيلات الضوئية · 1892", "o7_info": "الملصق التأسيسي للتمثيلات الضوئية في متحف غريفين، عام 1892، حيث ألقى رينوار الأفلام المتحركة يدوياً على الجمهور المدفوع، قبل عقود من وصول السينما.", "o8_t": "-slide سحري", "o8_sub": "slide لعبة سحرية", "o8_info": "slide لعبة سحرية مرسومة باليد. ادخلها في الساحر وأضيءها، وستظهر صورة مضيئة على الجدار، وهي ترفيه منزلي شائع قبل عقود من ظهور السينما."}, "vi": {"eyebrow": "Câu chuyện về Hình ảnh Động", "title": "Tường Đối tượng", "subtitle": "Một bức tường. Một thế kỷ hình ảnh động. Hỏi nó bất cứ điều gì.", "story": "Từ sàn đến trần, Tường Đối tượng tập hợp những máy móc đầu tiên đã dạy cho hình ảnh biết di chuyển — zoetrope và praxinoscope, đèn lồng phép thuật và nghiên cứu chuyển động của Muybridge, trống quay và đồ chơi gương trước điện ảnh, qua đến các tác phẩm hiện đại xoay lại chúng. Thay vì nhãn trên mỗi hộp, một AUXIO nói thay cho cả bức tường. Hỏi nó bằng lời nói hoặc văn bản, trong ngôn ngữ bạn chọn, chỉ dựa vào hồ sơ của ACMI.", "concept": "Demo khái niệm · đề xuất bởi Fine Art Media · không phải nội dung chính thức của ACMI", "mapcap": "Bức tường — chạm vào bất kỳ đối tượng nào để nói chuyện với nó", "asklabel": "Hỏi Tường Đối tượng", "personalabel": "Persona — lời nhắc và giọng điệu đã tải sẵn", "p_curator": "Trưởng bộ phận triển lãm", "p_guide": "Nhân viên hướng dẫn", "p_education": "Giáo dục", "p_technical": "Công nghệ", "placeholder": "Hỏi Tường Đối tượng bất cứ điều gì…", "ask": "Hỏi", "voicepanel": "Âm thanh và giọng nói", "voicehint": "chọn một giọng điệu", "readaloud": "Đọc câu trả lời to", "msgpanel": "Gửi tin nhắn", "msghint": "cho trưởng bộ phận triển lãm", "msgsend": "Gửi", "msgnote": "Lời nhắn của bạn sẽ được gửi đến đội ngũ quản lý triển lãm để xem xét — không bao giờ hiển thị công khai.", "sharepanel": "Chia sẻ", "sharehint": "đối tượng này", "sharebtn": "Chia sẻ…", "copybtn": "Sao chép liên kết", "recordpanel": "Bản ghi đối tượng", "recordhint": "cơ sở dữ liệu", "o0_t": "Zoetrope", "o0_sub": "Đồ chơi quang học · trống hoạt hình", "o0_info": "Một thiết bị hoạt hình: một ống trụ có lỗ chứa dải giấy in. Quay nó, nhìn qua các lỗ và chuỗi hình vẽ sẽ biến thành một hình ảnh động duy nhất.", "o1_t": "Praxinoscope", "o1_sub": "Charles-Émile Reynaud · 1876", "o1_info": "Một đồ chơi quang học thế kỷ 19 được phát minh vào năm 1876 bởi Charles-Émile Reynaud. Một dải gồm mười hai khung hình nằm trong một trụ quay, trong khi gương ở giữa cho thấy một hình ảnh duy nhất đang chuyển động.", "o2_t": "Praxinoscope Théâtre", "o2_sub": "Charles-Émile Reynaud", "o2_info": "Reynaud đã phát triển praxinoscope của mình thành một phòng nhỏ, cho phép người xem kết hợp nền in và cuộn nhân vật để tạo ra các cảnh hoạt hình phức tạp hơn.", "o3_t": "Théâtre Optique", "o3_sub": "Charles-Émile Reynaud · 1892", "o3_info": "Năm 1892 Charles-Émile Reynaud đã giới thiệu phát minh lớn nhất của mình, Théâtre Optique, tại Paris. Nó chiếu hình ảnh động được vẽ bằng tay lên các dải giấy perforated dài, hoạt hình trên màn hình nhiều năm trước khi điện ảnh ra đời.", "o4_t": "Toupie-fantoche", "o4_sub": "Charles-Émile Reynaud · 1881", "o4_info": "Năm 1881 Reynaud đã đơn giản hóa praxinoscope của mình thành một chiếc top quay di động, toupie-fantoche. Quay nó và những con bướm sẽ bay lượn, chó nhảy qua vòng tròn và các cậu bé đánh trống.", "o5_t": "Cuphead zoetrope", "o5_sub": "Studio MDHR · 2020", "o5_info": "Những nhân vật tinh nghịch của trò chơi Cuphead từ Studio MDHR sống động trong phiên bản hiện đại này của phát minh nổi tiếng thế kỷ 19, zoetrope.", "o6_t": "Muybridge motion study", "o6_sub": "Eadweard Muybridge · 1887", "o6_info": "Eadweard Muybridge đã đặt nền móng cho hình ảnh động. Sử dụng nhiều máy ảnh được kích hoạt bởi dây kéo, ông đã chụp một con ngựa đang chạy trong các khung hình liên tiếp, tái tạo chúng trong zoetrope và tạo ra những bức ảnh động đầu tiên của thế giới.", "o7_t": "Băng rôn Musée Grévin", "o7_sub": "Pantomimes Lumineuses · 1892", "o7_info": "Băng rôn khai mạc cho Pantomimes Lumineuses tại Musée Grévin, năm 1892, nơi Reynaud đã chiếu các bộ phim hoạt hình được vẽ bằng tay cho công chúng trả phí, nhiều năm trước khi điện ảnh xuất hiện.", "o8_t": "Slide đèn lồng phép thuật", "o8_sub": "Slide đèn lồng phép thuật đồ chơi", "o8_info": "Một slide đèn lồng phép thuật được vẽ bằng tay. Khi đưa vào đèn lồng và chiếu sáng, nó tạo ra một bức hình phát sáng trên tường, một hình thức giải trí gia đình phổ biến lâu trước khi điện ảnh xuất hiện."}, "el": {"eyebrow": "Η Ιστορία του Διεργασιμού Εικόνα", "title": "Το Γωνία Πράγματων", "subtitle": "Μια πλακές. Ένα αιώνιο του διεργασιμού εικόνα. Ερθείτε και ρωτήστε την οποιαδήποτε.", "story": "Από το πάτωμα μέχρι το στόχακο, το γωνία πράγματων συλλέγει τους χημικούς που πρώτοι διδάξαν τις εικόνες να κινούνται — zoetropes και praxinoscopes, μαγικές λαμπάδες και έργα Muybridge για κίνηση, τα στροβίλια και αυτόματα παιχνίδια πριν από τον κινηματογράφο, μέχρι σύγχρονες έργα που τα επαναφέρουν. Αντί για ένα ετικέτα σε κάθε περιβόλη, μια AUXIO λέει για όλο το γωνία.", "concept": "Demo concept · μια πρόταση από Fine Art Media · δεν είναι οφικιαλή ACMI περιεχόμενο", "mapcap": "Το γωνία — τάπισε κάθε όργανο για να του μιλήσετε", "asklabel": "Ερωτήστε το γωνία πράγματων", "personalabel": "Περσονα — φόρτωση εντυπώσεως & φωνή", "p_curator": "Καθηγητής", "p_guide": "Οδηγός", "p_education": "Εκπαιδευτική", "p_technical": "Τεχνική", "placeholder": "Ερωτήστε το γωνία πράγματων οποιαδήποτε…", "ask": "Ερώτηση", "voicepanel": "Φωνή & ακουστική", "voicehint": "ξεκλείδωσε μια φωνή", "readaloud": "Διαβάστε τις απαντήσεις υψηλόφωνα", "msgpanel": "Αφήστε ένα μήνυμα", "msghint": "για τους καθηγητές", "msgsend": "Στάλτε", "msgnote": "Το σημείωμά σας πηγάζει στο ομίλιο του καθηγητή για αξιολόγηση — ποτέ δεν εμφανίζεται δημοσίως.", "sharepanel": "Κοινοποίηση", "sharehint": "αυτό το όργανο", "sharebtn": "Κοινοποίηση…", "copybtn": "Αντέγγραφο σύνδεσμου", "recordpanel": "Εγγραφή όργανου", "recordhint": "βάση", "o0_t": "Zoetrope", "o0_sub": "Οπτικό παιχνίδι · δορυφορικό κύλινδρος", "o0_info": "Ένα δορυφορικό όργανο: ένα σλίτε τμήμα κυλίνδρου με επιστροφές γραμμένων παιζίδιων. Αν τον ανακατεύσετε, βλέψετε διά των σλίτων και μια σειρά γραφημάτων προβάλεται ως μια ενιαία διεργασιμή εικόνα.", "o1_t": "Praxinoscope", "o1_sub": "Charles-Émile Reynaud · 1876", "o1_info": "Ένα όπτικό παιχνίδι του 19ου αιώνα εφευρέθηκε το 1876 από τον Charles-Émile Reynaud. Ένα κύλινδρος με δώδεκα πλάκες στην περιοχή ενός συστήματος αναπαραγωγής, όπου τα καθρέφτες στο κέντρο δείχνουν μια ενιαία εικόνα.", "o2_t": "Praxinoscope Théâtre", "o2_sub": "Charles-Émile Reynaud", "o2_info": "Reynaud απλώστε το praxinoscope σε ένα μικρό θέατρο, επιτρέποντας τους χρήστες να πάρουν τυχαία δημιουργούμενες φόντα και σκηνοθετικά για να αποδείξουν πιο επιστημονικές άνιμε τυπικές σκηνές και ιστορίες.", "o3_t": "Théâtre Optique", "o3_sub": "Charles-Émile Reynaud · 1892", "o3_info": "Το 1892 Charles-Émile Reynaud διαμορφώσε την μεγαλύτερη επίδρασή του, το Théâtre Optique, στο Πάρις. Αυτό προβάλει κινητές εικόνες χειρογράφων σε μακρύ φουσκώδες ταινίες, ανιμέ τυπική σε δεξαμενή πολλά χρόνια πριν από την κινητογραφική.", "o4_t": "Toupie-fantoche", "o4_sub": "Charles-Émile Reynaud · 1881", "o4_info": "Το 1881 Reynaud απλώσε το praxinoscope σε ένα μικρό κυλίνδρος, το toupie-fantoche. Δώστε του μια ροή και τα πέτυχα φλιτζάρουν, τα σκύλα βγάζουν διαμόρφωση από τα ολίσθημα και τα μπούνεροι παίζουν.", "o5_t": "Cuphead zoetrope", "o5_sub": "Studio MDHR · 2020", "o5_info": "Τα χυστά χαρακτήρες του Cuphead videogame του Studio MDHR προβάλονται σε αυτό το σύγχρονο έργο, μια δημοφιλής 19ου αιώνιος επιστημονική περίθαλψη, zoetrope.", "o6_t": "Muybridge motion study", "o6_sub": "Eadweard Muybridge · 1887", "o6_info": "Eadweard Muybridge θέσε τον οριζόντα για τη διεργασιμή εικόνα. Χρησιμοποιώντας πολλά κάμερες ανακατευθυνόμενες μέσω τρίχων, αυτός συγκεντρώσε ένα φύλλο ποικιλοχρωμάτου κατά τη διάρκεια ενός χρόνου, το ανέπαιδευσε σε zoetrope, και δημιούργησε τις πρώτες μετακίνησες φωτογραφίες.", "o7_t": "Musée Grévin poster", "o7_sub": "Pantomimes Lumineuses · 1892", "o7_info": "Το πρώτο τύπο για την Pantomimes Lumineuses στο Musée Grévin, 1892, όπου Reynaud προβάλε δεξαμενές χειρογράφων ανιμέ σε ένα κόσμο της εταιρίας, μερικά χρόνια πριν από την φυλή.", "o8_t": "Magic lantern slide", "o8_sub": "Παιχνίδι magic-lantern slide", "o8_info": "Ένα χειρογράφων παιχνίδι magic-lantern slide. Εισαχθέντος σε μια λαμπάδα και φωτισμένου, το εκτόπιζε μια αλληλουϊα προβάλε στο τοίχο, ένα υποστήριξ για οικογενειακή εντertainment πολύ πριν από την κινηματογράφο."}, "it": {"eyebrow": "La Storia dell'Immagine in Movimento", "title": "Il Muro degli Oggetti", "subtitle": "Un muro. Un secolo di immagini in movimento. Chiedi qualsiasi cosa.", "story": "Dal pavimento al soffitto, il muro degli oggetti riunisce le macchine che hanno insegnato per prime alle immagini come muoversi — zoetropi e praxinoscopi, lanterne magiche e studi di movimento di Muybridge, tamburi rotanti e giocattoli specchiati dell'epoca pre-cinema, fino a opere contemporanee che li rielaborano. Piuttosto che una didascalia su ogni caso, un AUXIO parla per tutto il muro. Chiedi ad alta voce o in testo nella lingua che scegli, basandoti solo sulle registrazioni di ACMI.", "concept": "Demo concettuale · proposta da Fine Art Media · contenuto non ufficiale di ACMI", "mapcap": "Il muro — tocca qualsiasi oggetto per parlarci", "asklabel": "Chiedi al muro degli oggetti", "personalabel": "Persona — prompt caricato e voce", "p_curator": "Conservatore", "p_guide": "Guida", "p_education": "Didattica", "p_technical": "Tecnico", "placeholder": "Chiedi al muro degli oggetti qualsiasi cosa…", "ask": "Chiedi", "voicepanel": "Voce e audio", "voicehint": "scegli una voce", "readaloud": "Leggi le risposte ad alta voce", "msgpanel": "Lascia un messaggio", "msghint": "ai conservatori", "msgsend": "Invia", "msgnote": "Il tuo messaggio va alla squadra di conservazione per la revisione — mai mostrato pubblicamente.", "sharepanel": "Condividi", "sharehint": "questo oggetto", "sharebtn": "Condividi…", "copybtn": "Copia il link", "recordpanel": "Registro dell'oggetto", "recordhint": "fondamento", "o0_t": "Zoetrope", "o0_sub": "Gioco ottico · tamburo di animazione", "o0_info": "Un dispositivo di animazione: un cilindro con slitte che contiene strisce di carta stampate. Giralo, guarda attraverso le slitte e una sequenza di disegni si trasforma in un'immagine in movimento singola.", "o1_t": "Praxinoscope", "o1_sub": "Charles-Émile Reynaud · 1876", "o1_info": "Un gioco ottico del XIX secolo inventato nel 1876 da Charles-Émile Reynaud. Una striscia di dodici frame si trova in un cilindro rotante mentre specchi al centro rivelano un'immagine singola in movimento.", "o2_t": "Praxinoscope Théâtre", "o2_sub": "Charles-Émile Reynaud", "o2_info": "Reynaud sviluppò il suo praxinoscope in un piccolo teatro, permettendo ai spettatori di mescolare sfondi stampati e nastri di personaggi per creare scene animate più sofisticate e storie.", "o3_t": "Théâtre Optique", "o3_sub": "Charles-Émile Reynaud · 1892", "o3_info": "Nel 1892 Charles-Émile Reynaud debuttò la sua invenzione più grande, il Théâtre Optique, a Parigi. Proiettava immagini in movimento manoscritte su lunghe strisce perforate di gelatina, animazione sullo schermo anni prima del cinema.", "o4_t": "Toupie-fantoche", "o4_sub": "Charles-Émile Reynaud · 1881", "o4_info": "Nel 1881 Reynaud semplificò il suo praxinoscope in un piccolo girandola portatile, la toupie-fantoche. Dàle una spinta e le farfalle si muovono, i cani saltano attraverso gli anelli e i tamburini battono.", "o5_t": "Cuphead zoetrope", "o5_sub": "Studio MDHR · 2020", "o5_info": "I personaggi scherzosi di Cuphead del videogioco di Studio MDHR si muovono in azione in questa incarnazione contemporanea dell'invenzione popolare del XIX secolo, il zoetrope.", "o6_t": "Studio di movimento Muybridge", "o6_sub": "Eadweard Muybridge · 1887", "o6_info": "Eadweard Muybridge ha fondato l'immagine in movimento. Utilizzando più telecamere attivate da fili d'allarme, ha catturato un cavallo al galoppo in frame sequenziali, li ha riprodotti in un zoetrope e ha creato le prime fotografie in movimento del mondo.", "o7_t": "Poster Musée Grévin", "o7_sub": "Pantomimes Lumineuses · 1892", "o7_info": "Il poster inaugurale delle Pantomimes Lumineuses al Musée Grévin, 1892, dove Reynaud proiettava film animati a mano dipinti a un pubblico pagante, anni prima dell'arrivo del cinema.", "o8_t": "Lamina lanterna magica", "o8_sub": "Lamina giocattolo lanterna magica", "o8_info": "Una lamina giocattolo lanterna magica dipinta a mano. Inserita in una lanterna e illuminata, proiettava un'immagine luminosa sulla parete, un divertimento domestico popolare molto prima del cinema."}, "es": {"eyebrow": "La Historia de la Imagen en Movimiento", "title": "El Muro del Objeto", "subtitle": "Una pared. Un siglo de imágenes en movimiento. Pregúntale cualquier cosa.", "story": "Desde el suelo hasta el techo, el muro del objeto reúne las máquinas que primero enseñaron a las imágenes moverse — zoetropes y praxinoscopes, lámparas mágicas y estudios de movimiento de Muybridge, los tambores giratorios y juguetes con espejos de pre-cine, hasta obras contemporáneas que les dan un nuevo giro. En lugar de una etiqueta en cada caso, uno AUXIO habla por toda la pared. Pregúntale en voz alta o por texto, en el idioma que elijas, basado solo en los registros de ACMI.", "concept": "Demostración conceptual · una propuesta de Fine Art Media · no contenido oficial de ACMI", "mapcap": "La pared — toca cualquier objeto para hablar con él", "asklabel": "Pregunta al muro del objeto", "personalabel": "Persona — carga de sugerencia y voz", "p_curator": "Comisario", "p_guide": "Guía", "p_education": "Educación", "p_technical": "Técnico", "placeholder": "Pregunta al muro del objeto cualquier cosa…", "ask": "Preguntar", "voicepanel": "Voz y audio", "voicehint": "elige una voz", "readaloud": "Lee las respuestas en voz alta", "msgpanel": "Deja un mensaje", "msghint": "para los comisarios", "msgsend": "Enviar", "msgnote": "Tu nota va al equipo de comisariado para revisión — nunca se muestra públicamente.", "sharepanel": "Compartir", "sharehint": "este objeto", "sharebtn": "Compartir…", "copybtn": "Copiar enlace", "recordpanel": "Registro del objeto", "recordhint": "fundamento", "o0_t": "Zoetrope", "o0_sub": "Juguete óptico · tambor de animación", "o0_info": "Un dispositivo de animación: un cilindro con ranuras que contiene tiras impresas de papel. Gíralo, mira a través de las ranuras y una secuencia de dibujos se convierte en una sola imagen en movimiento.", "o1_t": "Praxinoscope", "o1_sub": "Charles-Émile Reynaud · 1876", "o1_info": "Un juguete óptico del siglo XIX inventado por Charles-Émile Reynaud en 1876. Una tira de doce cuadros se sitúa en un cilindro giratorio mientras que los espejos en el centro revelan una sola imagen en movimiento.", "o2_t": "Praxinoscope Théâtre", "o2_sub": "Charles-Émile Reynaud", "o2_info": "Reynaud desarrolló su praxinoscope en un pequeño teatro, permitiendo a los espectadores mezclar fondos impresas y tiras de personajes para construir escenas animadas más sofisticadas y historias.", "o3_t": "Théâtre Optique", "o3_sub": "Charles-Émile Reynaud · 1892", "o3_info": "En 1892 Charles-Émile Reynaud debutó su invento más grande, el Théâtre Optique, en París. Proyectaba imágenes en movimiento pintadas a mano en largas tiras perforadas de gelatina, animación en una pantalla años antes del cine.", "o4_t": "Toupie-fantoche", "o4_sub": "Charles-Émile Reynaud · 1881", "o4_info": "En 1881 Reynaud simplificó su propio praxinoscope en un pequeño topo giratorio, la toupie-fantoche. Dále una vuelta y las mariposas revolotean, los perros saltan por aros y los tamborileros tocan.", "o5_t": "Cuphead zoetrope", "o5_sub": "Studio MDHR · 2020", "o5_info": "Los personajes traviesos de Cuphead del videogame de Studio MDHR se ponen en acción en esta versión contemporánea del popular invento del siglo XIX, el zoetrope.", "o6_t": "Estudio de movimiento Muybridge", "o6_sub": "Eadweard Muybridge · 1887", "o6_info": "Eadweard Muybridge sentó las bases de la imagen en movimiento. Usando múltiples cámaras disparadas por cables, capturó un caballo galopante en cuadros secuenciales, los reprodujo en un zoetrope y creó las primeras fotografías en movimiento del mundo.", "o7_t": "Cartel Musée Grévin", "o7_sub": "Pantomimes Lumineuses · 1892", "o7_info": "El cartel inaugural de las Pantomimes Lumineuses en el Musée Grévin, 1892, donde Reynaud proyectó películas animadas a mano pintadas para un público pagante, años antes de que llegara el cine.", "o8_t": "Diapositiva de lámpara mágica", "o8_sub": "Juguete diapositiva de lámpara mágica", "o8_info": "Una diapositiva pintada a mano de juguete para lámpara mágica. Insertada en una lámpara y iluminada, proyectaba una imagen brillante sobre la pared, un entretenimiento familiar favorito mucho antes del cine."}, "fr": {"eyebrow": "L'Histoire de l'image en mouvement", "title": "Le Mur des Objets", "subtitle": "Un mur. Un siècle d'images animées. Posez-lui une question.", "story": "Du sol au plafond, le mur des objets rassemble les machines qui ont d'abord appris aux images à bouger — zoétrope et praxinoscope, lanterne magique et études de mouvement de Muybridge, tambours tournants et jouets miroirs du pré-cinéma, jusqu'à des œuvres contemporaines qui les réinventent. Au lieu d'une étiquette sur chaque casier, un AUXIO parle pour tout le mur. Posez-lui une question à voix haute ou en texte, dans la langue de votre choix, fondée uniquement sur les archives d'ACMI.", "concept": "Démonstration conceptuelle · une proposition de Fine Art Media · non officiel ACMI", "mapcap": "Le mur — tapez sur n’importe quel objet pour lui parler", "asklabel": "Posez une question au mur des objets", "personalabel": "Personnalité — prompt et voix chargés", "p_curator": "Conservateur", "p_guide": "Guide", "p_education": "Éducation", "p_technical": "Technique", "placeholder": "Posez au mur des objets n’importe quelle question…", "ask": "Demander", "voicepanel": "Voix et audio", "voicehint": "choisissez une voix", "readaloud": "Lire les réponses à haute voix", "msgpanel": "Laisser un message", "msghint": "pour les conservateurs", "msgsend": "Envoyer", "msgnote": "Votre note va au groupe de conservation pour examen — jamais montrée publiquement.", "sharepanel": "Partager", "sharehint": "cet objet", "sharebtn": "Partager…", "copybtn": "Copier le lien", "recordpanel": "Fiche d’objet", "recordhint": "ancrage", "o0_t": "Zoétrope", "o0_sub": "Jouet optique · tambour d'animation", "o0_info": "Un dispositif d'animation : un cylindre percé de fentes contenant des bandes de papier imprimées. Tournez-le, regardez à travers les fentes et une série de dessins se transforme en une image animée unique.", "o1_t": "Praxinoscope", "o1_sub": "Charles-Émile Reynaud · 1876", "o1_info": "Jouet optique du XIXe siècle inventé par Charles-Émile Reynaud en 1876. Une bande de douze images se trouve dans un cylindre tournant tandis que des miroirs au centre révèlent une image unique en mouvement.", "o2_t": "Praxinoscope Théâtre", "o2_sub": "Charles-Émile Reynaud", "o2_info": "Reynaud a développé son praxinoscope en un petit théâtre, permettant aux spectateurs de mélanger des arrière-plans imprimés et des bandes de personnages pour construire des scènes animées plus sophistiquées et des histoires.", "o3_t": "Théâtre Optique", "o3_sub": "Charles-Émile Reynaud · 1892", "o3_info": "En 1892, Charles-Émile Reynaud a dévoilé son invention la plus grande, le Théâtre Optique, à Paris. Il projetait des images animées peintes à la main sur de longues bandes perforées de gélatine, animation sur écran des années avant le cinéma.", "o4_t": "Toupie-fantoche", "o4_sub": "Charles-Émile Reynaud · 1881", "o4_info": "En 1881, Reynaud a simplifié son propre praxinoscope en une toupie portable, la toupie-fantoche. Faites-la tourner et des papillons s'envolent, des chiens sautent à travers des anneaux et des tambourineurs jouent de la batterie.", "o5_t": "Zoétrope Cuphead", "o5_sub": "Studio MDHR · 2020", "o5_info": "Les personnages espiègles du jeu vidéo Cuphead de Studio MDHR prennent vie dans cette incarnation contemporaine d'une invention populaire du XIXe siècle, le zoétrope.", "o6_t": "Étude de mouvement Muybridge", "o6_sub": "Eadweard Muybridge · 1887", "o6_info": "Eadweard Muybridge a posé les bases de l'image en mouvement. En utilisant plusieurs caméras déclenchées par des fils tendus, il a capturé un cheval au galop dans des images séquentielles, les a reproduites dans un zoétrope et a créé les premières photographies animées du monde.", "o7_t": "Affiche Musée Grévin", "o7_sub": "Pantomimes Lumineuses · 1892", "o7_info": "L'affiche inaugurale des Pantomimes Lumineuses au Musée Grévin en 1892, où Reynaud projetait des films animés peints à la main pour un public payant, des années avant l'arrivée du cinéma.", "o8_t": "Diapositive de lanterne magique", "o8_sub": "Diapositive de jouet de lanterne magique", "o8_info": "Une diapositive peinte à la main de jouet de lanterne magique. Insérée dans une lanterne et éclairée, elle projetait un tableau lumineux sur le mur, une forme d'entertainment familial populaire longtemps avant l'avènement du cinéma."}, "hi": {"eyebrow": "चलचित्र की कहानी", "title": "वस्तु दीवार", "subtitle": "एक दीवार। चलचित्रों की सदी। इसे कुछ पूछें।", "story": "भूमि से छत तक, वस्तु दीवार मशीनों को एकत्रित करता है जो पहले चित्रों को चलना सिखाने वाली थीं - जोट्रोप्स और प्रैक्सिनोस्कोप, मैजिक लैंटर्न और मुयब्रिड्ज के गति स्थापना अध्ययन, प्री-सिनेमा के घूमने वाले ड्रंग और दर्पण-खिलों, फिर आधुनिक कार्यों तक जो इन्हें नए ढंग से पुनः घूमते हैं। प्रत्येक महसूल के प्रति एक लेबल की जगह, एक AUXIO पूरी दीवार को विनयपूर्वक व्यक्त करता है। आप चुनिंदा भाषा में इसे बोल भी पूछ सकते हैं, या लिखकर पूछ सकते हैं - ACMI के रिकॉर्डों के आधार पर।", "concept": "कॉन्सेप्ट डीमो · फाइन आर्ट मीडिया से प्रस्ताव · ACMI की अनऑफिशिल कंटेंट", "mapcap": "दीवार — किसी भी वस्तु पर टैप करें, इससे बातचीत करें", "asklabel": "वस्तु दीवार से कुछ पूछें", "personalabel": "पर्सना — लोडेड प्रोम्प्ट & वाणी", "p_curator": "करेटर", "p_guide": "गाइड", "p_education": "शिक्षण", "p_technical": "เทคโนलॉजी", "placeholder": "वस्तु दीवार से कुछ पूछें…", "ask": "पूछें", "voicepanel": "आवाज़ और ऑडियो", "voicehint": "एक आवाज़ चुनें", "readaloud": "उत्तरों को बोलकर पढ़ें", "msgpanel": "संदेश छोड़ें", "msghint": "करेटर्स के लिए", "msgsend": "प्रेज़", "msgnote": "आपका संदेश करेटरीम टीम को प्रस्तुत होगा - कभी भी इन्हें वार्थलीबली नहीं दिखाया जाएगा।", "sharepanel": "शेयर", "sharehint": "यह वस्तु", "sharebtn": "शेयर…", "copybtn": "लिंक कॉपी", "recordpanel": "वस्तु रिकार्ड", "recordhint": "ग्राउंडिंग", "o0_t": "जोट्रोप", "o0_sub": "ऑप्टिकल टूय · एनीमेशन द्रम", "o0_info": "एक एनीमेशन डिवाइस: सुलझे हुए पेपर स्ट्रिपों को धारण करने वाला छिद्रित सिलेंडर। इसे घूमाएँ, छिद्रों में देखें, और चित्रों की श्रृंखला एक अद्वितीय चलचित्र में जाकर आती है।", "o1_t": "प्रैक्सिनोस्कोप", "o1_sub": "शार्ल्स-ईमिल रेयनोड · 1876", "o1_info": "19वीं सदी का ऑप्टिकल टूय, जो 1876 में शार्ल्स-ईमिल रेयनोड द्वारा आविष्कृत किया गया था। एक स्पिनिंग सिलेंडर में 12 ड्रेम स्ट्रीपों के बाद, केंद्र में दर्पण एक ही चित्र को गति देने के लिए प्रदर्शित करते हैं।", "o2_t": "प्रैक्सिनोस्कोप थीट्र", "o2_sub": "शार्ल्स-ईमिल रेयनोड", "o2_info": "रेयनोड ने अपने प्रैक्सिनोस्कोप को एक छोटे थीट्र में विकसित किया, जहाँ दर्शक संदूक और चरित्र रिलों को मिलाने के लिए प्रिंटेड बैकग्राउंड भी घोषित करते हैं, और समृद्ध एनीमेशन स्कीन और कहानियाँ बनाते हैं।", "o3_t": "थीट्र ऑप्टिक", "o3_sub": "शार्ल्स-ईमिल रेयनोड · 1892", "o3_info": "रेयनोड ने 1892 में पेरिस में अपनी सबसे बड़ी उत्पादन, थीट्र ऑप्टिक का डिब्यू किया। इसमें हथियार पेंटेड फिल्मों को लगाए गए लंबे छेदित स्ट्रीपों पर मोशन पिक्चर्स प्रक्षेपित किया जाता है, सिनेमा के बारे में वर्षों पहले।", "o4_t": "टूपी-फ़ैनटोच", "o4_sub": "शार्ल्स-ईमिल रेयनोड · 1881", "o4_info": "रेयनोड ने 1881 में अपने प्रैक्सिनोस्कोप को एक पुरातत्वीय स्पिंइंग टूपी, टूपी-फ़ैनटोच में सरल किया। इसे घूमाने पर चक्रधर फड़कते हैं, कुत्ते खिलाड़ियों के दाँव में जाते हैं और ड्रमर बच्चे ड्रम पर बजते हैं।", "o5_t": "कपहेड जोट्रोप", "o5_sub": "स्टुडियो MDHR · 2020", "o5_info": "स्टुडियो MDHR की कपहेड वीडियोगेम के चालक परंपरा, इस समकालीन उदाहरण में 19वीं सदी की प्रतिष्ठित जोट्रोप में आकार में चलने वाले हैं।", "o6_t": "मुयब्रिड्ज मोशन स्थापना", "o6_sub": "ईडवर्ड मुयब्रिड्ज · 1887", "o6_info": "ईडवर्ड मुयब्रिड्ज चलचित्रों के आधार पर नींव बना दिया। ट्रिप वाइर से गैलोपिंग हस्तक्षेप को अनुक्रम में फ़्रेमों में प्रतिबिंबित करने के लिए वे दोहरी कैमरा इस्तेमाल करते हैं, उन्हें जोट्रोप में पुनः बनाते हैं, और दुनिया की पहली चलचित्रों को बनाते हैं।", "o7_t": "म्यूसे ग्रेविन पोस्टर", "o7_sub": "पैंटोमीज़ लुमिनेस · 1892", "o7_info": "1892 में म्यूसे ग्रेविन के पैंटोमीज़ लुमिनेस के पहले पोस्टर। रेयनोड ने हथियार पेंटेड एनीमेशन फिल्मों को दर्शकों के सामने प्रक्षेपित किया, सिनेमा के आगमन से वर्षों पहले।", "o8_t": "मैजिक लैंटर्न स्लाइड", "o8_sub": "टॉय मैजिक-लैंटर्न स्लाइड", "o8_info": "एक हथियार पेंटेड टॉय मैजिक-लैंटर्न स्लाइड। इसे एक लैंटर्न में बना दिया जाता है, और प्रकाशित किया जाता है, जो चमकते पिक्चर को दीवार पर फेंकता है, सिनेमा के पहले से लंबे समय से पसंदीदा घर में आनंद।"}, "ja": {"eyebrow": "動画の物語", "title": "オブジェクトウォール", "subtitle": "一つの壁。映像が動き始めてから一世紀分の映像。何でも聞いてみよう。", "story": "床から天井まで、オブジェクトウォールは最初に絵を動かすことを教えた機械を集めています——ゾートロープやプラキノスコープ、魔法のランプとムービリッジの動き研究、映画誕生前の回転ドラムや鏡のおもちゃから、現代作品まで。各ケースにラベルをつける代わりに、一つのAUXIOが全体の壁を代表します。声で話しかけたり、テキストで質問したり、選んだ言語で何でも聞くことができます。ACMIの記録に基づいています。", "concept": "コンセプトデモ · Fine Art Mediaによる提案 · ACMI公式コンテンツではありません", "mapcap": "壁 — タップしてオブジェクトと話す", "asklabel": "オブジェクトウォールに聞く", "personalabel": "パーソナ — ロードされたプロンプト＆ボイス", "p_curator": "キュレーター", "p_guide": "ガイド", "p_education": "教育", "p_technical": "技術", "placeholder": "オブジェクトウォールに何でも聞いてみよう…", "ask": "聞く", "voicepanel": "ボイスとオーディオ", "voicehint": "声を選択", "readaloud": "音読する", "msgpanel": "メッセージを残す", "msghint": "キュレーターへ", "msgsend": "送信", "msgnote": "あなたのメモはキュレーターのチームにレビューのために送られます — 公開されることはありません。", "sharepanel": "共有", "sharehint": "このオブジェクトを", "sharebtn": "共有…", "copybtn": "リンクをコピー", "recordpanel": "オブジェクトレコード", "recordhint": "基盤となる情報", "o0_t": "ゾートロープ", "o0_sub": "光学玩具 · アニメーションドラム", "o0_info": "アニメーション装置：スリット付きの円筒に印刷された紙ストライプが入っています。回転させ、スリットから覗くと、絵が一連のフレームとして動き出す。", "o1_t": "プラキノスコープ", "o1_sub": "Charles-Émile Reynaud · 1876", "o1_info": "19世紀の光学玩具で、1876年にCharles-Émile Reynaudによって発明されました。12枚のフレームが入ったストリップが回転する円筒に置かれ、中央にある鏡が動きのある単一の画像を明らかにします。", "o2_t": "プラキノスコープ・シアター", "o2_sub": "Charles-Émile Reynaud", "o2_info": "Reynaudは彼のプラキノスコープを小さな劇場へと発展させ、印刷された背景とキャラクターリールを使ってより洗練されたアニメーションシーンや物語を作り出すことを可能にしました。", "o3_t": "オプティック・シアター", "o3_sub": "Charles-Émile Reynaud · 1892", "o3_info": "1892年にCharles-Émile Reynaudはパリで彼の最大の発明であるオプティック・シアターをデビューさせました。手描きされたアニメーションフィルムが長い穴あけストライプに投影され、映画が始まる数年前からスクリーン上のアニメーションを作り出しました。", "o4_t": "トゥピー・ファントッシュ", "o4_sub": "Charles-Émile Reynaud · 1881", "o4_info": "1881年にReynaudは自身のプラキノスコープを携帯可能な回転トップ、トゥピー・ファントッシュへと簡素化しました。回すと蝶が飛び交い、犬が輪を跳び、ドラマーの少年たちがドラムを叩きます。", "o5_t": "カップヘッド・ゾートロープ", "o5_sub": "Studio MDHR · 2020", "o5_info": "Studio MDHRのCupheadビデオゲームのキャラクターが、この現代版19世紀の人気発明であるゾートロープで動き出します。", "o6_t": "ムービリッジ・モーション研究", "o6_sub": "Eadweard Muybridge · 1887", "o6_info": "Eadweard Muybridgeは動画の基礎を築きました。トリガー線で複数のカメラが連続フレームで走る馬を撮影し、ゾートロープに再現して世界初の動き写真を作りました。", "o7_t": "グレーブン美術館ポスター", "o7_sub": "パンタミム・ルミネーズ · 1892", "o7_info": "Musée Grévinで1892年に開催されたPantomimes Lumineusesの初回ポスター。Reynaudは手描きアニメーション映画を有料観客に投影し、映画が登場する数年前から公開していました。", "o8_t": "魔法のランプスライド", "o8_sub": "玩具魔法のランプスライド", "o8_info": "手描きされた玩具魔法のランプスライド。ランプに差し込んで点灯させると、壁に明るい絵を投影します。映画が登場する数十年前から家庭での人気エンターテイメントでした。"}, "ko": {"eyebrow": "움직이는 이미지의 이야기", "title": "물체 벽", "subtitle": "한 벽. 움직이는 이미지의 세기. 그것에게 무엇이든 물어보세요.", "story": "바닥에서 천장까지, 물체 벽은 처음으로 그림을 움직이는 법을 가르친 기계들을 모았습니다 — zoetrope와 praxinoscope, 마법 램프와 Muybridge의 운동 연구, 영화가 등장하기 전의 회전 드럼과 거울 장난감에서 현대 작품까지 새로운 형태로 그들을 다시 탄생시킵니다. 각 케이스마다 라벨 대신 한 AUXIO가 전체 벽을 대변합니다. 원하는 언어로 소리 내서 또는 텍스트로 물어보세요, ACMI의 기록에 근거하여만.", "concept": "개념 데모 · Fine Art Media 제안 · 공식 ACMI 콘텐츠 아님", "mapcap": "벽 — 어떤 물체를 터치하면 대화가 시작됩니다", "asklabel": "물체 벽에게 묻기", "personalabel": "퍼스널 — 로드된 프롬프트 및 음성", "p_curator": "큐레이터", "p_guide": "가이드", "p_education": "교육", "p_technical": "기술", "placeholder": "물체 벽에게 무엇이든 묻습니다…", "ask": "묻기", "voicepanel": "음성 및 오디오", "voicehint": "목소리를 선택하세요", "readaloud": "답변 음성으로 읽어주기", "msgpanel": "메시지 남기기", "msghint": "큐레이터에게", "msgsend": "전송", "msgnote": "귀하의 메모는 큐레이터 팀에 검토를 위해 전달되며, 공개적으로 표시되지 않습니다.", "sharepanel": "공유", "sharehint": "이 물체", "sharebtn": "공유…", "copybtn": "링크 복사", "recordpanel": "물체 기록", "recordhint": "근거", "o0_t": "Zoetrope", "o0_sub": "광학 장난감 · 애니메이션 드럼", "o0_info": "애니메이션 장치: 슬릿이 있는 원통형 캐비닛에 인쇄된 종이 스트립을 넣습니다. 회전시키고, 그 사이를 통해 보세요. 그리고 그림 시퀀스가 움직이는 이미지로 살아납니다.", "o1_t": "Praxinoscope", "o1_sub": "Charles-Émile Reynaud · 1876", "o1_info": "19세기 광학 장난감으로, Charles-Émile Reynaud가 1876년에 발명했습니다. 12개 프레임이 있는 스트립이 회전하는 원통형 내부에 들어가며 중앙의 거울들이 움직이는 단일 이미지를 보여줍니다.", "o2_t": "Praxinoscope Théâtre", "o2_sub": "Charles-Émile Reynaud", "o2_info": "Reynaud은 그의 praxinoscope을 작은 극장으로 발전시켰습니다. 인쇄된 배경과 캐릭터 레일을 혼합하여 더 복잡한 애니메이션 장면과 이야기를 만들 수 있게 했습니다.", "o3_t": "Théâtre Optique", "o3_sub": "Charles-Émile Reynaud · 1892", "o3_info": "1892년 Charles-Émile Reynaud은 파리에서 그의 가장 큰 발명품인 Théâtre Optique을 선보였습니다. 손으로 그린 장면들이 긴 페로레이션된 필름 스트립에 프로젝션되어, 영화가 등장하기 수년 전부터 스크린 위에서 애니메이션이 가능하게 했습니다.", "o4_t": "Toupie-fantoche", "o4_sub": "Charles-Émile Reynaud · 1881", "o4_info": "1881년에 Reynaud은 자신의 praxinoscope를 휴대용 회전 놀이판인 toupie-fantoche로 단순화했습니다. 돌리면 나비가 날아다니고 개들이 고리를 통과하며 군악병들이 북을 칩니다.", "o5_t": "Cuphead zoetrope", "o5_sub": "Studio MDHR · 2020", "o5_info": "Studio MDHR의 Cuphead 비디오 게임에서 귀여운 캐릭터들이 이 현대적인 Zoetrope에서 움직이기 시작합니다.", "o6_t": "Muybridge motion study", "o6_sub": "Eadweard Muybridge · 1887", "o6_info": "Eadweard Muybridge는 움직이는 이미지의 기초를 놓았습니다. 트리거된 케이블로 여러 카메라를 작동시켜 갈색 말을 연속 프레임으로 포착하고, Zoetrope에 재생산하여 세계 최초의 움직이는 사진을 만들었습니다.", "o7_t": "Musée Grévin 포스터", "o7_sub": "Pantomimes Lumineuses · 1892", "o7_info": "Reynaud이 손으로 그린 애니메이션 영화를 투명한 필름에 프로젝션하여 대중에게 상영했던 Musée Grévin의 Pantomimes Lumineuses 첫 포스터, 1892년.", "o8_t": "마법 램프 슬라이드", "o8_sub": "장난감 마법 램프 슬라이드", "o8_info": "손으로 그린 장난감 마법 램프 슬라이드. 램프에 삽입하고 불을 켜면 벽에 빛나는 이미지를 던집니다, 영화가 등장하기 수십 년 전부터 집에서 즐길 수 있는 인기있는 오락이었습니다."}};
+const LANG_NAMES={en:'English',zh:'Simplified Chinese',ar:'Arabic',vi:'Vietnamese',el:'Greek',it:'Italian',es:'Spanish',fr:'French',hi:'Hindi',ja:'Japanese',ko:'Korean'};
+let uiLang='en',replyAuto=false;
+function t(k){return (I18N[uiLang]&&I18N[uiLang][k])||(I18N.en&&I18N.en[k])||'';}
+function objField(i,fl){return t('o'+i+'_'+fl)||(WALL[i]&&WALL[i][fl])||'';}
+function setLang(code){ if(code==='auto'){uiLang='en';replyAuto=true;} else {uiLang=code;replyAuto=false;} applyI18n(); }
+function applyI18n(){ document.querySelectorAll('[data-i18n]').forEach(function(el){var v=t(el.getAttribute('data-i18n'));if(v)el.textContent=v;}); document.body.classList.toggle('is-rtl',uiLang==='ar'); if(typeof buildPersonas==='function')buildPersonas(); if(typeof renderChips==='function')renderChips(); buildWall(); if(inputEl)inputEl.placeholder=t('placeholder'); if(heroObj.idx!=null){showObject(heroObj.idx);} else {var s=function(id,k){var e=$(id);if(e)e.textContent=t(k);}; s('hTitle','title');s('hSub','subtitle');s('hStory','story'); var c=$('heroCredit'); if(c)c.textContent='ACMI · '+t('eyebrow'); if(typeof fitTitle==='function')fitTitle();} }
+function buildWall(){
+  $('wallGrid').innerHTML=WALL.map(function(o,i){ return '<button type="button" class="wcell" onclick="setFocusIdx('+i+',this)" style="position:relative;border:1px solid var(--line2);background:#0d0d0d;padding:0;cursor:pointer;overflow:hidden;aspect-ratio:1/1;">'
+    +'<img src="'+o.img+'" alt="'+esc(objField(i,'t'))+'" loading="lazy" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05);transition:filter .25s;" onmouseover="this.style.filter=\'grayscale(0)\'" onmouseout="this.style.filter=\'grayscale(1) contrast(1.05)\'" onerror="this.parentNode.style.opacity=.25;this.style.display=\'none\'">'
+    +'<span style="position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,rgba(0,0,0,.9));color:#fff;font-family:var(--mono);font-size:.44rem;letter-spacing:.02em;text-align:left;padding:14px 6px 5px;line-height:1.3;">'+esc(objField(i,'t'))+(o.d?' · '+o.d:'')+'</span>'
+    +'</button>';}).join('');
 }
-function setFocus(label,g){
-  focusZone=label;
-  [...document.querySelectorAll('#wallMap rect')].forEach(r=>r.setAttribute('stroke-width','1'));
-  const rect=g.querySelector('rect'); if(rect){rect.setAttribute('stroke','#f2c14e');rect.setAttribute('stroke-width','2.5');}
-  inputEl.placeholder='Focused on “'+label+'” — ask about it…';
+function bigImg(u){ return u.replace('!400,400','!1200,1200').replace('/w_600/','/w_1000/').replace('-medium.jpg','-large.jpg'); }
+let heroObj={idx:null, title:'The Object Wall', ground:''};
+function fitTitle(){
+  const el=document.getElementById('hTitle'); if(!el)return;
+  el.style.whiteSpace='nowrap'; el.style.fontSize='';
+  let size=parseFloat(getComputedStyle(el).fontSize)||40, guard=0;
+  el.style.fontSize=size+'px';
+  while(el.scrollWidth>el.clientWidth+1 && size>13 && guard<400){ size-=1; el.style.fontSize=size+'px'; guard++; }
 }
-buildMap();
+function showObject(i){
+  const o=WALL[i]; if(!o)return;
+  const img=$('heroImg');
+  if(img){ const hero=img.closest('.heroimg'); if(hero)hero.style.display=''; img.onerror=function(){ this.closest('.heroimg').style.display='none'; }; img.src=bigImg(o.img); img.alt=objField(i,'t'); }
+  const set=(id,v)=>{ const e=$(id); if(e)e.textContent=v; };
+  set('heroCredit', objField(i,'t')+(o.d?' · '+o.d:''));
+  set('hTitle', objField(i,'t')); set('hSub', objField(i,'sub')); set('hStory', objField(i,'info'));
+  fitTitle();
+  heroObj={idx:i, title:o.t, ground:o.info||''};
+}
+// Talk to whatever object is currently the hero (hero image tap)
+function talkToHero(){
+  if(heroObj.idx==null){ focusZone=''; focusGround=''; }
+  else { focusZone=WALL[heroObj.idx].t; focusGround=WALL[heroObj.idx].info||''; }
+  inputEl.placeholder=t('placeholder');
+  [...document.querySelectorAll('#wallGrid .wcell')].forEach(c=>c.style.outline='none');
+  const a=document.querySelector('.ask-label'); if(a)a.scrollIntoView({behavior:'smooth',block:'start'});
+  setTimeout(()=>{try{inputEl.focus();}catch(e){}},320);
+}
+function setFocusIdx(i,el){
+  const o=WALL[i]; if(!o)return;
+  showObject(i);
+  focusZone=o.t; focusGround=o.info||'';
+  [...document.querySelectorAll('#wallGrid .wcell')].forEach(c=>c.style.outline='none');
+  if(el)el.style.outline='2px solid #fff';
+  inputEl.placeholder=t('placeholder');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+// Leave a message + share (AUXIO / Heide pattern)
+function sendMessage(){
+  const el=$('msgInput'), note=$('msgNote'); if(!el)return;
+  if(!el.value.trim()){ el.focus(); return; }
+  el.value=''; if(note)note.textContent='Thank you — your message has been sent to the curators.';
+}
+function shareLink(){ return location.href.split('#')[0]+'#'+encodeURIComponent(heroObj.title||'The Object Wall'); }
+function shareObj(){
+  const n=$('shareNote');
+  if(navigator.clipboard){ navigator.clipboard.writeText(shareLink()).then(()=>{ if(n)n.textContent='Link copied.'; }).catch(()=>{ if(n)n.textContent=shareLink(); }); }
+  else if(n){ n.textContent=shareLink(); }
+}
+function shareNative(){
+  const title=(heroObj.title||'The Object Wall')+' · ACMI Object Wall';
+  if(navigator.share){ navigator.share({title:title, url:shareLink()}).catch(()=>{}); } else { shareObj(); }
+}
+const VIDEOSPHERE_META="JVC Videosphere; a spherical, space-helmet-shaped television; type Television; maker JVC Ltd; made 1970 in Japan; open-access record held by the V&A (reg. W.661:1 to 4-2001). Objects like it are cared for in ACMI's Blackmagic Design Media Preservation Lab.";
+// default hero is the whole object wall (acmi-wall.jpg)
+buildWall();
+
+// ── personas — loaded prompt text + voice (curator / guide / education / technical) ──
+// All personas use the Australian cloned voice (rob_au) — the only AU voice available.
+// Personas change the PROMPT (tone); the voice stays Australian. Add more AU clones (ACMI actors) later.
+const PERSONAS=[
+  {id:'curator',   label:'Curator',   voice:'rob_au', tone:'Answer as a curator: authoritative and contextual, connecting the object to the wider story of the moving image and to other things on the wall.'},
+  {id:'guide',     label:'Guide',     voice:'rob_au', tone:'Answer as a warm gallery guide and visitor host: friendly, brief and practical, helping the visitor understand what they are looking at and what to see next.'},
+  {id:'education', label:'Education', voice:'rob_au', tone:'Answer as an education host for students and school groups: simple and encouraging, one idea at a time, ending with a question that keeps them curious.'},
+  {id:'technical', label:'Technical', voice:'rob_au', tone:'Answer as an AV and preservation technician: explain how the object worked, its format and mechanism, and how ACMI’s preservation lab keeps time-based media alive. Precise and plain, no hype.'}
+];
+let persona='curator';
+function buildPersonas(){
+  const row=$('personaRow'); if(!row)return;
+  row.innerHTML=PERSONAS.map(p=>{ const on=p.id===persona;
+    return '<button type="button" onclick="setPersona(\''+p.id+'\')" style="font-family:var(--mono);font-size:.52rem;letter-spacing:.06em;text-transform:uppercase;padding:8px 12px;border:1px solid '+(on?'#fff':'var(--line2)')+';background:'+(on?'#fff':'transparent')+';color:'+(on?'#000':'var(--ink2)')+';cursor:pointer;">'+t('p_'+p.id)+'</button>';
+  }).join('');
+}
+function setPersona(id){ persona=id; buildPersonas(); renderChips(); } // persona sets the prompt/tone + its own questions; the voice picker controls the voice
+buildPersonas();
 
 function sysPrompt(){
-  const f=focusZone?`The visitor is standing in front of the "${focusZone}" part of the wall; lean your answer toward that if it fits.`:'';
-  return `You are "The Object Wall" at ACMI (the Australian Centre for the Moving Image) in Naarm/Melbourne, part of the free permanent exhibition "The Story of the Moving Image". You speak in the first person, as the wall itself — a floor-to-ceiling display of moving-image objects across history: magic lanterns, early and hand-cranked cameras, film projectors, televisions, video and game consoles, screen props and everyday ephemera of cinema and television. ${f}
-Speak warmly and plainly, like a good gallery host, three to four sentences, no jargon. You may describe the kinds of objects on the wall and the story of the moving image in general terms. Do NOT invent specific provenance, dates, accession numbers or claims about individual named objects you cannot be sure of; if asked a specific detail you don't hold, say so and invite the visitor to look closer or ask a guide. If the visitor writes in another language, reply fully in that language. This is a concept demo; if pressed on exact holdings, gently note the live version is grounded in ACMI's own catalogue.`;
+  const f=focusZone?`The visitor has tapped "${focusZone}" on the wall${focusGround?': '+focusGround:''} Speak about that object specifically, grounded in what is genuinely known; do not invent details you are unsure of. `:'';
+  const lang=replyAuto?'Reply in the language the visitor used. ':(uiLang==='en'?'':`Reply entirely in ${LANG_NAMES[uiLang]}. `);
+  const pr=PERSONAS.find(x=>x.id===persona); const tone=pr?pr.tone+' ':'';
+  return `You are the voice of "The Object Wall" at ACMI (the Australian Centre for the Moving Image) in Naarm/Melbourne, part of the free permanent exhibition "The Story of the Moving Image" — a floor-to-ceiling display of the objects that gave birth to the moving image: zoetropes and praxinoscopes, magic lanterns and optical toys, Eadweard Muybridge’s 1887 motion studies and the Reynaud praxinoscope theatre, through to contemporary works like the Cuphead zoetrope that revisit them. ${f}${lang}${tone}Speak warmly and plainly, three to four sentences, no jargon. You may describe the kinds of objects on the wall and the story of the moving image in general terms. Do NOT invent specific provenance, dates, accession numbers or claims about individual named objects you cannot be sure of; if asked a specific detail you don't hold, say so and invite the visitor to look closer or ask a guide. This is a concept demo; if pressed on exact holdings, gently note the live version is grounded in ACMI's own catalogue.`;
 }
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function showThinking(){respEl.innerHTML='<span class="think">Listening to the wall<b>.</b><b>.</b><b>.</b></span>';}
 function showAnswer(t,live){
   lastReply=t;
   respEl.innerHTML='<span class="who">The Object Wall · ACMI</span>'+esc(t).replace(/\n/g,'<br>')
-    +'<div><button class="readbtn" id="readBtn" onclick="toggleRead()">Read aloud</button></div>'
+    +'<div style="display:flex;align-items:flex-end;gap:11px;"><button class="readbtn" id="readBtn" onclick="toggleRead()">Read aloud</button><span class="vbars" id="vbars"><i></i><i></i><i></i><i></i><i></i><i></i></span></div>'
     +'<span class="ground">'+(live?'✓ Grounded in the record':'Offline · a curated answer')+'</span>';
   if(autoReadEl.checked||window._speakNext){speak(t);window._speakNext=false;}
 }
@@ -205,24 +368,43 @@ async function ask(q){
 }
 function askFree(){const v=inputEl.value.trim();if(!v)return;inputEl.value='';[...$('chips').children].forEach(c=>c.classList.remove('active'));ask(v);}
 inputEl.addEventListener('keydown',e=>{if(e.key==='Enter')askFree();});
-const QS=['What are you?','Tell me a story from the wall','Where does the moving image begin?','What is the strangest object here?'];
-$('chips').innerHTML=QS.map(q=>`<button class="chip" onclick="ask('${q.replace(/'/g,"\\'")}')">${q}</button>`).join('');
+const PERSONA_QS={
+  curator:['What are you?','What is your story?','Why do you matter?','What should I notice?'],
+  guide:['What am I looking at?','How does it work?','What is nearby?','What should I see next?'],
+  education:['How do you work?','Explain it simply','What can I learn from you?','Tell me a fun fact'],
+  technical:['How were you made?','How does the mechanism work?','What are you made of?','How are you kept working?']
+};
+function renderChips(){ const qs=PERSONA_QS[(typeof persona!=='undefined'&&persona)||'curator']||PERSONA_QS.curator; if($('chips'))$('chips').innerHTML=qs.map(q=>`<button class="chip" onclick="this.classList.add('active');ask('${q.replace(/'/g,"\\'")}')">${q}</button>`).join(''); }
+renderChips();
 
 // ── voice output: sovereign (Piper) when available, else browser ──
 const canSpeak=typeof window.speechSynthesis!=='undefined'; let audioEl=null;
 async function speak(text){
   stopSpeak();
+  const bars=document.getElementById('vbars');
   if(sovereign){
-    try{ const r=await fetch(VOICE_SERVER+'/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:text.slice(0,1400),voice:voiceSel.value})});
-      if(!r.ok)throw 0; const buf=await r.blob(); audioEl=new Audio(URL.createObjectURL(buf));
-      const b=$('readBtn'); if(b){b.classList.add('on');b.textContent='Stop';} audioEl.onended=()=>{if(b){b.classList.remove('on');b.textContent='Read aloud';}}; audioEl.play(); return;
-    }catch(e){}
+    // Cloned/on-device voice ONLY. Never substitute a browser voice (e.g. Karen) for the chosen voice.
+    try{ if(bars)bars.classList.add('on'); // generating your cloned voice — can take a moment
+      const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),120000);
+      const r=await fetch(VOICE_SERVER+'/tts',{method:'POST',headers:{'Content-Type':'application/json'},signal:ctrl.signal,body:JSON.stringify({text:text.slice(0,1400),voice:voiceSel.value})});
+      clearTimeout(to);
+      if(!r.ok)throw new Error('tts '+r.status);
+      const buf=await r.blob(); audioEl=new Audio(URL.createObjectURL(buf));
+      const b=$('readBtn'); if(b){b.classList.add('on');b.textContent='Stop';}
+      audioEl.onended=()=>{if(b){b.classList.remove('on');b.textContent='Read aloud';} if(bars)bars.classList.remove('on');};
+      audioEl.onerror=()=>{ if(bars)bars.classList.remove('on'); };
+      audioEl.play();
+    }catch(e){
+      if(bars)bars.classList.remove('on');
+      const b=$('readBtn'); if(b){ b.classList.remove('on'); b.textContent='Voice engine busy — tap to retry'; }
+    }
+    return;
   }
   if(!canSpeak)return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text);
   const bv=(window._browserVoices||[])[voiceSel.value|0]; if(bv){u.voice=bv;u.lang=bv.lang;} u.rate=.98;
-  const b=$('readBtn'); u.onstart=()=>{if(b){b.classList.add('on');b.textContent='Stop';}}; u.onend=()=>{if(b){b.classList.remove('on');b.textContent='Read aloud';}}; speechSynthesis.speak(u);
+  const b=$('readBtn'); u.onstart=()=>{if(b){b.classList.add('on');b.textContent='Stop';} if(bars)bars.classList.add('on');}; u.onend=()=>{if(b){b.classList.remove('on');b.textContent='Read aloud';} if(bars)bars.classList.remove('on');}; speechSynthesis.speak(u);
 }
-function stopSpeak(){ if(audioEl){try{audioEl.pause();}catch(e){}audioEl=null;} if(canSpeak)speechSynthesis.cancel(); const b=$('readBtn'); if(b){b.classList.remove('on');b.textContent='Read aloud';} }
+function stopSpeak(){ if(audioEl){try{audioEl.pause();}catch(e){}audioEl=null;} if(canSpeak)speechSynthesis.cancel(); const b=$('readBtn'); if(b){b.classList.remove('on');b.textContent='Read aloud';} const vb=document.getElementById('vbars'); if(vb)vb.classList.remove('on'); }
 function toggleRead(){ if((audioEl&&!audioEl.paused)||(canSpeak&&speechSynthesis.speaking))stopSpeak(); else speak(lastReply); }
 
 // ── voice input: sovereign (record → Whisper) else browser SR ──
@@ -256,13 +438,18 @@ function populateBrowserVoices(){ if(!canSpeak)return; const all=speechSynthesis
   window._browserVoices=all; voiceSel.innerHTML=all.map((v,i)=>`<option value="${i}">${v.name} · ${v.lang}</option>`).join(''); const au=all.findIndex(v=>/en-AU/i.test(v.lang)); if(au>=0)voiceSel.value=String(au); }
 async function detectSovereign(){
   try{ const r=await fetch(VOICE_SERVER+'/health',{cache:'no-store'}); const d=await r.json();
-    if(d&&d.ok){ sovereign=true; voiceSel.innerHTML=(d.voices||['alba']).map(v=>`<option value="${v}">${VOICE_LABELS[v]||v}</option>`).join('');
-      $('vdot').classList.add('on'); $('vstatus').innerHTML='<b>Sovereign voice active</b> — Whisper listens, Piper speaks, on this machine. Nothing leaves the building.'; return; }
+    if(d&&d.ok){ sovereign=true;
+      const av=(d.voices||['alba']);
+      voiceSel.innerHTML=av.map(v=>`<option value="${v}">${VOICE_LABELS[v]||v}</option>`).join(''); voiceSel.value=av.includes('rob_au')?'rob_au':(av[0]||'');
+      $('vdot').classList.add('on'); { const _vb=document.querySelector('.vbanner'); if(_vb)_vb.style.display='none'; } return; }
     throw 0;
   }catch(e){ sovereign=false; populateBrowserVoices(); $('vstatus').innerHTML='Local engine not reachable — using the <b>browser voice</b> (run the ARCHAI voice server for the full on-device Whisper + Piper path).'; }
 }
+langSel.addEventListener('change',()=>setLang(langSel.value));
 if(canSpeak){populateBrowserVoices();speechSynthesis.onvoiceschanged=populateBrowserVoices;}
 detectSovereign();
+window.addEventListener('resize',fitTitle); fitTitle();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitTitle);
 </script>
 </body>
 </html>
