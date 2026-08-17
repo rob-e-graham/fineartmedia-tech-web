@@ -374,7 +374,7 @@ const PERSONA_QS={
   education:['How do you work?','Explain it simply','What can I learn from you?','Tell me a fun fact'],
   technical:['How were you made?','How does the mechanism work?','What are you made of?','How are you kept working?']
 };
-function renderChips(){ const qs=PERSONA_QS[(typeof persona!=='undefined'&&persona)||'curator']||PERSONA_QS.curator; if($('chips'))$('chips').innerHTML=qs.map(q=>`<button class="chip" onclick="this.classList.add('active');ask('${q.replace(/'/g,"\\'")}')">${q}</button>`).join(''); }
+function renderChips(){ const qs=PERSONA_QS[(typeof persona!=='undefined'&&persona)||'curator']||PERSONA_QS.curator; if($('chips'))$('chips').innerHTML=qs.map(q=>`<button class="chip" onclick="[...this.parentNode.children].forEach(c=>c.classList.remove('active'));this.classList.add('active');ask('${q.replace(/'/g,"\\'")}')">${q}</button>`).join(''); }
 renderChips();
 
 // ── voice output: sovereign (Piper) when available, else browser ──
