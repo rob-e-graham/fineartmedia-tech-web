@@ -22,7 +22,7 @@
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 html,body{scrollbar-width:none;-ms-overflow-style:none}
 html::-webkit-scrollbar,body::-webkit-scrollbar{width:0;height:0;display:none}
-body{background:var(--bg);color:var(--ink);font-family:var(--grot);font-weight:400;min-height:100dvh;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--ink);font-family:var(--grot);font-weight:400;min-height:100dvh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 body.is-rtl{direction:rtl}
 img{max-width:100%;display:block}
 .stage{width:100%;min-height:100dvh}
@@ -40,9 +40,18 @@ img{max-width:100%;display:block}
 /* HERO — type-led, ACMI editorial */
 .hero{padding:34px 20px 8px;border-bottom:1px solid var(--line)}
 .eyebrow{font-family:var(--mono);font-size:.52rem;letter-spacing:.26em;text-transform:uppercase;color:var(--ink2)}
-.title{font-family:var(--grot);font-weight:800;font-size:clamp(2.7rem,12vw,3.6rem);line-height:.92;letter-spacing:-.02em;margin:14px 0 0;text-transform:uppercase}
+.title{font-family:var(--grot);font-weight:800;font-size:clamp(1.85rem,8.5vw,3.6rem);line-height:1;letter-spacing:-.03em;margin:14px 0 0;text-transform:uppercase;white-space:nowrap;overflow:hidden}
 .subtitle{font-family:var(--grot);font-weight:400;font-size:clamp(1rem,4vw,1.2rem);line-height:1.2;margin-top:12px;color:var(--ink2)}
 .concept{display:inline-block;margin-top:16px;font-family:var(--mono);font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);border:1px solid var(--line2);padding:6px 9px}
+
+/* HERO IMAGE — the space helmet */
+.heroimg{position:relative;width:100%;background:#0d0d0d;display:flex;align-items:center;justify-content:center;overflow:hidden;max-height:52vh;border-bottom:1px solid var(--line)}
+.hero-cta{position:absolute;left:16px;bottom:14px;z-index:2;font-family:var(--mono);font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:#000;background:#fff;border:none;padding:9px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:background .15s}
+.hero-cta:hover{background:var(--ink2)}
+.hero-cta svg{width:12px;height:12px}
+.heroimg img{width:100%;height:100%;max-height:52vh;object-fit:contain;display:block;animation:fade 1s ease both}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.credit{font-family:var(--mono);font-size:.44rem;color:var(--ink3);letter-spacing:.08em;text-transform:uppercase;padding:7px 20px 0;text-align:right}
 
 /* CONTENT */
 .content{padding:22px 20px 40px}
@@ -86,6 +95,11 @@ img{max-width:100%;display:block}
 .think{font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink2)}
 .think b{animation:bl 1.3s infinite both}.think b:nth-child(2){animation-delay:.2s}.think b:nth-child(3){animation-delay:.4s}
 @keyframes bl{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.vbars{display:none;align-items:flex-end;gap:2px;height:15px;color:var(--ink2)}
+.vbars.on{display:inline-flex}
+.vbars i{display:block;width:2px;height:5px;background:currentColor;animation:vbar .9s ease-in-out infinite}
+.vbars i:nth-child(2){animation-delay:.12s}.vbars i:nth-child(3){animation-delay:.24s}.vbars i:nth-child(4){animation-delay:.36s}.vbars i:nth-child(5){animation-delay:.48s}.vbars i:nth-child(6){animation-delay:.6s}
+@keyframes vbar{0%,100%{height:4px;opacity:.45}50%{height:15px;opacity:1}}
 
 /* VOICE BANNER */
 .vbanner{margin:16px 0 0}
@@ -140,25 +154,32 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   </div>
 </header>
 
+<div class="heroimg"><img id="heroImg" src="acmi-wall.jpg" alt="The object wall at ACMI — a floor-to-ceiling display of moving-image objects" style="cursor:pointer" onclick="talkToHero()"
+  onerror="if(!this.dataset.f){this.dataset.f=1;this.src='https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/AEO177013_ZoetropeWithIllustratedAnimationStrips_Front.jpg.1200x1200_q85.jpg';}else{this.closest('.heroimg').style.display='none';}"></div>
+<div class="credit" id="heroCredit">The object wall · ACMI · The Story of the Moving Image</div>
+
 <section class="hero">
-  <div class="eyebrow">The Story of the Moving Image</div>
-  <h1 class="title">The Object Wall</h1>
-  <div class="subtitle">One wall. A century of moving images. Ask it anything.</div>
-  <div class="concept">Concept demo · not official ACMI content</div>
+  <div class="eyebrow" id="hEyebrow">The Story of the Moving Image</div>
+  <h1 class="title" id="hTitle">The Object Wall</h1>
+  <div class="subtitle" id="hSub">One wall. A century of moving images. Ask it anything.</div>
 </section>
 
 <section class="content">
-  <p class="story">From floor to ceiling, <b>the object wall</b> gathers the machines and ephemera of the moving image — magic lanterns and hand-cranked cameras, projectors and televisions, game consoles, props and the small strange things screens leave behind. Rather than a label on every case, <b>one AUXIO speaks for the whole wall</b>. Ask it aloud or in text, in the language you choose, grounded only in ACMI's records.</p>
+  <p class="story" id="hStory">From floor to ceiling, <b>the object wall</b> gathers the machines that first taught pictures to move — zoetropes and praxinoscopes, magic lanterns and Muybridge’s motion studies, the spinning drums and mirror-toys of pre-cinema, through to contemporary works that spin them anew. Rather than a label on every case, <b>one AUXIO speaks for the whole wall</b>. Ask it aloud or in text, in the language you choose, grounded only in ACMI's records.</p>
 
-  <div class="mapwrap">
-    <div class="map-cap">Map of the wall — tap a case to focus your question</div>
-    <div class="map"><svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" id="wallMap" role="img" aria-label="Schematic map of the object wall"></svg></div>
-    <div class="map-note">A schematic stand-in until the real wall photo and object plan drop in. In the live version this map is generated from ACMI's own object positions, so tapping a case tells the AUXIO exactly where the visitor is looking.</div>
-  </div>
+  <details class="panel" open style="margin-top:18px;">
+    <summary><span class="panel-t">The wall</span><span class="panel-h">tap an object to talk to it</span></summary>
+    <div class="panel-b">
+      <div id="wallGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px;"></div>
+      <div class="map-note" style="margin-top:8px;">Objects from ACMI's moving-image collection — tap any to talk to it, hover to reveal colour.</div>
+    </div>
+  </details>
 
   <div class="divider"></div>
 
-  <div class="ask-label">Ask the object wall — one voice for the whole wall</div>
+  <div class="ask-label">Ask the object wall</div>
+  <div style="font-family:var(--mono);font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;">Persona — loaded prompt &amp; voice</div>
+  <div id="personaRow" style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;"></div>
   <div class="chips" id="chips"></div>
   <div class="chat-row">
     <input class="chat-in" id="chatIn" type="text" maxlength="480" placeholder="Ask the wall anything…" enterkeyhint="send">
@@ -176,7 +197,27 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
     <div class="panel-b">
       <div class="row"><label for="voiceSel">Voice</label><select id="voiceSel" class="vsel"></select></div>
       <div class="row"><label class="check"><input type="checkbox" id="autoRead" checked> Read answers aloud</label></div>
-      <div class="note">Production path when the local engine is running: <b>Whisper</b> listens, <b>Piper</b> speaks, fully on-device, no audio leaves the building. Voices can be swapped per gallery, or cloned from ACMI's own visitor-services actors (Coqui XTTS), and the same cloned voice can answer in many languages. Falls back to the browser voice if the engine isn't reachable.</div>
+      <div class="note">On-device voice — <b>Whisper</b> listens, the cloned voice speaks, and no audio leaves the building. Voices can be cloned from your own visitor-services actors and answer in the visitor's language.</div>
+    </div>
+  </details>
+
+  <details class="panel">
+    <summary><span class="panel-t">Leave a message</span><span class="panel-h">for the curators</span></summary>
+    <div class="panel-b">
+      <textarea id="msgInput" placeholder="Share a memory, a question, or what this brought to mind…" style="width:100%;min-height:74px;background:#000;border:1px solid var(--line2);color:var(--ink);font-family:var(--grot);font-size:.95rem;padding:11px;outline:none;resize:vertical;"></textarea>
+      <button class="send" type="button" style="margin-top:9px;" onclick="sendMessage()">Send</button>
+      <div class="note" id="msgNote">Your note goes to the curatorial team for review — never shown publicly.</div>
+    </div>
+  </details>
+
+  <details class="panel">
+    <summary><span class="panel-t">Share</span><span class="panel-h">this object</span></summary>
+    <div class="panel-b">
+      <div class="row" style="gap:7px;">
+        <button class="readbtn" type="button" onclick="shareNative()">Share…</button>
+        <button class="readbtn" type="button" onclick="shareObj()">Copy link</button>
+      </div>
+      <div class="note" id="shareNote">Share what you are looking at — the link opens straight to this object.</div>
     </div>
   </details>
 
@@ -191,7 +232,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   </details>
 </section>
 
-<footer><b>Runs on ARCHAI</b> — sovereign, local-first cultural-heritage AI · grounded in the record, no invention<br>Whisper (STT) + Piper / Coqui (TTS), on-device · concept demo for ACMI · not official ACMI content · fineartmedia.tech/archai</footer>
+<footer><b>The Object Wall</b> — an AUXIO experience, grounded in the record<br>Runs on ARCHAI · sovereign, local-first cultural-heritage AI · on-device voice<br>A concept by Fine Art Media · independent proposal, not affiliated with or endorsed by ACMI · fineartmedia.tech</footer>
 
 </div></div>
 
@@ -200,49 +241,103 @@ const CHAT='https://archai-api.fineartmedia.tech/api/proxy/chat';
 const VOICE_SERVER='http://127.0.0.1:8123';
 const $=id=>document.getElementById(id);
 const inputEl=$('chatIn'),respEl=$('resp'),micBtn=$('micBtn'),voiceSel=$('voiceSel'),autoReadEl=$('autoRead'),langSel=$('langSel');
-let lastReply='',history=[],sovereign=false,focusZone='';
-const VOICE_LABELS={alba:'Ada · Female, 30s · Gallery guide',cori:'Cate · Female, 40s · Curator',amy:'Amy · Female, 20s · Education host',lessac:'Nora · Female, 40s · Archivist',ryan:'Ryan · Male, 30s · Narrator',alan:'Alan · Male, 60s · Historian',northern:'Ted · Male, 50s · Projectionist'};
+let lastReply='',history=[],sovereign=false,focusZone='',focusGround='';
+const VOICE_LABELS={rob_au:'Rob · Male · Australian (cloned voice)',alba:'Ada · Female · British (Piper)',cori:'Cate · Female · British (Piper)',amy:'Amy · Female · American (Piper)',lessac:'Nora · Female · American (Piper)',ryan:'Ryan · Male · American (Piper)',alan:'Alan · Male · British (Piper)',northern:'Ted · Male · British (Piper)'};
 
-// ── object map (schematic; tap a case to focus) ──
-const CASES=[
- 'Magic lanterns','Early cameras','Projectors','Televisions','Countdown sign',
- 'Film reels','Movie cameras','Home video','Game consoles','Drive-In sign',
- 'Phones & screens','Props & costumes','PEZ & ephemera','Radios','Speakers',
- 'Photographs','Posters','Toys & tie-ins','Editing gear','Screens today'];
-function buildMap(){
-  const cols=5,rows=4,W=420,H=300,pad=10,gx=6,gy=6;
-  const cw=(W-pad*2-gx*(cols-1))/cols, ch=(H-pad*2-gy*(rows-1))/rows;
-  let s='';
-  CASES.forEach((label,i)=>{
-    const c=i%cols,r=(i/cols)|0, x=pad+c*(cw+gx), y=pad+r*(ch+gy);
-    const on=(i*7)%5<2;
-    s+=`<g style="cursor:pointer" onclick="setFocus('${label.replace(/'/g,"")}',this)">`
-     +`<rect x="${x}" y="${y}" width="${cw}" height="${ch}" fill="${on?'#fff':'#0d0d0d'}" stroke="${on?'#fff':'#333'}" stroke-width="1"></rect>`
-     +`<text x="${x+cw/2}" y="${y+ch/2+3}" text-anchor="middle" font-family="DM Mono, monospace" font-size="7.5" fill="${on?'#000':'#8a8a8a'}">${label}</text></g>`;
-  });
-  $('wallMap').innerHTML=s;
+// ── the object wall — real objects from the collection; tap to focus ──
+const WALL=[{"t": "Zoetrope", "d": "19th c.", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/AEO177013_ZoetropeWithIllustratedAnimationStrips_Front.jpg.1200x1200_q85.jpg", "sub": "Optical toy · animation drum", "info": "An animation device: a slitted cylinder holding printed paper strips. Spin it, look through the slits, and a sequence of drawings springs into a single moving image."}, {"t": "Praxinoscope", "d": "1876", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/AEO175951_Praxinoscope_Front.jpg.1200x1200_q85.jpg", "sub": "Charles-Émile Reynaud · 1876", "info": "A 19th-century optical toy invented in 1876 by Charles-Émile Reynaud. A strip of twelve frames sits in a spinning cylinder while mirrors at the centre reveal a single image in motion."}, {"t": "Praxinoscope Théâtre", "d": "", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/AEO177313_RaynaudPraxinoscopeTheatre_34_Left_resaved.jpg.1200x1200_q85.jpg", "sub": "Charles-Émile Reynaud", "info": "Reynaud developed his praxinoscope into a small theatre, letting viewers mix printed backgrounds and character reels to build more sophisticated animated scenes and stories."}, {"t": "Théâtre Optique", "d": "1892", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/FC180128_FC022.jpg.1200x1200_q85.jpg", "sub": "Charles-Émile Reynaud · 1892", "info": "In 1892 Charles-Émile Reynaud debuted his grandest invention, the Théâtre Optique, in Paris. It projected moving pictures hand-painted onto long perforated strips of gelatine, animation on a screen years before cinema."}, {"t": "Toupie-fantoche", "d": "1881", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/P181400_ToupieFantoche.jpg.1200x1200_q85.jpg", "sub": "Charles-Émile Reynaud · 1881", "info": "In 1881 Reynaud simplified his own praxinoscope into a portable spinning top, the toupie-fantoche. Give it a spin and butterflies flutter, dogs jump through hoops and drummer boys drum."}, {"t": "Cuphead zoetrope", "d": "2020", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/P181399_CupheadZoetrope_FullFront.jpg.1200x1200_q85.jpg", "sub": "Studio MDHR · 2020", "info": "The cheeky characters of Studio MDHR’s Cuphead videogame spring into action in this contemporary incarnation of the popular 19th-century invention, the zoetrope."}, {"t": "Muybridge motion study", "d": "1887", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/P180308_G016.jpg.1200x1200_q85.jpg", "sub": "Eadweard Muybridge · 1887", "info": "Eadweard Muybridge laid the foundation of the moving image. Using multiple cameras triggered by trip wires, he captured a galloping horse in sequential frames, reproduced them in a zoetrope, and created the world’s first moving photographs."}, {"t": "Musée Grévin poster", "d": "1892", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/FC180127_FC021.jpg.1200x1200_q85.jpg", "sub": "Pantomimes Lumineuses · 1892", "info": "The inaugural poster for the Pantomimes Lumineuses at the Musée Grévin, 1892, where Reynaud projected hand-painted animated films to a paying public, years before cinema arrived."}, {"t": "Magic lantern slide", "d": "", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/AEO186355_ToyMagicLanternSlide_SnowWhiteWithPrince.jpg.1200x1200_q85.jpg", "sub": "Toy magic-lantern slide", "info": "A hand-painted toy magic-lantern slide. Slid into a lantern and lit, it threw a glowing picture onto the wall, a favourite home entertainment long before cinema."}];
+function buildWall(){
+  $('wallGrid').innerHTML=WALL.map(o=>
+    '<button type="button" class="wcell" onclick="setFocus(\''+o.t.replace(/'/g,'')+'\',this)" style="position:relative;border:1px solid var(--line2);background:#0d0d0d;padding:0;cursor:pointer;overflow:hidden;aspect-ratio:1/1;">'
+    +'<img src="'+o.img+'" alt="'+o.t+'" loading="lazy" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05);transition:filter .25s;" onmouseover="this.style.filter=\'grayscale(0)\'" onmouseout="this.style.filter=\'grayscale(1) contrast(1.05)\'" onerror="this.parentNode.style.opacity=.25;this.style.display=\'none\'">'
+    +'<span style="position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,rgba(0,0,0,.9));color:#fff;font-family:var(--mono);font-size:.44rem;letter-spacing:.02em;text-align:left;padding:14px 6px 5px;line-height:1.3;">'+o.t+(o.d?' · '+o.d:'')+'</span>'
+    +'</button>').join('');
 }
-function setFocus(label,g){
-  focusZone=label;
-  [...document.querySelectorAll('#wallMap rect')].forEach(r=>{r.setAttribute('fill','#0d0d0d');r.setAttribute('stroke','#333');r.querySelector&&0;});
-  [...document.querySelectorAll('#wallMap text')].forEach(t=>t.setAttribute('fill','#8a8a8a'));
-  const rect=g.querySelector('rect'),txt=g.querySelector('text');
-  if(rect){rect.setAttribute('fill','#fff');rect.setAttribute('stroke','#fff');} if(txt)txt.setAttribute('fill','#000');
-  inputEl.placeholder='Focused on “'+label+'” — ask about it…';
+function bigImg(u){ return u.replace('!400,400','!1200,1200').replace('/w_600/','/w_1000/').replace('-medium.jpg','-large.jpg'); }
+let heroObj={title:'The Object Wall', ground:''};
+function fitTitle(){
+  const el=document.getElementById('hTitle'); if(!el)return;
+  el.style.whiteSpace='nowrap'; el.style.fontSize='';
+  let size=parseFloat(getComputedStyle(el).fontSize)||40, guard=0;
+  el.style.fontSize=size+'px';
+  while(el.scrollWidth>el.clientWidth+1 && size>13 && guard<400){ size-=1; el.style.fontSize=size+'px'; guard++; }
 }
-buildMap();
+function showObject(o){
+  const img=$('heroImg');
+  if(img){ const hero=img.closest('.heroimg'); if(hero)hero.style.display=''; img.onerror=function(){ this.closest('.heroimg').style.display='none'; }; img.src=bigImg(o.img); img.alt=o.t; }
+  const set=(id,v)=>{ const e=$(id); if(e)e.textContent=v; };
+  set('heroCredit', o.t+(o.d?' · '+o.d:''));
+  set('hTitle', o.t); set('hSub', o.sub||''); set('hStory', o.info||'');
+  fitTitle();
+  heroObj={title:o.t, ground:o.info||''};
+}
+// Talk to whatever object is currently the hero (hero image tap)
+function talkToHero(){
+  if(heroObj.title==='The Object Wall'){ focusZone=''; focusGround=''; inputEl.placeholder='Ask the object wall anything…'; }
+  else { focusZone=heroObj.title; focusGround=heroObj.ground||''; inputEl.placeholder='Talking to “'+heroObj.title+'” — ask it anything…'; }
+  [...document.querySelectorAll('#wallGrid .wcell')].forEach(c=>c.style.outline='none');
+  const a=document.querySelector('.ask-label'); if(a)a.scrollIntoView({behavior:'smooth',block:'start'});
+  setTimeout(()=>{try{inputEl.focus();}catch(e){}},320);
+}
+function setFocus(label,el){
+  const o=WALL.find(w=>w.t===label); if(o) showObject(o);
+  focusZone=label; focusGround=(o&&o.info)||'';
+  [...document.querySelectorAll('#wallGrid .wcell')].forEach(c=>c.style.outline='none');
+  if(el)el.style.outline='2px solid #fff';
+  inputEl.placeholder='Talking to “'+label+'” — ask it anything…';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+// Leave a message + share (AUXIO / Heide pattern)
+function sendMessage(){
+  const el=$('msgInput'), note=$('msgNote'); if(!el)return;
+  if(!el.value.trim()){ el.focus(); return; }
+  el.value=''; if(note)note.textContent='Thank you — your message has been sent to the curators.';
+}
+function shareLink(){ return location.href.split('#')[0]+'#'+encodeURIComponent(heroObj.title||'The Object Wall'); }
+function shareObj(){
+  const n=$('shareNote');
+  if(navigator.clipboard){ navigator.clipboard.writeText(shareLink()).then(()=>{ if(n)n.textContent='Link copied.'; }).catch(()=>{ if(n)n.textContent=shareLink(); }); }
+  else if(n){ n.textContent=shareLink(); }
+}
+function shareNative(){
+  const title=(heroObj.title||'The Object Wall')+' · ACMI Object Wall';
+  if(navigator.share){ navigator.share({title:title, url:shareLink()}).catch(()=>{}); } else { shareObj(); }
+}
+const VIDEOSPHERE_META="JVC Videosphere; a spherical, space-helmet-shaped television; type Television; maker JVC Ltd; made 1970 in Japan; open-access record held by the V&A (reg. W.661:1 to 4-2001). Objects like it are cared for in ACMI's Blackmagic Design Media Preservation Lab.";
+// default hero is the whole object wall (acmi-wall.jpg)
+buildWall();
+
+// ── personas — loaded prompt text + voice (curator / guide / education / technical) ──
+// All personas use the Australian cloned voice (rob_au) — the only AU voice available.
+// Personas change the PROMPT (tone); the voice stays Australian. Add more AU clones (ACMI actors) later.
+const PERSONAS=[
+  {id:'curator',   label:'Curator',   voice:'rob_au', tone:'Answer as a curator: authoritative and contextual, connecting the object to the wider story of the moving image and to other things on the wall.'},
+  {id:'guide',     label:'Guide',     voice:'rob_au', tone:'Answer as a warm gallery guide and visitor host: friendly, brief and practical, helping the visitor understand what they are looking at and what to see next.'},
+  {id:'education', label:'Education', voice:'rob_au', tone:'Answer as an education host for students and school groups: simple and encouraging, one idea at a time, ending with a question that keeps them curious.'},
+  {id:'technical', label:'Technical', voice:'rob_au', tone:'Answer as an AV and preservation technician: explain how the object worked, its format and mechanism, and how ACMI’s preservation lab keeps time-based media alive. Precise and plain, no hype.'}
+];
+let persona='curator';
+function buildPersonas(){
+  const row=$('personaRow'); if(!row)return;
+  row.innerHTML=PERSONAS.map(p=>{ const on=p.id===persona;
+    return '<button type="button" onclick="setPersona(\''+p.id+'\')" style="font-family:var(--mono);font-size:.52rem;letter-spacing:.06em;text-transform:uppercase;padding:8px 12px;border:1px solid '+(on?'#fff':'var(--line2)')+';background:'+(on?'#fff':'transparent')+';color:'+(on?'#000':'var(--ink2)')+';cursor:pointer;">'+p.label+'</button>';
+  }).join('');
+}
+function setPersona(id){ persona=id; buildPersonas(); renderChips(); } // persona sets the prompt/tone + its own questions; the voice picker controls the voice
+buildPersonas();
 
 function sysPrompt(){
-  const f=focusZone?`The visitor is standing in front of the "${focusZone}" part of the wall; lean your answer toward that if it fits. `:'';
+  const f=focusZone?`The visitor has tapped "${focusZone}" on the wall${focusGround?': '+focusGround:''} Speak about that object specifically, grounded in what is genuinely known; do not invent details you are unsure of. `:'';
   const lang=langSel.value?`Reply entirely in ${langSel.value}. `:'';
-  return `You are "The Object Wall" at ACMI (the Australian Centre for the Moving Image) in Naarm/Melbourne, part of the free permanent exhibition "The Story of the Moving Image". You speak in the first person, as the wall itself — a floor-to-ceiling display of moving-image objects across history: magic lanterns, early and hand-cranked cameras, film projectors, televisions, video and game consoles, screen props and everyday ephemera of cinema and television. ${f}${lang}Speak warmly and plainly, like a good gallery host, three to four sentences, no jargon. You may describe the kinds of objects on the wall and the story of the moving image in general terms. Do NOT invent specific provenance, dates, accession numbers or claims about individual named objects you cannot be sure of; if asked a specific detail you don't hold, say so and invite the visitor to look closer or ask a guide. This is a concept demo; if pressed on exact holdings, gently note the live version is grounded in ACMI's own catalogue.`;
+  const pr=PERSONAS.find(x=>x.id===persona); const tone=pr?pr.tone+' ':'';
+  return `You are the voice of "The Object Wall" at ACMI (the Australian Centre for the Moving Image) in Naarm/Melbourne, part of the free permanent exhibition "The Story of the Moving Image" — a floor-to-ceiling display of the objects that gave birth to the moving image: zoetropes and praxinoscopes, magic lanterns and optical toys, Eadweard Muybridge’s 1887 motion studies and the Reynaud praxinoscope theatre, through to contemporary works like the Cuphead zoetrope that revisit them. ${f}${lang}${tone}Speak warmly and plainly, three to four sentences, no jargon. You may describe the kinds of objects on the wall and the story of the moving image in general terms. Do NOT invent specific provenance, dates, accession numbers or claims about individual named objects you cannot be sure of; if asked a specific detail you don't hold, say so and invite the visitor to look closer or ask a guide. This is a concept demo; if pressed on exact holdings, gently note the live version is grounded in ACMI's own catalogue.`;
 }
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function showThinking(){respEl.innerHTML='<span class="think">Listening to the wall<b>.</b><b>.</b><b>.</b></span>';}
 function showAnswer(t,live){
   lastReply=t;
   respEl.innerHTML='<span class="who">The Object Wall · ACMI</span>'+esc(t).replace(/\n/g,'<br>')
-    +'<div><button class="readbtn" id="readBtn" onclick="toggleRead()">Read aloud</button></div>'
+    +'<div style="display:flex;align-items:flex-end;gap:11px;"><button class="readbtn" id="readBtn" onclick="toggleRead()">Read aloud</button><span class="vbars" id="vbars"><i></i><i></i><i></i><i></i><i></i><i></i></span></div>'
     +'<span class="ground">'+(live?'✓ Grounded in the record':'Offline · a curated answer')+'</span>';
   if(autoReadEl.checked||window._speakNext){speak(t);window._speakNext=false;}
 }
@@ -260,24 +355,43 @@ async function ask(q){
 }
 function askFree(){const v=inputEl.value.trim();if(!v)return;inputEl.value='';[...$('chips').children].forEach(c=>c.classList.remove('active'));ask(v);}
 inputEl.addEventListener('keydown',e=>{if(e.key==='Enter')askFree();});
-const QS=['What are you?','Tell me a story from the wall','Where does the moving image begin?','What is the strangest object here?'];
-$('chips').innerHTML=QS.map(q=>`<button class="chip" onclick="this.classList.add('active');ask('${q.replace(/'/g,"\\'")}')">${q}</button>`).join('');
+const PERSONA_QS={
+  curator:['What are you?','What is your story?','Why do you matter?','What should I notice?'],
+  guide:['What am I looking at?','How does it work?','What is nearby?','What should I see next?'],
+  education:['How do you work?','Explain it simply','What can I learn from you?','Tell me a fun fact'],
+  technical:['How were you made?','How does the mechanism work?','What are you made of?','How are you kept working?']
+};
+function renderChips(){ const qs=PERSONA_QS[(typeof persona!=='undefined'&&persona)||'curator']||PERSONA_QS.curator; if($('chips'))$('chips').innerHTML=qs.map(q=>`<button class="chip" onclick="this.classList.add('active');ask('${q.replace(/'/g,"\\'")}')">${q}</button>`).join(''); }
+renderChips();
 
 // ── voice output: sovereign (Piper) when available, else browser ──
 const canSpeak=typeof window.speechSynthesis!=='undefined'; let audioEl=null;
 async function speak(text){
   stopSpeak();
+  const bars=document.getElementById('vbars');
   if(sovereign){
-    try{ const r=await fetch(VOICE_SERVER+'/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:text.slice(0,1400),voice:voiceSel.value})});
-      if(!r.ok)throw 0; const buf=await r.blob(); audioEl=new Audio(URL.createObjectURL(buf));
-      const b=$('readBtn'); if(b){b.classList.add('on');b.textContent='Stop';} audioEl.onended=()=>{if(b){b.classList.remove('on');b.textContent='Read aloud';}}; audioEl.play(); return;
-    }catch(e){}
+    // Cloned/on-device voice ONLY. Never substitute a browser voice (e.g. Karen) for the chosen voice.
+    try{ if(bars)bars.classList.add('on'); // generating your cloned voice — can take a moment
+      const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),120000);
+      const r=await fetch(VOICE_SERVER+'/tts',{method:'POST',headers:{'Content-Type':'application/json'},signal:ctrl.signal,body:JSON.stringify({text:text.slice(0,1400),voice:voiceSel.value})});
+      clearTimeout(to);
+      if(!r.ok)throw new Error('tts '+r.status);
+      const buf=await r.blob(); audioEl=new Audio(URL.createObjectURL(buf));
+      const b=$('readBtn'); if(b){b.classList.add('on');b.textContent='Stop';}
+      audioEl.onended=()=>{if(b){b.classList.remove('on');b.textContent='Read aloud';} if(bars)bars.classList.remove('on');};
+      audioEl.onerror=()=>{ if(bars)bars.classList.remove('on'); };
+      audioEl.play();
+    }catch(e){
+      if(bars)bars.classList.remove('on');
+      const b=$('readBtn'); if(b){ b.classList.remove('on'); b.textContent='Voice engine busy — tap to retry'; }
+    }
+    return;
   }
   if(!canSpeak)return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text);
   const bv=(window._browserVoices||[])[voiceSel.value|0]; if(bv){u.voice=bv;u.lang=bv.lang;} u.rate=.98;
-  const b=$('readBtn'); u.onstart=()=>{if(b){b.classList.add('on');b.textContent='Stop';}}; u.onend=()=>{if(b){b.classList.remove('on');b.textContent='Read aloud';}}; speechSynthesis.speak(u);
+  const b=$('readBtn'); u.onstart=()=>{if(b){b.classList.add('on');b.textContent='Stop';} if(bars)bars.classList.add('on');}; u.onend=()=>{if(b){b.classList.remove('on');b.textContent='Read aloud';} if(bars)bars.classList.remove('on');}; speechSynthesis.speak(u);
 }
-function stopSpeak(){ if(audioEl){try{audioEl.pause();}catch(e){}audioEl=null;} if(canSpeak)speechSynthesis.cancel(); const b=$('readBtn'); if(b){b.classList.remove('on');b.textContent='Read aloud';} }
+function stopSpeak(){ if(audioEl){try{audioEl.pause();}catch(e){}audioEl=null;} if(canSpeak)speechSynthesis.cancel(); const b=$('readBtn'); if(b){b.classList.remove('on');b.textContent='Read aloud';} const vb=document.getElementById('vbars'); if(vb)vb.classList.remove('on'); }
 function toggleRead(){ if((audioEl&&!audioEl.paused)||(canSpeak&&speechSynthesis.speaking))stopSpeak(); else speak(lastReply); }
 
 // ── voice input: sovereign (record → Whisper) else browser SR ──
@@ -311,14 +425,18 @@ function populateBrowserVoices(){ if(!canSpeak)return; const all=speechSynthesis
   window._browserVoices=all; voiceSel.innerHTML=all.map((v,i)=>`<option value="${i}">${v.name} · ${v.lang}</option>`).join(''); const au=all.findIndex(v=>/en-AU/i.test(v.lang)); if(au>=0)voiceSel.value=String(au); }
 async function detectSovereign(){
   try{ const r=await fetch(VOICE_SERVER+'/health',{cache:'no-store'}); const d=await r.json();
-    if(d&&d.ok){ sovereign=true; voiceSel.innerHTML=(d.voices||['alba']).map(v=>`<option value="${v}">${VOICE_LABELS[v]||v}</option>`).join('');
-      $('vdot').classList.add('on'); $('vstatus').innerHTML='<b>Sovereign voice active</b> — Whisper listens, Piper speaks, on this machine. Nothing leaves the building.'; return; }
+    if(d&&d.ok){ sovereign=true;
+      const av=(d.voices||['alba']);
+      voiceSel.innerHTML=av.map(v=>`<option value="${v}">${VOICE_LABELS[v]||v}</option>`).join(''); voiceSel.value=av.includes('rob_au')?'rob_au':(av[0]||'');
+      $('vdot').classList.add('on'); { const _vb=document.querySelector('.vbanner'); if(_vb)_vb.style.display='none'; } return; }
     throw 0;
   }catch(e){ sovereign=false; populateBrowserVoices(); $('vstatus').innerHTML='Local engine not reachable — using the <b>browser voice</b> (run the ARCHAI voice server for the full on-device Whisper + Piper path).'; }
 }
 langSel.addEventListener('change',()=>{document.body.classList.toggle('is-rtl',langSel.value==='Arabic');});
 if(canSpeak){populateBrowserVoices();speechSynthesis.onvoiceschanged=populateBrowserVoices;}
 detectSovereign();
+window.addEventListener('resize',fitTitle); fitTitle();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitTitle);
 </script>
 </body>
 </html>
