@@ -765,6 +765,9 @@ body.public-demo [data-staff-only]{display:none!important;}
     <div class="tab-dot" style="background:var(--accent)"></div>Online Shows
     <span class="tab-count" id="showsTabCount">1</span>
   </div>
+  <div class="tab t-soul" data-roles="admin,curator,collections" onclick="switchTab('soul',this)">
+    <div class="tab-dot" style="background:var(--accent2)"></div>Soul &amp; Voice
+  </div>
   <div class="tab t-visitor" data-roles="admin,curator,collections,technician,volunteer,visitor" onclick="switchTab('visitor',this)">Visitor View</div>
   <div class="tab t-famtec" data-roles="admin,curator,collections,technician,volunteer" onclick="switchTab('famtec',this)">FAMTEC Exchange</div>
   <div class="tab t-objdetail" id="tab-objdetail" data-roles="admin,curator,collections,technician,volunteer" onclick="switchTab('objdetail',this)" style="display:none">
@@ -1215,6 +1218,58 @@ body.public-demo [data-staff-only]{display:none!important;}
     </div>
     <div class="shows-side">
       <div id="onlineShowAudit"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ████ SOUL & VOICE PANEL ████ -->
+<div class="panel" id="panel-soul">
+  <div style="max-width:960px;margin:0 auto;">
+    <h2 style="font-family:var(--mono);font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent2);margin:2px 0 6px;">Soul &amp; Voice · persona design</h2>
+    <p style="font-family:var(--mono);font-size:0.52rem;line-height:1.85;color:var(--text3);margin-bottom:14px;max-width:660px;">
+      Author the <code>soul.md</code> voice layer for each way your institution speaks — curatorial, exhibitions, collection, education, guide, or a specific interactive — and assign the voice (Piper / Whisper, or a custom Australian clone) that reads it aloud. The soul shapes <em>how</em> ARCHAI and AUXIO speak; it never overrides the grounded record.
+    </p>
+
+    <div style="font-family:var(--mono);font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;">Persona</div>
+    <div id="soulPersonaTabs" style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;"></div>
+
+    <div class="soul-grid" style="display:grid;grid-template-columns:1.4fr 1fr;gap:16px;align-items:start;">
+      <div style="min-width:0;">
+        <div style="font-family:var(--mono);font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent2);margin-bottom:8px;">soul.md — <span id="soulActiveLabel">Curatorial</span></div>
+        <textarea id="soulPersonaInput" class="show-textarea" spellcheck="false" style="min-height:440px;width:100%;font-family:var(--mono);font-size:0.62rem;line-height:1.75;white-space:pre;overflow-wrap:normal;" oninput="soulSaveFromUI()"></textarea>
+        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+          <button class="btn primary" type="button" onclick="soulExportSoul()">Export soul.md</button>
+          <button class="btn" type="button" onclick="soulCopy()">Copy</button>
+          <button class="btn" type="button" onclick="soulReset()">Reset persona</button>
+        </div>
+      </div>
+
+      <div style="min-width:0;border:1px solid var(--border);border-radius:4px;background:var(--surface);padding:14px;">
+        <div style="font-family:var(--mono);font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent2);margin-bottom:12px;">Voice assignment</div>
+
+        <label style="font-family:var(--mono);font-size:0.5rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;">Speaking voice · TTS</label>
+        <select id="soulTts" onchange="soulSaveFromUI()" style="width:100%;padding:8px;margin:5px 0 4px;background:var(--surface);border:1px solid var(--border);color:var(--text2);font-family:var(--mono);font-size:0.55rem;border-radius:2px;outline:none;"></select>
+        <div id="soulTtsHint" style="font-family:var(--mono);font-size:0.46rem;color:var(--text3);line-height:1.7;margin-bottom:12px;"></div>
+
+        <label style="font-family:var(--mono);font-size:0.5rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;">Listening · Whisper STT</label>
+        <select id="soulStt" onchange="soulSaveFromUI()" style="width:100%;padding:8px;margin:5px 0 8px;background:var(--surface);border:1px solid var(--border);color:var(--text2);font-family:var(--mono);font-size:0.55rem;border-radius:2px;outline:none;"></select>
+
+        <label style="font-family:var(--mono);font-size:0.5rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;">Reply language</label>
+        <select id="soulLang" onchange="soulSaveFromUI()" style="width:100%;padding:8px;margin:5px 0 12px;background:var(--surface);border:1px solid var(--border);color:var(--text2);font-family:var(--mono);font-size:0.55rem;border-radius:2px;outline:none;"></select>
+
+        <div style="border-top:1px solid var(--border);padding-top:12px;">
+          <label style="font-family:var(--mono);font-size:0.5rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;">Custom voice recordings · for cloning</label>
+          <div style="font-family:var(--mono);font-size:0.46rem;color:var(--text3);line-height:1.7;margin:6px 0 8px;">15–40s of clean, consented speech per voice (WAV/MP3). Cloned by Coqui XTTS on your own machine — audio never leaves the building. An Australian reference gives an Australian clone.</div>
+          <input id="soulRec" type="file" accept="audio/*" multiple onchange="soulAddRecording(this)" style="font-family:var(--mono);font-size:0.5rem;color:var(--text2);width:100%;">
+          <div id="soulRecList" style="margin-top:8px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;align-items:center;">
+      <button class="btn" type="button" onclick="soulAddPersona()">＋ Add interactive / exhibition</button>
+      <button class="btn primary" type="button" onclick="soulExportPack()">Export persona pack (.json)</button>
+      <span style="font-family:var(--mono);font-size:0.46rem;color:var(--text3);">Bundles every persona&rsquo;s soul.md, voice assignment &amp; recording manifest for your ARCHAI deployment.</span>
     </div>
   </div>
 </div>
@@ -2396,11 +2451,11 @@ function collectionStopSpeaking() {
 // ── ROLE DEFINITIONS ────────────────────────────────────────────
 const ROLE_DEFS = {
   admin:       { label:'Admin',              note:'Admin access · user management, infra config, pipeline controls, all data',
-                 tabs:['curator','nodel','nfc','vocab','connect','shows','visitor','famtec','objdetail'] },
+                 tabs:['curator','nodel','nfc','vocab','connect','shows','soul','visitor','famtec','objdetail'] },
   curator:     { label:'Curator',            note:'Curator access · collection editing, AUXIO publishing, vocab tools',
-                 tabs:['curator','nodel','nfc','vocab','connect','shows','visitor','famtec','objdetail'] },
+                 tabs:['curator','nodel','nfc','vocab','connect','shows','soul','visitor','famtec','objdetail'] },
   collections: { label:'Collections Officer', note:'Collections Officer · data entry, upload/tagging, AUXIO assignment',
-                 tabs:['curator','nfc','vocab','connect','shows','visitor','famtec','objdetail'] },
+                 tabs:['curator','nfc','vocab','connect','shows','soul','visitor','famtec','objdetail'] },
   technician:  { label:'Technician / AV',    note:'Technician / AV · Nodel operations and technical record visibility',
                  tabs:['nodel','visitor','famtec','objdetail'] },
   volunteer:   { label:'Volunteer',          note:'Volunteer · read-only collection lookup, AUXIO preview, visitor support',
@@ -2408,7 +2463,7 @@ const ROLE_DEFS = {
   visitor:     { label:'Visitor',            note:'Visitor mode · public-facing preview only',
                  tabs:['visitor'] },
   demo:        { label:'Public Demo',         note:'Public read-only demo · explore every part of ARCHAI. Search, converse, and browse freely; editing and publishing are disabled.',
-                 tabs:['curator','nodel','nfc','vocab','connect','shows','visitor','famtec','objdetail'] }
+                 tabs:['curator','nodel','nfc','vocab','connect','shows','soul','visitor','famtec','objdetail'] }
 };
 
 // ── FAMTEC DATA ─────────────────────────────────────────────────
@@ -3342,6 +3397,7 @@ function switchTab(name, el) {
     selectNFC(firstEmpty.code);
   }
   if (name === 'shows') loadOnlineShowExample();
+  if (name === 'soul') soulInit();
 }
 function setChip(el) { el.closest('.filter-group').querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); }
 function togglePill(el) { el.classList.toggle('active'); }
@@ -5902,6 +5958,152 @@ function resetSoulMd() {
   if (!confirm('Reset soul.md to the template? Your current text will be replaced.')) return;
   el.value = defaultSoulMd(ONLINE_SHOW_EXAMPLE);
 }
+// ═══════════════════════════════════════════════════════════════════
+// SOUL & VOICE — persona / soul.md authoring + voice assignment
+// ═══════════════════════════════════════════════════════════════════
+const SOUL_TTS_VOICES = [
+  { v:'xtts',     label:'Custom clone · your recording (Coqui XTTS · Australian, any language)' },
+  { v:'alba',     label:'Ada · Female, 30s · British (Piper)' },
+  { v:'cori',     label:'Cate · Female, 40s · British (Piper)' },
+  { v:'amy',      label:'Amy · Female, 20s · American (Piper)' },
+  { v:'lessac',   label:'Nora · Female, 40s · American (Piper)' },
+  { v:'ryan',     label:'Ryan · Male, 30s · American (Piper)' },
+  { v:'alan',     label:'Alan · Male, 60s · British (Piper)' },
+  { v:'northern', label:'Ted · Male, 50s · British (Piper)' }
+];
+const SOUL_TTS_HINT = {
+  xtts:'The Australian path: clone your own or your visitor-services actors’ voices from a recording below. Sovereign and portable; one clone can speak many languages. An Australian reference gives an Australian voice.',
+  alba:'Piper: fully on-device and portable. British/American only — Piper has no Australian voice.',
+  cori:'Piper: on-device and portable. British/American only — Piper has no Australian voice.',
+  amy:'Piper: on-device and portable. American accent.',
+  lessac:'Piper: on-device and portable. American accent.',
+  ryan:'Piper: on-device and portable. American accent.',
+  alan:'Piper: on-device and portable. British accent.',
+  northern:'Piper: on-device and portable. British accent.'
+};
+const SOUL_STT_MODELS = [
+  { v:'base.en', label:'Whisper base.en · English, fast' },
+  { v:'base',    label:'Whisper base · multilingual' },
+  { v:'small',   label:'Whisper small · multilingual, more accurate' }
+];
+const SOUL_LANGS = ['English (en-AU)','English (en-GB)','French','Simplified Chinese','Japanese','Korean','Arabic','Spanish','Vietnamese','Auto-detect from visitor'];
+const SOUL_DEFAULT_PERSONAS = [
+  { id:'curatorial',  label:'Curatorial' },
+  { id:'exhibitions', label:'Exhibitions' },
+  { id:'collection',  label:'Collection' },
+  { id:'education',   label:'Education' },
+  { id:'guide',       label:'Guide' }
+];
+let SOUL_PERSONAS = null, soulActive = 'curatorial', soulInited = false;
+
+function soulEsc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function soulTemplate(id, label){
+  const R = {
+    curatorial:{ who:'ARCHAI speaking for the whole collection, in a warm curatorial voice', tone:'Warm, clear and unhurried. Plain language, not academic jargon. Two to four sentences. Curious and generous — invite the next question.', extra:'Draw connections across the collection, but never invent them.' },
+    exhibitions:{ who:'the voice of a specific exhibition or theme', tone:'Evocative but grounded. Tie each object back to the exhibition’s argument in two to four sentences.', extra:'Stay inside this exhibition’s checklist and theme. If asked about works not in the show, say so and point back to what is here.' },
+    collection:{ who:'staff-facing collection intelligence, for internal use', tone:'Precise, efficient and neutral. Professional terminology is fine (provenance, medium, condition, rights, accession).', extra:'This voice is for staff, not the public. Surface record gaps, rights flags and cataloguing notes plainly.' },
+    education:{ who:'an education host for students and school groups', tone:'Friendly, encouraging and simple. Short sentences, one idea at a time, and ask a question back to keep them thinking.', extra:'Pitch to the chosen year level. Define any specialist word you use.' },
+    guide:{ who:'a gallery guide and wayfinder, like great visitor services', tone:'Welcoming, brief and practical.', extra:'Help visitors find things, understand the space and decide what to see next. Hand any sensitive, crisis or restricted matter to a human staff member.' }
+  }[id] || { who:'a custom persona for '+(label||'this interactive'), tone:'Warm, clear and grounded.', extra:'Stay within the scope of this interactive or exhibition.' };
+  return '# soul.md — '+(label||id)+'\n\n'
+    +'## Who is speaking\n'+R.who+'.\n'
+    +'- AUXIO (a single work): the object speaks in the first person, as itself.\n'
+    +'- ARCHAI / ARCHAIX (the collection): this persona answers on the collection’s behalf.\n\n'
+    +'## Grounding — never negotiable\n'
+    +'Speak ONLY from the verified record and the institution’s own materials.\n'
+    +'If the record does not cover something, say so plainly. Never invent facts, dates,\n'
+    +'attributions, provenance or quotes. Do not guess.\n\n'
+    +'## Tone & register\n'+R.tone+'\n\n'
+    +'## Scope\n'+R.extra+'\n\n'
+    +'## Audience & access\n'
+    +'If the visitor writes or speaks in another language, reply fully in that language.\n'
+    +'Write for a general public unless this persona says otherwise.\n\n'
+    +'## Never say\n'
+    +'- Speculation dressed as fact, or fluent guesses to fill a gap.\n'
+    +'- Monetary valuations or authentication opinions.\n'
+    +'- Personal data about living people.\n'
+    +'- Culturally restricted knowledge — defer to community protocols and the curator.\n\n'
+    +'## Cultural protocol\n'
+    +'Follow the institution’s cultural-safety guidance (CARE Principles / Local Contexts).\n'
+    +'For First Nations material, use community-approved language; where a record is flagged\n'
+    +'restricted, decline gently and point to the appropriate custodians.\n\n'
+    +'## When in doubt\n'
+    +'It is always better to say “the record doesn’t tell us that” than to invent an answer.';
+}
+function soulInit(){
+  if (soulInited){ soulRenderTabs(); soulLoadToUI(); return; }
+  SOUL_PERSONAS = {};
+  SOUL_DEFAULT_PERSONAS.forEach(p=>{
+    SOUL_PERSONAS[p.id] = { id:p.id, label:p.label, soul:soulTemplate(p.id,p.label),
+      tts:'xtts', stt:'base.en', lang:'English (en-AU)', recordings:[] };
+  });
+  soulActive='curatorial'; soulInited=true;
+  soulRenderTabs(); soulLoadToUI();
+}
+function soulRenderTabs(){
+  const wrap=document.getElementById('soulPersonaTabs'); if(!wrap)return;
+  wrap.innerHTML = Object.keys(SOUL_PERSONAS).map(id=>{
+    const on = id===soulActive;
+    return '<button type="button" onclick="soulSelectPersona(\''+id+'\')" style="font-family:var(--mono);font-size:0.54rem;letter-spacing:0.06em;padding:8px 13px;border:1px solid '+(on?'var(--accent)':'var(--border)')+';background:'+(on?'var(--accent)':'transparent')+';color:'+(on?'#12140d':'var(--text2)')+';border-radius:2px;cursor:pointer;">'+soulEsc(SOUL_PERSONAS[id].label)+'</button>';
+  }).join('');
+}
+function soulFillSelect(el, opts, val){ if(!el)return; el.innerHTML=opts.map(o=>'<option value="'+o.v+'" '+(o.v===val?'selected':'')+'>'+o.label+'</option>').join(''); }
+function soulLoadToUI(){
+  const p=SOUL_PERSONAS[soulActive]; if(!p)return;
+  const inp=document.getElementById('soulPersonaInput'); if(inp)inp.value=p.soul;
+  const lbl=document.getElementById('soulActiveLabel'); if(lbl)lbl.textContent=p.label;
+  soulFillSelect(document.getElementById('soulTts'), SOUL_TTS_VOICES, p.tts);
+  soulFillSelect(document.getElementById('soulStt'), SOUL_STT_MODELS, p.stt);
+  const langEl=document.getElementById('soulLang'); if(langEl)langEl.innerHTML=SOUL_LANGS.map(l=>'<option '+(l===p.lang?'selected':'')+'>'+l+'</option>').join('');
+  soulTtsHint(); soulRenderRecs();
+}
+function soulTtsHint(){ const e=document.getElementById('soulTtsHint'), sel=document.getElementById('soulTts'); if(e&&sel)e.textContent=SOUL_TTS_HINT[sel.value]||''; }
+function soulSaveFromUI(){
+  if(!SOUL_PERSONAS)return; const p=SOUL_PERSONAS[soulActive]; if(!p)return;
+  const g=id=>{const e=document.getElementById(id);return e?e.value:'';};
+  p.soul=g('soulPersonaInput'); p.tts=g('soulTts')||p.tts; p.stt=g('soulStt')||p.stt; p.lang=g('soulLang')||p.lang;
+  soulTtsHint();
+}
+function soulSelectPersona(id){ soulSaveFromUI(); soulActive=id; soulRenderTabs(); soulLoadToUI(); }
+function soulAddPersona(){
+  const name=(prompt('Name this interactive or exhibition persona (e.g. “Mad Max Interactive”, “First Nations Gallery”):')||'').trim();
+  if(!name)return;
+  const id='x_'+name.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'').slice(0,40)+'_'+Object.keys(SOUL_PERSONAS).length;
+  SOUL_PERSONAS[id]={ id:id, label:name, soul:soulTemplate(id,name), tts:'xtts', stt:'base.en', lang:'English (en-AU)', recordings:[] };
+  soulActive=id; soulRenderTabs(); soulLoadToUI();
+}
+function soulAddRecording(input){
+  const p=SOUL_PERSONAS[soulActive]; if(!p)return;
+  [...(input.files||[])].forEach(f=>p.recordings.push({name:f.name, size:f.size}));
+  input.value=''; soulRenderRecs();
+}
+function soulRenderRecs(){
+  const wrap=document.getElementById('soulRecList'), p=SOUL_PERSONAS[soulActive]; if(!wrap||!p)return;
+  if(!p.recordings.length){ wrap.innerHTML='<div style="font-family:var(--mono);font-size:0.46rem;color:var(--text3);">No recordings yet.</div>'; return; }
+  wrap.innerHTML=p.recordings.map((r,i)=>'<div style="display:flex;justify-content:space-between;gap:8px;font-family:var(--mono);font-size:0.48rem;color:var(--text2);padding:4px 0;border-bottom:1px solid var(--border);"><span>'+soulEsc(r.name)+'</span><button type="button" onclick="soulDelRec('+i+')" style="background:none;border:none;color:var(--text3);cursor:pointer;">remove</button></div>').join('');
+}
+function soulDelRec(i){ const p=SOUL_PERSONAS[soulActive]; if(!p)return; p.recordings.splice(i,1); soulRenderRecs(); }
+function soulExportSoul(){
+  soulSaveFromUI(); const p=SOUL_PERSONAS[soulActive]; if(!p||!p.soul.trim())return;
+  const blob=new Blob([p.soul],{type:'text/markdown'}), a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=p.id+'.soul.md'; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+}
+async function soulCopy(){ soulSaveFromUI(); const p=SOUL_PERSONAS[soulActive]; if(!p)return;
+  try{ await navigator.clipboard.writeText(p.soul); alert('soul.md copied.'); }catch(e){ soulExportSoul(); } }
+function soulReset(){ const p=SOUL_PERSONAS[soulActive]; if(!p)return;
+  if(!confirm('Reset “'+p.label+'” to the template? Your edits to this persona will be replaced.'))return;
+  p.soul=soulTemplate(p.id,p.label); soulLoadToUI(); }
+function soulExportPack(){
+  soulSaveFromUI();
+  const pack={ generated_by:'ARCHAI Soul & Voice', personas:Object.values(SOUL_PERSONAS).map(p=>({
+    id:p.id, label:p.label, soul_md:p.soul, voice:{ tts:p.tts, stt:p.stt, reply_language:p.lang },
+    voice_recordings:p.recordings.map(r=>r.name) })) };
+  const blob=new Blob([JSON.stringify(pack,null,2)],{type:'application/json'}), a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='archai-persona-pack.json'; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+}
+
 function downloadShowJSON() {
   const show = collectShowEdits();
   if (!show) return;
