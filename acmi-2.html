@@ -50,6 +50,10 @@ img{max-width:100%;display:block}
 .hero-cta:hover{background:var(--ink2)}
 .hero-cta svg{width:12px;height:12px}
 .heroimg img{width:100%;height:100%;max-height:52vh;object-fit:contain;display:block;animation:fade 1s ease both}
+.heroimg.is-wall #heroImg{filter:grayscale(1) contrast(1.03);transition:filter .6s ease}
+.heroimg.is-wall:hover #heroImg,.heroimg.is-wall.lit #heroImg{filter:grayscale(0) contrast(1)}
+.heroimg.is-wall::after{content:"touch to reveal";position:absolute;right:14px;bottom:12px;z-index:2;font-family:var(--mono);font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.55);padding:5px 9px;pointer-events:none;transition:opacity .5s ease}
+.heroimg.is-wall:hover::after,.heroimg.is-wall.lit::after{opacity:0}
 @keyframes fade{from{opacity:0}to{opacity:1}}
 .credit{font-family:var(--mono);font-size:.44rem;color:var(--ink3);letter-spacing:.08em;text-transform:uppercase;padding:7px 20px 0;text-align:right}
 
@@ -158,9 +162,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   </div>
 </header>
 
-<div class="heroimg"><img id="heroImg" src="acmi-wall.jpg" alt="The object wall at ACMI — a floor-to-ceiling display of moving-image objects" style="cursor:pointer" onclick="talkToHero()"
+<div class="heroimg is-wall" onpointerdown="this.classList.add('lit')"><img id="heroImg" src="acmi-wall.jpg" alt="The object wall at ACMI — a floor-to-ceiling display of moving-image objects" style="cursor:pointer" onclick="talkToHero()"
   onerror="if(!this.dataset.f){this.dataset.f=1;this.src='https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/AEO177013_ZoetropeWithIllustratedAnimationStrips_Front.jpg.1200x1200_q85.jpg';}else{this.closest('.heroimg').style.display='none';}"></div>
-<div class="credit" id="heroCredit">The object wall · ACMI · The Story of the Moving Image</div>
+<div class="credit" id="heroCredit">The object wall · ACMI, Fed Square · photo Shannon McGrath</div>
 
 <section class="hero">
   <div class="eyebrow" id="hEyebrow" data-i18n="eyebrow">The Story of the Moving Image</div>
@@ -172,7 +176,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <section class="content">
   <p class="story" id="hStory">From floor to ceiling, <b>the object wall</b> gathers the machines that first taught pictures to move — zoetropes and praxinoscopes, magic lanterns and Muybridge’s motion studies, the spinning drums and mirror-toys of pre-cinema, through to contemporary works that spin them anew. Rather than a label on every case, <b>one AUXIO speaks for the whole wall</b>. Ask it aloud or in text, in the language you choose, grounded only in ACMI's records.</p>
 
-  <details class="panel" open style="margin-top:18px;">
+  <details class="panel" style="margin-top:18px;">
     <summary><span class="panel-t" data-i18n="mapcap_t">The wall</span><span class="panel-h">tap an object to talk to it</span></summary>
     <div class="panel-b">
       <div id="wallGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px;"></div>
@@ -197,7 +201,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
   <div class="vbanner"><div class="vbanner-in"><span class="vdot" id="vdot"></span><span class="vstatus" id="vstatus">Checking for the sovereign voice engine…</span></div></div>
 
-  <details class="panel" open>
+  <details class="panel">
     <summary><span class="panel-t" data-i18n="voicepanel">Voice &amp; audio</span><span class="panel-h" data-i18n="voicehint">choose a voice</span></summary>
     <div class="panel-b">
       <div class="row"><label for="voiceSel">Voice</label><select id="voiceSel" class="vsel"></select></div>
@@ -256,7 +260,7 @@ let uiLang='en',replyAuto=false;
 function t(k){return (I18N[uiLang]&&I18N[uiLang][k])||(I18N.en&&I18N.en[k])||'';}
 function objField(i,fl){return t('o'+i+'_'+fl)||(WALL[i]&&WALL[i][fl])||'';}
 function setLang(code){ if(code==='auto'){uiLang='en';replyAuto=true;} else {uiLang=code;replyAuto=false;} applyI18n(); }
-function applyI18n(){ document.querySelectorAll('[data-i18n]').forEach(function(el){var v=t(el.getAttribute('data-i18n'));if(v)el.textContent=v;}); document.body.classList.toggle('is-rtl',uiLang==='ar'); if(typeof buildPersonas==='function')buildPersonas(); if(typeof renderChips==='function')renderChips(); buildWall(); if(inputEl)inputEl.placeholder=t('placeholder'); if(heroObj.idx!=null){showObject(heroObj.idx);} else {var s=function(id,k){var e=$(id);if(e)e.textContent=t(k);}; s('hTitle','title');s('hSub','subtitle');s('hStory','story'); var c=$('heroCredit'); if(c)c.textContent='ACMI · '+t('eyebrow'); if(typeof fitTitle==='function')fitTitle();} }
+function applyI18n(){ document.querySelectorAll('[data-i18n]').forEach(function(el){var v=t(el.getAttribute('data-i18n'));if(v)el.textContent=v;}); document.body.classList.toggle('is-rtl',uiLang==='ar'); if(typeof buildPersonas==='function')buildPersonas(); if(typeof renderChips==='function')renderChips(); buildWall(); if(inputEl)inputEl.placeholder=t('placeholder'); if(heroObj.idx!=null){showObject(heroObj.idx);} else {var s=function(id,k){var e=$(id);if(e)e.textContent=t(k);}; s('hTitle','title');s('hSub','subtitle');s('hStory','story'); var c=$('heroCredit'); if(c)c.textContent='ACMI, Fed Square · '+t('eyebrow')+' · photo Shannon McGrath'; if(typeof fitTitle==='function')fitTitle();} }
 function buildWall(){
   $('wallGrid').innerHTML=WALL.map(function(o,i){ return '<button type="button" class="wcell" onclick="setFocusIdx('+i+',this)" style="position:relative;border:1px solid var(--line2);background:#0d0d0d;padding:0;cursor:pointer;overflow:hidden;aspect-ratio:1/1;">'
     +'<img src="'+o.img+'" alt="'+esc(objField(i,'t'))+'" loading="lazy" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05);transition:filter .25s;" onmouseover="this.style.filter=\'grayscale(0)\'" onmouseout="this.style.filter=\'grayscale(1) contrast(1.05)\'" onerror="this.parentNode.style.opacity=.25;this.style.display=\'none\'">'
@@ -275,7 +279,7 @@ function fitTitle(){
 function showObject(i){
   const o=WALL[i]; if(!o)return;
   const img=$('heroImg');
-  if(img){ const hero=img.closest('.heroimg'); if(hero)hero.style.display=''; img.onerror=function(){ this.closest('.heroimg').style.display='none'; }; img.src=bigImg(o.img); img.alt=objField(i,'t'); }
+  if(img){ const hero=img.closest('.heroimg'); if(hero){ hero.style.display=''; hero.classList.remove('is-wall'); } img.onerror=function(){ this.closest('.heroimg').style.display='none'; }; img.src=bigImg(o.img); img.alt=objField(i,'t'); }
   const set=(id,v)=>{ const e=$(id); if(e)e.textContent=v; };
   set('heroCredit', objField(i,'t')+(o.d?' · '+o.d:''));
   set('hTitle', objField(i,'t')); set('hSub', objField(i,'sub')); set('hStory', objField(i,'info'));
