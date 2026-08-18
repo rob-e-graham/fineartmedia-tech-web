@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="safechat.js"></script><!-- Saftio: on-device crisis + hate-speech safety layer -->
+<meta name="saftio" content="SafeChat by FAMTEC — safety layer for public messages">
 <style>
 :root{
   --bg:#000; --bg2:#0a0a0a; --panel:#0e0e0e; --panel2:#141414;
@@ -123,6 +125,14 @@ details.panel summary .chev{flex:none;width:0;height:0;border-left:4px solid tra
 details.panel[open] summary .chev{transform:rotate(180deg)}
 details.panel summary:hover .chev{border-top-color:var(--ink)}
 .panel-b{padding:2px 14px 16px}
+/* message wall — public visitor messages, moderated by Saftio */
+.msg-feed{display:flex;flex-direction:column;gap:8px;margin:2px 0 12px;max-height:300px;overflow-y:auto}
+.msg-item{border:1px solid var(--line);border-left:2px solid var(--line2);padding:9px 11px;background:var(--panel2)}
+.msg-item.msg-verified{border-left-color:#3f7a54}
+.msg-meta{font-family:var(--mono);font-size:.44rem;letter-spacing:.11em;text-transform:uppercase;color:var(--ink3);margin-bottom:5px;display:flex;gap:6px;align-items:center}
+.msg-text{font-size:.92rem;line-height:1.42;color:var(--ink2);white-space:pre-wrap;word-break:break-word}
+.msg-star{color:#8fe0a6;font-size:.8rem;line-height:1}
+.msg-empty{font-family:var(--mono);font-size:.5rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);padding:6px 0}
 .row{display:flex;gap:10px;align-items:center;margin:10px 0;flex-wrap:wrap}
 .row label{font-family:var(--mono);font-size:.52rem;letter-spacing:.06em;color:var(--ink2);min-width:110px;text-transform:uppercase}
 .vsel{flex:1;min-width:170px;background:#000;border:1px solid var(--line2);color:var(--ink2);font-family:var(--mono);font-size:.58rem;padding:9px 10px;outline:none}
@@ -213,11 +223,12 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   </details>
 
   <details class="panel">
-    <summary><span class="panel-t" data-i18n="msgpanel">Leave a message</span><span class="panel-h" data-i18n="msghint">for the curators</span><span class="chev" aria-hidden="true"></span></summary>
+    <summary><span class="panel-t" data-i18n="msgpanel">Message wall</span><span class="panel-h">read others, add yours</span><span class="chev" aria-hidden="true"></span></summary>
     <div class="panel-b">
-      <textarea id="msgInput" placeholder="Share a memory, a question, or what this brought to mind…" style="width:100%;min-height:74px;background:#000;border:1px solid var(--line2);color:var(--ink);font-family:var(--grot);font-size:.95rem;padding:11px;outline:none;resize:vertical;"></textarea>
-      <button class="send" type="button" style="margin-top:9px;" data-i18n="msgsend" onclick="sendMessage()">Send</button>
-      <div class="note" id="msgNote">Your note goes to the curatorial team for review, never shown publicly.</div>
+      <div id="msgFeed" class="msg-feed"></div>
+      <textarea id="msgInput" placeholder="Share a memory, a question, or something you know about this object…" style="width:100%;min-height:74px;background:#000;border:1px solid var(--line2);color:var(--ink);font-family:var(--grot);font-size:.95rem;padding:11px;outline:none;resize:vertical;"></textarea>
+      <button class="send" type="button" style="margin-top:9px;" onclick="sendMessage()">Post to the wall</button>
+      <div class="note" id="msgNote">Your message joins the wall for other visitors. Kept safe by Saftio: anything harmful is held for curatorial review, and verified facts are added to the object’s record with a ★.</div>
     </div>
   </details>
 
@@ -291,6 +302,7 @@ function showObject(i){
   set('hTitle', objField(i,'t')); set('hSub', objField(i,'sub')); set('hStory', objField(i,'info'));
   fitTitle();
   heroObj={idx:i, title:o.t, ground:o.info||''};
+  if(typeof renderFeed==='function')renderFeed();
 }
 // Talk to whatever object is currently the hero (hero image tap)
 function talkToHero(){
@@ -311,10 +323,51 @@ function setFocusIdx(i,el){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 // Leave a message + share (AUXIO / Heide pattern)
+// ── message wall: public visitor messages, moderated on-device by Saftio ──
+// Inline, self-contained component (the ARCHAI app composes these into AUXIO pages).
+const MSG_SEED=[
+  {obj:'Cuphead zoetrope', name:'Curatorial note', text:'The Cuphead zoetrope was built by Studio MDHR, spinning characters from their 2020 videogame into a three-dimensional zoetrope.', star:true},
+  {obj:'', name:'Margaret', text:'My grandfather ran the projector at the Regent in the 1950s. The zoetrope brought it all back.'},
+  {obj:'', name:'Visitor', text:'I never knew Muybridge triggered the cameras with trip-wires. Incredible for 1887.'},
+  {obj:'', name:'Aki', text:'Does the praxinoscope still spin? It looks so delicate.'},
+];
+function msgStore(){ try{return JSON.parse(localStorage.getItem('acmi_msgs')||'[]');}catch(e){return[];} }
+function msgSave(a){ try{localStorage.setItem('acmi_msgs',JSON.stringify(a.slice(-60)));}catch(e){} }
+function currentObjName(){ return heroObj.idx!=null ? (WALL[heroObj.idx]&&WALL[heroObj.idx].t||'') : ''; }
+function renderFeed(){
+  const feed=$('msgFeed'); if(!feed)return;
+  const here=currentObjName();
+  const all=[...msgStore().reverse(), ...MSG_SEED];
+  const shown=all.filter(m=>!m.obj || !here || m.obj===here);
+  if(!shown.length){ feed.innerHTML='<div class="msg-empty">Be the first to leave a message.</div>'; return; }
+  feed.innerHTML=shown.map(function(m){
+    const star=m.star?'<span class="msg-star" title="Verified — added to the object\'s record">★</span>':'';
+    const meta=esc(m.name||'Visitor')+(m.star?' · added to the record':'');
+    return '<div class="msg-item'+(m.star?' msg-verified':'')+'"><div class="msg-meta">'+star+'<span>'+meta+'</span></div><div class="msg-text">'+esc(m.text)+'</div></div>';
+  }).join('');
+}
 function sendMessage(){
   const el=$('msgInput'), note=$('msgNote'); if(!el)return;
-  if(!el.value.trim()){ el.focus(); return; }
-  el.value=''; if(note)note.textContent='Thank you, your message has been sent to the curators.';
+  const text=el.value.trim(); if(!text){ el.focus(); return; }
+  // Saftio safety layer (on-device) — runs before anything is posted
+  if(window.Safechat){
+    const crisis=Safechat.check(text);
+    if(crisis.level==='high'||crisis.level==='low'){
+      try{ Safechat.showModal(crisis); }catch(e){}
+      if(note)note.textContent='It sounds like you may be going through something. We’ve shown some support options — your message was not posted.';
+      el.value=''; return;
+    }
+    const mod=Safechat.detectModeration(text);
+    if(mod&&mod.category){
+      el.value=''; if(note)note.textContent='Thanks. This message has been held for curatorial review before it appears on the wall.';
+      return;
+    }
+  }
+  const store=msgStore();
+  store.push({obj:currentObjName(), name:'You', text:text, ts:Date.now()});
+  msgSave(store); el.value=''; renderFeed();
+  const feed=$('msgFeed'); if(feed)feed.scrollTop=0;
+  if(note)note.textContent='Posted to the wall. If it contains a fact the curators can verify, it may be added to the object’s record with a ★.';
 }
 function shareLink(){ return location.href.split('#')[0]+'#'+encodeURIComponent(heroObj.title||'The Object Wall'); }
 function shareObj(){
@@ -464,6 +517,7 @@ async function detectSovereign(){
 langSel.addEventListener('change',()=>setLang(langSel.value));
 if(canSpeak){populateBrowserVoices();speechSynthesis.onvoiceschanged=populateBrowserVoices;}
 detectSovereign();
+renderFeed();
 window.addEventListener('resize',fitTitle); fitTitle();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitTitle);
 </script>
