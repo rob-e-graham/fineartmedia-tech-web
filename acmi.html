@@ -448,23 +448,28 @@ function renderChips(){ const qs=PERSONA_QS[(typeof persona!=='undefined'&&perso
 renderChips();
 
 // ── voice output: sovereign (Piper) when available, else browser ──
-const canSpeak=typeof window.speechSynthesis!=='undefined'; let audioEl=null;
+const canSpeak=typeof window.speechSynthesis!=='undefined'; let audioEl=null, _ttsCtrl=null, _ttsSeq=0;
 async function speak(text){
   stopSpeak();
+  const mySeq=++_ttsSeq;              // only the newest speak() is allowed to sound
   const bars=document.getElementById('vbars');
   if(sovereign){
     // Cloned/on-device voice ONLY. Never substitute a browser voice (e.g. Karen) for the chosen voice.
     try{ if(bars)bars.classList.add('on'); // generating your cloned voice, can take a moment
-      const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),120000);
+      const ctrl=new AbortController(); _ttsCtrl=ctrl; const to=setTimeout(()=>ctrl.abort(),120000);
       const r=await fetch(VOICE_SERVER+'/tts',{method:'POST',headers:{'Content-Type':'application/json'},signal:ctrl.signal,body:JSON.stringify({text:text.slice(0,1400),voice:voiceSel.value})});
       clearTimeout(to);
+      if(mySeq!==_ttsSeq)return;      // a newer request superseded this one — don't play
       if(!r.ok)throw new Error('tts '+r.status);
-      const buf=await r.blob(); audioEl=new Audio(URL.createObjectURL(buf));
+      const buf=await r.blob();
+      if(mySeq!==_ttsSeq)return;      // superseded while decoding — don't play
+      audioEl=new Audio(URL.createObjectURL(buf));
       const b=$('readBtn'); if(b){b.classList.add('on');b.textContent='Stop';}
       audioEl.onended=()=>{if(b){b.classList.remove('on');b.textContent='Read aloud';} if(bars)bars.classList.remove('on');};
       audioEl.onerror=()=>{ if(bars)bars.classList.remove('on'); };
       audioEl.play();
     }catch(e){
+      if(mySeq!==_ttsSeq || (e&&e.name==='AbortError'))return;  // cancelled/superseded — stay silent
       if(bars)bars.classList.remove('on');
       const b=$('readBtn'); if(b){ b.classList.remove('on'); b.textContent='Voice engine busy, tap to retry'; }
     }
@@ -474,7 +479,7 @@ async function speak(text){
   const bv=(window._browserVoices||[])[voiceSel.value|0]; if(bv){u.voice=bv;u.lang=bv.lang;} u.rate=.98;
   const b=$('readBtn'); u.onstart=()=>{if(b){b.classList.add('on');b.textContent='Stop';} if(bars)bars.classList.add('on');}; u.onend=()=>{if(b){b.classList.remove('on');b.textContent='Read aloud';} if(bars)bars.classList.remove('on');}; speechSynthesis.speak(u);
 }
-function stopSpeak(){ if(audioEl){try{audioEl.pause();}catch(e){}audioEl=null;} if(canSpeak)speechSynthesis.cancel(); const b=$('readBtn'); if(b){b.classList.remove('on');b.textContent='Read aloud';} const vb=document.getElementById('vbars'); if(vb)vb.classList.remove('on'); }
+function stopSpeak(){ _ttsSeq++; if(_ttsCtrl){try{_ttsCtrl.abort();}catch(e){}_ttsCtrl=null;} if(audioEl){try{audioEl.pause();}catch(e){}audioEl=null;} if(canSpeak)speechSynthesis.cancel(); const b=$('readBtn'); if(b){b.classList.remove('on');b.textContent='Read aloud';} const vb=document.getElementById('vbars'); if(vb)vb.classList.remove('on'); }
 function toggleRead(){ if((audioEl&&!audioEl.paused)||(canSpeak&&speechSynthesis.speaking))stopSpeak(); else speak(lastReply); }
 
 // ── voice input: sovereign (record → Whisper) else browser SR ──
