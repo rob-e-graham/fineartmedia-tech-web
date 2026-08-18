@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="safechat.js"></script><!-- Saftio: on-device crisis + hate-speech safety layer -->
-<meta name="saftio" content="SafeChat by FAMTEC — safety layer for public messages">
+<meta name="saftio" content="SafeChat by FAMTEC, safety layer for public messages">
 <style>
 :root{
   --bg:#000; --bg2:#0a0a0a; --panel:#0e0e0e; --panel2:#141414;
@@ -125,7 +125,7 @@ details.panel summary .chev{flex:none;width:0;height:0;border-left:4px solid tra
 details.panel[open] summary .chev{transform:rotate(180deg)}
 details.panel summary:hover .chev{border-top-color:var(--ink)}
 .panel-b{padding:2px 14px 16px}
-/* message wall — public visitor messages, moderated by Saftio */
+/* message wall, public visitor messages, moderated by Saftio */
 .msg-feed{display:flex;flex-direction:column;gap:8px;margin:2px 0 12px;max-height:300px;overflow-y:auto}
 .msg-item{border:1px solid var(--line);border-left:2px solid var(--line2);padding:9px 11px;background:var(--panel2)}
 .msg-item.msg-verified{border-left-color:#3f7a54}
@@ -218,6 +218,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
     <summary><span class="panel-t" data-i18n="voicepanel">Voice &amp; audio</span><span class="panel-h" data-i18n="voicehint">choose a voice</span><span class="chev" aria-hidden="true"></span></summary>
     <div class="panel-b">
       <div class="row"><label for="voiceSel">Voice</label><select id="voiceSel" class="vsel"></select></div>
+      <div class="row" id="gtLangRow" style="display:none;"><label for="gtLangSel">Language</label><select id="gtLangSel" class="vsel"></select></div>
       <div class="row"><label class="check"><input type="checkbox" id="autoRead" checked> <span data-i18n="readaloud">Read answers aloud</span></label></div>
     </div>
   </details>
@@ -345,7 +346,7 @@ function renderFeed(){
   const shown=all.filter(m=>!m.obj || !here || m.obj===here);
   if(!shown.length){ feed.innerHTML='<div class="msg-empty">Be the first to leave a message.</div>'; return; }
   feed.innerHTML=shown.map(function(m){
-    const star=m.star?'<span class="msg-star" title="Verified — added to the object\'s record">★</span>':'';
+    const star=m.star?'<span class="msg-star" title="Verified, added to the object\'s record">★</span>':'';
     const meta=esc(m.name||'Visitor')+(m.star?' · added to the record':'');
     return '<div class="msg-item'+(m.star?' msg-verified':'')+'"><div class="msg-meta">'+star+'<span>'+meta+'</span></div><div class="msg-text">'+esc(m.text)+'</div></div>';
   }).join('');
@@ -353,12 +354,12 @@ function renderFeed(){
 function sendMessage(){
   const el=$('msgInput'), note=$('msgNote'); if(!el)return;
   const text=el.value.trim(); if(!text){ el.focus(); return; }
-  // Saftio safety layer (on-device) — runs before anything is posted
+  // Saftio safety layer (on-device), runs before anything is posted
   if(window.Safechat){
     const crisis=Safechat.check(text);
     if(crisis.level==='high'||crisis.level==='low'){
       try{ Safechat.showModal(crisis); }catch(e){}
-      if(note)note.textContent='It sounds like you may be going through something. We’ve shown some support options — your message was not posted.';
+      if(note)note.textContent='It sounds like you may be going through something. We’ve shown some support options, your message was not posted.';
       el.value=''; return;
     }
     const mod=Safechat.detectModeration(text);
@@ -464,8 +465,12 @@ function _resetReadUI(){ const b=$('readBtn'); if(b){b.classList.remove('on');b.
 // Backup voice: Google Translate TTS. Plays via an <audio> element (no CORS needed for
 // playback), chunked to its ~200-char limit, in the currently selected language. Works even
 // when the local/sovereign engine can't be reached.
+const GTRANSLATE_LANGS=[['en','English'],['af','Afrikaans'],['sq','Albanian'],['am','Amharic'],['ar','Arabic'],['hy','Armenian'],['az','Azerbaijani'],['eu','Basque'],['bn','Bengali'],['bs','Bosnian'],['bg','Bulgarian'],['ca','Catalan'],['ceb','Cebuano'],['zh-CN','Chinese (Simplified)'],['zh-TW','Chinese (Traditional)'],['co','Corsican'],['hr','Croatian'],['cs','Czech'],['da','Danish'],['nl','Dutch'],['eo','Esperanto'],['et','Estonian'],['fil','Filipino'],['fi','Finnish'],['fr','French'],['gl','Galician'],['ka','Georgian'],['de','German'],['el','Greek'],['gu','Gujarati'],['ht','Haitian Creole'],['ha','Hausa'],['iw','Hebrew'],['hi','Hindi'],['hmn','Hmong'],['hu','Hungarian'],['is','Icelandic'],['ig','Igbo'],['id','Indonesian'],['ga','Irish'],['it','Italian'],['ja','Japanese'],['jw','Javanese'],['kn','Kannada'],['kk','Kazakh'],['km','Khmer'],['ko','Korean'],['ku','Kurdish'],['ky','Kyrgyz'],['lo','Lao'],['la','Latin'],['lv','Latvian'],['lt','Lithuanian'],['lb','Luxembourgish'],['mk','Macedonian'],['mg','Malagasy'],['ms','Malay'],['ml','Malayalam'],['mt','Maltese'],['mi','Maori'],['mr','Marathi'],['mn','Mongolian'],['my','Myanmar (Burmese)'],['ne','Nepali'],['no','Norwegian'],['ps','Pashto'],['fa','Persian'],['pl','Polish'],['pt','Portuguese'],['pa','Punjabi'],['ro','Romanian'],['ru','Russian'],['sm','Samoan'],['gd','Scots Gaelic'],['sr','Serbian'],['st','Sesotho'],['sn','Shona'],['sd','Sindhi'],['si','Sinhala'],['sk','Slovak'],['sl','Slovenian'],['so','Somali'],['es','Spanish'],['su','Sundanese'],['sw','Swahili'],['sv','Swedish'],['tg','Tajik'],['ta','Tamil'],['te','Telugu'],['th','Thai'],['tr','Turkish'],['uk','Ukrainian'],['ur','Urdu'],['uz','Uzbek'],['vi','Vietnamese'],['cy','Welsh'],['xh','Xhosa'],['yi','Yiddish'],['yo','Yoruba'],['zu','Zulu']];
+function initGTLang(){ const s=$('gtLangSel'); if(!s||s.options.length)return; s.innerHTML=GTRANSLATE_LANGS.map(l=>`<option value="${l[0]}">${esc(l[1])}</option>`).join(''); const pre=(typeof uiLang!=='undefined'&&uiLang&&uiLang!=='auto')?uiLang:'en'; s.value=GTRANSLATE_LANGS.some(l=>l[0]===pre)?pre:'en'; }
+function toggleGTLang(){ const row=$('gtLangRow'); if(row)row.style.display=(voiceSel.value==='gtranslate')?'':'none'; }
+voiceSel.addEventListener('change',toggleGTLang); initGTLang();
 function speakGoogle(text, mySeq, bars){
-  const lang=(typeof uiLang!=='undefined' && uiLang && uiLang!=='auto' && uiLang!=='en')?uiLang:'en';
+  const gl=$('gtLangSel'); const lang=(gl&&gl.value)?gl.value:((typeof uiLang!=='undefined'&&uiLang&&uiLang!=='auto'&&uiLang!=='en')?uiLang:'en');
   const chunks=[]; let rest=String(text||'').replace(/\s+/g,' ').trim();
   while(rest.length){ let cut=rest.length<=190?rest.length:rest.lastIndexOf(' ',190); if(cut<=0)cut=Math.min(190,rest.length); chunks.push(rest.slice(0,cut)); rest=rest.slice(cut).trim(); }
   if(!chunks.length){ _resetReadUI(); return; }
@@ -488,14 +493,14 @@ async function speak(text){
       const ctrl=new AbortController(); _ttsCtrl=ctrl; const to=setTimeout(()=>ctrl.abort(),120000);
       const r=await fetch(VOICE_SERVER+'/tts',{method:'POST',headers:{'Content-Type':'application/json'},signal:ctrl.signal,body:JSON.stringify({text:text.slice(0,1400),voice:voiceSel.value})});
       clearTimeout(to);
-      if(mySeq!==_ttsSeq)return;      // a newer request superseded this one — don't play
+      if(mySeq!==_ttsSeq)return;      // a newer request superseded this one, don't play
       if(!r.ok)throw new Error('tts '+r.status);
       const arr=await r.arrayBuffer();
-      if(mySeq!==_ttsSeq)return;      // superseded while fetching — don't play
+      if(mySeq!==_ttsSeq)return;      // superseded while fetching, don't play
       const c=audioCtx(); if(!c)throw new Error('no audio');
       if(c.state==='suspended'){ try{ await c.resume(); }catch(e){} }
       const abuf=await new Promise((res,rej)=>{ try{ const q=c.decodeAudioData(arr, res, rej); if(q&&q.then)q.then(res,rej); }catch(e){ rej(e); } });
-      if(mySeq!==_ttsSeq)return;      // superseded while decoding — don't play
+      if(mySeq!==_ttsSeq)return;      // superseded while decoding, don't play
       if(_srcNode){ try{ _srcNode.onended=null; _srcNode.stop(); }catch(e){} }
       _srcNode=c.createBufferSource(); _srcNode.buffer=abuf; _srcNode.connect(c.destination);
       const b=$('readBtn'); if(b){b.classList.add('on');b.textContent='Stop';}
@@ -503,7 +508,7 @@ async function speak(text){
       _srcNode.onended=function(){ _playing=false; _resetReadUI(); };
       _srcNode.start(0);
     }catch(e){
-      if(mySeq!==_ttsSeq || (e&&e.name==='AbortError'))return;  // cancelled/superseded — stay silent
+      if(mySeq!==_ttsSeq || (e&&e.name==='AbortError'))return;  // cancelled/superseded, stay silent
       if(bars)bars.classList.remove('on');
       const b=$('readBtn'); if(b){ b.classList.remove('on'); b.textContent='Voice engine busy, tap to retry'; }
     }

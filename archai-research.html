@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>ARCHAI — Research, Technology &amp; Collaboration</title>
-<meta name="description" content="A working paper on ARCHAI: sovereign, local-first AI for cultural heritage — the PhD research question, technical overview, and a research agenda for a museum partnership.">
+<title>ARCHAI, Research, Technology &amp; Collaboration</title>
+<meta name="description" content="A working paper on ARCHAI: sovereign, local-first AI for cultural heritage, the PhD research question, technical overview, and a research agenda for a museum partnership.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
@@ -42,7 +42,14 @@
   .spec .v{font-family:var(--grot);font-size:.94rem;line-height:1.4}
   .spec .v small{display:block;font-family:var(--serif);font-size:.88rem;color:var(--ink2);margin-top:3px}
   .callout{background:var(--accent-soft);border-left:3px solid var(--accent);padding:15px 19px;margin:18px 0;border-radius:0 2px 2px 0}
-  .exp{border-left:2px solid var(--line2);padding:2px 0 2px 18px;margin:20px 0}
+  .exp{border-left:2px solid var(--line2);padding:2px 0 2px 18px;margin:22px 0}
+  .atacmi{font-size:.98rem;margin:8px 0}
+  .atacmi b{color:var(--accent)}
+  .ros{font-size:.9rem;color:var(--ink2);margin:5px 0;max-width:66ch}
+  .ros b{font-family:var(--mono);font-size:.58rem;letter-spacing:.11em;text-transform:uppercase;color:var(--accent);margin-right:9px}
+  .idea{border-left:2px solid var(--line2);padding:2px 0 2px 18px;margin:16px 0}
+  .idea h3{margin:2px 0 3px}
+  .idea .why{font-size:.9rem;color:var(--ink2);margin:5px 0}
   .exp .q::before{content:"";}
   .q{position:relative;padding-left:20px;margin:8px 0}
   .q::before{content:"?";position:absolute;left:0;top:0;font-family:var(--mono);color:var(--accent);font-weight:500}
@@ -60,7 +67,7 @@
 
   <div class="eyebrow">Working paper · Fine Art Media &amp; RMIT University</div>
   <h1>ARCHAI</h1>
-  <p class="lede">Sovereign, local-first AI for cultural heritage — turning collections into <em>living archives</em> people can talk to, while every record stays on hardware the institution owns and controls.</p>
+  <p class="lede">Sovereign, local-first AI for cultural heritage, turning collections into <em>living archives</em> people can talk to, while every record stays on hardware the institution owns and controls.</p>
   <div class="meta">
     <span>Research, technical overview &amp; collaboration agenda</span>
     <span>Rob Graham · rob@fineartmedia.tech</span>
@@ -68,7 +75,7 @@
   </div>
 
   <h2><span class="n">01</span> The research</h2>
-  <p><strong>Cultivating a Living Archive: Designing Sovereign AI Infrastructure for Cultural Heritage.</strong> A practice-based Design PhD at RMIT University, developed through Research through Design — where building the working system <em>is</em> the primary act of discovery, not an illustration of theory. A related paper was accepted for the 6th Summit on New Media Art Archiving at ISEA2026, Dubai.</p>
+  <p><strong>Cultivating a Living Archive: Designing Sovereign AI Infrastructure for Cultural Heritage.</strong> A practice-based Design PhD at RMIT University, developed through Research through Design, where building the working system <em>is</em> the primary act of discovery, not an illustration of theory. A related paper was accepted for the 6th Summit on New Media Art Archiving at ISEA2026, Dubai.</p>
   <h3>Primary research question</h3>
   <p class="rq">How can design transform cultural heritage collections into living archives through sovereign, local-first AI infrastructure while preserving provenance, institutional authority and curatorial practice?</p>
   <h3>Secondary questions</h3>
@@ -80,18 +87,18 @@
   </ol>
 
   <h2><span class="n">02</span> What ARCHAI is</h2>
-  <p>Not a new collection system — a <strong>semantic interface layer</strong> that sits <em>above</em> whatever an institution already runs (EMu, Axiell, Vernon, TMS, CollectiveAccess, ResourceSpace, and the rest). It connects via their APIs, reads and normalises the metadata, and makes the collection <strong>semantically searchable and conversationally accessible</strong> — no migration, nothing replaced, and it never writes back to the record.</p>
-  <p>Because it runs on institutionally owned hardware with local-first models, the collection <em>and</em> the new layer of visitor conversation it creates stay in the building. Sovereignty here is not just an ethical preference — it is a preservation requirement: an institution that can't maintain independent access to its own interpretive systems has, in a real sense, lost control of its collection.</p>
-  <div class="callout"><strong>The living-archive proposition.</strong> Instead of a static repository visitors must search, the archive becomes a place that can hold a conversation while staying anchored in evidence. Every response is bounded by verified collection information — the archive doesn't become less authoritative, its knowledge becomes more accessible.</div>
+  <p>Not a new collection system, a <strong>semantic interface layer</strong> that sits <em>above</em> whatever an institution already runs (EMu, Axiell, Vernon, TMS, CollectiveAccess, ResourceSpace, and the rest). It connects via their APIs, reads and normalises the metadata, and makes the collection <strong>semantically searchable and conversationally accessible</strong>, no migration, nothing replaced, and it never writes back to the record.</p>
+  <p>Because it runs on institutionally owned hardware with local-first models, the collection <em>and</em> the new layer of visitor conversation it creates stay in the building. Sovereignty here is not just an ethical preference, it is a preservation requirement: an institution that can't maintain independent access to its own interpretive systems has, in a real sense, lost control of its collection.</p>
+  <div class="callout"><strong>The living-archive proposition.</strong> Instead of a static repository visitors must search, the archive becomes a place that can hold a conversation while staying anchored in evidence. Every response is bounded by verified collection information, the archive doesn't become less authoritative, its knowledge becomes more accessible.</div>
 
   <h2><span class="n">03</span> Technical overview</h2>
   <h3>Three-layer architecture</h3>
   <div class="grid">
     <div class="spec"><div class="k">Heritage foundation</div><div class="v">The institution's CMS / DAMS<small>Read-only. No AI output ever enters the record. Permanent, authoritative, citable.</small></div></div>
-    <div class="spec"><div class="k">Derivative processing</div><div class="v">Vectors + AI responses<small>Entirely regenerable — rebuilt from unchanged source when models improve.</small></div></div>
+    <div class="spec"><div class="k">Derivative processing</div><div class="v">Vectors + AI responses<small>Entirely regenerable, rebuilt from unchanged source when models improve.</small></div></div>
     <div class="spec"><div class="k">Editorial</div><div class="v">Curator interpretation<small>Flows one way, archive → visitor. Never writes back.</small></div></div>
   </div>
-  <h3>The stack — all on-device</h3>
+  <h3>The stack, all on-device</h3>
   <div class="grid">
     <div class="spec"><div class="k">Search</div><div class="v">Qdrant + local embeddings</div></div>
     <div class="spec"><div class="k">Reasoning</div><div class="v">Local LLM (Qwen), five-layer grounding</div></div>
@@ -100,17 +107,17 @@
   </div>
   <h3>Six technical contributions</h3>
   <ul>
-    <li><strong>Vector embeddings for heritage discovery</strong> — semantic search without depending on controlled vocabulary.</li>
-    <li><strong>Provenance-tracked interpretation</strong> — every answer records its derivation chain back to source.</li>
-    <li><strong>Layered architecture</strong> — permanent heritage held apart from regenerable AI processing.</li>
-    <li><strong>Conversational objects (AUXIO)</strong> — items speaking in the first person from their own validated metadata.</li>
-    <li><strong>Five-layer hallucination prevention</strong> — responses stay grounded under adversarial conditions.</li>
-    <li><strong>Transferable hardware reference</strong> — a self-deployable stack for the GLAM sector.</li>
+    <li><strong>Vector embeddings for heritage discovery</strong>, semantic search without depending on controlled vocabulary.</li>
+    <li><strong>Provenance-tracked interpretation</strong>, every answer records its derivation chain back to source.</li>
+    <li><strong>Layered architecture</strong>, permanent heritage held apart from regenerable AI processing.</li>
+    <li><strong>Conversational objects (AUXIO)</strong>, items speaking in the first person from their own validated metadata.</li>
+    <li><strong>Five-layer hallucination prevention</strong>, responses stay grounded under adversarial conditions.</li>
+    <li><strong>Transferable hardware reference</strong>, a self-deployable stack for the GLAM sector.</li>
   </ul>
-  <p style="font-family:var(--mono);font-size:.8rem;color:var(--ink2);margin-top:14px">Live today: ~1,400 public AUXIO pages across institutions on five continents; 3,000+ staff-searchable records from twenty open sources; every object open-licensed, rights-restricted media excluded at ingest. Deployment is a <strong>one-time hardware capital cost, owned outright — not a per-seat cloud subscription.</strong></p>
+  <p style="font-family:var(--mono);font-size:.8rem;color:var(--ink2);margin-top:14px">Live today: ~1,400 public AUXIO pages across institutions on five continents; 3,000+ staff-searchable records from twenty open sources; every object open-licensed, rights-restricted media excluded at ingest. Deployment is a <strong>one-time hardware capital cost, owned outright, not a per-seat cloud subscription.</strong></p>
 
   <h2><span class="n">04</span> A research agenda for the museum</h2>
-  <p>Seven Research-through-Design experiments — each a working prototype tested in a real institution, mapping directly onto the questions above.</p>
+  <p>Seven Research-through-Design experiments, each a working prototype tested in a real institution, mapping directly onto the questions above.</p>
 
   <div class="exp"><h3>1 · Curatorial collection intelligence<span class="tag">staff-facing</span></h3>
   <p class="rq">How does conversational + semantic search change how curators find connections and build exhibitions?</p>
@@ -118,11 +125,11 @@
 
   <div class="exp"><h3>2 · Accessibility experiments<span class="tag">visitor-facing</span></h3>
   <p class="rq">What access gains come from conversational, multilingual, voice-first interpretation?</p>
-  <p>Multilingual AUXIO, voice in/out, plain-language and reading-level adaptation, cognitive-load pacing, high-contrast low-vision modes. The strongest external-funding fit — it extends existing museum accessibility and digital-practice research.</p></div>
+  <p>Multilingual AUXIO, voice in/out, plain-language and reading-level adaptation, cognitive-load pacing, high-contrast low-vision modes. The strongest external-funding fit, it extends existing museum accessibility and digital-practice research.</p></div>
 
   <div class="exp"><h3>3 · Local-LLM evaluation → the sovereign appliance<span class="tag">technical</span></h3>
   <p class="rq">Which local models sustain grounded, hallucination-free, fast interpretation on museum-owned hardware?</p>
-  <p>Benchmark local models on institutional records against the five-layer grounding framework — fidelity, latency, power — and publish a hardware reference specification.</p></div>
+  <p>Benchmark local models on institutional records against the five-layer grounding framework, fidelity, latency, power, and publish a hardware reference specification.</p></div>
 
   <div class="exp"><h3>4 · E-paper signage + NFC<span class="tag">physical</span></h3>
   <p class="rq">Can low-power e-paper + NFC turn a static label into living, updatable, conversational interpretation?</p>
@@ -130,7 +137,7 @@
 
   <div class="exp"><h3>5 · The federated sovereign index<span class="tag">flagship</span></h3>
   <p class="rq">What becomes possible when all open-licensed collections are federated into one local sovereign stack?</p>
-  <p>Scale the index into a "connecting archives" brain — cross-collection discovery, provenance across sources, sector-wide questions — held locally and owned outright. The largest ambition, and a natural ARC Linkage-scale project.</p></div>
+  <p>Scale the index into a "connecting archives" brain, cross-collection discovery, provenance across sources, sector-wide questions, held locally and owned outright. The largest ambition, and a natural ARC Linkage-scale project.</p></div>
 
   <div class="exp"><h3>6 · The living archive<span class="tag">community provenance</span></h3>
   <p class="rq">Can moderated visitor contributions become verified archival metadata without eroding authority?</p>
@@ -138,26 +145,26 @@
 
   <div class="exp"><h3>7 · Cultural protocols as architecture<span class="tag">governance</span></h3>
   <p class="rq">How can cultural protocols be enforceable properties of the system, not just written policy?</p>
-  <p>Co-design a cultural-sensitivity layer with the institution's First Nations governance — see the next section, which this experiment leads.</p></div>
+  <p>Co-design a cultural-sensitivity layer with the institution's First Nations governance, see the next section, which this experiment leads.</p></div>
 
   <h2><span class="n">05</span> First Nations collections &amp; data sovereignty</h2>
-  <p>Linking First Nations collections to <em>commercial cloud</em> AI is precisely what Indigenous Data Sovereignty frameworks forbid — it moves the material offshore and out of community control. A sovereign, local-first system is the opposite by design, and this is where ARCHAI's "ethics as architecture" thesis is tested most seriously.</p>
+  <p>Linking First Nations collections to <em>commercial cloud</em> AI is precisely what Indigenous Data Sovereignty frameworks forbid, it moves the material offshore and out of community control. A sovereign, local-first system is the opposite by design, and this is where ARCHAI's "ethics as architecture" thesis is tested most seriously.</p>
   <h3>The systems</h3>
   <ul>
-    <li><strong>Mukurtu CMS</strong> — Indigenous-led, open-source, with differential access and Traditional Knowledge narratives in the metadata.</li>
-    <li><strong>Traditional Knowledge (TK) Labels + Local Contexts Hub</strong> — the protocol/rights layer; communities author the labels and control their delivery.</li>
-    <li><strong>Ara Irititja</strong> and <strong>AIATSIS</strong> — Australian community and national heritage systems.</li>
+    <li><strong>Mukurtu CMS</strong>, Indigenous-led, open-source, with differential access and Traditional Knowledge narratives in the metadata.</li>
+    <li><strong>Traditional Knowledge (TK) Labels + Local Contexts Hub</strong>, the protocol/rights layer; communities author the labels and control their delivery.</li>
+    <li><strong>Ara Irititja</strong> and <strong>AIATSIS</strong>, Australian community and national heritage systems.</li>
   </ul>
-  <h3>How ARCHAI would engage — and the line it holds</h3>
-  <p>ARCHAI can <strong>read and enforce TK Labels</strong>: exclude restricted material at ingest, honour differential access, foreground community narratives, and never write AI output back into the record. Running locally, the data never leaves — satisfying <strong>Authority to Control</strong> and infrastructure sovereignty (CARE Principles; Maiam nayri Wingara).</p>
-  <div class="callout">This can only be a <strong>community-governed partnership, consent-first</strong>. Authority to Control sits with communities. Not everything is linkable, and some material must never be ingested or surfaced. ARCHAI's role is to <em>respect and enforce</em> protocols; communities decide. The proposition is not "ingest Indigenous collections" — it is "sovereign infrastructure that enforces <em>your</em> protocols, on <em>your</em> terms, on hardware you control."</div>
+  <h3>How ARCHAI would engage, and the line it holds</h3>
+  <p>ARCHAI can <strong>read and enforce TK Labels</strong>: exclude restricted material at ingest, honour differential access, foreground community narratives, and never write AI output back into the record. Running locally, the data never leaves, satisfying <strong>Authority to Control</strong> and infrastructure sovereignty (CARE Principles; Maiam nayri Wingara).</p>
+  <div class="callout">This can only be a <strong>community-governed partnership, consent-first</strong>. Authority to Control sits with communities. Not everything is linkable, and some material must never be ingested or surfaced. ARCHAI's role is to <em>respect and enforce</em> protocols; communities decide. The proposition is not "ingest Indigenous collections", it is "sovereign infrastructure that enforces <em>your</em> protocols, on <em>your</em> terms, on hardware you control."</div>
 
   <h2><span class="n">06</span> Working together</h2>
-  <p><strong>RMIT is already ACMI's Major University Partner</strong> — a decade-long relationship, renewed in 2026, spanning the ACMI + RMIT Audience Lab, the ARC-supported Museum Digital Social Futures project, RMIT's Centre of Digital Ecosystems, and an existing ARC Fellowship. ARCHAI extends that partnership into sovereign AI research. Pathways:</p>
+  <p><strong>RMIT is already ACMI's Major University Partner</strong>, a decade-long relationship, renewed in 2026, spanning the ACMI + RMIT Audience Lab, the ARC-supported Museum Digital Social Futures project, RMIT's Centre of Digital Ecosystems, and an existing ARC Fellowship. ARCHAI extends that partnership into sovereign AI research. Pathways:</p>
   <ul>
-    <li><strong>Scoped pilot</strong> — a small, low-risk, ACMI-approved record set; rights, terminology and cultural protocols set by your team.</li>
-    <li><strong>ARC Linkage Project</strong> — RMIT + ACMI as partners; Major-Partner status strengthens the bid.</li>
-    <li><strong>Audience Lab experiments</strong> — in-gallery prototypes (e-paper/NFC, the living archive) tested with real audiences.</li>
+    <li><strong>Scoped pilot</strong>, a small, low-risk, ACMI-approved record set; rights, terminology and cultural protocols set by your team.</li>
+    <li><strong>ARC Linkage Project</strong>, RMIT + ACMI as partners; Major-Partner status strengthens the bid.</li>
+    <li><strong>Audience Lab experiments</strong>, in-gallery prototypes (e-paper/NFC, the living archive) tested with real audiences.</li>
     <li><strong>Visitor studies &amp; evaluation</strong>, <strong>co-authored outputs</strong>, and <strong>student WIL projects</strong> extending the existing pipeline.</li>
   </ul>
   <h3>What we'd explore together</h3>
@@ -171,7 +178,7 @@
     Rob Graham · Creative technologist · Founder, Fine Art Media (FAMTEC) · PhD Researcher, RMIT University<br>
     rob@fineartmedia.tech · +61 409 336 251 · <a href="https://fineartmedia.tech/archai">fineartmedia.tech/archai</a><br>
     Try the concept (best on a phone): <a href="https://fineartmedia.tech/acmi">fineartmedia.tech/acmi</a>
-    <div class="src">Sources on First Nations frameworks: Mukurtu CMS &amp; TK Labels (mukurtu.org) · Local Contexts (localcontexts.org) · Ara Irititja (irititja.com) · CARE Principles (gida-global.org) · Maiam nayri Wingara (maiamnayriwingara.org). An independent proposal — not affiliated with or endorsed by any institution named.</div>
+    <div class="src">Sources on First Nations frameworks: Mukurtu CMS &amp; TK Labels (mukurtu.org) · Local Contexts (localcontexts.org) · Ara Irititja (irititja.com) · CARE Principles (gida-global.org) · Maiam nayri Wingara (maiamnayriwingara.org). An independent proposal, not affiliated with or endorsed by any institution named.</div>
   </div>
 
 </div>
