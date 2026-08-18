@@ -175,7 +175,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   </div>
 </header>
 
-<div class="heroimg is-wall" onpointerdown="this.classList.add('lit')"><img id="heroImg" src="acmi-wall.jpg" alt="The object wall at ACMI, a floor-to-ceiling display of moving-image objects" style="cursor:pointer" onclick="talkToHero()"
+<div class="heroimg is-wall" onpointerdown="litReveal(this)"><img id="heroImg" src="acmi-wall.jpg" alt="The object wall at ACMI, a floor-to-ceiling display of moving-image objects" style="cursor:pointer" onclick="talkToHero()"
   onerror="if(!this.dataset.f){this.dataset.f=1;this.src='https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/AEO177013_ZoetropeWithIllustratedAnimationStrips_Front.jpg.1200x1200_q85.jpg';}else{this.closest('.heroimg').style.display='none';}"></div>
 <div class="credit" id="heroCredit">The object wall · ACMI, Fed Square · photo Shannon McGrath</div>
 
@@ -293,6 +293,9 @@ function fitTitle(){
   el.style.fontSize=size+'px';
   while(el.scrollWidth>el.clientWidth+1 && size>13 && guard<400){ size-=1; el.style.fontSize=size+'px'; guard++; }
 }
+// Touch-to-reveal on the hero: bring the photo to colour AND open the object wall,
+// so a visitor can immediately pick an object to talk to.
+function litReveal(el){ el.classList.add('lit'); const s=document.querySelector('.panel-t[data-i18n="mapcap_t"]'); const w=s&&s.closest('details.panel'); if(w)w.open=true; }
 function showObject(i){
   const o=WALL[i]; if(!o)return;
   const img=$('heroImg');
