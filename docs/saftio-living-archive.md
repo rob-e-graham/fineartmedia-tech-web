@@ -75,8 +75,12 @@ Verified visitor knowledge → **community-sourced provenance → the living arc
 ## Where it lives
 
 - **Client** — the Saftio browser library in each AUXIO page (Leave-a-message panel **and** the chat).
-- **Staff app (ARCHAI)** — moderation queue, per-institution config, fact-verification →
-  write to the object's metadata, issue the green star.
+- **Staff app (ARCHAI)** — the **AUXIO Message Review** view: curators see every visitor
+  message across AUXIO pages, with Saftio's flags (crisis / hate / cultural) surfaced.
+  From here the team **approves held messages, routes crisis/cultural items, and verifies
+  facts** — awarding the **★ green star**, which writes the fact into the object's metadata.
+  The visitor wall only *displays* the ★ once curators grant it; verification never happens
+  on the public page. Per-institution Saftio thresholds (hate / crisis / cultural) are set here too.
 
 ---
 
