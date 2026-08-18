@@ -403,16 +403,22 @@ function setPersona(id){ persona=id; buildPersonas(); renderChips(); } // person
 buildPersonas();
 
 function sysPrompt(){
-  const f=focusZone?`The visitor has tapped "${focusZone}" on the wall${focusGround?': '+focusGround:''} Speak about that object specifically, grounded in what is genuinely known; do not invent details you are unsure of. `:'';
   const lang=replyAuto?'Reply in the language the visitor used. ':(uiLang==='en'?'':`Reply entirely in ${LANG_NAMES[uiLang]}. `);
   const pr=PERSONAS.find(x=>x.id===persona); const tone=pr?pr.tone+' ':'';
-  return `You are the voice of "The Object Wall" at ACMI (the Australian Centre for the Moving Image) in Naarm/Melbourne, part of the free permanent exhibition "The Story of the Moving Image", a floor-to-ceiling display of the objects that gave birth to the moving image: zoetropes and praxinoscopes, magic lanterns and optical toys, Eadweard Muybridge’s 1887 motion studies and the Reynaud praxinoscope theatre, through to contemporary works like the Cuphead zoetrope that revisit them. ${f}${lang}${tone}Speak warmly and plainly, three to four sentences, no jargon. You may describe the kinds of objects on the wall and the story of the moving image in general terms. Do NOT invent specific provenance, dates, accession numbers or claims about individual named objects you cannot be sure of; if asked a specific detail you don't hold, say so and invite the visitor to look closer or ask a guide. This is a concept demo; if pressed on exact holdings, gently note the live version is grounded in ACMI's own catalogue.`;
+  const base=`You belong to "The Object Wall" at ACMI (the Australian Centre for the Moving Image) in Naarm/Melbourne, part of the free permanent exhibition "The Story of the Moving Image", the objects that gave birth to the moving image, from zoetropes and praxinoscopes to Eadweard Muybridge’s 1887 motion studies and the Cuphead zoetrope. `;
+  let role;
+  if(focusZone){
+    role=`Right now you ARE the "${focusZone}"${focusGround?', '+focusGround+'.':'.'} Answer in the FIRST PERSON as this object, beginning with "I". Speak only about yourself and your place in the story of the moving image. Stay grounded in what is genuinely known. Never invent provenance, dates or accession numbers you are unsure of; if asked a detail you do not hold, say so plainly and invite the visitor to look closer or ask a guide. `;
+  } else {
+    role=`Speak as the voice of the whole wall. You may describe the kinds of objects on the wall and the story of the moving image in general terms, but never invent specific claims about individual named objects. `;
+  }
+  return base+role+lang+tone+`Speak warmly and plainly, three to four sentences, no jargon. This is a concept demo; if pressed on exact holdings, gently note the live version is grounded in ACMI's own catalogue.`;
 }
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function showThinking(){respEl.innerHTML='<span class="think">Listening to the wall<b>.</b><b>.</b><b>.</b></span>';}
 function showAnswer(t,live){
   lastReply=t;
-  respEl.innerHTML='<span class="who">The Object Wall · ACMI</span>'+esc(t).replace(/\n/g,'<br>')
+  respEl.innerHTML='<span class="who">'+(focusZone?esc(focusZone):'The Object Wall')+' · ACMI</span>'+esc(t).replace(/\n/g,'<br>')
     +'<div style="display:flex;align-items:flex-end;gap:11px;"><button class="readbtn" id="readBtn" onclick="toggleRead()">Read aloud</button><span class="vbars" id="vbars"><i></i><i></i><i></i><i></i><i></i><i></i></span></div>'
     +'<span class="ground">'+(live?'✓ Grounded in the record':'Offline · a curated answer')+'</span>';
   if(autoReadEl.checked||window._speakNext){speak(t);window._speakNext=false;}
@@ -427,7 +433,7 @@ async function ask(q){
     const reply=d&&d.message&&d.message.content&&d.message.content.trim();
     if(reply){history.push({role:'assistant',content:reply});showAnswer(reply,true);return;}
     throw new Error('empty');
-  }catch(e){ showAnswer("I'm the wall of moving-image objects at ACMI, cameras, projectors, screens and the odd surprise, a century of how pictures learned to move. My live voice is resting right now, but stand close: every object here is a small machine for making or holding an image.",false); }
+  }catch(e){ showAnswer(focusZone?("I am the "+focusZone+", here on ACMI's Object Wall. My live voice is resting a moment, but look closely and you'll see how I helped pictures learn to move."):"I'm the wall of moving-image objects at ACMI, cameras, projectors, screens and the odd surprise, a century of how pictures learned to move. My live voice is resting right now, but stand close: every object here is a small machine for making or holding an image.",false); }
 }
 function askFree(){const v=inputEl.value.trim();if(!v)return;inputEl.value='';[...$('chips').children].forEach(c=>c.classList.remove('active'));ask(v);}
 inputEl.addEventListener('keydown',e=>{if(e.key==='Enter')askFree();});
