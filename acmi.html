@@ -511,15 +511,23 @@ function populateBrowserVoices(){ if(!canSpeak)return; const all=speechSynthesis
 // ~16s, MeloTTS/MPS ~40s the very first time the GPU graph compiles).
 let _warmed=false;
 function warmVoice(v){ if(_warmed||!v)return; _warmed=true; try{ fetch(VOICE_SERVER+'/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:'Hello.',voice:v})}).then(r=>r.blob()).catch(()=>{}); }catch(e){} }
-async function detectSovereign(){
-  try{ const r=await fetch(VOICE_SERVER+'/health',{cache:'no-store'}); const d=await r.json();
+async function detectSovereign(attempt){
+  attempt=attempt||1;
+  try{
+    const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),7000);
+    const r=await fetch(VOICE_SERVER+'/health',{cache:'no-store',signal:ctrl.signal}); clearTimeout(to);
+    const d=await r.json();
     if(d&&d.ok){ sovereign=true;
       const av=(d.voices||['alba']);
       voiceSel.innerHTML=av.map(v=>`<option value="${v}">${VOICE_LABELS[v]||v}</option>`).join(''); voiceSel.value=av.includes('aussie')?'aussie':(av.includes('rob_au')?'rob_au':(av[0]||''));
       warmVoice(voiceSel.value);
       $('vdot').classList.add('on'); { const _vb=document.querySelector('.vbanner'); if(_vb)_vb.style.display='none'; } return; }
     throw 0;
-  }catch(e){ sovereign=false; populateBrowserVoices(); $('vstatus').innerHTML='Local engine not reachable, using the <b>browser voice</b> (run the ARCHAI voice server for the full on-device Whisper + Piper path).'; }
+  }catch(e){
+    // A stalled/slow fetch must never leave the dropdown hanging: retry, then fall back.
+    if(attempt<3){ const vs=$('vstatus'); if(vs)vs.textContent='Reaching the voice engine…'; await new Promise(r=>setTimeout(r,600)); return detectSovereign(attempt+1); }
+    sovereign=false; populateBrowserVoices(); $('vstatus').innerHTML='Local engine not reachable, using the <b>browser voice</b>. <a href="#" onclick="detectSovereign(1);return false;" style="color:var(--ink2);text-decoration:underline;">Retry</a>';
+  }
 }
 langSel.addEventListener('change',()=>setLang(langSel.value));
 if(canSpeak){populateBrowserVoices();speechSynthesis.onvoiceschanged=populateBrowserVoices;}
