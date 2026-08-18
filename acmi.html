@@ -446,16 +446,17 @@ function startBrowserSR(){ if(!SR){inputEl.placeholder='Voice needs Chrome, Edge
 // ── detect sovereign engine + populate voices ──
 function populateBrowserVoices(){ if(!canSpeak)return; const all=speechSynthesis.getVoices().filter(v=>/^en(-|_|$)/i.test(v.lang)); if(!all.length)return;
   window._browserVoices=all; voiceSel.innerHTML=all.map((v,i)=>`<option value="${i}">${v.name} · ${v.lang}</option>`).join(''); const au=all.findIndex(v=>/en-AU/i.test(v.lang)); if(au>=0)voiceSel.value=String(au); }
-// Warm the slow-to-load cloned-voice model in the background as soon as the engine
-// is found, so the visitor's first spoken answer isn't stuck behind a ~16s cold start.
+// Warm the chosen voice's model in the background as soon as the engine is found,
+// so the visitor's first spoken answer isn't stuck behind a cold start (Chatterbox
+// ~16s, MeloTTS/MPS ~40s the very first time the GPU graph compiles).
 let _warmed=false;
-function warmVoice(v){ if(_warmed)return; _warmed=true; try{ fetch(VOICE_SERVER+'/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:'Hello.',voice:v||'rob_au'})}).then(r=>r.blob()).catch(()=>{}); }catch(e){} }
+function warmVoice(v){ if(_warmed||!v)return; _warmed=true; try{ fetch(VOICE_SERVER+'/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:'Hello.',voice:v})}).then(r=>r.blob()).catch(()=>{}); }catch(e){} }
 async function detectSovereign(){
   try{ const r=await fetch(VOICE_SERVER+'/health',{cache:'no-store'}); const d=await r.json();
     if(d&&d.ok){ sovereign=true;
       const av=(d.voices||['alba']);
       voiceSel.innerHTML=av.map(v=>`<option value="${v}">${VOICE_LABELS[v]||v}</option>`).join(''); voiceSel.value=av.includes('aussie')?'aussie':(av.includes('rob_au')?'rob_au':(av[0]||''));
-      if(av.includes('rob_au'))warmVoice('rob_au');
+      warmVoice(voiceSel.value);
       $('vdot').classList.add('on'); { const _vb=document.querySelector('.vbanner'); if(_vb)_vb.style.display='none'; } return; }
     throw 0;
   }catch(e){ sovereign=false; populateBrowserVoices(); $('vstatus').innerHTML='Local engine not reachable, using the <b>browser voice</b> (run the ARCHAI voice server for the full on-device Whisper + Piper path).'; }
