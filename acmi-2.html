@@ -246,7 +246,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
 <script>
 const CHAT='https://archai-api.fineartmedia.tech/api/proxy/chat';
-const VOICE_SERVER='http://127.0.0.1:8123';
+// Local dev talks to the on-machine server; the live site reaches it through the
+// CORS-locked Cloudflare tunnel (archai-api.fineartmedia.tech/voice → localhost:8123),
+// so phones and any device get the sovereign voice too.
+const VOICE_SERVER=(/^(localhost|127\.0\.0\.1)$/.test(location.hostname))?'http://127.0.0.1:8123':'https://archai-api.fineartmedia.tech/voice';
 const $=id=>document.getElementById(id);
 const inputEl=$('chatIn'),respEl=$('resp'),micBtn=$('micBtn'),voiceSel=$('voiceSel'),autoReadEl=$('autoRead'),langSel=$('langSel');
 let lastReply='',history=[],sovereign=false,focusZone='',focusGround='';
