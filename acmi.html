@@ -451,7 +451,11 @@ function renderChips(){ const qs=PERSONA_QS[(typeof persona!=='undefined'&&perso
 renderChips();
 
 // ── voice output: sovereign (Piper) when available, else browser ──
-const canSpeak=typeof window.speechSynthesis!=='undefined'; let audioEl=null, _ttsCtrl=null, _ttsSeq=0;
+const canSpeak=typeof window.speechSynthesis!=='undefined'; let audioEl=new Audio(); audioEl.preload='auto'; let _ttsCtrl=null, _ttsSeq=0, _audioUnlocked=false;
+// iOS only lets audio play after a user gesture. Auto-read plays after an async fetch,
+// so unlock the (reused) audio element with a silent blip on the first touch/tap.
+function unlockAudio(){ if(_audioUnlocked)return; _audioUnlocked=true; try{ audioEl.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='; const q=audioEl.play(); if(q&&q.catch)q.catch(function(){}); }catch(e){} }
+['touchstart','pointerdown','mousedown'].forEach(function(ev){ document.addEventListener(ev,unlockAudio,{once:true,passive:true}); });
 async function speak(text){
   stopSpeak();
   const mySeq=++_ttsSeq;              // only the newest speak() is allowed to sound
@@ -466,11 +470,12 @@ async function speak(text){
       if(!r.ok)throw new Error('tts '+r.status);
       const buf=await r.blob();
       if(mySeq!==_ttsSeq)return;      // superseded while decoding — don't play
-      audioEl=new Audio(URL.createObjectURL(buf));
       const b=$('readBtn'); if(b){b.classList.add('on');b.textContent='Stop';}
       audioEl.onended=()=>{if(b){b.classList.remove('on');b.textContent='Read aloud';} if(bars)bars.classList.remove('on');};
       audioEl.onerror=()=>{ if(bars)bars.classList.remove('on'); };
-      audioEl.play();
+      try{audioEl.pause();}catch(e){}
+      audioEl.src=URL.createObjectURL(buf);
+      const pr=audioEl.play(); if(pr&&pr.catch)pr.catch(()=>{ if(bars)bars.classList.remove('on'); });
     }catch(e){
       if(mySeq!==_ttsSeq || (e&&e.name==='AbortError'))return;  // cancelled/superseded — stay silent
       if(bars)bars.classList.remove('on');
@@ -482,7 +487,7 @@ async function speak(text){
   const bv=(window._browserVoices||[])[voiceSel.value|0]; if(bv){u.voice=bv;u.lang=bv.lang;} u.rate=.98;
   const b=$('readBtn'); u.onstart=()=>{if(b){b.classList.add('on');b.textContent='Stop';} if(bars)bars.classList.add('on');}; u.onend=()=>{if(b){b.classList.remove('on');b.textContent='Read aloud';} if(bars)bars.classList.remove('on');}; speechSynthesis.speak(u);
 }
-function stopSpeak(){ _ttsSeq++; if(_ttsCtrl){try{_ttsCtrl.abort();}catch(e){}_ttsCtrl=null;} if(audioEl){try{audioEl.pause();}catch(e){}audioEl=null;} if(canSpeak)speechSynthesis.cancel(); const b=$('readBtn'); if(b){b.classList.remove('on');b.textContent='Read aloud';} const vb=document.getElementById('vbars'); if(vb)vb.classList.remove('on'); }
+function stopSpeak(){ _ttsSeq++; if(_ttsCtrl){try{_ttsCtrl.abort();}catch(e){}_ttsCtrl=null;} if(audioEl){try{audioEl.pause();}catch(e){}} if(canSpeak)speechSynthesis.cancel(); const b=$('readBtn'); if(b){b.classList.remove('on');b.textContent='Read aloud';} const vb=document.getElementById('vbars'); if(vb)vb.classList.remove('on'); }
 function toggleRead(){ if((audioEl&&!audioEl.paused)||(canSpeak&&speechSynthesis.speaking))stopSpeak(); else speak(lastReply); }
 
 // ── voice input: sovereign (record → Whisper) else browser SR ──
