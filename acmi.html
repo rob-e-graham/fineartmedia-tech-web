@@ -267,7 +267,7 @@ const VOICE_SERVER=(/^(localhost|127\.0\.0\.1)$/.test(location.hostname))?'http:
 const $=id=>document.getElementById(id);
 const inputEl=$('chatIn'),respEl=$('resp'),micBtn=$('micBtn'),voiceSel=$('voiceSel'),autoReadEl=$('autoRead'),langSel=$('langSel');
 let lastReply='',history=[],sovereign=false,focusZone='',focusGround='';
-const VOICE_LABELS={aussie:'Matilda · Female · Australian (MeloTTS)',rob_au:'Rob · Male · Australian (cloned voice)',alba:'Ada · Female · British (Piper)',cori:'Cate · Female · British (Piper)',amy:'Amy · Female · American (Piper)',lessac:'Nora · Female · American (Piper)',ryan:'Ryan · Male · American (Piper)',alan:'Alan · Male · British (Piper)',northern:'Ted · Male · British (Piper)'};
+const VOICE_LABELS={aussie:'Matilda · Female · Australian (MeloTTS)',gtranslate:'Google Translate · online (backup)',rob_au:'Rob · Male · Australian (cloned voice)',alba:'Ada · Female · British (Piper)',cori:'Cate · Female · British (Piper)',amy:'Amy · Female · American (Piper)',lessac:'Nora · Female · American (Piper)',ryan:'Ryan · Male · American (Piper)',alan:'Alan · Male · British (Piper)',northern:'Ted · Male · British (Piper)'};
 
 // ── the object wall, real objects from the collection; tap to focus ──
 const WALL=[{"t": "Zoetrope", "d": "19th c.", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/AEO177013_ZoetropeWithIllustratedAnimationStrips_Front.jpg.1200x1200_q85.jpg", "sub": "Optical toy · animation drum", "info": "An animation device: a slitted cylinder holding printed paper strips. Spin it, look through the slits, and a sequence of drawings springs into a single moving image."}, {"t": "Praxinoscope", "d": "1876", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/AEO175951_Praxinoscope_Front.jpg.1200x1200_q85.jpg", "sub": "Charles-Émile Reynaud · 1876", "info": "A 19th-century optical toy invented in 1876 by Charles-Émile Reynaud. A strip of twelve frames sits in a spinning cylinder while mirrors at the centre reveal a single image in motion."}, {"t": "Praxinoscope Théâtre", "d": "", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/AEO177313_RaynaudPraxinoscopeTheatre_34_Left_resaved.jpg.1200x1200_q85.jpg", "sub": "Charles-Émile Reynaud", "info": "Reynaud developed his praxinoscope into a small theatre, letting viewers mix printed backgrounds and character reels to build more sophisticated animated scenes and stories."}, {"t": "Théâtre Optique", "d": "1892", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/FC180128_FC022.jpg.1200x1200_q85.jpg", "sub": "Charles-Émile Reynaud · 1892", "info": "In 1892 Charles-Émile Reynaud debuted his grandest invention, the Théâtre Optique, in Paris. It projected moving pictures hand-painted onto long perforated strips of gelatine, animation on a screen years before cinema."}, {"t": "Toupie-fantoche", "d": "1881", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/P181400_ToupieFantoche.jpg.1200x1200_q85.jpg", "sub": "Charles-Émile Reynaud · 1881", "info": "In 1881 Reynaud simplified his own praxinoscope into a portable spinning top, the toupie-fantoche. Give it a spin and butterflies flutter, dogs jump through hoops and drummer boys drum."}, {"t": "Cuphead zoetrope", "d": "2020", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/P181399_CupheadZoetrope_FullFront.jpg.1200x1200_q85.jpg", "sub": "Studio MDHR · 2020", "info": "The cheeky characters of Studio MDHR’s Cuphead videogame spring into action in this contemporary incarnation of the popular 19th-century invention, the zoetrope."}, {"t": "Muybridge motion study", "d": "1887", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/P180308_G016.jpg.1200x1200_q85.jpg", "sub": "Eadweard Muybridge · 1887", "info": "Eadweard Muybridge laid the foundation of the moving image. Using multiple cameras triggered by trip wires, he captured a galloping horse in sequential frames, reproduced them in a zoetrope, and created the world’s first moving photographs."}, {"t": "Musée Grévin poster", "d": "1892", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/FC180127_FC021.jpg.1200x1200_q85.jpg", "sub": "Pantomimes Lumineuses · 1892", "info": "The inaugural poster for the Pantomimes Lumineuses at the Musée Grévin, 1892, where Reynaud projected hand-painted animated films to a paying public, years before cinema arrived."}, {"t": "Magic lantern slide", "d": "", "img": "https://acmi-website-media-prod.s3.amazonaws.com/media/original_images/AEO186355_ToyMagicLanternSlide_SnowWhiteWithPrince.jpg.1200x1200_q85.jpg", "sub": "Toy magic-lantern slide", "info": "A hand-painted toy magic-lantern slide. Slid into a lantern and lit, it threw a glowing picture onto the wall, a favourite home entertainment long before cinema."}];
@@ -452,18 +452,36 @@ renderChips();
 
 // ── voice output: sovereign (Piper) when available, else browser ──
 const canSpeak=typeof window.speechSynthesis!=='undefined';
-let _ttsCtrl=null, _ttsSeq=0, _audioUnlocked=false, _actx=null, _srcNode=null, _playing=false;
+let _ttsCtrl=null, _ttsSeq=0, _audioUnlocked=false, _actx=null, _srcNode=null, _playing=false, _gAudio=null;
 function audioCtx(){ if(!_actx){ try{ _actx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return _actx; }
 // iOS blocks audio that starts after an async fetch. Resume the AudioContext on the first
 // touch (and every touch, in case iOS re-suspends it); decoded buffers then play with no
-// further gesture, so auto-read is reliable on iPhones.
-function unlockAudio(){ const c=audioCtx(); if(!c)return; if(c.state==='suspended')c.resume().catch(function(){}); if(!_audioUnlocked){ _audioUnlocked=true; try{ var b=c.createBuffer(1,1,22050),s=c.createBufferSource(); s.buffer=b; s.connect(c.destination); s.start(0); }catch(e){} } }
+// further gesture, so auto-read is reliable on iPhones. Also unlock the <audio> element the
+// Google Translate backup voice uses.
+function unlockAudio(){ const c=audioCtx(); if(c&&c.state==='suspended')c.resume().catch(function(){}); if(!_audioUnlocked){ _audioUnlocked=true; try{ if(c){ var b=c.createBuffer(1,1,22050),s=c.createBufferSource(); s.buffer=b; s.connect(c.destination); s.start(0); } }catch(e){} try{ if(!_gAudio)_gAudio=new Audio(); _gAudio.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='; var q=_gAudio.play(); if(q&&q.catch)q.catch(function(){}); }catch(e){} } }
 ['touchstart','pointerdown','mousedown','keydown'].forEach(function(ev){ document.addEventListener(ev,unlockAudio,{passive:true}); });
 function _resetReadUI(){ const b=$('readBtn'); if(b){b.classList.remove('on');b.textContent='Read aloud';} const vb=document.getElementById('vbars'); if(vb)vb.classList.remove('on'); }
+// Backup voice: Google Translate TTS. Plays via an <audio> element (no CORS needed for
+// playback), chunked to its ~200-char limit, in the currently selected language. Works even
+// when the local/sovereign engine can't be reached.
+function speakGoogle(text, mySeq, bars){
+  const lang=(typeof uiLang!=='undefined' && uiLang && uiLang!=='auto' && uiLang!=='en')?uiLang:'en';
+  const chunks=[]; let rest=String(text||'').replace(/\s+/g,' ').trim();
+  while(rest.length){ let cut=rest.length<=190?rest.length:rest.lastIndexOf(' ',190); if(cut<=0)cut=Math.min(190,rest.length); chunks.push(rest.slice(0,cut)); rest=rest.slice(cut).trim(); }
+  if(!chunks.length){ _resetReadUI(); return; }
+  if(!_gAudio)_gAudio=new Audio();
+  const el=_gAudio, b=$('readBtn'); if(b){b.classList.add('on');b.textContent='Stop';} if(bars)bars.classList.add('on'); _playing=true;
+  let i=0;
+  el.onended=function(){ i++; if(mySeq!==_ttsSeq||i>=chunks.length){ _playing=false; _resetReadUI(); return; } play(); };
+  el.onerror=function(){ _playing=false; _resetReadUI(); };
+  function play(){ if(mySeq!==_ttsSeq){ _playing=false; return; } el.src='https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl='+lang+'&q='+encodeURIComponent(chunks[i]); const p=el.play(); if(p&&p.catch)p.catch(function(){ _playing=false; _resetReadUI(); }); }
+  play();
+}
 async function speak(text){
   stopSpeak();
   const mySeq=++_ttsSeq;              // only the newest speak() is allowed to sound
   const bars=document.getElementById('vbars');
+  if(voiceSel.value==='gtranslate'){ return speakGoogle(text, mySeq, bars); }
   if(sovereign){
     // Cloned/on-device voice ONLY. Never substitute a browser voice (e.g. Karen) for the chosen voice.
     try{ if(bars)bars.classList.add('on'); // generating your cloned voice, can take a moment
@@ -495,7 +513,7 @@ async function speak(text){
   const bv=(window._browserVoices||[])[voiceSel.value|0]; if(bv){u.voice=bv;u.lang=bv.lang;} u.rate=.98;
   const b=$('readBtn'); u.onstart=()=>{if(b){b.classList.add('on');b.textContent='Stop';} if(bars)bars.classList.add('on');}; u.onend=()=>{if(b){b.classList.remove('on');b.textContent='Read aloud';} if(bars)bars.classList.remove('on');}; speechSynthesis.speak(u);
 }
-function stopSpeak(){ _ttsSeq++; if(_ttsCtrl){try{_ttsCtrl.abort();}catch(e){}_ttsCtrl=null;} if(_srcNode){try{_srcNode.onended=null;_srcNode.stop();}catch(e){}_srcNode=null;} _playing=false; if(canSpeak)speechSynthesis.cancel(); _resetReadUI(); }
+function stopSpeak(){ _ttsSeq++; if(_ttsCtrl){try{_ttsCtrl.abort();}catch(e){}_ttsCtrl=null;} if(_srcNode){try{_srcNode.onended=null;_srcNode.stop();}catch(e){}_srcNode=null;} if(_gAudio){try{_gAudio.onended=null;_gAudio.pause();}catch(e){}} _playing=false; if(canSpeak)speechSynthesis.cancel(); _resetReadUI(); }
 function toggleRead(){ if(_playing||(canSpeak&&speechSynthesis.speaking))stopSpeak(); else speak(lastReply); }
 
 // ── voice input: sovereign (record → Whisper) else browser SR ──
@@ -526,7 +544,7 @@ function startBrowserSR(){ if(!SR){inputEl.placeholder='Voice needs Chrome, Edge
 
 // ── detect sovereign engine + populate voices ──
 function populateBrowserVoices(){ if(!canSpeak)return; const all=speechSynthesis.getVoices().filter(v=>/^en(-|_|$)/i.test(v.lang)); if(!all.length)return;
-  window._browserVoices=all; voiceSel.innerHTML=all.map((v,i)=>`<option value="${i}">${v.name} · ${v.lang}</option>`).join(''); const au=all.findIndex(v=>/en-AU/i.test(v.lang)); if(au>=0)voiceSel.value=String(au); }
+  window._browserVoices=all; voiceSel.innerHTML=all.map((v,i)=>`<option value="${i}">${v.name} · ${v.lang}</option>`).join('')+`<option value="gtranslate">${VOICE_LABELS.gtranslate}</option>`; const au=all.findIndex(v=>/en-AU/i.test(v.lang)); if(au>=0)voiceSel.value=String(au); }
 // Warm the chosen voice's model in the background as soon as the engine is found,
 // so the visitor's first spoken answer isn't stuck behind a cold start (Chatterbox
 // ~16s, MeloTTS/MPS ~40s the very first time the GPU graph compiles).
@@ -540,7 +558,7 @@ async function detectSovereign(attempt){
     const d=await r.json();
     if(d&&d.ok){ sovereign=true;
       const av=(d.voices||['alba']);
-      voiceSel.innerHTML=av.map(v=>`<option value="${v}">${VOICE_LABELS[v]||v}</option>`).join(''); voiceSel.value=av.includes('aussie')?'aussie':(av.includes('rob_au')?'rob_au':(av[0]||''));
+      voiceSel.innerHTML=av.map(v=>`<option value="${v}">${VOICE_LABELS[v]||v}</option>`).join('')+`<option value="gtranslate">${VOICE_LABELS.gtranslate}</option>`; voiceSel.value=av.includes('aussie')?'aussie':(av.includes('rob_au')?'rob_au':(av[0]||''));
       warmVoice(voiceSel.value);
       $('vdot').classList.add('on'); { const _vb=document.querySelector('.vbanner'); if(_vb)_vb.style.display='none'; } return; }
     throw 0;
