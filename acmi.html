@@ -302,6 +302,7 @@ function showObject(i){
   set('hTitle', objField(i,'t')); set('hSub', objField(i,'sub')); set('hStory', objField(i,'info'));
   fitTitle();
   heroObj={idx:i, title:o.t, ground:o.info||''};
+  const al=document.querySelector('.ask-label'); if(al)al.textContent='Ask the '+objField(i,'t');
   if(typeof renderFeed==='function')renderFeed();
 }
 // Talk to whatever object is currently the hero (hero image tap)
