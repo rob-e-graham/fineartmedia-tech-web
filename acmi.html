@@ -115,10 +115,13 @@ img{max-width:100%;display:block}
 
 /* PANELS */
 details.panel{border:1px solid var(--line);margin:12px 0 0;background:var(--panel)}
-details.panel summary{list-style:none;cursor:pointer;padding:13px 14px;display:flex;justify-content:space-between;align-items:center}
+details.panel summary{list-style:none;cursor:pointer;padding:13px 14px;display:flex;justify-content:space-between;align-items:center;gap:9px}
 details.panel summary::-webkit-details-marker{display:none}
-.panel-t{font-family:var(--mono);font-size:.54rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
+.panel-t{font-family:var(--mono);font-size:.54rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);margin-right:auto}
 .panel-h{font-family:var(--mono);font-size:.46rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+details.panel summary .chev{flex:none;width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid var(--ink3);transition:transform .22s ease;opacity:.85}
+details.panel[open] summary .chev{transform:rotate(180deg)}
+details.panel summary:hover .chev{border-top-color:var(--ink)}
 .panel-b{padding:2px 14px 16px}
 .row{display:flex;gap:10px;align-items:center;margin:10px 0;flex-wrap:wrap}
 .row label{font-family:var(--mono);font-size:.52rem;letter-spacing:.06em;color:var(--ink2);min-width:110px;text-transform:uppercase}
@@ -177,7 +180,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   <p class="story" id="hStory">From floor to ceiling, <b>the object wall</b> gathers the machines that first taught pictures to move — zoetropes and praxinoscopes, magic lanterns and Muybridge’s motion studies, the spinning drums and mirror-toys of pre-cinema, through to contemporary works that spin them anew. Rather than a label on every case, <b>one AUXIO speaks for the whole wall</b>. Ask it aloud or in text, in the language you choose, grounded only in ACMI's records.</p>
 
   <details class="panel" style="margin-top:18px;">
-    <summary><span class="panel-t" data-i18n="mapcap_t">The wall</span><span class="panel-h">tap an object to talk to it</span></summary>
+    <summary><span class="panel-t" data-i18n="mapcap_t">The wall</span><span class="panel-h">tap an object to talk to it</span><span class="chev" aria-hidden="true"></span></summary>
     <div class="panel-b">
       <div id="wallGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px;"></div>
       <div class="map-note" style="margin-top:8px;">Objects from ACMI's moving-image collection — tap any to talk to it, hover to reveal colour.</div>
@@ -202,7 +205,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   <div class="vbanner"><div class="vbanner-in"><span class="vdot" id="vdot"></span><span class="vstatus" id="vstatus">Checking for the sovereign voice engine…</span></div></div>
 
   <details class="panel">
-    <summary><span class="panel-t" data-i18n="voicepanel">Voice &amp; audio</span><span class="panel-h" data-i18n="voicehint">choose a voice</span></summary>
+    <summary><span class="panel-t" data-i18n="voicepanel">Voice &amp; audio</span><span class="panel-h" data-i18n="voicehint">choose a voice</span><span class="chev" aria-hidden="true"></span></summary>
     <div class="panel-b">
       <div class="row"><label for="voiceSel">Voice</label><select id="voiceSel" class="vsel"></select></div>
       <div class="row"><label class="check"><input type="checkbox" id="autoRead" checked> <span data-i18n="readaloud">Read answers aloud</span></label></div>
@@ -210,7 +213,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   </details>
 
   <details class="panel">
-    <summary><span class="panel-t" data-i18n="msgpanel">Leave a message</span><span class="panel-h" data-i18n="msghint">for the curators</span></summary>
+    <summary><span class="panel-t" data-i18n="msgpanel">Leave a message</span><span class="panel-h" data-i18n="msghint">for the curators</span><span class="chev" aria-hidden="true"></span></summary>
     <div class="panel-b">
       <textarea id="msgInput" placeholder="Share a memory, a question, or what this brought to mind…" style="width:100%;min-height:74px;background:#000;border:1px solid var(--line2);color:var(--ink);font-family:var(--grot);font-size:.95rem;padding:11px;outline:none;resize:vertical;"></textarea>
       <button class="send" type="button" style="margin-top:9px;" data-i18n="msgsend" onclick="sendMessage()">Send</button>
@@ -219,7 +222,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   </details>
 
   <details class="panel">
-    <summary><span class="panel-t" data-i18n="sharepanel">Share</span><span class="panel-h" data-i18n="sharehint">this object</span></summary>
+    <summary><span class="panel-t" data-i18n="sharepanel">Share</span><span class="panel-h" data-i18n="sharehint">this object</span><span class="chev" aria-hidden="true"></span></summary>
     <div class="panel-b">
       <div class="row" style="gap:7px;">
         <button class="readbtn" type="button" data-i18n="sharebtn" onclick="shareNative()">Share…</button>
@@ -230,7 +233,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   </details>
 
   <details class="panel">
-    <summary><span class="panel-t" data-i18n="recordpanel">Object record</span><span class="panel-h" data-i18n="recordhint">grounding</span></summary>
+    <summary><span class="panel-t" data-i18n="recordpanel">Object record</span><span class="panel-h" data-i18n="recordhint">grounding</span><span class="chev" aria-hidden="true"></span></summary>
     <div class="panel-b">
       <div class="meta-row"><span class="meta-k">Display</span><span class="meta-v">The object wall, The Story of the Moving Image</span></div>
       <div class="meta-row"><span class="meta-k">Institution</span><span class="meta-v">ACMI · Australian Centre for the Moving Image</span></div>
