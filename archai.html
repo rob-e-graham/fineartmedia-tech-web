@@ -1241,26 +1241,43 @@ function applyLiveStats(health) {
 }
 
 // ── Proxy fetch helpers ─────────────────────────────────────────
+// All proxy calls carry an AbortController timeout so a hung upstream
+// (Ollama/Qdrant on the backend host) fails fast instead of leaving the
+// caller's UI (e.g. the search spinner) stuck forever with no error.
 async function proxyEmbed(text) {
-  const r = await fetch(API_BASE + '/api/proxy/embed', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ prompt: text.substring(0, 1000) }),
-  });
-  const d = await r.json().catch(() => ({}));
-  if (!r.ok || !Array.isArray(d.embedding)) throw new Error(d.error || `Embedding unavailable (${r.status})`);
-  return d.embedding;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 15000);
+  try {
+    const r = await fetch(API_BASE + '/api/proxy/embed', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: text.substring(0, 1000) }),
+      signal: controller.signal,
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok || !Array.isArray(d.embedding)) throw new Error(d.error || `Embedding unavailable (${r.status})`);
+    return d.embedding;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 async function proxySearch(collection, vector, limit = 10) {
-  const r = await fetch(API_BASE + '/api/proxy/qdrant/search', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ collection, vector, limit }),
-  });
-  const d = await r.json().catch(() => ({}));
-  if (!r.ok || !Array.isArray(d.result)) throw new Error(d.error || `Collection search unavailable (${r.status})`);
-  return d.result || [];
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 15000);
+  try {
+    const r = await fetch(API_BASE + '/api/proxy/qdrant/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ collection, vector, limit }),
+      signal: controller.signal,
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok || !Array.isArray(d.result)) throw new Error(d.error || `Collection search unavailable (${r.status})`);
+    return d.result || [];
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 async function proxyChat(systemPrompt, userPrompt, history = []) {
@@ -1281,14 +1298,21 @@ async function proxyChat(systemPrompt, userPrompt, history = []) {
 }
 
 async function proxyCuratorSearch(query, limit = 20, collection = '') {
-  const r = await fetch(API_BASE + '/api/proxy/curator/search', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query, limit, ...(collection ? { collection } : {}) }),
-  });
-  const d = await r.json().catch(() => ({}));
-  if (!r.ok || !d.ok) throw new Error(d.error || 'Collection search unavailable');
-  return d.results || [];
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 15000);
+  try {
+    const r = await fetch(API_BASE + '/api/proxy/curator/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, limit, ...(collection ? { collection } : {}) }),
+      signal: controller.signal,
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok || !d.ok) throw new Error(d.error || 'Collection search unavailable');
+    return d.results || [];
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 async function searchSelectedCollection(query, limit = 20) {
