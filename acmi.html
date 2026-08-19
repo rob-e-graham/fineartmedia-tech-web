@@ -88,6 +88,25 @@ img{max-width:100%;display:block}
 .mic.rec{color:#000;background:#fff;border-color:#fff;animation:pulse 1.2s infinite}
 .mic.busy{opacity:.6}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.45)}70%{box-shadow:0 0 0 8px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+/* Live recording / Whisper transcription indicator */
+.recind{display:none;align-items:center;gap:13px;margin:12px 0 2px;padding:11px 15px;border:1px solid var(--line2);background:var(--panel);border-radius:2px}
+.recind.on{display:flex}
+.recind .rdot{width:9px;height:9px;border-radius:50%;background:#e5484d;flex:0 0 auto;animation:rblink 1s infinite}
+.recind.whisper .rdot{background:var(--ink2);animation:rblink 1.4s infinite}
+@keyframes rblink{0%,100%{opacity:1}50%{opacity:.2}}
+.recwave{display:flex;align-items:flex-end;gap:3px;height:24px;flex:0 0 auto}
+.recwave i{display:block;width:3px;height:5px;background:var(--ink);border-radius:2px;transition:height .06s linear}
+.recind.rec:not(.live) .recwave i{animation:rbar 1s infinite ease-in-out}
+.recwave i:nth-child(2){animation-delay:.12s}.recwave i:nth-child(3){animation-delay:.24s}.recwave i:nth-child(4){animation-delay:.36s}.recwave i:nth-child(5){animation-delay:.18s}.recwave i:nth-child(6){animation-delay:.30s}.recwave i:nth-child(7){animation-delay:.06s}
+@keyframes rbar{0%,100%{height:5px}50%{height:22px}}
+.recind.whisper .recwave{display:none}
+.rdots{display:none;gap:5px;align-items:center}
+.recind.whisper .rdots{display:flex}
+.rdots i{width:6px;height:6px;border-radius:50%;background:var(--ink2);animation:rbounce 1.1s infinite}
+.rdots i:nth-child(2){animation-delay:.18s}.rdots i:nth-child(3){animation-delay:.36s}
+@keyframes rbounce{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-5px);opacity:1}}
+.rlabel{font-family:var(--mono);font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink2)}
+@media (prefers-reduced-motion:reduce){.recind .rdot{animation:none}.recind.rec:not(.live) .recwave i{animation:none;height:13px}.rdots i{animation:none}}
 .send{background:var(--ink);color:#000;border:none;font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;padding:0 17px;cursor:pointer;font-weight:500}
 .send:active{opacity:.8}
 
@@ -209,6 +228,12 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
       <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2.5" width="6" height="11" rx="3"></rect><path d="M5.5 11a6.5 6.5 0 0 0 13 0"></path><line x1="12" y1="17.5" x2="12" y2="21"></line><line x1="8.5" y1="21" x2="15.5" y2="21"></line></svg>
     </button>
     <button class="send" data-i18n="ask" onclick="askFree()">Ask</button>
+  </div>
+  <div class="recind" id="recind" role="status" aria-live="polite">
+    <span class="rdot"></span>
+    <div class="recwave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="rdots"><i></i><i></i><i></i></div>
+    <span class="rlabel" id="rlabel">Recording</span>
   </div>
   <div class="resp" id="resp"></div>
 
@@ -469,16 +494,54 @@ const GTRANSLATE_LANGS=[['en','English'],['af','Afrikaans'],['sq','Albanian'],['
 function initGTLang(){ const s=$('gtLangSel'); if(!s||s.options.length)return; s.innerHTML=GTRANSLATE_LANGS.map(l=>`<option value="${l[0]}">${esc(l[1])}</option>`).join(''); const pre=(typeof uiLang!=='undefined'&&uiLang&&uiLang!=='auto')?uiLang:'en'; s.value=GTRANSLATE_LANGS.some(l=>l[0]===pre)?pre:'en'; }
 function toggleGTLang(){ const row=$('gtLangRow'); if(row)row.style.display=(voiceSel.value==='gtranslate')?'':'none'; }
 voiceSel.addEventListener('change',toggleGTLang); initGTLang();
+function _gtChunks(text){ const chunks=[]; let rest=String(text||'').replace(/\s+/g,' ').trim();
+  while(rest.length){ let cut=rest.length<=190?rest.length:rest.lastIndexOf(' ',190); if(cut<=0)cut=Math.min(190,rest.length); chunks.push(rest.slice(0,cut)); rest=rest.slice(cut).trim(); }
+  return chunks; }
 function speakGoogle(text, mySeq, bars){
   const gl=$('gtLangSel'); const lang=(gl&&gl.value)?gl.value:((typeof uiLang!=='undefined'&&uiLang&&uiLang!=='auto'&&uiLang!=='en')?uiLang:'en');
-  const chunks=[]; let rest=String(text||'').replace(/\s+/g,' ').trim();
-  while(rest.length){ let cut=rest.length<=190?rest.length:rest.lastIndexOf(' ',190); if(cut<=0)cut=Math.min(190,rest.length); chunks.push(rest.slice(0,cut)); rest=rest.slice(cut).trim(); }
+  const chunks=_gtChunks(text);
   if(!chunks.length){ _resetReadUI(); return; }
+  const b=$('readBtn'); if(b){b.classList.add('on');b.textContent='Stop';} if(bars)bars.classList.add('on'); _playing=true;
+  // Preferred path: proxy Google's audio through the sovereign server and play it via Web Audio.
+  // Phones refuse to play translate.google.com directly, but the proxied MP3 is same-origin and
+  // decodes through the AudioContext the user already unlocked, so it is reliable on iOS.
+  if(sovereign && typeof VOICE_SERVER!=='undefined' && VOICE_SERVER){
+    const c=audioCtx();
+    if(c){ if(c.state==='suspended'){ try{ c.resume(); }catch(e){} }
+      (async function(){
+        try{
+          for(let i=0;i<chunks.length;i++){
+            if(mySeq!==_ttsSeq)return;
+            const ctrl=new AbortController(); _ttsCtrl=ctrl;
+            const r=await fetch(VOICE_SERVER+'/gtts?tl='+encodeURIComponent(lang)+'&q='+encodeURIComponent(chunks[i]),{signal:ctrl.signal});
+            if(mySeq!==_ttsSeq)return;
+            if(!r.ok)throw new Error('gtts '+r.status);
+            const arr=await r.arrayBuffer(); if(mySeq!==_ttsSeq)return;
+            const abuf=await new Promise((res,rej)=>{ try{ const q=c.decodeAudioData(arr,res,rej); if(q&&q.then)q.then(res,rej); }catch(e){ rej(e); } });
+            if(mySeq!==_ttsSeq)return;
+            await new Promise(function(done){
+              if(_srcNode){ try{ _srcNode.onended=null; _srcNode.stop(); }catch(e){} }
+              _srcNode=c.createBufferSource(); _srcNode.buffer=abuf; _srcNode.connect(c.destination);
+              _srcNode.onended=function(){ done(); }; _srcNode.start(0);
+            });
+          }
+          if(mySeq===_ttsSeq){ _playing=false; _resetReadUI(); }
+        }catch(e){
+          if(mySeq!==_ttsSeq || (e&&e.name==='AbortError'))return;
+          speakGoogleDirect(text, mySeq, bars, lang, chunks); // proxy unreachable, try the browser path
+        }
+      })();
+      return;
+    }
+  }
+  speakGoogleDirect(text, mySeq, bars, lang, chunks);
+}
+// Fallback: play translate.google.com directly in an <audio> element; if the browser refuses
+// (Referer/CORS), drop to the built-in speech engine in the chosen language so nothing goes silent.
+function speakGoogleDirect(text, mySeq, bars, lang, chunks){
   if(!_gAudio)_gAudio=new Audio();
-  const el=_gAudio, b=$('readBtn'); if(b){b.classList.add('on');b.textContent='Stop';} if(bars)bars.classList.add('on'); _playing=true;
+  const el=_gAudio; _playing=true;
   let i=0, fellBack=false;
-  // The browser often refuses to play translate.google.com audio (Referer/CORS): if the very
-  // first chunk fails, drop to the built-in speech engine in the chosen language so nothing goes silent.
   function fallback(){ if(fellBack||mySeq!==_ttsSeq)return; fellBack=true; try{ el.onended=null; el.onerror=null; el.pause(); }catch(e){}
     if(!canSpeak){ _playing=false; _resetReadUI(); return; }
     speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(String(text||''));
@@ -533,27 +596,45 @@ function toggleRead(){ if(_playing||(canSpeak&&speechSynthesis.speaking))stopSpe
 
 // ── voice input: sovereign (record → Whisper) else browser SR ──
 let mediaRec=null,chunks=[],recording=false;
+// --- recording / Whisper visualiser ---------------------------------------
+let _recRAF=null,_recAnalyser=null,_recAudioCtx=null;
+function _recBars(){ return Array.from(document.querySelectorAll('#recind .recwave i')); }
+function recViz(mode,label){ const ri=$('recind'); if(!ri)return; ri.className='recind on '+(mode||'rec'); const l=$('rlabel'); if(l)l.textContent=label||'Recording'; }
+function recVizLive(stream){ // drive the bars from the real microphone level
+  recViz('rec','Recording · tap mic to stop');
+  try{ const AC=window.AudioContext||window.webkitAudioContext; _recAudioCtx=new AC();
+    const src=_recAudioCtx.createMediaStreamSource(stream); const an=_recAudioCtx.createAnalyser(); an.fftSize=64; an.smoothingTimeConstant=.75; src.connect(an); _recAnalyser=an;
+    const data=new Uint8Array(an.frequencyBinCount); const bars=_recBars(); $('recind').classList.add('live');
+    (function loop(){ if(!_recAnalyser)return; an.getByteFrequencyData(data);
+      for(let i=0;i<bars.length;i++){ const v=(data[2+i*2]||0)/255; bars[i].style.height=(5+v*19).toFixed(1)+'px'; }
+      _recRAF=requestAnimationFrame(loop); })();
+  }catch(e){ /* leave CSS-animated bars as the fallback */ }
+}
+function recVizStop(){ if(_recRAF)cancelAnimationFrame(_recRAF); _recRAF=null; _recAnalyser=null; if(_recAudioCtx){try{_recAudioCtx.close();}catch(e){}} _recAudioCtx=null; _recBars().forEach(b=>b.style.height=''); }
+function recVizWhisper(){ recVizStop(); recViz('whisper','Transcribing'); }
+function recVizHide(){ recVizStop(); const ri=$('recind'); if(ri)ri.className='recind'; }
+
 async function toggleMic(){ if(recording){if(mediaRec)mediaRec.stop();return;} if(sovereign){startRecording();return;} startBrowserSR(); }
 async function startRecording(){
   try{ const stream=await navigator.mediaDevices.getUserMedia({audio:true}); mediaRec=new MediaRecorder(stream); chunks=[];
     mediaRec.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};
-    mediaRec.onstart=()=>{recording=true;micBtn.classList.add('rec');inputEl.dataset.ph=inputEl.placeholder;inputEl.placeholder='Recording… tap the mic to stop';};
-    mediaRec.onstop=async()=>{ recording=false;micBtn.classList.remove('rec');micBtn.classList.add('busy');inputEl.placeholder='Transcribing (Whisper)…'; stream.getTracks().forEach(t=>t.stop());
+    mediaRec.onstart=()=>{recording=true;micBtn.classList.add('rec');inputEl.dataset.ph=inputEl.placeholder;inputEl.placeholder='Recording… tap the mic to stop';recVizLive(stream);};
+    mediaRec.onstop=async()=>{ recording=false;micBtn.classList.remove('rec');micBtn.classList.add('busy');inputEl.placeholder='Transcribing…';recVizWhisper(); stream.getTracks().forEach(t=>t.stop());
       try{ const blob=new Blob(chunks,{type:mediaRec.mimeType||'audio/webm'});
         const r=await fetch(VOICE_SERVER+'/stt',{method:'POST',headers:{'Content-Type':'application/octet-stream'},body:blob});
-        const d=await r.json(); const text=(d.text||'').trim(); micBtn.classList.remove('busy'); inputEl.placeholder=inputEl.dataset.ph||'Ask the wall anything…';
+        const d=await r.json(); const text=(d.text||'').trim(); micBtn.classList.remove('busy'); inputEl.placeholder=inputEl.dataset.ph||'Ask the wall anything…'; recVizHide();
         if(text){inputEl.value=text;window._speakNext=true;ask(text);}
-      }catch(e){ micBtn.classList.remove('busy'); inputEl.placeholder='Voice engine unreachable, type instead'; } };
+      }catch(e){ micBtn.classList.remove('busy'); inputEl.placeholder='Voice engine unreachable, type instead'; recVizHide(); } };
     mediaRec.start();
-  }catch(e){ inputEl.placeholder='Microphone was blocked'; }
+  }catch(e){ inputEl.placeholder='Microphone was blocked'; recVizHide(); }
 }
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition; let sr=null,draft='',submitted=false;
 function startBrowserSR(){ if(!SR){inputEl.placeholder='Voice needs Chrome, Edge or Safari, type instead';return;} if(sr){sr.stop();return;}
   sr=new SR(); sr.lang='en-AU'; sr.interimResults=true; sr.continuous=false; draft='';submitted=false;
-  sr.onstart=()=>{recording=true;micBtn.classList.add('rec');inputEl.placeholder='Listening…';};
+  sr.onstart=()=>{recording=true;micBtn.classList.add('rec');inputEl.placeholder='Listening…';recViz('rec','Listening');};
   sr.onresult=e=>{const t=Array.from(e.results||[]).map(x=>(x[0]&&x[0].transcript)||'').join(' ').trim();if(!t)return;draft=t;inputEl.value=t;if(Array.from(e.results).some(x=>x.isFinal)&&!submitted){submitted=true;window._speakNext=true;ask(t);}};
-  sr.onerror=()=>{recording=false;micBtn.classList.remove('rec');};
-  sr.onend=()=>{recording=false;micBtn.classList.remove('rec');sr=null;if(draft&&!submitted){submitted=true;window._speakNext=true;ask(draft);}};
+  sr.onerror=()=>{recording=false;micBtn.classList.remove('rec');recVizHide();};
+  sr.onend=()=>{recording=false;micBtn.classList.remove('rec');recVizHide();sr=null;if(draft&&!submitted){submitted=true;window._speakNext=true;ask(draft);}};
   sr.start();
 }
 
