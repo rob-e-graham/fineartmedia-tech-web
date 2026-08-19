@@ -476,10 +476,20 @@ function speakGoogle(text, mySeq, bars){
   if(!chunks.length){ _resetReadUI(); return; }
   if(!_gAudio)_gAudio=new Audio();
   const el=_gAudio, b=$('readBtn'); if(b){b.classList.add('on');b.textContent='Stop';} if(bars)bars.classList.add('on'); _playing=true;
-  let i=0;
+  let i=0, fellBack=false;
+  // The browser often refuses to play translate.google.com audio (Referer/CORS): if the very
+  // first chunk fails, drop to the built-in speech engine in the chosen language so nothing goes silent.
+  function fallback(){ if(fellBack||mySeq!==_ttsSeq)return; fellBack=true; try{ el.onended=null; el.onerror=null; el.pause(); }catch(e){}
+    if(!canSpeak){ _playing=false; _resetReadUI(); return; }
+    speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(String(text||''));
+    if(lang&&lang!=='en'){ const m=(speechSynthesis.getVoices()||[]).find(v=>new RegExp('^'+lang+'(-|_|$)','i').test(v.lang)); if(m){u.voice=m;u.lang=m.lang;} else u.lang=lang; }
+    u.onend=function(){ _playing=false; _resetReadUI(); };
+    u.onerror=function(){ _playing=false; _resetReadUI(); };
+    speechSynthesis.speak(u);
+  }
   el.onended=function(){ i++; if(mySeq!==_ttsSeq||i>=chunks.length){ _playing=false; _resetReadUI(); return; } play(); };
-  el.onerror=function(){ _playing=false; _resetReadUI(); };
-  function play(){ if(mySeq!==_ttsSeq){ _playing=false; return; } el.src='https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl='+lang+'&q='+encodeURIComponent(chunks[i]); const p=el.play(); if(p&&p.catch)p.catch(function(){ _playing=false; _resetReadUI(); }); }
+  el.onerror=function(){ if(i===0)fallback(); else { _playing=false; _resetReadUI(); } };
+  function play(){ if(mySeq!==_ttsSeq){ _playing=false; return; } el.src='https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl='+lang+'&q='+encodeURIComponent(chunks[i]); const p=el.play(); if(p&&p.catch)p.catch(function(){ if(i===0)fallback(); else { _playing=false; _resetReadUI(); } }); }
   play();
 }
 async function speak(text){
