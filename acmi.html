@@ -653,8 +653,9 @@ async function detectSovereign(attempt){
     const r=await fetch(VOICE_SERVER+'/health',{cache:'no-store',signal:ctrl.signal}); clearTimeout(to);
     const d=await r.json();
     if(d&&d.ok){ sovereign=true;
-      const av=(d.voices||['alba']);
-      voiceSel.innerHTML=av.map(v=>`<option value="${v}">${VOICE_LABELS[v]||v}</option>`).join('')+`<option value="gtranslate">${VOICE_LABELS.gtranslate}</option>`; voiceSel.value=av.includes('aussie')?'aussie':(av.includes('rob_au')?'rob_au':(av[0]||''));
+      const av0=(d.voices||['alba']); // rob_au is my cloned voice but it comes out American, so list it last
+      const av=av0.filter(v=>v!=='rob_au').concat(av0.includes('rob_au')?['rob_au']:[]);
+      voiceSel.innerHTML=av.map(v=>`<option value="${v}">${VOICE_LABELS[v]||v}</option>`).join('')+`<option value="gtranslate">${VOICE_LABELS.gtranslate}</option>`; voiceSel.value=av.includes('aussie')?'aussie':(av[0]||'');
       warmVoice(voiceSel.value);
       $('vdot').classList.add('on'); { const _vb=document.querySelector('.vbanner'); if(_vb)_vb.style.display='none'; } return; }
     throw 0;
