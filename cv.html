@@ -319,6 +319,22 @@
   .panel-hint::after{content:'+';margin-left:10px;color:var(--accent);font-weight:700}
   details.panel[open] .panel-hint::after{content:'−'}
   .panel-body{padding:2px 2px 28px}
+  .contact-card{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .contact-btn{
+    font:12.5px var(--sans);font-weight:600;text-decoration:none;
+    color:var(--accent-ink);background:var(--accent);
+    border:1px solid var(--accent);border-radius:100px;padding:8px 14px;
+    display:inline-flex;align-items:center;
+  }
+  .contact-btn:nth-child(n+2){background:transparent;color:var(--ink);border-color:var(--line-strong)}
+  .contact-btn:nth-child(n+2):hover{border-color:var(--accent);color:var(--accent)}
+  .via{
+    font:9.5px var(--mono);letter-spacing:.06em;text-transform:none;
+    color:var(--ink-faint);margin-left:8px;
+  }
+  .thinking b{animation:bl 1.3s infinite both;font-weight:400}
+  .thinking b:nth-child(2){animation-delay:.2s}
+  .thinking b:nth-child(3){animation-delay:.4s}
   .principles{margin:14px 0 0;padding-left:20px}
   .principles li{font:13.5px/1.65 var(--sans);color:var(--ink-dim);margin:0 0 9px 0;padding-left:4px}
   .principles li b{color:var(--ink)}
@@ -580,6 +596,24 @@
   <section class="panels">
 
     <details class="panel">
+      <summary><span class="panel-title">Read answers aloud</span><span class="panel-hint">Sovereign voice</span></summary>
+      <div class="panel-body">
+        <div class="row">
+          <label for="voiceSelect">Voice</label>
+          <select id="voiceSelect"><option>Loading voices…</option></select>
+          <button class="btn" id="testVoiceBtn" type="button" style="margin-top:0">Test voice</button>
+        </div>
+        <div class="row">
+          <label for="rateRange">Speed</label>
+          <input type="range" id="rateRange" min="0.8" max="1.15" step="0.01" value="0.97">
+          <span class="rate-value" id="rateValue">0.97×</span>
+        </div>
+        <div class="row"><label class="check"><input type="checkbox" id="autoRead" checked> Read each answer aloud automatically</label></div>
+        <div class="status-line" id="voiceStatus">Checking for the sovereign voice engine…</div>
+      </div>
+    </details>
+
+    <details class="panel">
       <summary><span class="panel-title">My story</span><span class="panel-hint">How I got here</span></summary>
       <div class="panel-body">
         <p class="story-p">I started collecting records in 1991 and DJing in 1994, and that never really stopped. Through the 2000s I was promoting events, making video work, curating AV nights and putting myself through art school, first a Diploma at Swinburne, then a Bachelor of Fine Arts and a Master at RMIT.</p>
@@ -604,23 +638,6 @@
       </div>
     </details>
 
-    <details class="panel">
-      <summary><span class="panel-title">Read answers aloud</span><span class="panel-hint">Sovereign voice</span></summary>
-      <div class="panel-body">
-        <div class="row">
-          <label for="voiceSelect">Voice</label>
-          <select id="voiceSelect"><option>Loading voices…</option></select>
-          <button class="btn" id="testVoiceBtn" type="button" style="margin-top:0">Test voice</button>
-        </div>
-        <div class="row">
-          <label for="rateRange">Speed</label>
-          <input type="range" id="rateRange" min="0.8" max="1.15" step="0.01" value="0.97">
-          <span class="rate-value" id="rateValue">0.97×</span>
-        </div>
-        <div class="row"><label class="check"><input type="checkbox" id="autoRead" checked> Read each answer aloud automatically</label></div>
-        <div class="status-line" id="voiceStatus">Checking for the sovereign voice engine…</div>
-      </div>
-    </details>
 
     <details class="panel">
       <summary><span class="panel-title">Share this page</span><span class="panel-hint">Link</span></summary>
@@ -751,7 +768,7 @@
 
         <div class="rec-group-title">AV &amp; control</div>
         <div class="pill-list">
-          <span class="pill">Crestron</span><span class="pill">AMX</span><span class="pill">Extron</span><span class="pill">Nodel</span>
+          <span class="pill">Crestron</span><span class="pill">AMX</span><span class="pill">Extron</span><span class="pill">Nodel</span><span class="pill">Q-SYS</span>
           <span class="pill">Network control systems</span><span class="pill">Intelligent lighting</span>
           <span class="pill">Seminar &amp; conference AV</span><span class="pill">Venue fit-out</span>
           <span class="pill">ATEM Vision Mixer</span><span class="pill">Allen &amp; Heath</span>
@@ -1094,10 +1111,10 @@
     {
       id:"tools", tags:["tools","software","skills","adobe","davinci","crestron","stack","systems","madmapper","ableton","touchdesigner","resolume","qlab"],
       title:"Tools &amp; systems",
-      recruiter:"Adobe Creative Suite (After Effects, Premiere Pro, Photoshop, Illustrator), DaVinci Resolve and Ableton for production; TouchDesigner, Resolume, MadMapper and QLab for live and immersive work; Crestron, AMX, Extron and Nodel for AV control; BrightSign and MagicInfo for digital signage; Office 365 and end-to-end testing and commissioning.",
+      recruiter:"Adobe Creative Suite (After Effects, Premiere Pro, Photoshop, Illustrator), DaVinci Resolve and Ableton for production; TouchDesigner, Resolume, MadMapper and QLab for live and immersive work; Crestron, AMX, Extron, Nodel and Q-SYS for AV control; BrightSign and MagicInfo for digital signage; Office 365 and end-to-end testing and commissioning.",
       curator:"The toolkit spans a full production pipeline, the same hands move from a timeline in Premiere to a MadMapper session to a Crestron panel to a gallery floor.",
-      technical:"Creative: Adobe CS, DaVinci Resolve, Ableton. Immersive/live: TouchDesigner, Resolume, MadMapper, QLab. AV control: Crestron, AMX, Extron, Nodel. Signage: BrightSign, MagicInfo. AI/voice: RAG, Qdrant, Ollama, Whisper.cpp, Piper, MeloTTS, Chatterbox. Infrastructure: CollectiveAccess, ResourceSpace, Synology/Proxmox/TrueNAS, LTO backup.",
-      quick:"Adobe CS · DaVinci · Ableton · TouchDesigner/Resolume/MadMapper/QLab · Crestron/AMX/Extron/Nodel · RAG/Qdrant/Ollama."
+      technical:"Creative: Adobe CS, DaVinci Resolve, Ableton. Immersive/live: TouchDesigner, Resolume, MadMapper, QLab. AV control: Crestron, AMX, Extron, Nodel, Q-SYS. Signage: BrightSign, MagicInfo. AI/voice: RAG, Qdrant, Ollama, Whisper.cpp, Piper, MeloTTS, Chatterbox. Infrastructure: CollectiveAccess, ResourceSpace, Synology/Proxmox/TrueNAS, LTO backup.",
+      quick:"Adobe CS · DaVinci · Ableton · TouchDesigner/Resolume/MadMapper/QLab · Crestron/AMX/Extron/Nodel/Q-SYS · RAG/Qdrant/Ollama."
     },
     {
       id:"immersive", tags:["immersive","immersive design","projection mapping","projection","strongest skill","best skill","technical skill","specialty","speciality","strength","strengths","your strengths","best at","good at","mapping","madmapper","touchdesigner","resolume"],
@@ -1124,12 +1141,12 @@
       quick:"40+ exhibition credits · 2013-2026 · full list and evidence notes below."
     },
     {
-      id:"building-systems", tags:["nodel","building systems","intelligent lighting","lighting","seminar room","conference room","network control","building control","sustainability","eco","energy","venue systems","fit-out","fitout"],
+      id:"building-systems", tags:["nodel","q-sys","qsys","q sys","qsc","dsp","audio dsp","building systems","intelligent lighting","lighting","seminar room","conference room","network control","building control","sustainability","eco","energy","venue systems","fit-out","fitout"],
       title:"Building systems &amp; network control: NCM",
-      recruiter:"At the National Communication Museum Rob delivered the building's technical systems, not just its exhibitions: a Nodel network control system giving centralised control of gallery and building services; a seminar and conference room equipped for meetings, conferences, seminars and events; and network-controlled intelligent lighting so the venue could run efficiently and be managed centrally.",
-      curator:"The part visitors never see. A Nodel control network so the building could be run from one place, a seminar room that actually works for conferences and events, and intelligent lighting so the place is efficient rather than burning power in empty galleries. Getting that right is what lets the exhibitions above it look effortless.",
-      technical:"NCM building systems: Nodel-based network control layer for centralised gallery and building control; seminar/conference room AV and presentation systems for meetings, conferences, seminars and events; networked intelligent lighting enabling efficient, centrally managed building operation. Delivered as part of whole-of-venue technical fit-out from a bare shell.",
-      quick:"Nodel network control · seminar &amp; conference room · networked intelligent lighting · whole-venue fit-out."
+      recruiter:"At the National Communication Museum Rob delivered the building's technical systems, not just its exhibitions: a Nodel network control system giving centralised control of gallery and building services; a Q-SYS based seminar and conference room equipped for meetings, conferences, seminars and events; and network-controlled intelligent lighting so the venue could run efficiently and be managed centrally.",
+      curator:"The part visitors never see. A Nodel control network so the building could be run from one place, a Q-SYS seminar room that actually works for conferences and events, and intelligent lighting so the place is efficient rather than burning power in empty galleries. Getting that right is what lets the exhibitions above it look effortless.",
+      technical:"NCM building systems: Nodel-based network control layer for centralised gallery and building control; seminar and conference room built on Q-SYS, covering AV, DSP and presentation systems for meetings, conferences, seminars and events; networked intelligent lighting enabling efficient, centrally managed building operation. Delivered as part of whole-of-venue technical fit-out from a bare shell.",
+      quick:"Nodel network control · Q-SYS seminar and conference room · networked intelligent lighting · whole-venue fit-out."
     },
     {
       id:"partnerships", tags:["partnership","partnerships","podcast studio","podcast","zero cost","procurement","vendor","suppliers","sponsorship","budget","industry partners","doing more with less"],
@@ -1278,8 +1295,21 @@
       // otherwise match tag words against query words, stem-insensitively
       var tagWords = tokens(t);
       if (!tagWords.length) return;
-      var hits = tagWords.filter(function(tw){ return qTokens.indexOf(tw) !== -1; }).length;
-      if (hits === tagWords.length) {
+      // Words of a multi-word tag must appear IN ORDER, not merely all be
+      // present. Without this, "support your team" collapses to
+      // [support, team] and matches "what football team do you support".
+      var pos = -1, ordered = true;
+      for (var wi = 0; wi < tagWords.length; wi++){
+        var found = -1;
+        for (var qi = pos + 1; qi < qTokens.length; qi++){
+          if (qTokens[qi] === tagWords[wi]) { found = qi; break; }
+        }
+        if (found === -1) { ordered = false; break; }
+        pos = found;
+      }
+      var hits = ordered ? tagWords.length
+                         : tagWords.filter(function(tw){ return qTokens.indexOf(tw) !== -1; }).length;
+      if (ordered && hits === tagWords.length) {
         s += t.length;
         // A multi-word tag reduced to one word by stopword removal (for example
         // "best at") only anchors on the exact phrase above, not on "best" alone.
@@ -1634,27 +1664,98 @@
     card.appendChild(wrap);
   }
 
-  function ask(qRaw){
-    var q = (qRaw || askInput.value || "").trim();
-    if (!q){ return; }
-    var rec = findMatch(q);
+  // ---- AUXIO routing -------------------------------------------------------
+  // The deterministic matcher answers first. Only when it finds nothing does
+  // the local model get involved, and its ONLY job is to choose which record
+  // applies. It never writes the answer: the record supplies the words
+  // verbatim. That keeps principle one intact, an LLM cannot invent Rob's
+  // history if it is never allowed to compose it.
+  var AUXIO_CHAT = "https://archai-api.fineartmedia.tech/api/proxy/chat";
+
+  function recordMenu(){
+    return RECORDS.filter(function(r){ return r.title; })
+      .map(function(r){ return r.id + ": " + r.title.replace(/&amp;/g,"&"); }).join("\n");
+  }
+
+  // Deterministic guard against a plausible-but-wrong route. If the question
+  // names a specific product, brand or certification, that term must actually
+  // appear in the chosen record, otherwise showing any answer would imply a
+  // capability Rob has not claimed. Refusing is always the safer failure.
+  function verifyNamedTerms(q, rec){
+    var m = q.match(/\b(?:know|knows|use|used|using|worked with|experience (?:with|in|of)|familiar with|any good with|trained (?:in|on))\s+(.{2,40})/i);
+    if (!m) return true;                       // not a "do you know X" question
+    var tail = m[1].replace(/[?.!,;].*$/, "").trim();
+    if (!tail) return true;
+    var hay = [rec.title, rec.recruiter, rec.curator, rec.technical, rec.quick]
+      .join(" ").toLowerCase();
+    // any reasonably distinctive token from the tail must be present
+    var toks = tail.toLowerCase().split(/[\s/&,]+/).filter(function(t){
+      t = t.replace(/[^a-z0-9+.-]/g, "");
+      return t.length > 2 && !STOPWORDS[t];
+    });
+    if (!toks.length) return true;
+    for (var i = 0; i < toks.length; i++){
+      if (hay.indexOf(toks[i].replace(/[^a-z0-9+.-]/g, "")) !== -1) return true;
+    }
+    return false;                              // named something the record never mentions
+  }
+
+  function auxioRoute(q){
+    var sys = "You route questions to records on Rob Graham's CV. Records:\n\n" +
+      recordMenu() +
+      "\n\nRules:\n" +
+      "1. Reply with ONE record id, or exactly NONE. No other words.\n" +
+      "2. Only choose a record if it DIRECTLY answers the question.\n" +
+      "3. If the question names a specific tool, product, brand, certification, employer or number, choose a record ONLY if you are confident that record covers that exact thing. Otherwise reply NONE.\n" +
+      "4. Questions about availability, notice period, salary, references, visa or personal life are not covered. Reply NONE.\n" +
+      "5. When uncertain, always reply NONE. A wrong record is worse than NONE.";
+    var ctrl = new AbortController();
+    var to = setTimeout(function(){ ctrl.abort(); }, 9000);
+    return fetch(AUXIO_CHAT, {
+      method: "POST", headers: { "Content-Type": "application/json" }, signal: ctrl.signal,
+      body: JSON.stringify({ systemPrompt: sys, userPrompt: q.slice(0, 300), history: [] })
+    }).then(function(r){ clearTimeout(to); return r.json(); })
+      .then(function(d){
+        var raw = d && d.message && d.message.content ? d.message.content.trim() : "";
+        var id = raw.split(/[\s,.:\n]/)[0].replace(/[^a-z0-9-]/gi, "").toLowerCase();
+        var hit = RECORDS.filter(function(r){ return r.id === id; })[0];
+        if (!hit) return null;                 // unrecognised is treated as NONE
+        return verifyNamedTerms(q, hit) ? hit : null;
+      })
+      .catch(function(){ clearTimeout(to); return null; });
+  }
+
+  function renderNoAnswer(q){
     responseEl.innerHTML = "";
     var card = document.createElement("div");
-    if (!rec){
-      card.className = "response-card empty";
-      card.innerHTML = '<span class="rvoice">Worth asking Rob</span>' +
-        '<p>That one isn\'t covered in the verified record on this page, so it won\'t be guessed at here. Rob would be happy to answer it directly, <a href="mailto:rob@fineartmedia.tech">drop him a line</a>, or try one of the questions below.</p>';
-      addSource(card, null, q);
-      addFollowups(card, null);
-      responseEl.appendChild(card);
-      return;
-    }
+    card.className = "response-card empty";
+    card.innerHTML =
+      '<span class="rvoice">Best asked directly</span>' +
+      '<p>That is not covered in the verified record, so it will not be guessed at here. ' +
+      'It is a good question for Rob though, and he is happy to be contacted.</p>' +
+      '<div class="contact-card">' +
+        '<a class="contact-btn" href="mailto:rob@fineartmedia.tech?subject=' +
+          encodeURIComponent("Question from your CV page") + '&body=' +
+          encodeURIComponent("Hi Rob,\n\nI was reading your CV and wanted to ask:\n\n" + q + "\n\n") +
+        '">Email Rob</a>' +
+        '<a class="contact-btn" href="tel:+61409336251">+61 409 336 251</a>' +
+        '<a class="contact-btn" href="https://www.linkedin.com/in/rob-graham-a0897a25" target="_blank" rel="noopener">LinkedIn</a>' +
+      '</div>';
+    addSource(card, null, q);
+    addFollowups(card, null);
+    responseEl.appendChild(card);
+  }
+
+  function renderAnswer(rec, q, viaAuxio){
+    responseEl.innerHTML = "";
+    var card = document.createElement("div");
     card.className = "response-card" + (rec.noAnswer ? " empty" : "");
     var body = rec[tone] || rec.recruiter;
     var plain = body.replace(/<[^>]+>/g,"");
     card.innerHTML =
       '<div class="rhead">' +
-        '<span class="rvoice">' + tone + ' style</span>' +
+        '<span class="rvoice">' + tone + ' style' +
+          (viaAuxio ? ' <span class="via">matched by AUXIO</span>' : '') + '</span>' +
         '<span class="speakwrap">' +
           '<span class="speakload"><b>·</b><b>·</b><b>·</b> preparing voice</span>' +
           '<span class="vbars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>' +
@@ -1668,13 +1769,30 @@
     addFollowups(card, rec);
     responseEl.appendChild(card);
     if (window.__fieldPulse) window.__fieldPulse();
-
     var sb = card.querySelector(".speakbtn");
     if (sb) sb.addEventListener("click", function(){
       if (isSpeaking()) { stopSpeaking(); } else { rawSpeak(plain); }
     });
-
     speak(plain);
+  }
+
+  function renderThinking(){
+    responseEl.innerHTML =
+      '<div class="response-card empty"><span class="rvoice">Checking the record</span>' +
+      '<p class="thinking"><b>·</b><b>·</b><b>·</b> AUXIO is looking for a record that answers this</p></div>';
+  }
+
+  function ask(qRaw){
+    var q = (qRaw || askInput.value || "").trim();
+    if (!q){ return; }
+    var rec = findMatch(q);
+    if (rec){ renderAnswer(rec, q, false); return; }
+    // nothing matched deterministically: let AUXIO try to route it
+    renderThinking();
+    auxioRoute(q).then(function(routed){
+      if (routed) renderAnswer(routed, q, true);
+      else renderNoAnswer(q);
+    });
   }
 
   askBtn.addEventListener("click", function(){ ask(); });
