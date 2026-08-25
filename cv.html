@@ -579,6 +579,21 @@
       </div>
     </details>
 
+
+    <details class="panel">
+      <summary><span class="panel-title">Leave a message</span><span class="panel-hint">Get in touch</span></summary>
+      <div class="panel-body">
+        <p class="story-p" style="margin-bottom:10px">Write a note here and it will open in your own email client, addressed to Rob, so you keep a copy of what you sent.</p>
+        <div class="row">
+          <input class="ask-input" id="msgName" type="text" placeholder="Your name" style="flex:1;min-width:160px">
+          <input class="ask-input" id="msgOrg" type="text" placeholder="Organisation (optional)" style="flex:1;min-width:160px">
+        </div>
+        <textarea id="msgBody" placeholder="Your message"></textarea>
+        <button class="btn" id="msgBtn" type="button">Compose email to Rob</button>
+        <div class="status-line" id="msgStatus">Nothing is stored on this page or sent anywhere until you press send in your own email client.</div>
+      </div>
+    </details>
+
     <details class="panel">
       <summary><span class="panel-title">Read answers aloud</span><span class="panel-hint">Sovereign voice</span></summary>
       <div class="panel-body">
@@ -1653,6 +1668,28 @@
 
   askBtn.addEventListener("click", function(){ ask(); });
   askInput.addEventListener("keydown", function(e){ if(e.key === "Enter"){ ask(); } });
+
+  // ---- leave a message (composes in the visitor's own mail client) ----
+  var msgBtn = document.getElementById("msgBtn");
+  if (msgBtn) msgBtn.addEventListener("click", function(){
+    var name = (document.getElementById("msgName").value || "").trim();
+    var org  = (document.getElementById("msgOrg").value  || "").trim();
+    var body = (document.getElementById("msgBody").value || "").trim();
+    var status = document.getElementById("msgStatus");
+    if (!body){
+      status.textContent = "Add a message first, then this will open your email client.";
+      status.className = "status-line warn";
+      return;
+    }
+    var subject = "Message from " + (name || "your CV page") + (org ? " (" + org + ")" : "");
+    var lines = body;
+    if (name || org) lines += "\n\n" + [name, org].filter(Boolean).join(", ");
+    lines += "\n\nSent from fineartmedia.tech/cv";
+    window.location.href = "mailto:rob@fineartmedia.tech?subject=" +
+      encodeURIComponent(subject) + "&body=" + encodeURIComponent(lines);
+    status.textContent = "Opening your email client. Nothing is sent until you press send there.";
+    status.className = "status-line ok";
+  });
 
   // ---- share ----
   document.getElementById("copyBtn").addEventListener("click", function(){
