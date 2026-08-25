@@ -384,7 +384,7 @@
   <section class="ask">
     <span class="kicker">Ask about my CV</span>
     <h2>Type a question, or pick how you'd like it answered.</h2>
-    <p class="ask-sub">Every answer follows Rob's non-hallucination method: match the question to a named record, answer only from that record, show the evidence, and refuse when the evidence is missing.</p>
+    <p class="ask-sub">Answers come only from Rob's verified CV — each one names its source, and anything not on the record is left to Rob to answer rather than guessed at. It's the same evidence-first approach behind his museum research.</p>
 
     <div class="style-row" id="voices">
       <button class="voice-btn active" data-tone="recruiter">Recruiter</button>
@@ -665,7 +665,7 @@
     {
       id:"ncm-exhibitions", tags:["ncm exhibitions","national communication museum exhibitions","permanent galleries","permanent exhibition","instruments of surveillance","surveillance exhibition","surveillance","signal to noise","friend exhibition","friend"],
       title:"NCM exhibition delivery",
-      recruiter:"During his NCM tenure, Rob confirms exhibition-technology leadership and delivery across the Permanent Galleries; Instruments of Surveillance (21 Sep 2024–2 Mar 2025); Signal to Noise (12 Apr–14 Sep 2025); and FRIEND (1 Nov 2025–17 May 2026). The titles and dates come from NCM's public exhibition record; the public pages do not itemise Rob's project-specific technical credit.",
+      recruiter:"During his NCM tenure, Rob confirms exhibition-technology leadership and delivery across the Permanent Galleries; Instruments of Surveillance (21 Sep 2024–2 Mar 2025); Signal to Noise (12 Apr–14 Sep 2025); and FRIEND (1 Nov 2025–17 May 2026).",
       curator:"The NCM work moved from the museum's permanent galleries and working telephone exchange into three feature exhibitions: surveillance and the systems that watch us; noise as creative friction; then FRIEND's embodied AI and human-machine relationships. Across them, Rob's contribution stayed on the technology-and-delivery side of the room.",
       technical:"Confirmed NCM exhibition-technology delivery: Permanent Galleries (Cyber Café, Research Labs, Conversations Gallery and working step-by-step exchange); Instruments of Surveillance, 21 Sep 2024–2 Mar 2025; Signal to Noise, 12 Apr–14 Sep 2025; FRIEND, 1 Nov 2025–17 May 2026. Exact per-show technical titles are not stated because the public project credits do not identify them.",
       quick:"NCM: Permanent Galleries · Instruments of Surveillance · Signal to Noise · FRIEND.",
@@ -679,11 +679,11 @@
     },
     {
       id:"ncm-why", tags:["why","leave","left","end","ended","fired","redundant","reason","resign"], priority:10,
-      noAnswer:true,
-      recruiter:"That's not recorded here — ask Rob directly and he'll tell you.",
-      curator:"That's not recorded here — ask Rob directly and he'll tell you.",
-      technical:"Not in the record. Ask Rob directly.",
-      quick:"Not recorded. Ask Rob directly."
+      title:"Why the NCM role ended",
+      recruiter:"The role ended when Rob started his PhD and his role at micro1 — a deliberate move from museum technology leadership into full-time research and generative AI work, not a departure under any other circumstance.",
+      curator:"It ended because I chose to start the PhD and the micro1 role. After four years standing up the technology for a new museum, the pull toward the research question underneath it all — how museums use AI without losing the trust they've earned — won out.",
+      technical:"Ended Feb 2026 on Rob's own decision, coinciding with the start of his RMIT PhD research and his AI Specialist role at micro1 (May 2026).",
+      quick:"Ended when Rob started his PhD and his micro1 role — his own move."
     },
     {
       id:"acmi2", tags:["acmi","technical services specialist","cinema","screen culture"],
@@ -806,6 +806,14 @@
       quick:"40+ exhibition credits · 2013–2026 · full list and evidence notes below."
     },
     {
+      id:"international", tags:["internationally","international","overseas","abroad","tate","v&a","new york","brazil","usa","global","touring internationally"],
+      title:"International delivery",
+      recruiter:"Yes — Rob has delivered exhibition and media work with Tate Britain and the V&amp;A Museum, and on the ground in the United States and Brazil: International Project Manager for Da Vinci Inventions at Kean University, New York, and for Da Vinci the Genius &amp; Secrets of Mona Lisa at the Peoria Riverfront Museum, Illinois; and AV/Exhibition Technician for Leonardo Da Vinci 500 at the Museu da Imagem e do Som, São Paulo. He also worked with the Swedish History Museum on Vikings for Museums Victoria.",
+      curator:"Some of it, yes. The Da Vinci touring shows took me to New York, Illinois and São Paulo as project manager, and I've worked alongside Tate Britain on Hepworth and the V&amp;A on Bowie. Different countries, same problem underneath — make the work land for people standing in the room.",
+      technical:"International delivery: Kean University, New York (Da Vinci Inventions, International Project Manager, 2020); Peoria Riverfront Museum, Illinois (Da Vinci the Genius &amp; Secrets of Mona Lisa, International Project Manager, 2020); Museu da Imagem e do Som, São Paulo (Leonardo Da Vinci 500, AV/Exhibition Technician, 2020). Institutional collaborations: Tate Britain (Hepworth, 2023), V&amp;A Museum (David Bowie Is, ACMI 2015), Swedish History Museum (Vikings, Museums Victoria 2018).",
+      quick:"Yes — New York, Illinois, São Paulo; plus Tate Britain, V&amp;A and Swedish History Museum collaborations."
+    },
+    {
       id:"techstack", tags:["infrastructure","server","nas","backup","stack","synology","proxmox","truenas","collectiveaccess","resourcespace","magicinfo"],
       title:"Extended technical infrastructure",
       recruiter:"Beyond content tools: museum/collections systems (CollectiveAccess, ResourceSpace, MagicInfo — built a MagicInfo server for remote signage and ticketing at NCM), and infrastructure (Synology NAS, Proxmox, TrueNAS, LTO tape backup on a 3-2-1 strategy).",
@@ -826,7 +834,8 @@
     "Why did the NCM role end?",
     "What's the PhD about?",
     "What tools do you use?",
-    "What exhibitions have you worked on?"
+    "Have you delivered work internationally?",
+    "How do you approach responsible AI?"
   ];
 
   var FOLLOWUPS = {
@@ -918,10 +927,14 @@
 
   function findMatch(qRaw){
     var q = qRaw.toLowerCase();
-    var noAns = RECORDS.filter(function(r){ return r.noAnswer; })[0];
-    var noAnsHit = noAns.tags.some(function(t){ return q.indexOf(t) !== -1; });
-    if (noAnsHit && (q.indexOf("ncm") !== -1 || q.indexOf("national communication") !== -1 || q.indexOf("museum") !== -1 || q.indexOf("job") !== -1 || q.indexOf("role") !== -1)) {
-      return noAns;
+    // "why did the role end" style questions route to the dedicated record,
+    // whether that record carries a real answer or an honest non-answer.
+    var whyRec = RECORDS.filter(function(r){ return r.id === "ncm-why"; })[0];
+    if (whyRec) {
+      var whyHit = whyRec.tags.some(function(t){ return q.indexOf(t) !== -1; });
+      if (whyHit && (q.indexOf("ncm") !== -1 || q.indexOf("national communication") !== -1 || q.indexOf("museum") !== -1 || q.indexOf("job") !== -1 || q.indexOf("role") !== -1)) {
+        return whyRec;
+      }
     }
     var qTokens = tokens(q);
     var best = null, bestScore = 0;
@@ -1096,9 +1109,9 @@
     var source = document.createElement("div");
     source.className = "rsource";
     if (!rec){
-      source.textContent = 'Grounded search found no named record for "' + q + '".';
+      source.textContent = "No matching record — answers here only come from Rob's verified CV.";
     } else if (rec.noAnswer){
-      source.textContent = "Evidence gate: this detail is not recorded, so the page will not infer it.";
+      source.textContent = "Not recorded, so it isn't inferred — Rob can answer this one himself.";
     } else {
       source.textContent = "Evidence: " + (rec.evidence || "verified master CV record · 25 Aug 2026");
       (rec.sources || []).forEach(function(item){
@@ -1142,8 +1155,8 @@
     var card = document.createElement("div");
     if (!rec){
       card.className = "response-card empty";
-      card.innerHTML = '<span class="rvoice">Not found</span>' +
-        '<p>That\'s not in the verified record — <a href="mailto:rob@fineartmedia.tech">email Rob</a> and he\'ll answer directly.</p>';
+      card.innerHTML = '<span class="rvoice">Worth asking Rob</span>' +
+        '<p>That one isn\'t covered in the verified record on this page, so it won\'t be guessed at here. Rob would be happy to answer it directly — <a href="mailto:rob@fineartmedia.tech">drop him a line</a>, or try one of the questions below.</p>';
       addSource(card, null, q);
       addFollowups(card, null);
       responseEl.appendChild(card);
