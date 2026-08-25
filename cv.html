@@ -702,6 +702,8 @@
     northern:"Ted · Male · British (Piper)"
   };
   var PREFERRED_ORDER = ["northern","rob_au","aussie","alan","ryan","cori","alba","amy","lessac"];
+  var MALE_VOICE_IDS = ["northern","rob_au","alan","ryan"];
+  var MALE_NAME_HINTS = /\b(daniel|oliver|lee|ryan|alan|ted|arthur|fred|gordon|james|guy|male)\b/i;
 
   var sovereign = false;
   var browserVoices = [];
@@ -730,7 +732,9 @@
     }
     browserVoices = window.speechSynthesis.getVoices();
     if (!browserVoices.length) return;
-    var sorted = browserVoices.slice().sort(function(a,b){
+    var maleVoices = browserVoices.filter(function(v){ return MALE_NAME_HINTS.test(v.name); });
+    var usable = maleVoices.length ? maleVoices : browserVoices; // never render an empty picker
+    var sorted = usable.slice().sort(function(a,b){
       var ra = voiceRankBrowser(a), rb = voiceRankBrowser(b);
       if (ra !== rb) return ra - rb;
       return a.name.localeCompare(b.name);
@@ -754,8 +758,10 @@
 
   function populateServerVoices(list){
     voiceSelect.innerHTML = "";
-    var ordered = PREFERRED_ORDER.filter(function(id){ return list.indexOf(id) !== -1; })
-      .concat(list.filter(function(id){ return PREFERRED_ORDER.indexOf(id) === -1 && id !== "gtranslate"; }));
+    var maleList = list.filter(function(id){ return MALE_VOICE_IDS.indexOf(id) !== -1; });
+    var usable = maleList.length ? maleList : list; // never render an empty picker
+    var ordered = PREFERRED_ORDER.filter(function(id){ return usable.indexOf(id) !== -1; })
+      .concat(usable.filter(function(id){ return PREFERRED_ORDER.indexOf(id) === -1 && id !== "gtranslate"; }));
     ordered.forEach(function(id){
       var opt = document.createElement("option");
       opt.value = "server:" + id;
