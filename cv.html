@@ -221,6 +221,59 @@
   }
   @keyframes rise{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
   .response-card .rvoice{font:10.5px var(--sans);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+
+  /* ---------- SPEAKING VISUALISER ---------- */
+  .rhead{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .speakwrap{display:flex;align-items:center;gap:9px;flex:0 0 auto}
+  .speakbtn{
+    appearance:none;cursor:pointer;background:transparent;
+    border:1px solid var(--line-strong);border-radius:100px;
+    color:var(--ink-dim);padding:5px 11px;
+    font:10.5px var(--sans);font-weight:600;letter-spacing:.04em;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .speakbtn:hover{border-color:var(--accent);color:var(--accent)}
+  .speakbtn.on{border-color:var(--accent);color:var(--accent-ink);background:var(--accent)}
+  .speakbtn .ico{width:8px;height:8px;border-radius:1px;background:currentColor;flex:0 0 auto}
+  .speakbtn:not(.on) .ico{
+    width:0;height:0;border-radius:0;background:transparent;
+    border-left:7px solid currentColor;
+    border-top:4.5px solid transparent;border-bottom:4.5px solid transparent;
+  }
+
+  /* Bars are driven by real audio amplitude when the sovereign voice is
+     playing; they fall back to a CSS loop for browser speech, which
+     exposes no analysable stream. */
+  .vbars{display:none;align-items:flex-end;gap:2.5px;height:16px;color:var(--accent)}
+  .vbars.on{display:inline-flex}
+  .vbars i{
+    display:block;width:2.5px;height:4px;border-radius:2px;
+    background:currentColor;
+    transition:height .07s linear;
+  }
+  .vbars.sim i{animation:vbar .9s ease-in-out infinite}
+  .vbars.sim i:nth-child(2){animation-delay:.12s}
+  .vbars.sim i:nth-child(3){animation-delay:.24s}
+  .vbars.sim i:nth-child(4){animation-delay:.36s}
+  .vbars.sim i:nth-child(5){animation-delay:.48s}
+  .vbars.sim i:nth-child(6){animation-delay:.6s}
+  .vbars.sim i:nth-child(7){animation-delay:.30s}
+  @keyframes vbar{0%,100%{height:4px;opacity:.45}50%{height:16px;opacity:1}}
+
+  .speakload{
+    display:none;font:10px var(--mono);letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-faint);
+  }
+  .speakload.on{display:inline-block}
+  .speakload b{animation:bl 1.3s infinite both;font-weight:400}
+  .speakload b:nth-child(2){animation-delay:.2s}
+  .speakload b:nth-child(3){animation-delay:.4s}
+  @keyframes bl{0%,80%,100%{opacity:.25}40%{opacity:1}}
+
+  @media (prefers-reduced-motion:reduce){
+    .vbars.sim i{animation:none;height:9px}
+    .speakload b{animation:none}
+  }
   .response-card p{font:15.5px/1.7 var(--sans);color:var(--ink);margin:10px 0 0}
   .response-card .rsource{
     margin-top:14px;padding-top:12px;border-top:1px solid var(--line);
@@ -400,6 +453,11 @@
     #testVoiceBtn{width:100%;margin-top:0}
     input[type=range]{flex:1;min-width:0;width:auto}
 
+    /* Let the answer header wrap rather than squeezing the waveform
+       and its control against the style label. */
+    .rhead{flex-wrap:wrap;gap:8px}
+    .speakwrap{gap:8px}
+
     .cv-entry .role{font-size:14px}
     .cv-entry .meta{font-size:12px}
     .pill{font-size:11.5px;padding:5px 9px}
@@ -412,6 +470,7 @@
      tighter visual sizing, since a mouse doesn't need 44px. */
   @media(hover:none) and (pointer:coarse){
     .id-links a,.chip,.voice-btn,.followup-btn,.btn,.ask-btn{min-height:44px}
+    .speakbtn{min-height:40px;padding:8px 14px}
     .id-links a,.ask-btn,.btn{display:flex;align-items:center;justify-content:center}
     .chip,.voice-btn,.followup-btn{display:inline-flex;align-items:center}
     details.panel summary{min-height:52px}
@@ -1172,23 +1231,145 @@
       var u = new SpeechSynthesisUtterance(text);
       if (v) u.voice = v;
       u.rate = parseFloat(rateRange.value) || 1;
+      // No analysable stream from speechSynthesis, so run the simulated bars.
+      u.onstart = function(){
+        setSpeakUI("speaking");
+        var e = vizEls();
+        if (e.bars) e.bars.classList.add("sim");
+      };
+      u.onend = function(){ stopSpeaking(); };
+      u.onerror = function(){ stopSpeaking(); };
       window.speechSynthesis.speak(u);
     }catch(e){}
   }
 
+  // ---- speaking visualiser -------------------------------------------------
+  // When the sovereign voice server returns audio we analyse the real stream,
+  // so the bars move with Rob's actual voice. Browser speechSynthesis exposes
+  // no stream, so that path falls back to a CSS loop.
+  var audioCtx = null, analyser = null, sourceNode = null, vizFrame = null;
+
+  function vizEls(){
+    return {
+      bars: document.querySelector(".vbars"),
+      btn: document.querySelector(".speakbtn"),
+      load: document.querySelector(".speakload")
+    };
+  }
+
+  function setSpeakUI(state){ // "idle" | "loading" | "speaking"
+    var e = vizEls();
+    if (!e.btn) return;
+    if (e.load) e.load.className = "speakload" + (state === "loading" ? " on" : "");
+    if (e.bars) e.bars.className = "vbars" + (state === "speaking" ? " on" : "");
+    e.btn.className = "speakbtn" + (state === "speaking" ? " on" : "");
+    var label = e.btn.querySelector(".lbl");
+    if (label) label.textContent = state === "speaking" ? "Stop" : "Read aloud";
+  }
+
+  function stopViz(){
+    if (vizFrame) { cancelAnimationFrame(vizFrame); vizFrame = null; }
+    var e = vizEls();
+    if (e.bars) {
+      e.bars.classList.remove("sim");
+      [].forEach.call(e.bars.children, function(b){ b.style.height = "4px"; });
+    }
+  }
+
+  // Drive the bars from real audio amplitude.
+  //
+  // Safety rule: routing the element through WebAudio means a suspended
+  // AudioContext would make the audio INAUDIBLE. Hearing Rob's voice matters
+  // more than the animation, so we only build the analyser graph once the
+  // context is confirmed running, and otherwise fall back to simulated bars
+  // and leave playback completely untouched.
+  function startViz(el){
+    stopViz();
+    var e = vizEls();
+    if (!e.bars) return;
+    var bars = [].slice.call(e.bars.children);
+    var simulate = function(){ e.bars.classList.add("sim"); };
+
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) { simulate(); return; }
+
+    try {
+      if (!audioCtx) audioCtx = new AC();
+    } catch(err){ simulate(); return; }
+
+    var build = function(){
+      if (audioCtx.state !== "running") { simulate(); return; }
+      try {
+        // An element can only ever be attached to one MediaElementSource,
+        // so the graph is rebuilt per utterance against a fresh Audio object.
+        sourceNode = audioCtx.createMediaElementSource(el);
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 64;
+        analyser.smoothingTimeConstant = 0.75;
+        sourceNode.connect(analyser);
+        analyser.connect(audioCtx.destination);
+      } catch(err){ simulate(); return; }
+
+      var data = new Uint8Array(analyser.frequencyBinCount);
+      var draw = function(){
+        analyser.getByteFrequencyData(data);
+        for (var i = 0; i < bars.length; i++){
+          // sample across the low/mid band, where speech energy sits
+          var v = data[2 + i * 2] || 0;
+          bars[i].style.height = Math.max(4, Math.round((v / 255) * 16)) + "px";
+        }
+        vizFrame = requestAnimationFrame(draw);
+      };
+      draw();
+    };
+
+    if (audioCtx.state === "suspended" && audioCtx.resume){
+      audioCtx.resume().then(build, simulate);
+    } else {
+      build();
+    }
+  }
+
+  function stopSpeaking(){
+    try { if (audioEl) { audioEl.pause(); audioEl.currentTime = 0; } } catch(e){}
+    try { if (supportsSpeech) window.speechSynthesis.cancel(); } catch(e){}
+    stopViz();
+    setSpeakUI("idle");
+  }
+
+  function isSpeaking(){
+    if (audioEl && !audioEl.paused && !audioEl.ended) return true;
+    try { if (supportsSpeech && window.speechSynthesis.speaking) return true; } catch(e){}
+    return false;
+  }
+
   function rawSpeak(text){
     var sel = voiceSelect.value || "";
+    stopSpeaking();
     if (sel.indexOf("server:") === 0){
       var voiceId = sel.slice(7);
+      setSpeakUI("loading");
       fetch(VOICE_SERVER + "/tts", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: text.slice(0, 1400), voice: voiceId })
       }).then(function(r){ if (!r.ok) throw new Error("tts failed"); return r.blob(); })
         .then(function(blob){
-          if (audioEl) { audioEl.pause(); }
           audioEl = new Audio(URL.createObjectURL(blob));
           audioEl.playbackRate = parseFloat(rateRange.value) || 1;
-          audioEl.play().catch(function(){});
+          audioEl.addEventListener("play", function(){ setSpeakUI("speaking"); startViz(audioEl); });
+          audioEl.addEventListener("ended", function(){ stopSpeaking(); });
+          audioEl.addEventListener("pause", function(){ if (audioEl && audioEl.ended) stopSpeaking(); });
+          // Browsers block audio that isn't started by a user gesture, so an
+          // auto-read on page load can be refused. Say so rather than sitting
+          // silent — the Read aloud button will then work on click.
+          audioEl.play().catch(function(){
+            setSpeakUI("idle");
+            var e = vizEls();
+            if (e.btn) {
+              var l = e.btn.querySelector(".lbl");
+              if (l) l.textContent = "Tap to hear";
+            }
+          });
         })
         .catch(function(){
           sovereign = false;
@@ -1270,12 +1451,29 @@
     }
     card.className = "response-card" + (rec.noAnswer ? " empty" : "");
     var body = rec[tone] || rec.recruiter;
-    card.innerHTML = '<span class="rvoice">' + tone + ' style</span>' +
+    var plain = body.replace(/<[^>]+>/g,"");
+    card.innerHTML =
+      '<div class="rhead">' +
+        '<span class="rvoice">' + tone + ' style</span>' +
+        '<span class="speakwrap">' +
+          '<span class="speakload"><b>·</b><b>·</b><b>·</b> preparing voice</span>' +
+          '<span class="vbars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>' +
+          '<button class="speakbtn" type="button" aria-label="Read this answer aloud">' +
+            '<span class="ico" aria-hidden="true"></span><span class="lbl">Read aloud</span>' +
+          '</button>' +
+        '</span>' +
+      '</div>' +
       '<p>' + body + '</p>';
     addSource(card, rec, q);
     addFollowups(card, rec);
     responseEl.appendChild(card);
-    speak(body.replace(/<[^>]+>/g,""));
+
+    var sb = card.querySelector(".speakbtn");
+    if (sb) sb.addEventListener("click", function(){
+      if (isSpeaking()) { stopSpeaking(); } else { rawSpeak(plain); }
+    });
+
+    speak(plain);
   }
 
   askBtn.addEventListener("click", function(){ ask(); });
