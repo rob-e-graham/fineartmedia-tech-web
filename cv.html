@@ -1671,6 +1671,21 @@
   // verbatim. That keeps principle one intact, an LLM cannot invent Rob's
   // history if it is never allowed to compose it.
   var AUXIO_CHAT = "https://archai-api.fineartmedia.tech/api/proxy/chat";
+  // Unknown until proven. If the model is unreachable the page behaves exactly
+  // as it did before AUXIO existed: deterministic matcher, instant refusal, no
+  // spinner and no waiting on a request that will not arrive.
+  var auxioAvailable = null;
+
+  (function probeAuxio(){
+    var ctrl = new AbortController();
+    var to = setTimeout(function(){ ctrl.abort(); }, 3500);
+    fetch(AUXIO_CHAT, {
+      method: "POST", headers: { "Content-Type": "application/json" }, signal: ctrl.signal,
+      body: JSON.stringify({ systemPrompt: "Reply with the single word OK.", userPrompt: "ping", history: [] })
+    }).then(function(r){ clearTimeout(to); return r.ok ? r.json() : null; })
+      .then(function(d){ auxioAvailable = !!(d && d.message && d.message.content); })
+      .catch(function(){ clearTimeout(to); auxioAvailable = false; });
+  })();
 
   function recordMenu(){
     return RECORDS.filter(function(r){ return r.title; })
@@ -1710,7 +1725,7 @@
       "4. Questions about availability, notice period, salary, references, visa or personal life are not covered. Reply NONE.\n" +
       "5. When uncertain, always reply NONE. A wrong record is worse than NONE.";
     var ctrl = new AbortController();
-    var to = setTimeout(function(){ ctrl.abort(); }, 9000);
+    var to = setTimeout(function(){ ctrl.abort(); }, 6000);
     return fetch(AUXIO_CHAT, {
       method: "POST", headers: { "Content-Type": "application/json" }, signal: ctrl.signal,
       body: JSON.stringify({ systemPrompt: sys, userPrompt: q.slice(0, 300), history: [] })
@@ -1722,7 +1737,7 @@
         if (!hit) return null;                 // unrecognised is treated as NONE
         return verifyNamedTerms(q, hit) ? hit : null;
       })
-      .catch(function(){ clearTimeout(to); return null; });
+      .catch(function(){ clearTimeout(to); auxioAvailable = false; return null; });
   }
 
   function renderNoAnswer(q){
@@ -1787,7 +1802,9 @@
     if (!q){ return; }
     var rec = findMatch(q);
     if (rec){ renderAnswer(rec, q, false); return; }
-    // nothing matched deterministically: let AUXIO try to route it
+    // Nothing matched deterministically. If AUXIO is known to be unavailable,
+    // answer exactly as the original system would, immediately.
+    if (auxioAvailable === false){ renderNoAnswer(q); return; }
     renderThinking();
     auxioRoute(q).then(function(routed){
       if (routed) renderAnswer(routed, q, true);
