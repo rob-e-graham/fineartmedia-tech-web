@@ -1362,6 +1362,10 @@
   var MALE_NAME_HINTS = /\b(daniel|oliver|lee|ryan|alan|ted|arthur|fred|gordon|james|guy|male)\b/i;
 
   var sovereign = false;
+  // Once the visitor picks a voice we must never silently override it. Chrome
+  // fires onvoiceschanged repeatedly, and each repopulate used to reset the
+  // selection, which felt like the voice randomly swapping between answers.
+  var userPickedVoice = null;
   var browserVoices = [];
   var audioEl = null;
   var voiceSelect = document.getElementById("voiceSelect");
@@ -1402,6 +1406,13 @@
       opt.textContent = v.name + ", " + v.lang;
       voiceSelect.appendChild(opt);
     });
+    // restore an explicit choice if it is still available
+    if (userPickedVoice && voiceSelect.querySelector('option[value="' + userPickedVoice.replace(/"/g,'\\"') + '"]')){
+      voiceSelect.value = userPickedVoice;
+      voiceStatus.textContent = "Using your selected voice.";
+      voiceStatus.className = "status-line";
+      return;
+    }
     var auVoice = sorted.filter(function(v){ return /^en-AU/i.test(v.lang); })[0];
     if (auVoice){
       voiceSelect.value = "browser:" + auVoice.name;
@@ -1424,7 +1435,11 @@
       opt.textContent = VOICE_LABELS[id] || id;
       voiceSelect.appendChild(opt);
     });
-    if (ordered.length) voiceSelect.value = "server:" + ordered[0];
+    if (userPickedVoice && voiceSelect.querySelector('option[value="' + userPickedVoice.replace(/"/g,'\\"') + '"]')){
+      voiceSelect.value = userPickedVoice;
+    } else if (ordered.length) {
+      voiceSelect.value = "server:" + ordered[0];
+    }
     voiceStatus.textContent = "Connected to the sovereign voice server, on-device, local-first speech, the same engine behind the ACMI and Heide demos.";
     voiceStatus.className = "status-line ok";
   }
@@ -1445,12 +1460,48 @@
 
   initVoices();
   if (supportsSpeech){
-    window.speechSynthesis.onvoiceschanged = function(){ if (!sovereign) populateBrowserVoices(); };
+    window.speechSynthesis.onvoiceschanged = function(){
+      // Never disturb a working sovereign list, and never clobber a user choice.
+      if (sovereign) return;
+      var before = voiceSelect.options.length;
+      populateBrowserVoices();
+      if (before === voiceSelect.options.length && userPickedVoice) voiceSelect.value = userPickedVoice;
+    };
   }
+
+  voiceSelect.addEventListener("change", function(){
+    userPickedVoice = voiceSelect.value;
+    voiceStatus.textContent = "Using your selected voice.";
+    voiceStatus.className = "status-line";
+  });
 
   rateRange.addEventListener("input", function(){
     rateValue.textContent = parseFloat(rateRange.value).toFixed(2) + "×";
   });
+
+  // Speaks with a browser voice without altering the current selection.
+  function browserSpeakFallback(text){
+    if (!supportsSpeech) { setSpeakUI("idle"); return; }
+    var myTokenBS = speakToken;
+    try{
+      window.speechSynthesis.cancel();
+      var all = window.speechSynthesis.getVoices();
+      var v = all.filter(function(x){ return /^en-AU/i.test(x.lang); })[0] ||
+              all.filter(function(x){ return MALE_NAME_HINTS.test(x.name); })[0] ||
+              all.filter(function(x){ return /^en/i.test(x.lang); })[0];
+      var u = new SpeechSynthesisUtterance(text);
+      if (v) u.voice = v;
+      u.rate = parseFloat(rateRange.value) || 1;
+      u.onstart = function(){
+        if (myTokenBS !== speakToken) { try { window.speechSynthesis.cancel(); } catch(e){} return; }
+        setSpeakUI("speaking");
+        var e = vizEls(); if (e.bars) e.bars.classList.add("sim");
+      };
+      u.onend = function(){ if (myTokenBS === speakToken) stopSpeaking(); };
+      u.onerror = function(){ if (myTokenBS === speakToken) stopSpeaking(); };
+      window.speechSynthesis.speak(u);
+    }catch(e){ setSpeakUI("idle"); }
+  }
 
   function browserSpeak(text){
     if (!supportsSpeech) return;
@@ -1615,11 +1666,12 @@
           });
         })
         .catch(function(){
-          sovereign = false;
-          populateBrowserVoices();
-          voiceStatus.textContent = "The sovereign voice server didn't respond, switched to this browser's own speech.";
+          // Speak this one answer with the browser voice, but keep the server
+          // selected: a transient failure should not change the voice for every
+          // later answer. The next question tries the server again.
+          voiceStatus.textContent = "That answer used the browser voice, the sovereign server did not respond in time.";
           voiceStatus.className = "status-line warn";
-          browserSpeak(text);
+          browserSpeakFallback(text);
         });
     } else if (sel.indexOf("browser:") === 0){
       browserSpeak(text);
