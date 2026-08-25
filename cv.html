@@ -311,6 +311,8 @@
   .panel-hint::after{content:'+';margin-left:10px;color:var(--accent);font-weight:700}
   details.panel[open] .panel-hint::after{content:'−'}
   .panel-body{padding:2px 2px 28px}
+  .story-p{font:14.5px/1.7 var(--sans);color:var(--ink-dim);margin:0 0 12px 0;max-width:70ch}
+  .story-p:last-child{margin-bottom:0}
 
   .row{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
   .row label{font:13px var(--sans);color:var(--ink-dim)}
@@ -504,10 +506,10 @@
     </div>
 
     <div class="identity">
-      <p class="kicker">Creative Technologist &amp; Gen AI Specialist</p>
+      <p class="kicker">Technology Leader &amp; Creative Technologist</p>
       <h1>Rob Graham</h1>
-      <p class="role-line">Senior Multimedia Designer · Exhibition Multimedia · Interactive &amp; AV Systems</p>
-      <p class="lede">20+ years across museums, galleries and immersive exhibitions. Most recently Head of Technology at the National Communication Museum, where he was technical lead for delivering the museum itself, a gutted telephone exchange with dirt floors when he started. Now working on generative video and robotics AI at micro1, alongside part-time RMIT research into responsible AI for cultural heritage.</p>
+      <p class="role-line">Museum &amp; Exhibition Technology · Immersive Systems · Applied AI</p>
+      <p class="lede">Technology leader with 20 years delivering exhibitions, immersive systems and cultural infrastructure. Head of Technology at the National Communication Museum through its build and opening, where he led the technical team and delivered the venue end to end. Now working on generative video and robotics AI at micro1, and researching responsible AI for cultural heritage at RMIT.</p>
       <div class="id-links">
         <a class="cta" href="/downloads/Rob_Graham_Master_CV.pdf" target="_blank" rel="noopener">Download CV (PDF)</a>
         <a href="mailto:rob@fineartmedia.tech">Email</a>
@@ -528,13 +530,13 @@
 
   <div class="metastrip">
     <span class="tag ok">Verified CV record</span>
-    <span class="tag accent">Open to exhibition, AV &amp; AI roles</span>
+    <span class="tag accent">Technology leadership · Exhibitions · Applied AI</span>
   </div>
 
   <div class="story">
-    <p>I came up through music and street art, DJing and promoting events from 1999, and put myself through art school working bar shifts and record shops while showing video work and curating AV nights. I entered museums at the front line, visitor services and exhibition technician at ACMI, and worked inward from there: collections and digital media at Museums Victoria, then large-scale projection with Grande Experiences, which took me to New York, Illinois and São Paulo.</p>
-    <p style="margin-top:14px">In 2022 I took on the National Communication Museum. It was a gutted telephone exchange with dirt floors when I arrived; four years later it was an operating museum, every sign and interactive, the galleries, the Nodel control network, the seminar room, and intelligent lighting so the building could run efficiently. I brought in a professional podcast studio at no cost to the museum by building the industry partnerships to fund it.</p>
-    <p style="margin-top:14px">Alongside all of it I've run Counterculture, a weekly KISS FM show, an interactive site I built, and a Tourism Australia funded festival. Today I work on generative video and robotics AI at micro1 and research responsible AI for cultural heritage at RMIT. The principle behind that research is the same one this page runs on: answer from evidence, and say so plainly when you don't know.</p>
+    <p>I lead technology delivery for cultural institutions. Most recently I was Head of Technology at the National Communication Museum, where I was technical lead for delivering the museum itself: all signage and interactives, the permanent gallery and its exhibitions, the Nodel control network, the seminar and conference room, and network controlled intelligent lighting. The building was a gutted telephone exchange when the work began. I built and led the technical team that runs it today, and secured a professional podcast studio at no capital cost through industry partnerships.</p>
+    <p style="margin-top:14px">That role sat on twenty years of delivery across ACMI, Museums Victoria and Grande Experiences, and more than forty exhibition credits with Heide, TarraWarra, Tate Britain, the V&amp;A and Museums Victoria, including international projects in New York, Illinois and Sao Paulo. Through FAMTEC I assemble and lead specialist teams for institutions that need work delivered properly, end to end.</p>
+    <p style="margin-top:14px">I now work on generative video and robotics AI at micro1, and research responsible AI for cultural heritage at RMIT. That research holds to one principle, and so does this page: answer from evidence, and say plainly when you do not know.</p>
   </div>
 
   <div class="divider"></div>
@@ -563,6 +565,16 @@
   </section>
 
   <section class="panels">
+
+    <details class="panel">
+      <summary><span class="panel-title">My story</span><span class="panel-hint">How I got here</span></summary>
+      <div class="panel-body">
+        <p class="story-p">I started collecting records in 1991 and DJing in 1994, and that never really stopped. Through the 2000s I was promoting events, making video work, curating AV nights and putting myself through art school, first a Diploma at Swinburne, then a Bachelor of Fine Arts and a Master at RMIT.</p>
+        <p class="story-p">I came into museums at the front line. Visitor services and exhibition technician at ACMI, which meant standing in the gallery when things broke and learning what the work actually asks of the people running it. From there: collections and digital media at Museums Victoria, then large scale projection with Grande Experiences, which took me to New York, Illinois and Sao Paulo.</p>
+        <p class="story-p">In 2022 I took on the National Communication Museum. It was a gutted telephone exchange with dirt floors when I arrived, and four years later it was an operating museum. I hired the technical team that runs it now.</p>
+        <p class="story-p">Alongside all of it I have run Counterculture, which is where the record collecting ended up: a weekly show on Kiss FM, a site I built, and a festival. I still think the two halves feed each other. Knowing how a room full of people responds to sound and image is not a different skill from designing a gallery.</p>
+      </div>
+    </details>
 
     <details class="panel">
       <summary><span class="panel-title">Read answers aloud</span><span class="panel-hint">Sovereign voice</span></summary>
@@ -813,15 +825,15 @@
 
   var RECORDS = [
     {
-      id:"story", tags:["career story","career history","background","journey","throughline","through-line","profile","whole career"],
+      id:"story", tags:["career story","career history","background","journey","throughline","through-line","profile","whole career","tell me about yourself","about yourself","introduce yourself","who are you","your background"],
       title:"Career through-line",
-      recruiter:"Rob worked his way inward from the front line. He came up through music and street art, DJing and promoting from 1999, and put himself through three degrees while working hospitality and record-shop jobs. He entered museums at visitor services and exhibition technician level at ACMI, moved into collections and digital media at Museums Victoria, then large-scale projection with Grande Experiences across the US and Brazil, before leading technology for a new public museum and moving into generative AI and RMIT research. Every step is documented on this page.",
-      curator:"The thread is making technology serve the work, the place and the audience, and I've stood at most points on that ladder. Bar shifts while at art school, then visitor services, then exhibition technician, collections, touring projection, and eventually responsibility for a whole museum's technology. It means I know what each of those jobs actually asks of a person, which changes how you specify a system and how you hand it over.",
-      technical:"Career progression: music/street-art practice and professional DJing from 1999; art-school qualifications 2007-13; visitor services and exhibition technician (ACMI); collections and digital media (Museums Victoria); international touring projection (Grande Experiences); technical services (ACMI); whole-of-venue museum technology delivery and leadership (NCM); now generative-AI evaluation (micro1) and practice-based RMIT research.",
-      quick:"Front line to whole-museum delivery: DJ/artist → visitor services → technician → collections → touring projection → museum technology lead → responsible AI."
+      recruiter:"Rob leads technology delivery for cultural institutions. Twenty years of hands-on exhibition and AV work across ACMI, Museums Victoria and Grande Experiences built into technology leadership at the National Communication Museum, where he delivered a new public venue end to end and built the technical team that runs it. He now works on generative video and robotics AI at micro1 and researches responsible AI for cultural heritage at RMIT. The through-line is technology that serves the work, the building and the audience, and that keeps working after opening night.",
+      curator:"The thread is making technology serve the work, the place and the audience. I have done most of the jobs in that chain, from exhibition floor to technical leadership, which changes how you specify a system and how you hand it over. You design differently when you know who has to run it on a Tuesday morning and what happens when it fails mid-exhibition.",
+      technical:"Career progression: exhibition technology and public programs (ACMI, 2014-17); collections and digital media (Museums Victoria, 2016-19); international touring projection (Grande Experiences, 2019-20); technical services (ACMI, 2020-22); whole-of-venue technology delivery and leadership (NCM, 2022-26); generative AI evaluation (micro1, current) alongside practice-based RMIT research and FAMTEC practice.",
+      quick:"Exhibition technology to whole-venue delivery and technology leadership, now applied AI. 20 years, 40+ exhibition credits."
     },
     {
-      id:"ncm", tags:["national communication museum","ncm","head of technology","museum","technology strategy"],
+      id:"ncm", tags:["national communication museum","ncm","head of technology","museum","technology strategy","biggest achievement","greatest achievement","proudest","most proud","best work","challenging project","hardest project","biggest project","most challenging","difficult project"],
       title:"Head of Technology: National Communication Museum",
       recruiter:"Head of Technology, National Communication Museum, Feb 2022 to Feb 2026. Rob was technical lead for delivering the museum itself, the building was a gutted telephone exchange with dirt floors when he started. He delivered all signage and interactives, the permanent gallery and its exhibitions, the Nodel network control system, the seminar and conference room, network-controlled intelligent lighting, and a professional podcast studio secured at zero cost to the museum through industry partnerships.",
       curator:"When I started, it was a gutted exchange with dirt floors. Four years later it was a working museum. I was technical lead for delivering the whole thing, every sign and interactive, the galleries, and the systems underneath that nobody is meant to notice: the Nodel control network, the seminar room, the intelligent lighting. The podcast studio I'm particularly pleased with; I brought it in at zero cost to the museum by building the right industry partnerships.",
@@ -844,7 +856,7 @@
       ]
     },
     {
-      id:"ncm-why", tags:["why","leave","left","end","ended","fired","redundant","reason","resign"], priority:10,
+      id:"ncm-why", tags:["why did you leave","why you left","leave your last role","left ncm","leave ncm","why did the ncm role end","resigned","resignation","fired","redundant","made redundant"], priority:10,
       title:"Why the NCM role ended",
       recruiter:"Rob resigned to start his PhD and his role at micro1, a deliberate move from museum technology leadership into research and generative AI work, after four years delivering the museum.",
       curator:"It ended because I chose to start the PhD and the micro1 role. After four years standing up the technology for a new museum, the pull toward the research question underneath it all, how museums use AI without losing the trust they've earned, won out.",
@@ -876,7 +888,7 @@
       quick:"Digital Media Specialist / Collections Officer · Museums Victoria · Feb 2016 to May 2019."
     },
     {
-      id:"grande", tags:["grande experiences","grande","touring","projection mapping","immersive"],
+      id:"grande", tags:["grande experiences","grande","touring","projection mapping","immersive","deadline","deadlines","under pressure","work to a deadline","tight deadline","pressure"],
       title:"Senior Technical Lead: Grande Experiences",
       recruiter:"Senior Technical Lead, Grande Experiences, 2019-2020. Delivered large-scale projection and immersive AV for touring exhibitions under fixed public-opening deadlines.",
       curator:"Touring shows don't forgive mistakes, the deadline is fixed the day the doors open. Grande taught me to work fast and stay calm.",
@@ -948,7 +960,7 @@
       quick:"Adobe CS · DaVinci · Ableton · TouchDesigner/Resolume/MadMapper/QLab · Crestron/AMX/Extron/Nodel · RAG/Qdrant/Ollama."
     },
     {
-      id:"immersive", tags:["immersive","immersive design","projection mapping","projection","strongest skill","best skill","technical skill","specialty","speciality","strength","best at","mapping","madmapper","touchdesigner","resolume"],
+      id:"immersive", tags:["immersive","immersive design","projection mapping","projection","strongest skill","best skill","technical skill","specialty","speciality","strength","strengths","your strengths","best at","good at","mapping","madmapper","touchdesigner","resolume"],
       title:"Immersive design &amp; projection mapping",
       recruiter:"Immersive design and projection mapping are my two strongest skills, large-scale projection environments, synchronised multi-projector systems and interactive immersive spaces, delivered for touring exhibitions, museums, galleries and public festivals over more than a decade.",
       curator:"If you want the honest answer: immersive design and projection mapping are what I'm best at. Getting light onto a building or through a room so it does something to the people standing in it, the Royal Exhibition Building, White Night, Gertrude Street, a decade of touring shows. That's the work I'd pick first.",
@@ -956,7 +968,7 @@
       quick:"Strongest skills: immersive design + projection mapping · MadMapper/Resolume/TouchDesigner/QLab · 10+ years."
     },
     {
-      id:"genai", tags:["gen ai","generative ai","micro1","ai specialist","generative video","robotics"],
+      id:"genai", tags:["gen ai","generative ai","micro1","ai specialist","generative video","robotics","working on now","currently working","current role","right now","these days","at the moment"],
       title:"AI Specialist, Generative Video & Robotics: micro1",
       recruiter:"AI Specialist, Generative Video & Robotics at micro1, May 2026 to present. Evaluates model outputs and agentic workflows, designs evaluation scenarios and datasets, and works with generative media, visual reasoning and multimodal AI, current, alongside the museum and exhibition work above.",
       curator:"This is the newest thread, and it's not really separate from the rest, evaluating generative video and robotics models is the same instinct as everything else here: does this actually work, is it trustworthy, and can someone check my working.",
@@ -1007,8 +1019,8 @@
       id:"counterculture", tags:["counterculture","radio","radio show","kiss fm","broadcast","dj","music","on air","saturday show","presenter","own platform","side project"],
       title:"Counterculture: radio, web &amp; festival",
       recruiter:"Counterculture is Rob's own cultural platform, run across three formats: a long-running Saturday radio show on Kiss FM that he manages and presents; an interactive website he designed and built for it; and a multicultural festival of the same name, delivered under a Tourism Australia grant with several international artists and 700+ attendance. It is the clearest evidence that he can originate and sustain a cultural programme, not only deliver someone else's.",
-      curator:"Counterculture is mine end to end. It started as a Saturday show on Kiss FM, which I still manage and present; I built the interactive site for it myself; and it became a festival, Tourism Australia funded, international artists, more than 700 people through the door. Same instinct as the museum work, just without an institution behind it.",
-      technical:"Counterculture: long-running Kiss FM Saturday programme (managed and presented); interactive website designed and built by Rob; and a Tourism Australia funded multicultural festival with several international artists, 700+ attendance. Spans live broadcast, audio production, web/interactive build, grant execution and event delivery.",
+      curator:"Counterculture is mine end to end. I have been collecting records since 1991 and DJing since 1994, and Counterculture is where that lands now: a Saturday show on Kiss FM which I manage and present; I built the interactive site for it myself; and it became a festival, Tourism Australia funded, international artists, more than 700 people through the door. Same instinct as the museum work, just without an institution behind it.",
+      technical:"Counterculture: long-running Kiss FM Saturday programme (managed and presented); DJing since 1994, collecting since 1991; interactive website designed and built by Rob; and a Tourism Australia funded multicultural festival with several international artists, 700+ attendance. Spans live broadcast, audio production, web/interactive build, grant execution and event delivery.",
       quick:"Counterculture · Kiss FM radio show (managed) · interactive site he built · Tourism Australia funded festival, 700+ attendance."
     },
     {
@@ -1030,19 +1042,18 @@
   ];
 
   var CHIPS = [
-    "What are your strongest skills?",
-    "What's the through-line in your career?",
-    "How do you lead technology projects?",
-    "What did you build at NCM?",
-    "Which NCM exhibitions did you deliver?",
-    "What did you do at Museums Victoria?",
-    "Tell me about ARCHAI",
-    "What licences do you hold?",
-    "Why did the NCM role end?",
-    "What's the PhD about?",
+    "Tell me about yourself",
+    "What's your biggest achievement?",
+    "What are your strengths?",
+    "How do you lead a team?",
+    "Tell me about a challenging project",
+    "How do you work to a deadline?",
+    "Why did you leave your last role?",
+    "What are you working on now?",
+    "Have you worked internationally?",
     "What tools do you use?",
-    "Have you delivered work internationally?",
-    "How do you approach responsible AI?"
+    "Tell me about ARCHAI",
+    "What's the PhD about?"
   ];
 
   var FOLLOWUPS = {
@@ -1115,8 +1126,15 @@
   function score(rec, q, qTokens){
     var s = 0, anchored = false;
     rec.tags.forEach(function(t){
-      // whole-phrase hit is strongest
-      if (q.indexOf(t) !== -1) { s += t.length * 2; anchored = true; return; }
+      // Whole-phrase hit is strongest. Short tags must land on a word
+      // boundary, or "ai" matches inside "failed" and answers the wrong record.
+      var phraseHit;
+      if (t.length < 4) {
+        phraseHit = new RegExp("\\b" + t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "i").test(q);
+      } else {
+        phraseHit = q.indexOf(t) !== -1;
+      }
+      if (phraseHit) { s += t.length * 2; anchored = true; return; }
       // otherwise match tag words against query words, stem-insensitively
       var tagWords = tokens(t);
       if (!tagWords.length) return;
