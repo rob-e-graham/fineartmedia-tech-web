@@ -311,6 +311,9 @@
   .panel-hint::after{content:'+';margin-left:10px;color:var(--accent);font-weight:700}
   details.panel[open] .panel-hint::after{content:'−'}
   .panel-body{padding:2px 2px 28px}
+  .principles{margin:14px 0 0;padding-left:20px}
+  .principles li{font:13.5px/1.65 var(--sans);color:var(--ink-dim);margin:0 0 9px 0;padding-left:4px}
+  .principles li b{color:var(--ink)}
   .story-p{font:14.5px/1.7 var(--sans);color:var(--ink-dim);margin:0 0 12px 0;max-width:70ch}
   .story-p:last-child{margin-bottom:0}
 
@@ -544,7 +547,7 @@
   <section class="ask">
     <span class="kicker">Ask about my CV</span>
     <h2>Type a question, or pick how you'd like it answered.</h2>
-    <p class="ask-sub">Answers come only from Rob's verified CV, each one names its source, and anything not on the record is left to Rob to answer rather than guessed at. It's the same evidence-first approach behind his museum research.</p>
+    <p class="ask-sub">Every answer here comes from Rob's verified record and names its source. Ask something the record does not cover and the page will say so rather than invent an answer. That is the same principle his museum research is built on: a system that admits what it does not know is more trustworthy than one that fills the silence.</p>
 
     <div class="style-row" id="voices">
       <button class="voice-btn active" data-tone="recruiter">Recruiter</button>
@@ -602,6 +605,22 @@
           <button class="btn" id="emailBtn">Email a link</button>
         </div>
         <div class="status-line" id="shareStatus">Copies this page's address.</div>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary><span class="panel-title">Principles this page runs on</span><span class="panel-hint">Responsible AI</span></summary>
+      <div class="panel-body">
+        <p class="story-p">From <em>Waking Up the Museum: An AI Manifesto for Ethical, Community-Driven Digital Culture</em>, Rob Graham, 2026. This page is an implementation of them, not just a description.</p>
+        <ol class="principles">
+          <li><b>AI must never invent cultural knowledge.</b> If the record does not support a claim, the system must say so.</li>
+          <li><b>Every answer should be traceable</b> to visible, auditable sources.</li>
+          <li><b>Curators remain responsible</b> for institutional knowledge. AI amplifies curatorial work, it does not replace curatorial judgement.</li>
+          <li><b>Communities should be able to speak back.</b> A living archive welcomes memories, corrections, names and local knowledge through a reviewed pathway.</li>
+          <li><b>Conversation is part of the archive.</b> Visitor questions and interpretive gaps may become future cultural evidence.</li>
+          <li><b>Unknowns are valuable.</b> A system that admits what it does not know is more trustworthy than one that fills silence with invention. Every gap is an invitation.</li>
+          <li><b>The archive should grow without becoming extractive.</b> Contribution must be consent-based, reviewable, removable and attributed with care.</li>
+        </ol>
       </div>
     </details>
 
@@ -825,7 +844,7 @@
 
   var RECORDS = [
     {
-      id:"story", tags:["career story","career history","background","journey","throughline","through-line","profile","whole career","tell me about yourself","about yourself","introduce yourself","who are you","your background"],
+      id:"story", tags:["career story","career history","background","journey","throughline","through-line","profile","whole career","tell me about yourself","about yourself","introduce yourself","who are you","your background","walk me through","walk me through your career","talk me through","summarise your career","overview of your career"],
       title:"Career through-line",
       recruiter:"Rob leads technology delivery for cultural institutions. Twenty years of hands-on exhibition and AV work across ACMI, Museums Victoria and Grande Experiences built into technology leadership at the National Communication Museum, where he delivered a new public venue end to end and built the technical team that runs it. He now works on generative video and robotics AI at micro1 and researches responsible AI for cultural heritage at RMIT. The through-line is technology that serves the work, the building and the audience, and that keeps working after opening night.",
       curator:"The thread is making technology serve the work, the place and the audience. I have done most of the jobs in that chain, from exhibition floor to technical leadership, which changes how you specify a system and how you hand it over. You design differently when you know who has to run it on a Tuesday morning and what happens when it fails mid-exhibition.",
@@ -904,7 +923,103 @@
       quick:"Founder / Creative Technologist · FAMTEC · 2018-present · assembles and leads specialist teams per project."
     },
     {
-      id:"leadership", tags:["leadership","technology leadership","technology project","lead technology project","delivery","roadmap","strategy","team leadership","staffing","hiring","recruitment","recruited","rosters","rostering","budgets","budget","lead technician","crew","lead a team","lead teams","manage a team","managed a team","manage people","managing people","managed people","people management","led people","leading people","direct reports","team","staff","manager","stakeholder","procurement","vendor","governance","documentation","handover","change management"],
+      id:"fit", tags:["why should we hire you","why you","what would you bring","what do you bring","why are you the right","suit this role","right person","value you add","what makes you different"],
+      title:"What I bring",
+      recruiter:"Rob is unusual in combining three things that rarely sit in one person: he can specify and build the systems himself, he has led the teams and budgets that keep them running, and he holds a considered public position on how AI should be used in cultural institutions. He has delivered a national museum end to end, and he has stood on the gallery floor when things broke, which shapes how he designs for the people who inherit the work.",
+      curator:"I would put it plainly. I can do the technical work, I can lead the people doing it, and I have thought seriously about the ethics of the technology we are all now being asked to adopt. Plenty of people have one or two of those. The combination is what I would be bringing.",
+      technical:"Differentiators: whole-of-venue delivery experience from bare shell to operating museum; hands-on capability across AV, control, projection, interactive and infrastructure; people leadership including recruitment, rosters and budgets; published position on responsible AI in cultural heritage; and practical site tickets so he can work in the space rather than only specify it.",
+      quick:"Builds the systems, leads the team, and has a published position on the ethics. The combination is the point."
+    },
+    {
+      id:"growth", tags:["weakness","greatest weakness","development area","improve","where do you see yourself","five years","next five years","career goals","ambition","future","what next","where are you heading"],
+      title:"Growth and where I am heading",
+      recruiter:"Rob is candid that his instinct is to take on the hands-on work himself, which served him as a technician and needed unlearning as a leader; his answer has been to invest in documentation and in hiring people he can genuinely hand things to. Looking forward, he wants to keep working at the intersection of cultural institutions and applied AI, bringing his research into practice inside an organisation rather than only alongside one.",
+      curator:"My weakness is the obvious one for someone who came up through the floor. I would rather fix it myself than wait, and that does not scale, and it is not fair on a team who need the chance to own things. What I have learned to do is write proper documentation and hire people I trust, so the work does not depend on me. Where I am heading: I want the research and the day job to be the same thing, applying responsible AI inside a cultural institution rather than writing about it from the outside.",
+      technical:"Development area: default toward personally executing technical work; mitigated by documentation discipline, delegated ownership and hiring for capability. Direction: applied responsible AI within cultural institutions, bringing ARCHAI/AUXIO research methods into operational practice.",
+      quick:"Weakness: wants to fix it himself. Fix: documentation and trusted hires. Direction: responsible AI inside a cultural institution."
+    },
+    {
+      id:"conflict", tags:["conflict","disagreement","difficult stakeholder","difficult person","underperformance","underperforming","poor performance","difficult conversation","tension","pushback","said no","disagree"],
+      title:"Conflict and difficult conversations",
+      recruiter:"Rob approaches disagreement by separating the constraint from the person: most exhibition conflict comes from a genuine tension between creative intent, budget and what will still work in a year, and naming that openly usually resolves more than negotiating positions. With underperformance he acts early and privately, on the basis that people usually know before you tell them.",
+      curator:"Most conflict I have seen on a project is not really interpersonal. It is a creative ambition meeting a technical or budget reality, and everyone is arguing about the symptom. So I try to put the actual constraint on the table early, because people can problem-solve a constraint but they cannot problem-solve a vague no. With a team member who is struggling, I would rather have the awkward conversation in week two than the formal one in month six. People usually already know.",
+      technical:"Approach: surface the real constraint early rather than negotiating positions; document decisions so agreements survive personnel change; escalate with options rather than problems; address performance issues early, privately and specifically, with a clear path back.",
+      quick:"Name the constraint, not the person. Deal with performance early and privately."
+    },
+    {
+      id:"setbacks", tags:["a time you failed","failed","failure","mistake","went wrong","learned the hard way","setback","what would you do differently"],
+      title:"When things go wrong",
+      recruiter:"Rob works in a field where public failure is visible and time-bound, so his practice is built around it: assume something will fail, design for graceful degradation, document failure modes, and make sure the venue team can recover without him. On touring exhibitions with fixed opening dates he learned that the plan matters less than how quickly the room can recover.",
+      curator:"Anyone who tells you nothing has gone wrong has not delivered much. Openings are unforgiving and the failures are public. What I took from that is not to chase perfection but to design for recovery: what does this look like when it breaks, who is in the room, and can they fix it without calling me. That thinking is why I am so insistent about documentation, and honestly it came from being the person who once did not have any.",
+      technical:"Practice: design for graceful degradation; document failure modes alongside configuration; build recovery procedures the venue team can execute unaided; run realistic pre-opening failure testing; hold a rollback position on every deployment.",
+      quick:"Assume it will break. Design for recovery, document failure modes, make the venue team self-sufficient."
+    },
+    {
+      id:"collaboration", tags:["work with curators","curators","curatorial","work with artists","artists","artist liaison","designers","multidisciplinary","cross functional","work with other teams","collaborate"],
+      title:"Working with curators and artists",
+      recruiter:"Rob has worked directly with curators, artists, exhibition designers, lighting and operations teams across more than forty exhibitions, including artist-led installations with Patricia Piccinini, Tracey Moffatt, Mike Parr, Catherine Opie and Robert Owen. His approach is to translate curatorial and artistic intent into technical specification early, and to be honest about constraints while the work can still change.",
+      curator:"The job is translation in both directions. A curator or artist should not have to speak in specifications, and a technician should not have to guess at intent. What I try to do is get the real ambition out early, then be straight about what the space, the budget and the timeline will actually carry, while there is still room to change it. Artists in particular deserve a direct answer rather than a polite maybe.",
+      technical:"Collaboration practice: early technical input into curatorial and design development; translate intent into specification, drawings and equipment lists; flag constraints while design is still fluid; support artist installation and commissioning on site; handover documentation for operations teams.",
+      quick:"Translate intent into specification, and give curators and artists straight answers early enough to matter."
+    },
+    {
+      id:"accessibility", tags:["accessibility","accessible","inclusive","inclusion","captioning","audio description","multilingual","languages","wcag","disability","universal design"],
+      title:"Accessibility and inclusive design",
+      recruiter:"Accessibility is a working part of Rob's research rather than an add-on: AUXIO is built around image-first search, QR and NFC access, voice interaction and multilingual response so that visitors can meet a collection in their own words and their own language. In exhibition delivery this extends to caption and audio provision, reach and clearance in physical installs, and interfaces that work without instruction.",
+      curator:"The premise of the research is that people should be able to ask a collection something in their own words and their own language. That is an accessibility position before it is a technology one. In the gallery it is more practical: can someone reach it, hear it, read it, and understand it without a wall of instructions, and does it still work for someone who has never used a touchscreen.",
+      technical:"Accessibility practice: multilingual voice and text interaction; image-first search for low-literacy and non-English visitors; QR and NFC as low-barrier access; caption and audio-description support in AV specification; physical reach, height and clearance in install design; interfaces designed for unassisted first use.",
+      quick:"Multilingual and voice interaction, image-first access, QR and NFC, captioning, and installs that work without instruction."
+    },
+    {
+      id:"troubleshooting", tags:["troubleshoot","troubleshooting","fault finding","fault-finding","debug","diagnose","system failure","breaks down","goes down","fix a problem","complex install","difficult install","biggest install"],
+      title:"Troubleshooting and complex installs",
+      recruiter:"Fault-finding under time pressure is routine in Rob's work: touring exhibitions with fixed opening dates at Grande Experiences, live gallery operation at ACMI and NCM, and independent installs through FAMTEC. His method is to isolate systematically rather than guess, working from signal path and power outward, and to document the fix so it does not recur.",
+      curator:"The discipline is not to guess. Under pressure the temptation is to start swapping things, and you can lose an hour that way. I work the signal path methodically, power first, and I try to prove each stage rather than assume it. Then I write down what it actually was, because the same fault will find someone else at two in the morning when I am not there.",
+      technical:"Method: isolate by signal path and power; verify each stage rather than assume; reproduce before repairing; check configuration and network state against documented baseline; log root cause and remedy into system documentation. Complex installs handled include synchronised multi-projector environments, heritage-building integration and touring builds against fixed opening dates.",
+      quick:"Isolate methodically, prove each stage, then document the root cause so it does not catch the next person."
+    },
+    {
+      id:"signage-networks", tags:["digital signage","signage","brightsign","magicinfo","networks","networking","network","ip","infrastructure experience","servers","server"],
+      title:"Digital signage and networks",
+      recruiter:"Rob built NCM's signage and network infrastructure, including a MagicInfo server for remote ticketing and signage management across the museum, extensive BrightSign work, and the Nodel network control layer giving centralised control of gallery and building systems. He also ran the museum's Microsoft 365 and Azure administration, cyber security and access governance.",
+      curator:"Signage and networks are the part nobody thanks you for and everybody notices when it fails. I built NCM so it could be run remotely and consistently rather than as a set of one-off screens, which is the difference between a system and a pile of players.",
+      technical:"Signage: BrightSign (extensive), Samsung MagicInfo including server build for remote ticketing and signage management. Networks and infrastructure: Nodel network control layer for gallery and building systems; server architecture and remote management; Synology NAS, Proxmox, TrueNAS, LTO backup on a 3-2-1 strategy; Microsoft 365 and Azure administration, cyber security, permissions and access governance.",
+      quick:"BrightSign and MagicInfo signage, Nodel control network, server and NAS infrastructure, plus M365 and Azure administration."
+    },
+    {
+      id:"site-safety", tags:["work at heights","heights","ewp","scissor lift","boom lift","forklift","site safety","safety","risk","swms","white card","physically","site work","install work"],
+      title:"Site work and safety",
+      recruiter:"Rob holds the practical tickets to work on site rather than only specify from a desk: EWP operator licence (boom and scissor lift), high-risk work licence for forklift, White Card, electrical test and tag, and a heavy vehicle and light rigid licence. Working at heights, rigging AV to truss and lighting grids and moving equipment through galleries are a normal part of his delivery work.",
+      curator:"I can actually get in the lift and do the work, which matters more than it sounds. It means when I specify something I know what it takes to hang it, reach it and service it later, and I am not asking a crew to do something I would not do myself.",
+      technical:"Tickets: EWP operator licence, Yellow Card (boom and scissor lift); licence to perform high risk work, forklift (LF); White Card construction induction; electrical test and tag (UEENEEP026A); heavy vehicle and light rigid driver licence. Site practice: working at heights, rigging to truss and lighting grids, equipment handling through gallery and warehouse environments, and risk and operational management responsibility at NCM.",
+      quick:"EWP, forklift, White Card, test and tag, light rigid. Works at heights and rigs to grid, not just specifies it."
+    },
+    {
+      id:"leading-people", tags:["leadership","how do you lead","lead a team","lead teams","leadership style","management style","how do you manage","manage a team","managed a team","manage people","managing people","managed people","people management","led people","leading people","direct reports","look after your team","care for your team","support your team","team culture","mentoring","develop people","what kind of leader","kind of manager","psychological safety","how do you treat","your team"],
+      title:"How I lead",
+      recruiter:"Rob's leadership approach comes from having done most of the jobs in the chain. He started in visitor services and worked as an exhibition technician before leading teams, so he specifies systems knowing who has to run them, staff them and fix them. At NCM he recruited and hired the technical team, managed their rosters and budgets, and built the documentation that let them operate independently of him.",
+      curator:"I have been the person on the floor when something failed five minutes before opening, so I try to lead in a way I would have wanted then. That means three things. Give people a clear build rather than a vague brief. Write the documentation properly, because handing someone an undocumented system is handing them your problem. And protect the team from the deadline where you can, because the pressure should sit with me, not spread out across everyone.",
+      technical:"Leadership practice: recruit for capability and attitude, then give people ownership of a defined area. Specify systems for the operator, not the installer. Document architecture, configuration and failure modes so the team is not dependent on one person. Absorb schedule pressure at the lead level. Build vendor relationships that outlast any single project.",
+      quick:"Came up through the floor, so leads for the people who run the system: clear briefs, real documentation, pressure held at the top."
+    },
+    {
+      id:"ethics", tags:["ethics","responsible ai","ai ethics","values","principles","trust","hallucination","governance of ai","safe ai","what do you believe","philosophy","stance on ai","approach to ai","sovereignty","data sovereignty"],
+      title:"Ethics and responsible AI",
+      recruiter:"Rob's published position is that AI in cultural institutions must never invent knowledge. His manifesto <em>Waking Up the Museum</em> sets out seven principles: AI must not fabricate cultural knowledge; every answer must be traceable to visible sources; curators remain responsible for institutional knowledge; communities must be able to speak back; conversation becomes part of the archive; unknowns are valuable; and growth must never become extractive. This page is built to those principles and will decline rather than guess.",
+      curator:"The line I keep coming back to is that an object which admits what it does not know is worth a hundred that guess. Museums spent a century earning public trust and it would be very easy to spend it in a year by letting a confident system invent provenance. So I build the refusal in first, before the cleverness. Every gap is an invitation to ask a person, not a licence to fill the silence.",
+      technical:"Seven principles from <em>Waking Up the Museum</em> (2026): 1. AI must never invent cultural knowledge; if the record does not support a claim, the system says so. 2. Every answer traceable to visible, auditable sources. 3. Curators remain responsible for institutional knowledge; AI amplifies, never replaces, curatorial judgement. 4. Communities can speak back through a reviewed contribution pathway. 5. Conversation is part of the archive. 6. Unknowns are valuable. 7. The archive grows without becoming extractive: consent-based, reviewable, removable, attributed. Implemented locally, with data sovereignty, so institutions keep control of their collections.",
+      quick:"Never invent; make it traceable; curators stay responsible; communities can answer back; unknowns are valuable; never extractive."
+    },
+    {
+      id:"heritage", tags:["heritage","why museums","cultural heritage","collections care","provenance","why culture","what draws you","motivates you","motivation","care about","passion","why this work","public value"],
+      title:"Culture, heritage and why this work",
+      recruiter:"Rob works in cultural heritage because collections hold far more knowledge than can ever be put on display, and because the care those collections require is a discipline in itself. His Museums Victoria collections background shaped a practice where documentation and provenance are treated as core work rather than administration, and where technology is judged by whether it still serves the institution years after opening night.",
+      curator:"Cultural collections hold far more than can ever be shown. Most of it sits in storage, described in records that very few people will ever read. What pulls me is the idea that people could meet that knowledge in their own words and their own language, and that the institution could hear something back. Communities hold knowledge collections do not. Working with collections teaches you quickly that documentation and provenance are not paperwork, they are the thing that makes an object mean anything at all.",
+      technical:"Heritage practice: collections and digitisation experience at Museums Victoria; preservation-aware infrastructure including 3-2-1 strategy and LTO; provenance and rights-aware interpretation; IIIF viewing; consent-based community contribution held in a review layer rather than ingested automatically; systems specified for long-term institutional maintainability.",
+      quick:"Collections hold more than can be shown. The work is making that reachable without damaging the trust or the record."
+    },
+    {
+      id:"leadership", tags:["technology leadership","technology project","lead technology project","delivery","roadmap","strategy","staffing","hiring","hired","hire people","hired people","recruitment","recruited","rosters","rostering","budgets","budget","budget experience","lead technician","crew","stakeholder","procurement","vendor","governance","documentation","handover","change management"],
       title:"Technology leadership &amp; delivery",
       recruiter:"Rob has led teams directly, not just projects. At the National Communication Museum he did all the technology staffing: he recruited and hired the museum's current technical team, and ran their rosters and budgets, alongside technology strategy, procurement, vendor management, governance, documentation and operational handover. On site he works as lead technician, managing crews through each build.",
       curator:"I hired the technical team that runs the National Communication Museum now, and I did their rosters and budgets. On site I am lead technician, so I am managing the crew through the build as well. Leadership here means keeping the creative intent intact while making the system supportable, and leaving an institution able to run the work after opening night.",
@@ -1044,16 +1159,16 @@
   var CHIPS = [
     "Tell me about yourself",
     "What's your biggest achievement?",
-    "What are your strengths?",
     "How do you lead a team?",
-    "Tell me about a challenging project",
-    "How do you work to a deadline?",
-    "Why did you leave your last role?",
-    "What are you working on now?",
-    "Have you worked internationally?",
-    "What tools do you use?",
-    "Tell me about ARCHAI",
-    "What's the PhD about?"
+    "Why should we hire you?",
+    "How do you approach responsible AI?",
+    "How do you work with curators and artists?",
+    "How do you troubleshoot a failure?",
+    "What motivates you about this work?",
+    "Tell me about a time you failed",
+    "What's your greatest weakness?",
+    "Do you work at heights?",
+    "Why did you leave your last role?"
   ];
 
   var FOLLOWUPS = {
