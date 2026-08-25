@@ -137,6 +137,8 @@
     padding:7px 13px;
   }
   .id-links a:hover{border-color:var(--accent);color:var(--accent)}
+  .id-links a.cta{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+  .id-links a.cta:hover{background:var(--accent-strong);border-color:var(--accent-strong);color:var(--accent-ink)}
 
   .facts-row{
     display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
@@ -274,8 +276,6 @@
     font:12.5px var(--sans);font-weight:600;margin-top:10px;
   }
   .btn:hover{border-color:var(--accent)}
-  .notes-list{margin-top:16px;display:flex;flex-direction:column;gap:8px}
-  .note-item{border-left:2px solid var(--accent);padding:6px 0 6px 12px;font:13px/1.6 var(--sans);color:var(--ink-dim)}
 
   /* ---- full CV record: proper hierarchy, not raw meta rows ---- */
   .rec-group-title{font:12px var(--sans);font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);margin:26px 0 12px}
@@ -331,11 +331,12 @@
     </div>
 
     <div class="identity">
-      <p class="kicker">Creative technologist &amp; technology leader</p>
+      <p class="kicker">Creative Technologist &amp; Gen AI Specialist</p>
       <h1>Rob Graham</h1>
       <p class="role-line">Senior Multimedia Designer · Exhibition Multimedia · Interactive &amp; AV Systems</p>
-      <p class="lede">20+ years across museums, galleries and immersive exhibitions — most recently Head of Technology at the National Communication Museum, alongside a part-time PhD at RMIT researching responsible AI for cultural heritage.</p>
+      <p class="lede">20+ years across museums, galleries and immersive exhibitions — most recently Head of Technology at the National Communication Museum, now working on generative video and robotics AI at micro1, alongside a part-time PhD at RMIT researching responsible AI for cultural heritage.</p>
       <div class="id-links">
+        <a class="cta" href="/downloads/Rob_Graham_Master_CV.pdf" target="_blank" rel="noopener">Download CV (PDF)</a>
         <a href="mailto:rob@fineartmedia.tech">Email</a>
         <a href="tel:+61409336251">+61409336251</a>
         <a href="https://fineartmedia.tech" target="_blank" rel="noopener">Portfolio</a>
@@ -358,7 +359,7 @@
   </div>
 
   <div class="story">
-    <p>Twenty years across museums, galleries and immersive exhibitions — Museums Victoria, ACMI, Grande Experiences and, most recently, Head of Technology at the National Communication Museum. Alongside that, an independent creative-technology practice through FAMTEC, and a part-time PhD at RMIT on the responsible use of AI in cultural heritage.</p>
+    <p>Twenty years across museums, galleries and immersive exhibitions — Museums Victoria, ACMI, Grande Experiences and Head of Technology at the National Communication Museum. Currently a Gen AI Specialist at micro1, working on generative video and robotics. Alongside that, an independent creative-technology practice through FAMTEC, and a part-time PhD at RMIT on the responsible use of AI in cultural heritage.</p>
   </div>
 
   <div class="divider"></div>
@@ -407,16 +408,6 @@
     </details>
 
     <details class="panel">
-      <summary><span class="panel-title">Leave a note</span><span class="panel-hint">Message</span></summary>
-      <div class="panel-body">
-        <textarea id="noteInput" placeholder="Leave a note — kept only in this browser, not sent anywhere."></textarea>
-        <button class="btn" id="noteBtn">Add note</button>
-        <div class="status-line">This stays local to your browser. To reach Rob directly, <a href="mailto:rob@fineartmedia.tech">email him</a> instead.</div>
-        <div class="notes-list" id="notesList"></div>
-      </div>
-    </details>
-
-    <details class="panel">
       <summary><span class="panel-title">Share this page</span><span class="panel-hint">Link</span></summary>
       <div class="panel-body">
         <div class="row">
@@ -440,6 +431,10 @@
         </div>
 
         <div class="rec-group-title">Experience</div>
+        <div class="cv-entry">
+          <div class="role">AI Specialist, Generative Video &amp; Robotics — micro1</div>
+          <div class="meta">May 2026 – present</div>
+        </div>
         <div class="cv-entry">
           <div class="role">Head of Technology — National Communication Museum</div>
           <div class="meta">Feb 2022 – Feb 2026</div>
@@ -490,14 +485,36 @@
           <span class="pill">Heavy Vehicle / Light Rigid</span><span class="pill">Driver's licence</span>
         </div>
 
-        <div class="rec-group-title">Tools &amp; systems</div>
+        <div class="rec-group-title">Creative &amp; motion</div>
         <div class="pill-list">
           <span class="pill">Adobe After Effects</span><span class="pill">Premiere Pro</span><span class="pill">Photoshop</span>
-          <span class="pill">DaVinci Resolve</span><span class="pill">ATEM Vision Mixer</span><span class="pill">Allen &amp; Heath</span>
+          <span class="pill">Illustrator</span><span class="pill">Animate</span><span class="pill">DaVinci Resolve</span>
+          <span class="pill">Ableton</span>
+        </div>
+
+        <div class="rec-group-title">Immersive &amp; live systems</div>
+        <div class="pill-list">
+          <span class="pill">TouchDesigner</span><span class="pill">Resolume</span><span class="pill">MadMapper</span>
+          <span class="pill">QLab</span><span class="pill">SketchUp</span><span class="pill">projection mapping</span>
+        </div>
+
+        <div class="rec-group-title">AV &amp; control</div>
+        <div class="pill-list">
           <span class="pill">Crestron</span><span class="pill">AMX</span><span class="pill">Extron</span><span class="pill">Nodel</span>
+          <span class="pill">ATEM Vision Mixer</span><span class="pill">Allen &amp; Heath</span>
           <span class="pill">NFC / smart labels</span><span class="pill">e-paper labels</span>
+        </div>
+
+        <div class="rec-group-title">AI, data &amp; voice</div>
+        <div class="pill-list">
           <span class="pill">RAG / LLMs</span><span class="pill">Qdrant</span><span class="pill">Ollama</span>
-          <span class="pill">CollectiveAccess</span><span class="pill">ResourceSpace</span><span class="pill">MagicInfo</span>
+          <span class="pill">Whisper.cpp</span><span class="pill">Piper TTS</span><span class="pill">MeloTTS</span><span class="pill">Chatterbox</span>
+          <span class="pill">Python</span>
+        </div>
+
+        <div class="rec-group-title">Collections &amp; infrastructure</div>
+        <div class="pill-list">
+          <span class="pill">CollectiveAccess</span><span class="pill">ResourceSpace</span><span class="pill">MagicInfo</span><span class="pill">BrightSign</span>
           <span class="pill">Synology NAS</span><span class="pill">Proxmox</span><span class="pill">TrueNAS</span><span class="pill">LTO backup</span>
           <span class="pill">Office 365</span>
         </div>
@@ -664,12 +681,20 @@
       quick:"8 licences/tickets on file — forklift, EWP, White Card, Test &amp; Tag, Light Rigid and more."
     },
     {
-      id:"tools", tags:["tools","software","skills","adobe","davinci","crestron","stack","systems"],
+      id:"tools", tags:["tools","software","skills","adobe","davinci","crestron","stack","systems","madmapper","ableton","touchdesigner","resolume","qlab"],
       title:"Tools &amp; systems",
-      recruiter:"Adobe Creative Suite (After Effects, Premiere Pro, Photoshop), DaVinci Resolve, projection and AV systems, interactive/web builds, digital signage, QR/NFC, Office 365, and end-to-end testing and commissioning.",
-      curator:"The toolkit spans a full production pipeline — the same hands move from a timeline in Premiere to a Crestron panel to a gallery floor.",
-      technical:"Crestron, AMX, Extron, Nodel control systems; Adobe CS; DaVinci Resolve; projection/AV integration; RAG, vector databases (Qdrant), API integration for the AI side.",
-      quick:"Adobe CS · DaVinci Resolve · Crestron/AMX/Extron/Nodel · RAG/Qdrant · O365."
+      recruiter:"Adobe Creative Suite (After Effects, Premiere Pro, Photoshop, Illustrator), DaVinci Resolve and Ableton for production; TouchDesigner, Resolume, MadMapper and QLab for live and immersive work; Crestron, AMX, Extron and Nodel for AV control; BrightSign and MagicInfo for digital signage; Office 365 and end-to-end testing and commissioning.",
+      curator:"The toolkit spans a full production pipeline — the same hands move from a timeline in Premiere to a MadMapper session to a Crestron panel to a gallery floor.",
+      technical:"Creative: Adobe CS, DaVinci Resolve, Ableton. Immersive/live: TouchDesigner, Resolume, MadMapper, QLab. AV control: Crestron, AMX, Extron, Nodel. Signage: BrightSign, MagicInfo. AI/voice: RAG, Qdrant, Ollama, Whisper.cpp, Piper, MeloTTS, Chatterbox. Infrastructure: CollectiveAccess, ResourceSpace, Synology/Proxmox/TrueNAS, LTO backup.",
+      quick:"Adobe CS · DaVinci · Ableton · TouchDesigner/Resolume/MadMapper/QLab · Crestron/AMX/Extron/Nodel · RAG/Qdrant/Ollama."
+    },
+    {
+      id:"genai", tags:["gen ai","generative ai","micro1","ai specialist","generative video","robotics"],
+      title:"AI Specialist, Generative Video & Robotics — micro1",
+      recruiter:"AI Specialist, Generative Video & Robotics at micro1, May 2026 – present. Evaluates model outputs and agentic workflows, designs evaluation scenarios and datasets, and works with generative media, visual reasoning and multimodal AI — current, alongside the museum and exhibition work above.",
+      curator:"This is the newest thread, and it's not really separate from the rest — evaluating generative video and robotics models is the same instinct as everything else here: does this actually work, is it trustworthy, and can someone check my working.",
+      technical:"micro1, May 2026–present. Evaluates model outputs and agentic workflows for reasoning gaps, designs realistic evaluation scenarios and datasets with human-in-the-loop testing, works across generative media, visual reasoning and multimodal AI workflows.",
+      quick:"AI Specialist, Generative Video & Robotics · micro1 · May 2026 – present."
     },
     {
       id:"exhibitions", tags:["exhibitions","exhibition history","shows","tarrawarra","heide","projection mapping history","installations"],
@@ -940,33 +965,6 @@
 
   askBtn.addEventListener("click", function(){ ask(); });
   askInput.addEventListener("keydown", function(e){ if(e.key === "Enter"){ ask(); } });
-
-  // ---- notes (local only) ----
-  var NOTES_KEY = "auxio_rob_notes";
-  var notesList = document.getElementById("notesList");
-  var noteInput = document.getElementById("noteInput");
-  document.getElementById("noteBtn").addEventListener("click", function(){
-    var v = noteInput.value.trim();
-    if (!v) return;
-    var notes = [];
-    try{ notes = JSON.parse(localStorage.getItem(NOTES_KEY) || "[]"); }catch(e){}
-    notes.unshift(v);
-    localStorage.setItem(NOTES_KEY, JSON.stringify(notes.slice(0,20)));
-    noteInput.value = "";
-    renderNotes();
-  });
-  function renderNotes(){
-    var notes = [];
-    try{ notes = JSON.parse(localStorage.getItem(NOTES_KEY) || "[]"); }catch(e){}
-    notesList.innerHTML = "";
-    notes.forEach(function(n){
-      var d = document.createElement("div");
-      d.className = "note-item";
-      d.textContent = n;
-      notesList.appendChild(d);
-    });
-  }
-  renderNotes();
 
   // ---- share ----
   document.getElementById("copyBtn").addEventListener("click", function(){
