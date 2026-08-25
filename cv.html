@@ -1,4 +1,5 @@
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Rob Graham · Online CV</title>
 <meta name="description" content="Rob Graham's online CV — a queryable career record with a natural-voice read-aloud feature, adapted from his AUXIO museum-interpretation research.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -326,12 +327,105 @@
   .archai-mark{font:14px var(--serif);font-style:italic;color:var(--ink-faint)}
   .footline{font:12px/1.6 var(--sans);color:var(--ink-faint)}
 
-  @media(max-width:640px){
-    .hero{grid-template-columns:104px 1fr;gap:18px;padding-top:36px}
-    .portrait{width:104px}
+  /* ---------- RESPONSIVE ---------- */
+
+  /* Nothing may force the page wider than the screen. */
+  html,body{max-width:100%;overflow-x:hidden}
+  img,svg{max-width:100%}
+  .response-card p,.story p,.cv-entry .role,.cv-entry .desc,.identity p.lede{
+    overflow-wrap:anywhere;
+  }
+
+  /* Tablet / small laptop */
+  @media(max-width:860px){
+    .hero{grid-template-columns:140px 1fr;gap:24px;padding-top:44px}
+    .portrait{width:140px}
     .facts-row{grid-template-columns:repeat(2,1fr)}
-    .id-links{grid-template-columns:repeat(2,minmax(0,1fr));width:100%}
-    .id-links a{padding:7px 9px}
+  }
+
+  /* Phone */
+  @media(max-width:640px){
+    .nav{height:54px}
+    .nav-tag{font-size:10.5px}
+
+    /* Portrait above the name reads better than a cramped two-column
+       squeeze once the text column drops under ~250px. */
+    /* Portrait sits beside the name block, then the lede and links run
+       full width beneath it — keeps the hero from pushing the
+       interactive part of the page two screens down. display:contents
+       lets .identity's children join the hero grid directly. */
+    .hero{
+      grid-template-columns:92px 1fr;
+      column-gap:14px;row-gap:0;
+      padding:26px max(18px,4vw) 4px;
+      align-items:start;
+    }
+    .portrait{width:92px;grid-column:1;grid-row:1 / span 3;align-self:start}
+    .identity{display:contents}
+    .identity .kicker{grid-column:2;font-size:10.5px;letter-spacing:.09em;align-self:end}
+    .identity h1{grid-column:2;font-size:29px;line-height:1.05;margin:4px 0 0}
+    .identity .role-line{grid-column:2;font-size:13.5px;margin-top:6px}
+    .identity p.lede{grid-column:1 / -1;font-size:14.5px;margin-top:14px}
+    .id-links{grid-column:1 / -1}
+
+    .id-links{grid-template-columns:repeat(2,minmax(0,1fr));width:100%;gap:7px}
+    .id-links a{padding:9px 10px;font-size:12px}
+    .id-links a.cta{grid-column:1 / -1}
+
+    .facts-row{grid-template-columns:repeat(2,1fr);margin:20px max(18px,4vw) 0;width:calc(100% - max(36px,8vw))}
+    .fact{padding:11px 12px}
+    .fact dd{font-size:13px}
+
+    .metastrip{padding:16px max(18px,4vw) 0}
+    .story{padding:22px max(18px,4vw) 0}
+    .story p{font-size:15px;line-height:1.7}
+    .divider{margin:30px max(18px,4vw)}
+
+    .ask{padding:0 max(18px,4vw)}
+    .ask h2{font-size:24px}
+    .ask-sub{font-size:13.5px}
+    /* Stack the field and its button so the input keeps a usable width
+       and the button stays a comfortable tap target. */
+    .ask-row{flex-direction:column;gap:8px}
+    .ask-btn{padding:13px 22px;width:100%}
+    .chip,.voice-btn,.followup-btn{font-size:12.5px}
+
+    .panels{padding:6px max(18px,4vw) 0}
+    .panel-body{padding-bottom:22px}
+    /* Voice controls: let the select take the full row instead of
+       overflowing next to its label and test button. */
+    .row{gap:9px}
+    .row label{width:100%}
+    #voiceSelect{min-width:0;width:100%}
+    #testVoiceBtn{width:100%;margin-top:0}
+    input[type=range]{flex:1;min-width:0;width:auto}
+
+    .cv-entry .role{font-size:14px}
+    .cv-entry .meta{font-size:12px}
+    .pill{font-size:11.5px;padding:5px 9px}
+
+    .ack,.concept{padding-left:max(18px,4vw);padding-right:max(18px,4vw)}
+    .footbrand{padding:20px max(18px,4vw) 0}
+  }
+
+  /* Touch devices: guarantee a comfortable hit area. Desktop keeps the
+     tighter visual sizing, since a mouse doesn't need 44px. */
+  @media(hover:none) and (pointer:coarse){
+    .id-links a,.chip,.voice-btn,.followup-btn,.btn,.ask-btn{min-height:44px}
+    .id-links a,.ask-btn,.btn{display:flex;align-items:center;justify-content:center}
+    .chip,.voice-btn,.followup-btn{display:inline-flex;align-items:center}
+    details.panel summary{min-height:52px}
+    select,.ask-input{min-height:44px}
+    input[type=range]{height:26px}
+  }
+
+  /* Small phones — kept below common 375px devices so they still get
+     the two-column link grid rather than a long single stack. */
+  @media(max-width:344px){
+    .identity h1{font-size:26px}
+    .facts-row{grid-template-columns:1fr}
+    .id-links{grid-template-columns:1fr}
+    .ask h2{font-size:22px}
   }
 </style>
 
