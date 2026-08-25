@@ -98,7 +98,10 @@
     background:color-mix(in srgb, var(--bg) 88%, transparent);
     backdrop-filter:blur(10px);
   }
-  .nav-name{font:14px/1 var(--sans);font-weight:700;letter-spacing:-.01em;color:var(--ink)}
+  .nav-name{font:14px/1 var(--sans);font-weight:700;letter-spacing:-.01em;color:var(--ink);text-decoration:none}
+  .nav-name:hover{color:var(--accent)}
+  .nav-back{color:var(--ink-dim);text-decoration:none}
+  .nav-back:hover{color:var(--accent)}
   .nav-tag{
     font:11px/1 var(--sans);font-weight:600;letter-spacing:.04em;color:var(--ink-dim);
   }
@@ -491,8 +494,8 @@
 <div class="stage">
 
   <nav class="nav">
-    <span class="nav-name">Rob Graham</span>
-    <span class="nav-tag">Online CV</span>
+    <a class="nav-name" href="/">Rob Graham</a>
+    <span class="nav-tag"><a href="/" class="nav-back">FAMTEC</a> · Online CV</span>
   </nav>
 
   <header class="hero">
@@ -529,7 +532,9 @@
   </div>
 
   <div class="story">
-    <p>I began in animation, visitor experience and public programs, then built a career delivering projection mapping, interactive media and exhibition systems across ACMI, Museums Victoria, Grande Experiences and independent FAMTEC projects. That hands-on practice grew into technology leadership at the National Communication Museum, where I was technical lead for delivering the whole venue — it was a gutted telephone exchange with dirt floors when I arrived, and four years later it was an operating museum, down to the signage, the interactives, the control network and the lighting. Today I bring those threads together through generative video and robotics AI at micro1, my cultural-technology practice through FAMTEC, and part-time RMIT research into responsible, evidence-grounded AI for cultural heritage.</p>
+    <p>I came up through music and street art, DJing and promoting events from 1999, and put myself through art school working bar shifts and record shops while showing video work and curating AV nights. I entered museums at the front line — visitor services and exhibition technician at ACMI — and worked inward from there: collections and digital media at Museums Victoria, then large-scale projection with Grande Experiences, which took me to New York, Illinois and São Paulo.</p>
+    <p style="margin-top:14px">In 2022 I took on the National Communication Museum. It was a gutted telephone exchange with dirt floors when I arrived; four years later it was an operating museum — every sign and interactive, the galleries, the Nodel control network, the seminar room, and intelligent lighting so the building could run efficiently. I brought in a professional podcast studio at no cost to the museum by building the industry partnerships to fund it.</p>
+    <p style="margin-top:14px">Alongside all of it I've run Counterculture — a weekly KISS FM show, an interactive site I built, and a Tourism Australia–funded festival. Today I work on generative video and robotics AI at micro1 and research responsible AI for cultural heritage at RMIT. The principle behind that research is the same one this page runs on: answer from evidence, and say so plainly when you don't know.</p>
   </div>
 
   <div class="divider"></div>
@@ -651,16 +656,20 @@
           <div class="meta">RMIT University · in progress</div>
         </div>
         <div class="cv-entry">
-          <div class="role">Master of Animation and Interactive Media</div>
-          <div class="meta">RMIT University</div>
+          <div class="role">Master of Creative Media (Animation &amp; Interactive Media)</div>
+          <div class="meta">RMIT University · 2012–13</div>
         </div>
         <div class="cv-entry">
-          <div class="role">Bachelor of Media Arts</div>
-          <div class="meta">RMIT University</div>
+          <div class="role">Bachelor of Fine Arts (Media Arts)</div>
+          <div class="meta">RMIT University · 2009–11</div>
+        </div>
+        <div class="cv-entry">
+          <div class="role">Diploma of Visual Art</div>
+          <div class="meta">Swinburne University · 2008</div>
         </div>
         <div class="cv-entry">
           <div class="role">Diploma of Multimedia</div>
-          <div class="meta">Swinburne University</div>
+          <div class="meta">Swinburne University · 2007</div>
         </div>
 
         <div class="rec-group-title">Licences &amp; tickets</div>
@@ -674,7 +683,8 @@
         <div class="pill-list">
           <span class="pill">Adobe After Effects</span><span class="pill">Premiere Pro</span><span class="pill">Photoshop</span>
           <span class="pill">Illustrator</span><span class="pill">Animate</span><span class="pill">DaVinci Resolve</span>
-          <span class="pill">Ableton</span>
+          <span class="pill">Ableton</span><span class="pill">Max/MSP</span>
+          <span class="pill">Music production</span><span class="pill">Sound design</span><span class="pill">DJing</span>
         </div>
 
         <div class="rec-group-title">Immersive &amp; live systems</div>
@@ -805,10 +815,10 @@
     {
       id:"story", tags:["career story","career history","background","journey","throughline","through-line","profile","whole career"],
       title:"Career through-line",
-      recruiter:"Rob's career connects creative production, hands-on exhibition delivery, museum technology leadership and responsible AI. He began in animation, visitor experience and public programs; developed deep expertise in projection mapping, interactive media and AV systems; led technology for a new public museum; and now combines generative-AI evaluation, independent cultural-technology practice and RMIT research.",
-      curator:"The thread is making technology serve the work, the place and the audience. It starts with animation and live public programs, moves through projection and exhibition systems, grows into leading a museum's technology, and now asks how AI can enter cultural institutions without weakening trust.",
-      technical:"Career progression: animation and motion design; visitor-facing and public-program work; exhibition AV, projection mapping and interactive systems; museum infrastructure, governance and technology leadership; then applied generative AI, RAG, local-first systems and human-in-the-loop evaluation.",
-      quick:"Creative production → exhibition systems → museum technology leadership → responsible AI."
+      recruiter:"Rob worked his way inward from the front line. He came up through music and street art, DJing and promoting from 1999, and put himself through three degrees while working hospitality and record-shop jobs. He entered museums at visitor services and exhibition technician level at ACMI, moved into collections and digital media at Museums Victoria, then large-scale projection with Grande Experiences across the US and Brazil — before leading technology for a new public museum and moving into generative AI and RMIT research. Every step is documented on this page.",
+      curator:"The thread is making technology serve the work, the place and the audience — and I've stood at most points on that ladder. Bar shifts while at art school, then visitor services, then exhibition technician, collections, touring projection, and eventually responsibility for a whole museum's technology. It means I know what each of those jobs actually asks of a person, which changes how you specify a system and how you hand it over.",
+      technical:"Career progression: music/street-art practice and professional DJing from 1999; art-school qualifications 2007–13; visitor services and exhibition technician (ACMI); collections and digital media (Museums Victoria); international touring projection (Grande Experiences); technical services (ACMI); whole-of-venue museum technology delivery and leadership (NCM); now generative-AI evaluation (micro1) and practice-based RMIT research.",
+      quick:"Front line to whole-museum delivery: DJ/artist → visitor services → technician → collections → touring projection → museum technology lead → responsible AI."
     },
     {
       id:"ncm", tags:["national communication museum","ncm","head of technology","museum","technology strategy"],
@@ -908,9 +918,9 @@
     {
       id:"quals", tags:["qualifications","degree","diploma","bachelor","master","university","study","education"],
       title:"Formal qualifications",
-      recruiter:"Diploma of Multimedia (Swinburne University); Bachelor of Media Arts and Master of Animation and Interactive Media, both RMIT University.",
+      recruiter:"Diploma of Multimedia (Swinburne University, 2007) and Diploma of Visual Art (Swinburne, 2008); Bachelor of Fine Arts in Media Arts (RMIT, 2009–11); Master of Creative Media in Animation and Interactive Media (RMIT, 2012–13). Currently a PhD Researcher in Design at RMIT.",
       curator:"Three degrees, one throughline — multimedia, then moving image, then interaction. Every job since has drawn on all three.",
-      technical:"Diploma of Multimedia — Swinburne. Bachelor of Media Arts — RMIT. Master of Animation and Interactive Media — RMIT.",
+      technical:"Diploma of Multimedia (Swinburne, 2007); Diploma of Visual Art (Swinburne, 2008); Bachelor of Fine Arts, Media Arts (RMIT, 2009–11); Master of Creative Media, Animation and Interactive Media (RMIT, 2012–13); PhD Researcher, Design (RMIT, current).",
       quick:"Diploma (Swinburne) · Bachelor + Master (RMIT)."
     },
     {
@@ -984,6 +994,14 @@
       curator:"I've been on both sides of the funding conversation. The Tourism Australia grant became Counterculture — a multicultural festival with international artists and over 700 people through the door — writing it, winning it, then actually delivering the programme. These days I volunteer as grants officer for the local Steiner kindergarten, which is the same work at a much smaller scale.",
       technical:"Grant execution and public-programme delivery: Tourism Australia grant funding the Counterculture multicultural festival, several international artists, 700+ attendance — funding submission through to programme delivery and artist liaison. Current: volunteer Grants Officer, local Steiner kindergarten.",
       quick:"Executed a Tourism Australia grant → Counterculture festival, international artists, 700+ attendance · volunteer Grants Officer."
+    },
+    {
+      id:"writing", tags:["writing","published","publication","paper","manifesto","isea","conference","thought leadership","substack","waking up the museum","street arc","speaking"],
+      title:"Writing &amp; published work",
+      recruiter:"<em>ARCHAI: Cultivating a Living Archive</em> is Rob's first published white paper, accepted for the 6th Summit on New Media Art Archiving at ISEA2026 Dubai. He also writes independently on Substack — including the manifesto <em>Waking Up the Museum</em>, and pieces on Dark Plates and SafeChat — which are self-published rather than peer-reviewed.",
+      curator:"The ISEA paper is my first published white paper, and it went through review. Everything on my Substack — <em>Waking Up the Museum</em>, Dark Plates, SafeChat — is self-published, and I'd rather say so plainly. The argument across all of it is the same: an object that admits what it doesn't know is worth a hundred that guess.",
+      technical:"Peer-reviewed: <em>ARCHAI: Cultivating a Living Archive</em>, accepted, 6th Summit on New Media Art Archiving, ISEA2026 Dubai — first published white paper. Self-published (Substack): <em>Waking Up the Museum: An AI Manifesto for Ethical, Community-Driven Digital Culture</em>, plus writing on Dark Plates and SafeChat. In development: <em>Street Arc: Culture in Conversation</em>.",
+      quick:"ISEA2026 Dubai — first published white paper (peer-reviewed) · Waking Up the Museum, Dark Plates, SafeChat — self-published on Substack."
     },
     {
       id:"counterculture", tags:["counterculture","radio","radio show","kiss fm","broadcast","dj","music","on air","saturday show","presenter","own platform","side project"],
