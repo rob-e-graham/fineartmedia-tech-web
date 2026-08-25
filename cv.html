@@ -350,7 +350,7 @@
     <div class="fact"><dt>Location</dt><dd>Melbourne / Naarm</dd></div>
     <div class="fact"><dt>Experience</dt><dd>20+ years</dd></div>
     <div class="fact"><dt>Domain</dt><dd>Museums · AV · AI</dd></div>
-    <div class="fact"><dt>Research</dt><dd>PhD Candidate, RMIT</dd></div>
+    <div class="fact"><dt>Research</dt><dd>PhD Researcher, RMIT</dd></div>
   </dl>
 
   <div class="metastrip">
@@ -462,7 +462,7 @@
 
         <div class="rec-group-title">Education</div>
         <div class="cv-entry">
-          <div class="role">PhD Candidate, Design</div>
+          <div class="role">PhD Researcher, Design</div>
           <div class="meta">RMIT University · in progress</div>
         </div>
         <div class="cv-entry">
@@ -658,11 +658,11 @@
     },
     {
       id:"phd", tags:["phd","doctorate","research","rmit design","dissertation"],
-      title:"PhD Candidate, Design — RMIT University",
-      recruiter:"PhD Candidate, Design, RMIT University (in progress) — practice-based research into responsible, practical AI for museums and cultural heritage, undertaken outside full-time work.",
+      title:"PhD Researcher, Design — RMIT University",
+      recruiter:"PhD Researcher, Design, RMIT University (in progress) — practice-based research into responsible, practical AI for museums and cultural heritage, undertaken outside full-time work.",
       curator:"Ten years of exhibition work raised a question I couldn't shake: how does a museum use AI without losing the trust it took decades to earn? The PhD is where I sit with that properly.",
       technical:"PhD, Design, RMIT (in progress). Practice-based research: human-AI collaboration, evidence-grounded interpretation, applied AI systems for cultural heritage.",
-      quick:"PhD Candidate · Design · RMIT University · in progress, part-time, outside work hours."
+      quick:"PhD Researcher · Design · RMIT University · in progress, part-time, outside work hours."
     },
     {
       id:"quals", tags:["qualifications","degree","diploma","bachelor","master","university","study","education"],
@@ -687,6 +687,14 @@
       curator:"The toolkit spans a full production pipeline — the same hands move from a timeline in Premiere to a MadMapper session to a Crestron panel to a gallery floor.",
       technical:"Creative: Adobe CS, DaVinci Resolve, Ableton. Immersive/live: TouchDesigner, Resolume, MadMapper, QLab. AV control: Crestron, AMX, Extron, Nodel. Signage: BrightSign, MagicInfo. AI/voice: RAG, Qdrant, Ollama, Whisper.cpp, Piper, MeloTTS, Chatterbox. Infrastructure: CollectiveAccess, ResourceSpace, Synology/Proxmox/TrueNAS, LTO backup.",
       quick:"Adobe CS · DaVinci · Ableton · TouchDesigner/Resolume/MadMapper/QLab · Crestron/AMX/Extron/Nodel · RAG/Qdrant/Ollama."
+    },
+    {
+      id:"immersive", tags:["immersive","immersive design","projection mapping","projection","strongest skill","best skill","technical skill","specialty","speciality","strength","best at","mapping","madmapper","touchdesigner","resolume"],
+      title:"Immersive design &amp; projection mapping",
+      recruiter:"Immersive design and projection mapping are my two strongest skills — large-scale projection environments, synchronised multi-projector systems and interactive immersive spaces, delivered for touring exhibitions, museums, galleries and public festivals over more than a decade.",
+      curator:"If you want the honest answer: immersive design and projection mapping are what I'm best at. Getting light onto a building or through a room so it does something to the people standing in it — the Royal Exhibition Building, White Night, Gertrude Street, a decade of touring shows. That's the work I'd pick first.",
+      technical:"Immersive design and projection mapping: synchronised multi-projector builds, warping and blending, alignment and calibration, content pipelines and playback. Tooling includes MadMapper, Resolume, TouchDesigner and QLab, integrated with Crestron/AMX/Extron/Nodel control and media servers. Delivered at the Royal Exhibition Building, White Night, Gertrude Street Projection Festival, and across touring work with Grande Experiences.",
+      quick:"Strongest skills: immersive design + projection mapping · MadMapper/Resolume/TouchDesigner/QLab · 10+ years."
     },
     {
       id:"genai", tags:["gen ai","generative ai","micro1","ai specialist","generative video","robotics"],
@@ -715,6 +723,7 @@
   ];
 
   var CHIPS = [
+    "What are your strongest skills?",
     "What did you do at Museums Victoria?",
     "Tell me about ARCHAI",
     "What licences do you hold?",
@@ -758,9 +767,39 @@
     chipsEl.appendChild(b);
   });
 
-  function score(rec, q){
+  // Normalise a string into comparable word stems, so "skill" matches "skills",
+  // "exhibitions" matches "exhibition", and punctuation doesn't break a match.
+  var STOPWORDS = {what:1,whats:1,which:1,who:1,when:1,where:1,why:1,how:1,do:1,does:1,did:1,
+    is:1,are:1,was:1,were:1,you:1,your:1,rob:1,robs:1,he:1,his:1,have:1,has:1,had:1,the:1,a:1,an:1,
+    of:1,in:1,on:1,at:1,for:1,to:1,and:1,or:1,with:1,about:1,me:1,my:1,i:1,tell:1,any:1,some:1,
+    can:1,could:1,would:1,use:1,used:1,uses:1,work:1,worked:1,works:1,like:1,got:1};
+
+  function stem(w){
+    w = w.replace(/[^a-z0-9+/.]/g, "");
+    if (w.length > 4 && /ies$/.test(w)) return w.slice(0, -3) + "y";
+    if (w.length > 3 && /(sses|shes|ches|xes)$/.test(w)) return w.slice(0, -2);
+    if (w.length > 3 && /s$/.test(w) && !/ss$/.test(w)) return w.slice(0, -1);
+    return w;
+  }
+
+  function tokens(str){
+    return str.toLowerCase().split(/[\s,;:!?()"']+/).map(stem).filter(function(w){
+      return w && w.length > 1 && !STOPWORDS[w];
+    });
+  }
+
+  function score(rec, q, qTokens){
     var s = 0;
-    rec.tags.forEach(function(t){ if(q.indexOf(t) !== -1) s += t.length; });
+    rec.tags.forEach(function(t){
+      // whole-phrase hit is strongest
+      if (q.indexOf(t) !== -1) { s += t.length * 2; return; }
+      // otherwise match tag words against query words, stem-insensitively
+      var tagWords = tokens(t);
+      if (!tagWords.length) return;
+      var hits = tagWords.filter(function(tw){ return qTokens.indexOf(tw) !== -1; }).length;
+      if (hits === tagWords.length) s += t.length;        // every word of the tag present
+      else if (hits > 0) s += Math.max(2, t.length / 2);  // partial tag hit still counts
+    });
     return s;
   }
 
@@ -771,10 +810,11 @@
     if (noAnsHit && (q.indexOf("ncm") !== -1 || q.indexOf("national communication") !== -1 || q.indexOf("museum") !== -1 || q.indexOf("job") !== -1 || q.indexOf("role") !== -1)) {
       return noAns;
     }
+    var qTokens = tokens(q);
     var best = null, bestScore = 0;
     RECORDS.forEach(function(r){
       if (r.noAnswer) return;
-      var s = score(r, q);
+      var s = score(r, q, qTokens);
       if (s > bestScore){ bestScore = s; best = r; }
     });
     return bestScore > 0 ? best : null;
