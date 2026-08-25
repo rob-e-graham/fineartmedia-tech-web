@@ -87,7 +87,15 @@
     text-transform:uppercase;letter-spacing:.12em;
     color:var(--accent);
   }
-  .stage{max-width:920px;margin:0 auto;position:relative;padding-bottom:64px}
+  .stage{max-width:920px;margin:0 auto;position:relative;padding-bottom:64px;z-index:1}
+  /* Ambient field: a sparse constellation that settles when idle and briefly
+     resolves connections when the page matches an answer, so the motion
+     describes retrieval rather than just decorating. */
+  #field{
+    position:fixed;inset:0;width:100%;height:100%;
+    pointer-events:none;z-index:0;opacity:.55;
+  }
+  @media (prefers-reduced-motion:reduce){ #field{display:none} }
 
   /* ---------- NAV ---------- */
   .nav{
@@ -495,6 +503,8 @@
     .ask h2{font-size:22px}
   }
 </style>
+
+<canvas id="field" aria-hidden="true"></canvas>
 
 <div class="stage">
 
@@ -1657,6 +1667,7 @@
     addSource(card, rec, q);
     addFollowups(card, rec);
     responseEl.appendChild(card);
+    if (window.__fieldPulse) window.__fieldPulse();
 
     var sb = card.querySelector(".speakbtn");
     if (sb) sb.addEventListener("click", function(){
@@ -1668,6 +1679,108 @@
 
   askBtn.addEventListener("click", function(){ ask(); });
   askInput.addEventListener("keydown", function(e){ if(e.key === "Enter"){ ask(); } });
+
+  // ---- ambient field -------------------------------------------------------
+  // Sparse drifting nodes. Idle, they simply breathe. When the page resolves a
+  // question to a record, nearby nodes briefly link up, so the animation shows
+  // retrieval happening rather than decorating the page. Canvas, not DOM, and
+  // it pauses entirely when the tab is hidden so it costs nothing in the
+  // background.
+  (function(){
+    var cv = document.getElementById("field");
+    if (!cv) return;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    var ctx = cv.getContext("2d", { alpha: true });
+    if (!ctx) return;
+
+    var nodes = [], w = 0, h = 0, dpr = 1, raf = null, pulse = 0;
+
+    function accent(){
+      var v = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
+      return v || "#136f79";
+    }
+    function rgba(hex, a){
+      hex = hex.replace("#","");
+      if (hex.length === 3) hex = hex.split("").map(function(x){return x+x;}).join("");
+      var n = parseInt(hex, 16);
+      return "rgba(" + ((n>>16)&255) + "," + ((n>>8)&255) + "," + (n&255) + "," + a + ")";
+    }
+
+    function seed(){
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = cv.clientWidth; h = cv.clientHeight;
+      cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      // deliberately sparse, and lighter on small screens
+      var target = Math.round(Math.min(46, Math.max(14, (w * h) / 42000)));
+      nodes = [];
+      for (var i = 0; i < target; i++){
+        nodes.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.14,
+          vy: (Math.random() - 0.5) * 0.14,
+          r: Math.random() * 1.1 + 0.6
+        });
+      }
+    }
+
+    function frame(){
+      ctx.clearRect(0, 0, w, h);
+      var col = accent();
+      var linkDist = pulse > 0 ? 150 : 108;
+
+      for (var i = 0; i < nodes.length; i++){
+        var n = nodes[i];
+        n.x += n.vx; n.y += n.vy;
+        if (n.x < -20) n.x = w + 20; else if (n.x > w + 20) n.x = -20;
+        if (n.y < -20) n.y = h + 20; else if (n.y > h + 20) n.y = -20;
+
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.fillStyle = rgba(col, 0.30 + pulse * 0.30);
+        ctx.fill();
+      }
+
+      // connections: faint at rest, briefly assertive after a match
+      for (var a = 0; a < nodes.length; a++){
+        for (var b = a + 1; b < nodes.length; b++){
+          var dx = nodes[a].x - nodes[b].x, dy = nodes[a].y - nodes[b].y;
+          var d = Math.sqrt(dx*dx + dy*dy);
+          if (d < linkDist){
+            var strength = (1 - d / linkDist) * (0.055 + pulse * 0.16);
+            ctx.beginPath();
+            ctx.moveTo(nodes[a].x, nodes[a].y);
+            ctx.lineTo(nodes[b].x, nodes[b].y);
+            ctx.strokeStyle = rgba(col, strength);
+            ctx.lineWidth = 0.6;
+            ctx.stroke();
+          }
+        }
+      }
+
+      if (pulse > 0) pulse = Math.max(0, pulse - 0.012);
+      raf = requestAnimationFrame(frame);
+    }
+
+    function start(){ if (!raf) raf = requestAnimationFrame(frame); }
+    function stop(){ if (raf) { cancelAnimationFrame(raf); raf = null; } }
+
+    seed(); start();
+
+    var rt;
+    window.addEventListener("resize", function(){
+      clearTimeout(rt); rt = setTimeout(function(){ seed(); }, 180);
+    });
+    // never burn cycles or battery in a background tab
+    document.addEventListener("visibilitychange", function(){
+      if (document.hidden) stop(); else start();
+    });
+
+    // the page tells the field when it has resolved an answer
+    window.__fieldPulse = function(){ pulse = 1; };
+  })();
 
   // ---- leave a message (composes in the visitor's own mail client) ----
   var msgBtn = document.getElementById("msgBtn");
