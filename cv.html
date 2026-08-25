@@ -129,12 +129,8 @@
     font:15px/1.65 var(--sans);
     margin:12px 0 0;
   }
-  .id-links{
-    display:grid;grid-template-columns:repeat(3,max-content);gap:8px 10px;
-    width:max-content;max-width:100%;margin-top:16px;
-  }
+  .id-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
   .id-links a{
-    display:flex;align-items:center;justify-content:center;box-sizing:border-box;
     font:12.5px/1 var(--sans);font-weight:600;
     text-decoration:none;color:var(--ink);
     border:1px solid var(--line-strong);border-radius:100px;
@@ -225,16 +221,6 @@
     margin-top:14px;padding-top:12px;border-top:1px solid var(--line);
     font:11.5px var(--mono);color:var(--ink-faint);
   }
-  .response-card .rsource a{color:var(--accent);text-decoration:none}
-  .response-card .rsource a:hover{text-decoration:underline}
-  .followups{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
-  .followup-label{width:100%;font:10.5px var(--sans);font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint)}
-  .followup-btn{
-    appearance:none;cursor:pointer;background:var(--surface-2);color:var(--ink-dim);
-    border:1px solid var(--line);border-radius:100px;padding:7px 11px;
-    font:11.5px var(--sans);text-align:left;
-  }
-  .followup-btn:hover{border-color:var(--accent);color:var(--accent)}
   .response-card.empty{border-style:dashed;box-shadow:none;background:transparent}
   .response-card.empty p{color:var(--ink-dim)}
   .response-card.empty .rsource a{color:var(--accent)}
@@ -299,8 +285,6 @@
   .cv-entry .role{font:14.5px var(--sans);font-weight:600;color:var(--ink)}
   .cv-entry .meta{font:12.5px var(--mono);color:var(--ink-faint);margin-top:3px}
   .cv-entry .desc{font:13.5px/1.6 var(--sans);color:var(--ink-dim);margin-top:6px}
-  .cv-entry .desc a{color:var(--accent);text-decoration:none}
-  .cv-entry .desc a:hover{text-decoration:underline}
   .pill-list{display:flex;flex-wrap:wrap;gap:7px}
   .pill{
     font:12px var(--mono);color:var(--ink-dim);background:var(--surface-2);
@@ -330,8 +314,7 @@
     .hero{grid-template-columns:104px 1fr;gap:18px;padding-top:36px}
     .portrait{width:104px}
     .facts-row{grid-template-columns:repeat(2,1fr)}
-    .id-links{grid-template-columns:repeat(2,minmax(0,1fr));width:100%}
-    .id-links a{padding:7px 9px}
+    .id-links a{padding:6px 11px}
   }
 </style>
 
@@ -384,7 +367,7 @@
   <section class="ask">
     <span class="kicker">Ask about my CV</span>
     <h2>Type a question, or pick how you'd like it answered.</h2>
-    <p class="ask-sub">Every answer follows Rob's non-hallucination method: match the question to a named record, answer only from that record, show the evidence, and refuse when the evidence is missing.</p>
+    <p class="ask-sub">Every answer below is matched from the verified record at the bottom of this page — nothing is invented, and if it isn't in the record, the page says so.</p>
 
     <div class="style-row" id="voices">
       <button class="voice-btn active" data-tone="recruiter">Recruiter</button>
@@ -397,7 +380,7 @@
     <div class="chips" id="chips"></div>
 
     <div class="ask-row">
-      <input class="ask-input" id="askInput" type="text" maxlength="200" placeholder="Ask about a role, exhibition, skill or project…" enterkeyhint="send">
+      <input class="ask-input" id="askInput" type="text" maxlength="200" placeholder="Try “ARCHAI” or “Museums Victoria”…" enterkeyhint="send">
       <button class="ask-btn" id="askBtn">Ask</button>
     </div>
 
@@ -477,20 +460,6 @@
           <div class="meta">Jan 2018 – present</div>
         </div>
 
-        <div class="rec-group-title">Additional experience</div>
-        <div class="cv-entry">
-          <div class="role">Co-Owner — Counterweight Vinyl &amp; Espresso</div>
-          <div class="meta">Sep 2018 – Aug 2024</div>
-        </div>
-        <div class="cv-entry">
-          <div class="role">Art Installer — Art Installed</div>
-          <div class="meta">Jan 2015 – Jan 2016</div>
-        </div>
-        <div class="cv-entry">
-          <div class="role">Freelance Animator &amp; Motion Designer</div>
-          <div class="meta">2012 – Jan 2017</div>
-        </div>
-
         <div class="rec-group-title">Education</div>
         <div class="cv-entry">
           <div class="role">PhD Researcher, Design</div>
@@ -536,20 +505,11 @@
           <span class="pill">NFC / smart labels</span><span class="pill">e-paper labels</span>
         </div>
 
-        <div class="rec-group-title">Technology leadership &amp; delivery</div>
+        <div class="rec-group-title">AI, data &amp; voice</div>
         <div class="pill-list">
-          <span class="pill">Technology strategy &amp; roadmaps</span><span class="pill">Team leadership</span>
-          <span class="pill">Procurement &amp; vendor management</span><span class="pill">Stakeholder workshops</span>
-          <span class="pill">Risk &amp; governance</span><span class="pill">Technical documentation &amp; handover</span>
-          <span class="pill">Change &amp; adoption</span>
-        </div>
-
-        <div class="rec-group-title">AI, data &amp; responsible practice</div>
-        <div class="pill-list">
-          <span class="pill">RAG / LLMs</span><span class="pill">Model evaluation</span><span class="pill">Agentic workflows</span>
-          <span class="pill">Human-in-the-loop testing</span><span class="pill">Responsible AI &amp; governance</span>
-          <span class="pill">Privacy &amp; data sovereignty</span><span class="pill">APIs &amp; data pipelines</span>
-          <span class="pill">Qdrant</span><span class="pill">Ollama</span><span class="pill">Voice AI</span><span class="pill">Python</span>
+          <span class="pill">RAG / LLMs</span><span class="pill">Qdrant</span><span class="pill">Ollama</span>
+          <span class="pill">Whisper.cpp</span><span class="pill">Piper TTS</span><span class="pill">MeloTTS</span><span class="pill">Chatterbox</span>
+          <span class="pill">Python</span>
         </div>
 
         <div class="rec-group-title">Collections &amp; infrastructure</div>
@@ -559,28 +519,14 @@
           <span class="pill">Office 365</span>
         </div>
 
-        <div class="rec-group-title">Ways of working</div>
-        <div class="pill-list">
-          <span class="pill">Calm practical problem-solving</span><span class="pill">Clear non-technical communication</span>
-          <span class="pill">Cross-functional collaboration</span><span class="pill">Concurrent project delivery</span>
-          <span class="pill">Documentation discipline</span><span class="pill">Audience-centred design</span>
-        </div>
-
         <div class="status-line" style="margin-top:18px">Source: Rob Graham's master CV profile, corrected and verified 25 August 2026.</div>
       </div>
     </details>
 
     <details class="panel">
-      <summary><span class="panel-title">Selected exhibitions</span><span class="panel-hint">40+ credits, 2013–2026</span></summary>
+      <summary><span class="panel-title">Selected exhibitions</span><span class="panel-hint">30+ credits, 2013–2023</span></summary>
       <div class="panel-body">
-        <div class="status-line" style="margin-bottom:14px">Named exhibition and installation credits — mostly through FAMTEC, alongside employed roles above. NCM titles, dates and descriptions are linked to the museum's public record; Rob's involvement is directly confirmed, while project-specific technical titles are not inferred. Earlier institution and role details are recorded by Rob and remain indicative rather than contract-verified for any single line.</div>
-        <div class="rec-group-title">National Communication Museum</div>
-        <div class="cv-entry"><div class="role"><em>Permanent Galleries</em>, National Communication Museum</div><div class="meta">Permanent exhibition · exhibition technology leadership and delivery</div><div class="desc">Cyber Café, Research Labs, Conversations Gallery and the working step-by-step exchange. <a href="https://ncm.org.au/exhibitions/permanent-galleries" target="_blank" rel="noopener">Official NCM record</a></div></div>
-        <div class="cv-entry"><div class="role"><em>Instruments of Surveillance</em>, National Communication Museum</div><div class="meta">21 Sep 2024 – 2 Mar 2025 · exhibition technology leadership and delivery</div><div class="desc">Surveillance from wiretaps and the Enigma machine to robotics, data extraction and generative AI. <a href="https://ncm.org.au/exhibitions/instruments-of-surveillance" target="_blank" rel="noopener">Official NCM record</a></div></div>
-        <div class="cv-entry"><div class="role"><em>Signal to Noise</em>, National Communication Museum</div><div class="meta">12 Apr – 14 Sep 2025 · exhibition technology leadership and delivery</div><div class="desc">International artworks, new commissions and technology collections exploring glitches, disruption and interference in communication systems. <a href="https://ncm.org.au/exhibitions/signal-to-noise" target="_blank" rel="noopener">Official NCM record</a></div></div>
-        <div class="cv-entry"><div class="role"><em>FRIEND</em>, National Communication Museum</div><div class="meta">1 Nov 2025 – 17 May 2026 · exhibition technology leadership and delivery</div><div class="desc">Embodied AI, robotics and human-machine relationships, presented in collaboration with studioBOWL (Japan). <a href="https://ncm.org.au/exhibitions/friend" target="_blank" rel="noopener">Official NCM record</a></div></div>
-
-        <div class="rec-group-title">Cultural and immersive delivery</div>
+        <div class="status-line" style="margin-bottom:14px">Dated, named exhibition and installation credits — mostly through FAMTEC, alongside employed roles above. Institution and role as recorded by Rob; treat as indicative rather than contract-verified for any single line.</div>
         <div class="cv-entry"><div class="role">Catherine Opie — <em>Binding Ties</em>, Heide Museum of Modern Art</div><div class="meta">2023 · Technical Lead</div></div>
         <div class="cv-entry"><div class="role">TarraWarra Biennale, <em>ua usiusi fa'ava'asavili</em>, TWMA</div><div class="meta">2023 · Technical Lead</div></div>
         <div class="cv-entry"><div class="role">Barbara Hepworth — <em>In Equilibrium</em> + <em>w-Hole</em>, Tate Britain / Heide</div><div class="meta">2023 · Technical Lead</div></div>
@@ -647,35 +593,12 @@
 
   var RECORDS = [
     {
-      id:"story", tags:["career story","career history","background","journey","throughline","through-line","profile","whole career"],
-      title:"Career through-line",
-      recruiter:"Rob's career connects creative production, hands-on exhibition delivery, museum technology leadership and responsible AI. He began in animation, visitor experience and public programs; developed deep expertise in projection mapping, interactive media and AV systems; led technology for a new public museum; and now combines generative-AI evaluation, independent cultural-technology practice and RMIT research.",
-      curator:"The thread is making technology serve the work, the place and the audience. It starts with animation and live public programs, moves through projection and exhibition systems, grows into leading a museum's technology, and now asks how AI can enter cultural institutions without weakening trust.",
-      technical:"Career progression: animation and motion design; visitor-facing and public-program work; exhibition AV, projection mapping and interactive systems; museum infrastructure, governance and technology leadership; then applied generative AI, RAG, local-first systems and human-in-the-loop evaluation.",
-      quick:"Creative production → exhibition systems → museum technology leadership → responsible AI."
-    },
-    {
       id:"ncm", tags:["national communication museum","ncm","head of technology","museum","technology strategy"],
       title:"Head of Technology — National Communication Museum",
       recruiter:"Head of Technology, National Communication Museum, Feb 2022 – Feb 2026. Led technology strategy, exhibition multimedia and digital infrastructure for a new public museum, end to end — planning through commissioning, documentation and operational support.",
       curator:"For four years I was the person a new museum turned to when the technology had to actually work in the room — galleries, signage, exhibits, the quiet infrastructure visitors never notice. It's the role where design intent meets long-term serviceability.",
       technical:"Head of Technology, NCM (Feb 2022–Feb 2026). Owned exhibition AV/interactive systems, Microsoft 365 and Azure administration, cyber security and access governance, plus gallery control and digital-media infrastructure — specification through commissioning and documentation.",
       quick:"Head of Technology · National Communication Museum · Feb 2022–Feb 2026 · role ended, not current."
-    },
-    {
-      id:"ncm-exhibitions", tags:["ncm exhibitions","national communication museum exhibitions","permanent galleries","permanent exhibition","instruments of surveillance","surveillance exhibition","surveillance","signal to noise","friend exhibition","friend"],
-      title:"NCM exhibition delivery",
-      recruiter:"During his NCM tenure, Rob confirms exhibition-technology leadership and delivery across the Permanent Galleries; Instruments of Surveillance (21 Sep 2024–2 Mar 2025); Signal to Noise (12 Apr–14 Sep 2025); and FRIEND (1 Nov 2025–17 May 2026). The titles and dates come from NCM's public exhibition record; the public pages do not itemise Rob's project-specific technical credit.",
-      curator:"The NCM work moved from the museum's permanent galleries and working telephone exchange into three feature exhibitions: surveillance and the systems that watch us; noise as creative friction; then FRIEND's embodied AI and human-machine relationships. Across them, Rob's contribution stayed on the technology-and-delivery side of the room.",
-      technical:"Confirmed NCM exhibition-technology delivery: Permanent Galleries (Cyber Café, Research Labs, Conversations Gallery and working step-by-step exchange); Instruments of Surveillance, 21 Sep 2024–2 Mar 2025; Signal to Noise, 12 Apr–14 Sep 2025; FRIEND, 1 Nov 2025–17 May 2026. Exact per-show technical titles are not stated because the public project credits do not identify them.",
-      quick:"NCM: Permanent Galleries · Instruments of Surveillance · Signal to Noise · FRIEND.",
-      evidence:"Direct confirmation from Rob Graham, cross-checked against NCM's official exhibition pages",
-      sources:[
-        {label:"Permanent Galleries",url:"https://ncm.org.au/exhibitions/permanent-galleries"},
-        {label:"Instruments of Surveillance",url:"https://ncm.org.au/exhibitions/instruments-of-surveillance"},
-        {label:"Signal to Noise",url:"https://ncm.org.au/exhibitions/signal-to-noise"},
-        {label:"FRIEND",url:"https://ncm.org.au/exhibitions/friend"}
-      ]
     },
     {
       id:"ncm-why", tags:["why","leave","left","end","ended","fired","redundant","reason","resign"], priority:10,
@@ -726,14 +649,6 @@
       quick:"Founder / Creative Technologist · FAMTEC · 2018–present."
     },
     {
-      id:"leadership", tags:["leadership","technology leadership","technology project","lead technology project","delivery","roadmap","strategy","team leadership","stakeholder","procurement","vendor","governance","documentation","handover","change management"],
-      title:"Technology leadership &amp; delivery",
-      recruiter:"Rob combines hands-on technical depth with technology strategy, roadmaps, team leadership, procurement, vendor management, stakeholder workshops, risk and governance, documentation, operational handover and staff adoption. At NCM he carried this across both exhibition technology and organisational infrastructure.",
-      curator:"Leadership here means keeping the creative intent intact while making the system supportable: listening to artists and curators, giving technicians a clear build, giving staff useful documentation, and leaving the institution able to run the work after opening night.",
-      technical:"Technology strategy and roadmaps; team and supplier leadership; procurement and vendor management; cyber security, permissions and access governance; architecture and configuration documentation; test plans, commissioning, support guides and operational handover; workshops, change and adoption.",
-      quick:"Strategy · teams · vendors · governance · documentation · commissioning · adoption."
-    },
-    {
       id:"archai", tags:["archai","auxio","ai","rag","phd research","cultural heritage ai"],
       title:"ARCHAI / AUXIO",
       recruiter:"ARCHAI is my PhD research platform: a local-first AI layer for cultural collections, currently piloted as AUXIO — image-first, evidence-grounded visitor interpretation via QR/NFC and voice.",
@@ -756,14 +671,6 @@
       curator:"Three degrees, one throughline — multimedia, then moving image, then interaction. Every job since has drawn on all three.",
       technical:"Diploma of Multimedia — Swinburne. Bachelor of Media Arts — RMIT. Master of Animation and Interactive Media — RMIT.",
       quick:"Diploma (Swinburne) · Bachelor + Master (RMIT)."
-    },
-    {
-      id:"additional", tags:["additional experience","other experience","counterweight","vinyl","espresso","record store","cafe","art installed","art installer","freelance animator","motion designer","animation"],
-      title:"Additional experience",
-      recruiter:"Alongside the core museum and technology record, Rob was Co-Owner of Counterweight Vinyl &amp; Espresso (2018–2024), an Art Installer with Art Installed (2015–2016), and a Freelance Animator &amp; Motion Designer (2012–2017).",
-      curator:"The wider history matters: animation is the visual foundation, art installation brought close contact with objects and spaces, and six years co-running a record store and cafe added the everyday reality of building a place people choose to return to.",
-      technical:"Additional record: Co-Owner, Counterweight Vinyl &amp; Espresso, Sep 2018–Aug 2024; Art Installer, Art Installed, Jan 2015–Jan 2016; Freelance Animator & Motion Designer, 2012–Jan 2017.",
-      quick:"Counterweight co-owner · Art Installed · freelance animation and motion design."
     },
     {
       id:"licences", tags:["licence","licences","tickets","forklift","ewp","white card","test and tag","safety"],
@@ -799,11 +706,11 @@
     },
     {
       id:"exhibitions", tags:["exhibitions","exhibition history","shows","tarrawarra","heide","projection mapping history","installations"],
-      title:"Selected exhibitions, 2013–2026",
-      recruiter:"40+ named exhibition and installation credits between 2013 and 2026 — including NCM's Permanent Galleries, Instruments of Surveillance, Signal to Noise and FRIEND; plus Heide, TarraWarra Museum of Art, Tate Britain, ACMI, Museums Victoria, MUMA, Geelong Gallery and international touring venues. Full list and evidence notes are in the Selected Exhibitions panel below.",
-      curator:"More than a decade of shows — from Bowie at ACMI, Vikings and Lunar New Year at Museums Victoria and three TarraWarra Biennials, through to building the permanent and feature-exhibition technology of a new national museum. See the full list below rather than me flattening that history into one line.",
-      technical:"2013–2026, 40+ credits across technology leadership, technical lead / senior AV technician / lead technician roles, projection mapping, media installation, interactive systems and international touring delivery. NCM entries link to the museum's public record; earlier credits carry Rob's evidence note in the panel below.",
-      quick:"40+ exhibition credits · 2013–2026 · full list and evidence notes below."
+      title:"Selected exhibitions, 2013–2023",
+      recruiter:"30+ dated, named exhibition and installation credits between 2013 and 2023 — Heide, TarraWarra Museum of Art, Tate Britain, ACMI, Museums Victoria, MUMA, Geelong Gallery and international venues including Kean University (New York), the Peoria Riverfront Museum and the Museu da Imagem e do Som (São Paulo). Full list is in the Selected Exhibitions panel below.",
+      curator:"A decade of shows, mostly through FAMTEC — Bowie at ACMI, Vikings and Lunar New Year at Museums Victoria, three TarraWarra Biennials, Barbara Hepworth at Tate Britain and Heide. See the full list below rather than me trying to summarise it in one line.",
+      technical:"2013–2023, 30+ credits: technical lead / senior AV technician / lead technician roles across projection mapping, media installation, video-mapped exhibitions and international touring delivery. Full dated list in the Selected Exhibitions panel.",
+      quick:"30+ exhibition credits · 2013–2023 · full list in the Selected Exhibitions panel below."
     },
     {
       id:"techstack", tags:["infrastructure","server","nas","backup","stack","synology","proxmox","truenas","collectiveaccess","resourcespace","magicinfo"],
@@ -817,9 +724,6 @@
 
   var CHIPS = [
     "What are your strongest skills?",
-    "What's the through-line in your career?",
-    "How do you lead technology projects?",
-    "Which NCM exhibitions did you deliver?",
     "What did you do at Museums Victoria?",
     "Tell me about ARCHAI",
     "What licences do you hold?",
@@ -828,18 +732,6 @@
     "What tools do you use?",
     "What exhibitions have you worked on?"
   ];
-
-  var FOLLOWUPS = {
-    story:["What are your strongest skills?","How do you lead technology projects?","What exhibitions have you worked on?"],
-    ncm:["Which NCM exhibitions did you deliver?","How do you lead technology projects?","What's the PhD about?"],
-    "ncm-exhibitions":["What did you do at the NCM?","What exhibitions have you worked on?","What are your strongest skills?"],
-    mv:["What exhibitions have you worked on?","What tools do you use?"],
-    leadership:["What did you do at the NCM?","What are your strongest skills?"],
-    archai:["What's the PhD about?","What AI and data skills do you have?"],
-    immersive:["What tools do you use?","What exhibitions have you worked on?"],
-    exhibitions:["Which NCM exhibitions did you deliver?","What are your strongest skills?"]
-  };
-  var DEFAULT_FOLLOWUPS = ["What's the through-line in your career?","What are your strongest skills?","Which NCM exhibitions did you deliver?"];
 
   var VOICE_NOTES = {
     recruiter:"Plain, professional summaries — titles, dates, outcomes.",
@@ -896,24 +788,23 @@
     });
   }
 
+  // Evidence gate (see "Online CV evidence-grounding rules" in the master profile):
+  // a full phrase or a complete tag anchor is required. A single shared word is NOT
+  // enough — that risks answering confidently from the wrong record. Stemming is
+  // normalisation, not looseness: "skill"/"skills" are the same anchor word.
   function score(rec, q, qTokens){
-    var s = 0, anchored = false;
+    var s = 0;
     rec.tags.forEach(function(t){
-      // whole-phrase hit is strongest
-      if (q.indexOf(t) !== -1) { s += t.length * 2; anchored = true; return; }
-      // otherwise match tag words against query words, stem-insensitively
+      // whole-phrase hit is the strongest anchor
+      if (q.indexOf(t) !== -1) { s += t.length * 2; return; }
+      // otherwise EVERY word of the tag must be present in the query
       var tagWords = tokens(t);
       if (!tagWords.length) return;
       var hits = tagWords.filter(function(tw){ return qTokens.indexOf(tw) !== -1; }).length;
-      if (hits === tagWords.length) {
-        s += t.length;
-        // A multi-word tag reduced to one word by stopword removal (for example
-        // "best at") only anchors on the exact phrase above, not on "best" alone.
-        if (tagWords.length > 1 || t.trim().split(/\s+/).length === 1) anchored = true;
-      }
-      else if (hits > 0) s += Math.max(2, t.length / 2);  // partial tag hit still counts
+      if (hits === tagWords.length) s += t.length;
+      // partial hits deliberately score nothing — see rule 3
     });
-    return {value:s, anchored:anchored};
+    return s;
   }
 
   function findMatch(qRaw){
@@ -927,8 +818,8 @@
     var best = null, bestScore = 0;
     RECORDS.forEach(function(r){
       if (r.noAnswer) return;
-      var result = score(r, q, qTokens);
-      if (result.anchored && result.value > bestScore){ bestScore = result.value; best = r; }
+      var s = score(r, q, qTokens);
+      if (s > bestScore){ bestScore = s; best = r; }
     });
     return bestScore > 0 ? best : null;
   }
@@ -1092,48 +983,6 @@
     rawSpeak("G'day. This is Rob Graham's record, read aloud.");
   });
 
-  function addSource(card, rec, q){
-    var source = document.createElement("div");
-    source.className = "rsource";
-    if (!rec){
-      source.textContent = 'Grounded search found no named record for "' + q + '".';
-    } else if (rec.noAnswer){
-      source.textContent = "Evidence gate: this detail is not recorded, so the page will not infer it.";
-    } else {
-      source.textContent = "Evidence: " + (rec.evidence || "verified master CV record · 25 Aug 2026");
-      (rec.sources || []).forEach(function(item){
-        source.appendChild(document.createTextNode(" · "));
-        var link = document.createElement("a");
-        link.href = item.url;
-        link.target = "_blank";
-        link.rel = "noopener";
-        link.textContent = item.label;
-        source.appendChild(link);
-      });
-    }
-    card.appendChild(source);
-  }
-
-  function addFollowups(card, rec){
-    var list = rec ? (FOLLOWUPS[rec.id] || []) : DEFAULT_FOLLOWUPS;
-    if (!list.length) return;
-    var wrap = document.createElement("div");
-    wrap.className = "followups";
-    var label = document.createElement("span");
-    label.className = "followup-label";
-    label.textContent = "Continue with a grounded question";
-    wrap.appendChild(label);
-    list.forEach(function(question){
-      var button = document.createElement("button");
-      button.className = "followup-btn";
-      button.type = "button";
-      button.textContent = question;
-      button.addEventListener("click", function(){ askInput.value = question; ask(question); });
-      wrap.appendChild(button);
-    });
-    card.appendChild(wrap);
-  }
-
   function ask(qRaw){
     var q = (qRaw || askInput.value || "").trim();
     if (!q){ return; }
@@ -1143,18 +992,17 @@
     if (!rec){
       card.className = "response-card empty";
       card.innerHTML = '<span class="rvoice">Not found</span>' +
-        '<p>That\'s not in the verified record — <a href="mailto:rob@fineartmedia.tech">email Rob</a> and he\'ll answer directly.</p>';
-      addSource(card, null, q);
-      addFollowups(card, null);
+        '<p>That\'s not in the record — <a href="mailto:rob@fineartmedia.tech">email Rob</a> and he\'ll answer directly.</p>' +
+        '<div class="rsource">Grounded search returned nothing above threshold for "'+ q.replace(/</g,"&lt;") +'".</div>';
       responseEl.appendChild(card);
       return;
     }
     card.className = "response-card" + (rec.noAnswer ? " empty" : "");
     var body = rec[tone] || rec.recruiter;
+    var sourceLine = rec.noAnswer ? "Grounded search: no matching record — honest non-answer by design." : ("Matched from: " + rec.title);
     card.innerHTML = '<span class="rvoice">' + tone + ' style</span>' +
-      '<p>' + body + '</p>';
-    addSource(card, rec, q);
-    addFollowups(card, rec);
+      '<p>' + body + '</p>' +
+      '<div class="rsource">' + sourceLine + '</div>';
     responseEl.appendChild(card);
     speak(body.replace(/<[^>]+>/g,""));
   }
