@@ -191,6 +191,11 @@
   .ask .kicker{margin-bottom:8px;display:block}
   .ask-sub{font:14.5px/1.6 var(--sans);color:var(--ink-faint);margin:8px 0 0;max-width:60ch}
 
+  .tone-label{
+    font:10.5px var(--sans);font-weight:700;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--ink-faint);
+    margin:22px 0 -6px 0;
+  }
   .style-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
   .voice-btn{
     appearance:none;cursor:pointer;
@@ -559,11 +564,10 @@
 
   <div class="metastrip">
     <span class="tag ok">Verified CV record</span>
-    <span class="tag accent">Technology leadership · Exhibitions · Applied AI</span>
   </div>
 
   <div class="story">
-    <p>I lead technology delivery for cultural institutions. Most recently I was Head of Technology at the National Communication Museum, where I was technical lead for delivering the museum itself: all signage and interactives, the permanent gallery and its exhibitions, the Nodel control network, the seminar and conference room, and network controlled intelligent lighting. The building was a gutted telephone exchange when the work began. I built and led the technical team that runs it today, and secured a professional podcast studio at no capital cost through industry partnerships.</p>
+    <p>At the National Communication Museum I was technical lead for delivering the museum itself: all signage and interactives, the permanent gallery and its exhibitions, the Nodel control network, the seminar and conference room, and network controlled intelligent lighting. The building was a gutted telephone exchange when the work began. I built and led the technical team that runs it today, and secured a professional podcast studio at no capital cost through industry partnerships.</p>
     <p style="margin-top:14px">That role sat on twenty years of delivery across ACMI, Museums Victoria and Grande Experiences, and more than forty exhibition credits with Heide, TarraWarra, Tate Britain, the V&amp;A and Museums Victoria, including international projects in New York, Illinois and Sao Paulo. Through FAMTEC I assemble and lead specialist teams for institutions that need work delivered properly, end to end.</p>
     <p style="margin-top:14px">I now work on generative video and robotics AI at micro1, and research responsible AI for cultural heritage at RMIT. That research holds to one principle, and so does this page: answer from evidence, and say plainly when you do not know.</p>
   </div>
@@ -572,9 +576,10 @@
 
   <section class="ask">
     <span class="kicker">Ask about my CV</span>
-    <h2>Type a question, or pick how you'd like it answered.</h2>
-    <p class="ask-sub">Every answer here comes from Rob's verified record and names its source. Ask something the record does not cover and the page will say so rather than invent an answer. That is the same principle his museum research is built on: a system that admits what it does not know is more trustworthy than one that fills the silence.</p>
+    <h2>Ask me anything about my work.</h2>
+    <p class="ask-sub">Every answer comes from my verified record and names its source. Ask something it does not cover and this page will tell you so rather than invent an answer. That is the principle my museum research is built on: a system that admits what it does not know is more trustworthy than one that fills the silence.</p>
 
+    <p class="tone-label">Answer style</p>
     <div class="style-row" id="voices">
       <button class="voice-btn active" data-tone="recruiter">Recruiter</button>
       <button class="voice-btn" data-tone="curator">Curator</button>
@@ -682,45 +687,54 @@
         <div class="cv-entry">
           <div class="role">AI Specialist, Generative Video &amp; Robotics, micro1</div>
           <div class="meta">May 2026 to present</div>
+          <div class="desc">Evaluates generative video and robotics models, designing test scenarios and giving structured human-in-the-loop feedback on reliability and safety.</div>
         </div>
         <div class="cv-entry">
           <div class="role">Head of Technology, National Communication Museum</div>
           <div class="meta">Feb 2022 to Feb 2026</div>
-          <div class="desc">Technical lead for delivering the museum itself, from a gutted telephone exchange with dirt floors to an operating venue: all signage and interactives, the permanent gallery and first exhibition, the Nodel network control system, the seminar and conference room, and network-controlled intelligent lighting for efficient building operation.</div>
+          <div class="desc">Technical lead for delivering a new public museum end to end, and built the technical team that runs it.</div>
         </div>
         <div class="cv-entry">
           <div class="role">Technical Services Specialist, ACMI</div>
           <div class="meta">2020 to 2022</div>
+          <div class="desc">Specialist AV support across exhibitions and public spaces: projection, audio, media playback and interactive systems, from install through to daily operation.</div>
         </div>
         <div class="cv-entry">
           <div class="role">Senior Technician, Grande Experiences</div>
           <div class="meta">Apr 2019 to Apr 2020</div>
+          <div class="desc">Large scale projection and immersive AV for touring exhibitions, delivered against fixed opening dates in Melbourne, New York, Illinois and Sao Paulo.</div>
         </div>
         <div class="cv-entry">
           <div class="role">Digital Media Specialist / Collections Officer, Museums Victoria</div>
           <div class="meta">Feb 2016 to May 2019</div>
+          <div class="desc">Digital media systems, AV and collections content across museum venues, supporting digitisation, preservation and public access.</div>
         </div>
         <div class="cv-entry">
           <div class="role">Exhibition Technician / Visitor Services / Associate Public Programs Producer, ACMI</div>
           <div class="meta">Feb 2014 to Jan 2017</div>
+          <div class="desc">Three concurrent roles across the exhibition floor, visitor services and public programming on screen culture and emerging technology.</div>
         </div>
         <div class="cv-entry">
           <div class="role">Founder / Creative Technologist, FAMTEC</div>
           <div class="meta">Jan 2018 to present</div>
+          <div class="desc">Independent practice for museums, galleries and artists, assembling and leading a specialist team for each brief, concept through installation and support.</div>
         </div>
 
         <div class="rec-group-title">Additional experience</div>
         <div class="cv-entry">
           <div class="role">Co-Owner, Counterweight Vinyl &amp; Espresso</div>
           <div class="meta">Sep 2018 to Aug 2024</div>
+          <div class="desc">Co-owned a Footscray cafe and record store for six years, run alongside the museum and exhibition work.</div>
         </div>
         <div class="cv-entry">
           <div class="role">Art Installer, Art Installed</div>
           <div class="meta">Jan 2015 to Jan 2016</div>
+          <div class="desc">Art direction and installation for private, commercial and residential spaces.</div>
         </div>
         <div class="cv-entry">
           <div class="role">Freelance Animator &amp; Motion Designer</div>
           <div class="meta">2012 to Jan 2017</div>
+          <div class="desc">Animation, motion graphics and short form video for commercial and cultural clients.</div>
         </div>
 
         <div class="rec-group-title">Education</div>
@@ -1818,7 +1832,7 @@
           encodeURIComponent("Question from your CV page") + '&body=' +
           encodeURIComponent("Hi Rob,\n\nI was reading your CV and wanted to ask:\n\n" + q + "\n\n") +
         '">Email Rob</a>' +
-        '<a class="contact-btn" href="tel:+61409336251">+61 409 336 251</a>' +
+        '<a class="contact-btn" href="tel:+61409336251">+61409336251</a>' +
         '<a class="contact-btn" href="https://www.linkedin.com/in/rob-graham-a0897a25" target="_blank" rel="noopener">LinkedIn</a>' +
       '</div>';
     addSource(card, null, q);
