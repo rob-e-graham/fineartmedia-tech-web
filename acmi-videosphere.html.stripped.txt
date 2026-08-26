@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#000000">
+<title>JVC Videosphere · ACMI AUXIO concept</title>
+<meta name="description" content="Talk to the JVC Videosphere — the 1970 television shaped like a space helmet. A single-object AUXIO grounded in the real record, in ACMI's black-and-white brand. Powered by ARCHAI. Concept demo, not official ACMI content.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+</head>
+<body>
+<div class="stage"><div class="shell">
+
+<header class="hdr">
+  <img class="logo" src="acmi-wordmark.jpg" alt="ACMI" onerror="this.outerHTML='<span style=&quot;font-family:var(--grot);font-weight:800;font-size:1.3rem&quot;>acmi</span>'">
+  <div class="hdr-tools">
+    <select class="langsel" id="langSel" aria-label="Answer language">
+      <option value="">English</option>
+      <option value="French">Français</option>
+      <option value="simplified Chinese">简体中文</option>
+      <option value="Japanese">日本語</option>
+      <option value="Korean">한국어</option>
+      <option value="Arabic">العربية</option>
+      <option value="Spanish">Español</option>
+      <option value="Vietnamese">Tiếng Việt</option>
+    </select>
+    <span class="tag">AUXIO</span>
+  </div>
+</header>
+
+<div class="hero"><img id="heroImg" src="https://framemark.vam.ac.uk/collections/2007BR3166/full/!1200,1200/0/default.jpg" alt="JVC Videosphere, a spherical television shaped like a space helmet"
+  onerror="if(!this.dataset.f){this.dataset.f=1;this.src='https://framemark.vam.ac.uk/collections/2007BR3166/full/!600,600/0/default.jpg';}else{this.closest('.hero').style.display='none';}"></div>
+<div class="credit">JVC Videosphere · Victoria and Albert Museum · V&amp;A Open Access</div>
+
+<section class="content">
+  <div class="eyebrow">The Story of the Moving Image</div>
+  <h1 class="title">JVC Videosphere</h1>
+  <div class="subtitle">The television that looked like a space helmet. Japan, 1970.</div>
+  <div class="concept">Concept demo · not official ACMI content</div>
+
+  <div class="metastrip">
+    <span class="mtag">Television</span>
+    <span class="mtag">JVC Ltd · 1970</span>
+    <span class="mtag">Made in Japan</span>
+    <span class="mtag">Open Access</span>
+  </div>
+
+  <p class="story">I am a <b>Videosphere</b> — a television built inside a sphere, with a face like an astronaut's helmet. <b>JVC</b> made me in <b>1970</b>, when the world was still watching the Moon landings and the future looked round and chrome. Objects like me are why a place like ACMI keeps a <b>preservation lab</b>: the picture tubes age, the plastics yellow, and someone has to keep the moving image alive. Ask me anything — I'll answer from my record, in the language you choose.</p>
+
+  <div class="divider"></div>
+
+  <div class="ask-label">Ask the Videosphere</div>
+  <div class="chips" id="chips"></div>
+  <div class="chat-row">
+    <input class="chat-in" id="chatIn" type="text" maxlength="480" placeholder="Ask me anything…" enterkeyhint="send">
+    <button class="mic" id="micBtn" type="button" onclick="toggleMic()" aria-label="Ask by voice" title="Ask by voice">
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2.5" width="6" height="11" rx="3"></rect><path d="M5.5 11a6.5 6.5 0 0 0 13 0"></path><line x1="12" y1="17.5" x2="12" y2="21"></line><line x1="8.5" y1="21" x2="15.5" y2="21"></line></svg>
+    </button>
+    <button class="send" onclick="askFree()">Ask</button>
+  </div>
+  <div class="resp" id="resp"></div>
+
+  <div class="vbanner"><div class="vbanner-in"><span class="vdot" id="vdot"></span><span class="vstatus" id="vstatus">Checking for the sovereign voice engine…</span></div></div>
+
+  <details class="panel" open>
+    <summary><span class="panel-t">Voice &amp; audio</span><span class="panel-h">choose a voice</span></summary>
+    <div class="panel-b">
+      <div class="row"><label for="voiceSel">Voice</label><select id="voiceSel" class="vsel"></select></div>
+      <div class="row"><label class="check"><input type="checkbox" id="autoRead" checked> Read answers aloud</label></div>
+      <div class="note">When the local engine is running: <b>Whisper</b> listens, <b>Piper</b> speaks, on-device — no audio leaves the building. For an Australian voice, clone one with <b>Coqui XTTS</b> from a consented recording. Falls back to the browser voice if the engine isn't reachable.</div>
+    </div>
+  </details>
+
+  <details class="panel">
+    <summary><span class="panel-t">Object record</span><span class="panel-h">grounding</span></summary>
+    <div class="panel-b">
+      <div class="meta-row"><span class="meta-k">Title</span><span class="meta-v">JVC Videosphere</span></div>
+      <div class="meta-row"><span class="meta-k">Type</span><span class="meta-v">Television</span></div>
+      <div class="meta-row"><span class="meta-k">Maker</span><span class="meta-v">JVC Ltd</span></div>
+      <div class="meta-row"><span class="meta-k">Date</span><span class="meta-v">1970</span></div>
+      <div class="meta-row"><span class="meta-k">Origin</span><span class="meta-v">Japan</span></div>
+      <div class="meta-row"><span class="meta-k">Record</span><span class="meta-v"><a href="https://collections.vam.ac.uk/item/O62328/" target="_blank" rel="noopener">V&amp;A · W.661:1 to 4-2001</a></span></div>
+    </div>
+  </details>
+</section>
+
+<footer><b>Runs on ARCHAI</b> — sovereign, local-first cultural-heritage AI · grounded in the record, no invention<br>Whisper (STT) + Piper / Coqui (TTS), on-device · concept demo for ACMI · not official ACMI content · fineartmedia.tech/archai</footer>
+
+</div></div>
+
+
+</body>
+</html>

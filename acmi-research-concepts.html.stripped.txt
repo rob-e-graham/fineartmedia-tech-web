@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow">
+<title>ARCHAI × ACMI, Research Concepts</title>
+<meta name="description" content="Research concepts for a sovereign, local-first AI collaboration with ACMI: seven Research-through-Design experiments and further ideas.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+</head>
+<body><div class="wrap">
+  <div class="eyebrow">Research concepts · Fine Art Media &amp; RMIT University</div>
+  <h1>ARCHAI × ACMI</h1>
+  <p class="lede">Research concepts for a sovereign, local-first AI collaboration. Each is Research-through-Design: the working prototype, tested in a real gallery, <em>is</em> the research, and how we would research, explore and share the data is set out for each.</p>
+  <div class="meta"><span>Seven concepts + further ideas</span><span>Rob Graham · rob@fineartmedia.tech</span><span>PhD (Design), RMIT University · FAMTEC</span></div>
+
+  <p style="font-family:var(--mono);font-size:.72rem;color:var(--ink2);line-height:1.8;margin-top:8px">Built and improved with <b style="color:var(--accent)">Huggle</b> (a transparent multi-agent development log) and secured with <b style="color:var(--accent)">Keytec</b> (a sovereign secrets &amp; API-key wallet), so implementation never loosens sovereignty.</p>
+
+  <h2>Seven concepts</h2>
+
+  <div class="exp"><h3>Curatorial collection intelligence<span class="tag">staff-facing</span></h3>
+  <p class="rq">How does conversational + semantic search change how curators find connections and build exhibitions?</p>
+  <p class="atacmi"><b>At ACMI</b> This is the staff-facing twin of the Constellation. ACMI already models the collection as a web of relationships (the lens-driven Constellation, the object-wall adjacencies) for visitors, but curators building exhibitions still discover connections through the CMS, the open collection API, and spreadsheets, largely by keyword and prior knowledge.</p>
+  <div class="ros"><b>Research</b> Research-through-Design + qualitative: think-aloud sessions, work-diaries and interviews with Collections/Exhibitions staff using ARCHAI’s staff mode; log every query and “new connection” moment; compare against baseline catalogue search.</div>
+  <div class="ros"><b>Explore</b> Open-ended semantic and conversational exploration: “show me connections between these,” whole-collection aggregate queries, serendipitous discovery for exhibition development.</div>
+  <div class="ros"><b>Share</b> A published “curatorial discovery” design-pattern set; anonymised query logs as an open dataset (with consent); open-source staff tooling; a symposium talk; findings fed back into practice.</div>
+  </div>
+
+  <div class="exp"><h3>Accessibility &amp; multilingual voice<span class="tag">visitor-facing</span></h3>
+  <p class="rq">What access gains come from conversational, multilingual, voice-first collection interpretation?</p>
+  <p class="atacmi"><b>At ACMI</b> This lands squarely in ACMI's free permanent exhibition, The Story of the Moving Image, where interpretation today is overwhelmingly text-and-screen based, wall labels, object-wall captions, and the Lens's collected-content pages, which structurally excludes low-literacy visitors, blind/low-vision visitors, older visitors, and Naarm/Melbourne's large non-English-first communities (Mandarin, Cantonese, Vietnamese, Arabic, Greek, Italian). ARCHAI adds a conversational, multilingual, voice-first interpretation layer over a defined cluster of ~15-20 works/objects: a visitor speaks or taps in any of a chosen ~8 languages, asks "what am I looking at / why does it matter," and hears a spoken, plain-language answer grounded ONLY in ACMI's own catalogue records and curatorial interpretation.</p>
+  <div class="ros"><b>Research</b> Mixed-methods visitor studies: comparative trials across modes (conversational, multilingual, voice, plain-language, high-contrast), WCAG + cognitive audits, and observation/interviews with disabled and diverse visitors, co-designed with access consultants.</div>
+  <div class="ros"><b>Explore</b> Visitors explore the same objects across modes; measure comprehension, dwell, independence, satisfaction.</div>
+  <div class="ros"><b>Share</b> An open accessibility pattern library + evaluation data; a contribution to the existing accessibility &amp; digital-practice toolkits; open-sourced modes; papers.</div>
+  </div>
+
+  <div class="exp"><h3>Local-LLM evaluation → the sovereign appliance<span class="tag">technical</span></h3>
+  <p class="rq">Which local models sustain grounded, hallucination-free, fast interpretation on museum-owned hardware?</p>
+  <p class="atacmi"><b>At ACMI</b> This is a back-of-house technical experiment, not a visitor demo, its output is the sovereign appliance every later ARCHAI-at-ACMI activity would run on, so it belongs where ACMI already handles technical, controlled, collection-adjacent work: the Blackmagic-supported Media Preservation Lab, run against ACMI's own open collection API. The API is the reason ACMI is the ideal site for this specific question: it exposes clean, structured, field-level records (title, creator, date, credit line, description, Constellation lenses/tags) that give you machine-checkable ground truth, you can score a model's every claim against the actual record field, which you cannot do at Heide (no open API, curated record set only).</p>
+  <div class="ros"><b>Research</b> Controlled benchmarking: models × tasks × hardware, scored on grounding fidelity (a five-layer framework, under adversarial prompts), hallucination rate, latency, throughput, power and cost; a reproducible eval harness.</div>
+  <div class="ros"><b>Explore</b> Run the same record set through Qwen / Llama / others; map the fidelity–speed–cost frontier and appliance sizing.</div>
+  <div class="ros"><b>Share</b> An open benchmark + reproducible harness; a published hardware reference spec and honest cost model; a sector leaderboard; a technical paper.</div>
+  </div>
+
+  <div class="exp"><h3>E-paper signage + NFC (living labels)<span class="tag">physical</span></h3>
+  <p class="rq">Can low-power e-paper + NFC turn a static label into living, updatable, conversational interpretation?</p>
+  <img class="epaper" src="acmi-epaper-label.jpg" alt="ARCHAI e-paper label concept mockup at ACMI">
+  <p class="cap">Concept mockup, an ARCHAI e-paper label: it redraws from the record, and a tap (NFC) or scan opens a conversation with the object.</p>
+  <p class="atacmi"><b>At ACMI</b> Anchor on the Gallery 1 object wall in "The Story of the Moving Image", hundreds of floor-to-ceiling screen-technology objects (cameras, projectors, consoles, phones) whose interpretation is currently thinnest-per-object and locked to a print/production cycle. This is the exact place a "living label" earns its keep.</p>
+  <div class="ros"><b>Research</b> RtD prototype tested in-gallery via an Audience Lab / spatial-interaction framework: A/B against static labels; observe tap-through, dwell, comprehension; measure power and sustainability.</div>
+  <div class="ros"><b>Explore</b> Visitors explore objects via the phone conversation reached by an NFC tap; staff explore the “label redraws itself from the record” workflow.</div>
+  <div class="ros"><b>Share</b> An open hardware/firmware reference + the record→label pipeline; a sustainability/engagement dataset; a replicable “living label” pattern for the sector.</div>
+  </div>
+
+  <div class="exp"><h3>The federated museum “mega brain”<span class="tag">flagship</span></h3>
+  <p class="rq">What becomes possible when all open-licensed collections are federated into one local sovereign stack?</p>
+  <p class="atacmi"><b>At ACMI</b> This experiment has an unusually exact home at ACMI because ACMI already ships the two things ARCHAI needs and nobody else in the sector has: (1) a genuinely open collection API and CC-licensed metadata on GitHub (maintained by the collection-API developer), and (2) the Constellation, ACMI's own curatorial model of the moving image as a web of connections between works, creators and technologies inside The Story of the Moving Image. The federated sovereign index IS the Constellation computed at sector scale: today the Constellation is hand-authored and single-institution; ARCHAI turns it into a living, multimodal, cross-collection graph by federating ACMI's open records with the other open GLAM screen collections Rob already indexes (Trove/NFSA screen records, Europeana AV, Wikimedia Commons) into one local Qdrant stack.</p>
+  <div class="ros"><b>Research</b> RtD systems research: build the federated local index across open sources; study cross-collection discovery, provenance handling, and what it surfaces that single-collection search can’t; scale + sustainability analysis.</div>
+  <div class="ros"><b>Explore</b> Cross-collection semantic exploration, provenance chains across sources, sector-wide questions.</div>
+  <div class="ros"><b>Share</b> An open, federated, provenance-tracked index (respecting every licence and protocol); a contribution to the connecting-archives agenda; an open-sourced federation layer.</div>
+  </div>
+
+  <div class="exp"><h3>The living archive (community provenance)<span class="tag">community provenance</span></h3>
+  <p class="rq">Can moderated visitor contributions become verified archival metadata without eroding authority?</p>
+  <p class="atacmi"><b>At ACMI</b> Anchor it to the Object Wall in the free permanent exhibition "The Story of the Moving Image." The Wall's screen-technology objects (magic lanterns, home-cine and VHS gear, consoles, cameras) are exactly the records with thin, contested or Melbourne-specific provenance, the class of object where a visitor genuinely holds knowledge the institution lacks ("we sold these at Myer," "my father serviced this model," community memory around the videogames and Australian-screen-history holdings). That mismatch is the whole reason to test community provenance here rather than on well-documented film/TV records.</p>
+  <div class="ros"><b>Research</b> RtD + evaluation: deploy the moderated message wall + curatorial green-star → metadata; measure contribution quality/volume vs curatorial workload; interview curators and contributors.</div>
+  <div class="ros"><b>Explore</b> Visitors explore and add to the object record; curators explore the review queue and verification flow.</div>
+  <div class="ros"><b>Share</b> Open-source the community-provenance model + the Saftio safety framework; verified community metadata back into the record, and, with consent, an open contribution dataset.</div>
+  </div>
+
+  <div class="exp"><h3>Cultural protocols as architecture<span class="tag">governance</span></h3>
+  <p class="rq">How can cultural protocols be enforceable properties of the system, not just policy?</p>
+  <p class="atacmi"><b>At ACMI</b> The fit is a real, documented gap. ACMI already has the *policy* layer, the First Nations Cultural and Intellectual Property (ICIP) Protocol and the Reconciliation Action Plan, and publicly commits that "First Nations communities have first right of access" to First Nations cultural materials.</p>
+  <div class="ros"><b>Research</b> Participatory, community-led co-design under CARE + Maiam nayri Wingara; design and stress-test the protocol-enforcing layer (TK Labels, differential access); evaluate whether protocols hold under real use.</div>
+  <div class="ros"><b>Explore</b> Community and curators explore how enforcement behaves (access tiers, labels, exclusions), always community-governed.</div>
+  <div class="ros"><b>Share</b> Sharing inverts: the data is not open by default, Authority to Control stays with communities. What’s openly shareable is the method, the governance process, and the architecture, co-authored with community.</div>
+  </div>
+
+  <div class="foot">
+    Rob Graham · Creative technologist · Founder, Fine Art Media (FAMTEC) · PhD Researcher, RMIT University<br>
+    rob@fineartmedia.tech<br>
+    Web: <a href="https://fineartmedia.tech/archai">fineartmedia.tech/archai</a> · <a href="https://fineartmedia.tech/acmi">fineartmedia.tech/acmi</a> · <a href="https://fineartmedia.tech/acmi-pilot">pilot brief</a><br>
+    Code: <a href="https://github.com/rob-e-graham">github.com/rob-e-graham</a><br>
+    An independent proposal, not affiliated with or endorsed by any institution named. The e-paper label above is a concept mockup.
+  </div>
+</div></body></html>
