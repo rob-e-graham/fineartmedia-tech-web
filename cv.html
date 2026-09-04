@@ -1372,7 +1372,11 @@
   };
   var PREFERRED_ORDER = ["northern","rob_au","aussie","alan","ryan","cori","alba","amy","lessac"];
   var MALE_VOICE_IDS = ["northern","rob_au","alan","ryan"];
-  var MALE_NAME_HINTS = /\b(daniel|oliver|lee|ryan|alan|ted|arthur|fred|gordon|james|guy|male)\b/i;
+  var MALE_NAME_HINTS = /\b(daniel|oliver|lee|ryan|alan|ted|arthur|gordon|james|guy|aaron|tom|alex|nathan|rishi|male|man)\b/i;
+  var FEMALE_NAME_HINTS = /\b(samantha|karen|moira|tessa|fiona|veena|victoria|allison|ava|susan|zoe|kate|serena|stephanie|nicky|sara|catherine|martha|amelie|anna|ellen|alice|amira|female|woman)\b/i;
+  // Classic novelty / low-quality system voices we never offer.
+  var VOICE_BLOCKLIST = /\b(albert|bad news|bahh|bells|boing|bubbles|cellos|deranged|eddy|flo|fred|good news|grandma|grandpa|hysterical|jester|junior|kathy|organ|pipe organ|princess|ralph|reed|rocko|sandy|shelley|superstar|trinoids|whisper|wobble|zarvox)\b/i;
+  var ACCENTS = {"en-au":"Australian","en-gb":"British","en-us":"American","en-ie":"Irish","en-in":"Indian","en-za":"South African","en-nz":"New Zealand","en-ca":"Canadian","en-sg":"Singaporean"};
 
   var sovereign = false;
   // Once the visitor picks a voice we must never silently override it. Chrome
@@ -1388,10 +1392,29 @@
   var testVoiceBtn = document.getElementById("testVoiceBtn");
   var supportsSpeech = "speechSynthesis" in window;
 
-  function voiceRankBrowser(v){
-    if (/^en-AU/i.test(v.lang)) return 0;
-    if (/^en/i.test(v.lang)) return 1;
-    return 2;
+  function accentFromLang(lang){ return ACCENTS[(lang||"").toLowerCase()] || ""; }
+  function genderOf(name){
+    if (MALE_NAME_HINTS.test(name)) return "Male";
+    if (FEMALE_NAME_HINTS.test(name)) return "Female";
+    return "";
+  }
+  function voiceQuality(v){
+    var n = (v.name||"").toLowerCase();
+    return /siri|premium|enhanced|natural|neural/.test(n) ? 0 : 1;
+  }
+  function voiceLangRank(v){
+    var l = (v.lang||"").toLowerCase();
+    if (l.indexOf("en-au") === 0) return 0;
+    if (l.indexOf("en-gb") === 0) return 1;
+    if (l.indexOf("en-us") === 0) return 2;
+    if (l.indexOf("en") === 0) return 3;
+    return 9;
+  }
+  function browserVoiceLabel(v){
+    var bits = [ (v.name||"").replace(/\s*\(.*\)\s*$/, "") ];
+    var g = genderOf(v.name); if (g) bits.push(g);
+    var a = accentFromLang(v.lang); if (a) bits.push(a);
+    return bits.join(" · ");
   }
 
   function populateBrowserVoices(){
@@ -1405,18 +1428,24 @@
     }
     browserVoices = window.speechSynthesis.getVoices();
     if (!browserVoices.length) return;
-    var maleVoices = browserVoices.filter(function(v){ return MALE_NAME_HINTS.test(v.name); });
-    var usable = maleVoices.length ? maleVoices : browserVoices; // never render an empty picker
+    // English voices only; drop novelty / low-quality system voices. Show BOTH
+    // men and women, best quality first, so it never collapses to one gender.
+    var english = browserVoices.filter(function(v){ return /^en[-_]?/i.test(v.lang); });
+    var pool = english.length ? english : browserVoices;
+    var curated = pool.filter(function(v){ return !VOICE_BLOCKLIST.test(v.name); });
+    var usable = curated.length ? curated : pool; // never render an empty picker
     var sorted = usable.slice().sort(function(a,b){
-      var ra = voiceRankBrowser(a), rb = voiceRankBrowser(b);
-      if (ra !== rb) return ra - rb;
+      var qa = voiceQuality(a), qb = voiceQuality(b);
+      if (qa !== qb) return qa - qb;
+      var la = voiceLangRank(a), lb = voiceLangRank(b);
+      if (la !== lb) return la - lb;
       return a.name.localeCompare(b.name);
     });
     voiceSelect.innerHTML = "";
     sorted.forEach(function(v){
       var opt = document.createElement("option");
       opt.value = "browser:" + v.name;
-      opt.textContent = v.name + ", " + v.lang;
+      opt.textContent = browserVoiceLabel(v);
       voiceSelect.appendChild(opt);
     });
     // restore an explicit choice if it is still available
@@ -1426,13 +1455,14 @@
       voiceStatus.className = "status-line";
       return;
     }
-    var auVoice = sorted.filter(function(v){ return /^en-AU/i.test(v.lang); })[0];
-    if (auVoice){
-      voiceSelect.value = "browser:" + auVoice.name;
-      voiceStatus.textContent = "Sovereign voice server not reachable from here, using this browser's own speech instead. Found an Australian voice on this device: “" + auVoice.name + "”.";
-    } else {
-      voiceStatus.textContent = "Sovereign voice server not reachable from here, using this browser's own speech instead. No Australian voice found on this device; pick any voice below.";
-    }
+    // Default to the best available MALE voice (matching Rob's studio voice),
+    // Australian accent preferred — never silently default to a female voice.
+    var pick = sorted.filter(function(v){ return genderOf(v.name) === "Male" && /^en-au/i.test(v.lang); })[0] ||
+               sorted.filter(function(v){ return genderOf(v.name) === "Male"; })[0] ||
+               sorted.filter(function(v){ return /^en-au/i.test(v.lang); })[0] ||
+               sorted[0];
+    if (pick) voiceSelect.value = "browser:" + pick.name;
+    voiceStatus.textContent = "The studio voices (Matilda, Rob) run on the sovereign server, which isn’t reachable from here right now — using this device’s best available voices instead. Pick any man or woman below.";
     voiceStatus.className = "status-line warn";
   }
 
@@ -1499,8 +1529,11 @@
     try{
       window.speechSynthesis.cancel();
       var all = window.speechSynthesis.getVoices();
-      var v = all.filter(function(x){ return /^en-AU/i.test(x.lang); })[0] ||
-              all.filter(function(x){ return MALE_NAME_HINTS.test(x.name); })[0] ||
+      var chosenName = (voiceSelect.value || "").replace(/^browser:/, "");
+      var v = (chosenName && all.filter(function(x){ return x.name === chosenName; })[0]) ||
+              all.filter(function(x){ return MALE_NAME_HINTS.test(x.name) && /^en-AU/i.test(x.lang); })[0] ||
+              all.filter(function(x){ return MALE_NAME_HINTS.test(x.name) && /^en/i.test(x.lang); })[0] ||
+              all.filter(function(x){ return /^en-AU/i.test(x.lang); })[0] ||
               all.filter(function(x){ return /^en/i.test(x.lang); })[0];
       var u = new SpeechSynthesisUtterance(text);
       if (v) u.voice = v;
