@@ -1170,12 +1170,12 @@
       quick:"Nodel network control · Q-SYS seminar and conference room · networked intelligent lighting · whole-venue fit-out."
     },
     {
-      id:"partnerships", tags:["partnership","partnerships","podcast studio","podcast","zero cost","procurement","vendor","suppliers","sponsorship","budget","industry partners","doing more with less"],
+      id:"partnerships", tags:["partnership","partnerships","podcast studio","podcast","zero cost","procurement","vendor","vendors","vendor management","suppliers","integrator","integrators","developers","lumicom","grumpy sailor","exhibition one","sponsorship","budget","industry partners","doing more with less"],
       title:"Industry partnerships &amp; the podcast studio",
-      recruiter:"At NCM Rob managed several industry partnerships and used them to deliver a professional podcast studio at zero cost to the museum, a complete broadcast-capable facility funded entirely through partner relationships rather than capital budget. Those same partnerships underpinned six figures of hardware savings across the technology programme.",
-      curator:"The podcast studio is the one I'd point to. A museum opening on a tight budget doesn't get a professional studio, unless someone can specify it properly and then convince industry partners it's worth backing. It cost the museum nothing. That's a different skill from installing it, and I think it's the part people underestimate.",
-      technical:"Managed multiple industry partnerships across the NCM technology programme, converting supplier relationships into delivered capability: a professional podcast studio with broadcast systems at zero capital cost, plus substantial hardware savings across gallery and infrastructure fit-out.",
-      quick:"Professional podcast studio delivered at zero cost via industry partnerships · six-figure hardware savings."
+      recruiter:"Rob holds long-standing relationships across both sides of the supply chain: integrators and developers including Lumicom, Grumpy Sailor and Exhibition One, and manufacturers including Epson and Panasonic. At NCM he managed several industry partnerships and used them to deliver a professional podcast studio at zero cost to the museum, a complete broadcast-capable facility funded entirely through partner relationships rather than capital budget. Those same partnerships underpinned six figures of hardware savings across the technology programme.",
+      curator:"The relationships are the part that compounds. I have worked with Lumicom, Grumpy Sailor and Exhibition One over many years, and a lot of work with Paul at Exhibition One in particular, alongside direct lines into Epson and Panasonic. That is the difference between raising a purchase order and being able to get something escalated, or being told the truth about a delivery date. The podcast studio is the one I would point to. A museum opening on a tight budget doesn't get a professional studio, unless someone can specify it properly and then convince industry partners it's worth backing. It cost the museum nothing. That's a different skill from installing it, and I think it's the part people underestimate.",
+      technical:"Integrator and developer relationships: Lumicom, Grumpy Sailor and Exhibition One (extensive work with Paul at Exhibition One), among others. Manufacturer relationships: Epson and Panasonic. Managed multiple industry partnerships across the NCM technology programme, converting supplier relationships into delivered capability: a professional podcast studio with broadcast systems at zero capital cost, plus substantial hardware savings across gallery and infrastructure fit-out.",
+      quick:"Integrators: Lumicom · Grumpy Sailor · Exhibition One. Manufacturers: Epson · Panasonic. Podcast studio delivered at zero cost · six-figure hardware savings."
     },
     {
       id:"grants", tags:["grant","grants","funding","tourism australia","festival","multicultural festival","public program","public programs","community","volunteer","kindergarten","steiner","audience","attendance"],
@@ -1464,13 +1464,13 @@
       return;
     }
     // Default to the best available MALE voice (matching Rob's studio voice),
-    // Australian accent preferred — never silently default to a female voice.
+    // Australian accent preferred, never silently default to a female voice.
     var pick = sorted.filter(function(v){ return genderOf(v.name) === "Male" && /^en-au/i.test(v.lang); })[0] ||
                sorted.filter(function(v){ return genderOf(v.name) === "Male"; })[0] ||
                sorted.filter(function(v){ return /^en-au/i.test(v.lang); })[0] ||
                sorted[0];
     if (pick) voiceSelect.value = "browser:" + pick.name;
-    voiceStatus.textContent = "The studio voices (Matilda, Rob) run on the sovereign server, which isn’t reachable from here right now — using this device’s best available voices instead. Pick any man or woman below.";
+    voiceStatus.textContent = "The studio voices (Matilda, Rob) run on the sovereign server, which isn’t reachable from here right now, using this device’s best available voices instead. Pick any man or woman below.";
     voiceStatus.className = "status-line warn";
   }
 
