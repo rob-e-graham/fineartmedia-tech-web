@@ -1050,7 +1050,15 @@
       quick:"EWP, forklift, White Card, test and tag, light rigid. Works at heights and rigs to grid, not just specifies it."
     },
     {
-      id:"leading-people", tags:["leadership","how do you lead","lead a team","lead teams","leadership style","management style","how do you manage","manage a team","managed a team","manage people","managing people","managed people","people management","led people","leading people","direct reports","look after your team","care for your team","support your team","team culture","mentoring","develop people","what kind of leader","kind of manager","psychological safety","how do you treat","your team"],
+      id:"staffing", tags:["staffing","staff","hiring","hired","hire people","hired people","budget experience","recruit","recruitment","recruited","rosters","rostering","headcount","budgets","budget","resourcing","workforce","casuals","team building","built the team","capability"],
+      title:"Staffing, rosters &amp; budgets",
+      recruiter:"Rob ran all technology staffing at the National Communication Museum: he recruited and hired the technical team that operates the museum today, managed their rosters, and held the technology budget. NCM's signed reference letter independently records management of a team of technical staff and casuals, alongside budgeting and procurement, as part of the role.",
+      curator:"Hiring the team was the part that outlasts me. The systems will be replaced eventually, but the people I brought in are still running that building, and they can run it without me, which was the point. Rosters and budgets are unglamorous and they are most of what makes a technical service actually dependable.",
+      technical:"Full technology staffing responsibility at NCM: role definition, recruitment and hiring of the permanent technical team, engagement of casual staff, rostering against opening hours and events, and technology budget ownership including procurement. Independently corroborated by NCM's reference letter (Emily Siddons, Co-CEO and Artistic Director, 23 Jul 2026).",
+      quick:"Recruited and hired NCM's current technical team · ran rosters and casuals · held the technology budget · corroborated by the NCM reference."
+    },
+    {
+      id:"leading-people", tags:["leadership","leadership style","how do you lead","lead a team","lead teams","leadership style","management style","how do you manage","manage a team","managed a team","manage people","managing people","managed people","people management","led people","leading people","direct reports","look after your team","care for your team","support your team","team culture","mentoring","develop people","what kind of leader","kind of manager","psychological safety","how do you treat","your team"],
       title:"How I lead",
       recruiter:"Rob's leadership approach comes from having done most of the jobs in the chain. He started in visitor services and worked as an exhibition technician before leading teams, so he specifies systems knowing who has to run them, staff them and fix them. At NCM he recruited and hired the technical team, managed their rosters and budgets, and built the documentation that let them operate independently of him.",
       curator:"I have been the person on the floor when something failed five minutes before opening, so I try to lead in a way I would have wanted then. That means three things. Give people a clear build rather than a vague brief. Write the documentation properly, because handing someone an undocumented system is handing them your problem. And protect the team from the deadline where you can, because the pressure should sit with me, not spread out across everyone.",
@@ -1074,7 +1082,7 @@
       quick:"Collections hold more than can be shown. The work is making that reachable without damaging the trust or the record."
     },
     {
-      id:"leadership", tags:["technology leadership","technology project","lead technology project","delivery","roadmap","strategy","staffing","hiring","hired","hire people","hired people","recruitment","recruited","rosters","rostering","budgets","budget","budget experience","lead technician","crew","stakeholder","procurement","vendor","governance","documentation","handover","change management"],
+      id:"leadership", tags:["technology leadership","technology project","lead technology project","delivery","roadmap","strategy","lead technician","crew","stakeholder","procurement","vendor","governance","documentation","handover","change management"],
       title:"Technology leadership &amp; delivery",
       recruiter:"Rob has led teams directly, not just projects. At the National Communication Museum he did all the technology staffing: he recruited and hired the museum's current technical team, and ran their rosters and budgets, alongside technology strategy, procurement, vendor management, governance, documentation and operational handover. On site he works as lead technician, managing crews through each build.",
       curator:"I hired the technical team that runs the National Communication Museum now, and I did their rosters and budgets. On site I am lead technician, so I am managing the crew through the build as well. Leadership here means keeping the creative intent intact while making the system supportable, and leaving an institution able to run the work after opening night.",
@@ -1378,8 +1386,10 @@
     alan:"Alan · Male · British (Piper)",
     northern:"Ted · Male · British (Piper)"
   };
-  var PREFERRED_ORDER = ["northern","rob_au","aussie","alan","ryan","cori","alba","amy","lessac"];
-  var MALE_VOICE_IDS = ["northern","rob_au","alan","ryan"];
+  var PREFERRED_ORDER = ["northern","rob_au","alan","ryan","aussie","cori","alba","amy","lessac"];
+  // Voices offered on the page. Ted leads because he is the default; Matilda
+  // is the ACMI/Heide studio voice and is offered alongside the male voices.
+  var OFFERED_VOICE_IDS = ["northern","rob_au","alan","ryan","aussie"];
   var MALE_NAME_HINTS = /\b(daniel|oliver|lee|ryan|alan|ted|arthur|gordon|james|guy|aaron|tom|alex|nathan|rishi|male|man)\b/i;
   var FEMALE_NAME_HINTS = /\b(samantha|karen|moira|tessa|fiona|veena|victoria|allison|ava|susan|zoe|kate|serena|stephanie|nicky|sara|catherine|martha|amelie|anna|ellen|alice|amira|female|woman)\b/i;
   // Classic novelty / low-quality system voices we never offer.
@@ -1476,8 +1486,8 @@
 
   function populateServerVoices(list){
     voiceSelect.innerHTML = "";
-    var maleList = list.filter(function(id){ return MALE_VOICE_IDS.indexOf(id) !== -1; });
-    var usable = maleList.length ? maleList : list; // never render an empty picker
+    var offered = list.filter(function(id){ return OFFERED_VOICE_IDS.indexOf(id) !== -1; });
+    var usable = offered.length ? offered : list; // never render an empty picker
     var ordered = PREFERRED_ORDER.filter(function(id){ return usable.indexOf(id) !== -1; })
       .concat(usable.filter(function(id){ return PREFERRED_ORDER.indexOf(id) === -1 && id !== "gtranslate"; }));
     ordered.forEach(function(id){
