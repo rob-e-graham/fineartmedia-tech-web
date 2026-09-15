@@ -539,27 +539,36 @@ var FACTS=[
 function srcLabel(x){ return x.src ? x.src : "TRIBE record"; }
 var STOP={the:1,a:1,an:1,and:1,or:1,to:1,of:1,in:1,is:1,are:1,we:1,i:1,you:1,my:1,our:1,for:1,on:1,at:1,it:1,do:1,can:1,any:1,what:1,where:1,when:1,how:1,there:1,this:1,that:1,with:1,me:1,us:1};
 function toks(t){return String(t||'').toLowerCase().replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(function(w){return w.length>2&&!STOP[w];});}
+/* Four facts are true of every question: who they are, what they will not eat,
+   what is happening today, and who is on the ground. Everything else competes
+   on the words in the question, with the programme and the client file weighted
+   up so they still win when they are relevant. Before this, the mandatory set
+   ate the whole prompt and no city knowledge ever reached the model. */
+var CORE=['PRG-CLI-01','PRG-CLI-02','PRG-EVT-01','PRG-TEAM-01'];
 function retrieve(q,budget){
   var qt=toks(q);
-  var must=FACTS.filter(function(f){return f.cat==='client'||f.cat==='program'||f.cat==='gap';});
-  var rest=FACTS.filter(function(f){return must.indexOf(f)<0;});
+  var core=FACTS.filter(function(f){ return CORE.indexOf(f.id)>-1; });
+  var rest=FACTS.filter(function(f){ return CORE.indexOf(f.id)<0; });
   rest.forEach(function(f){
     var hay=toks(f.name+' '+f.fact+' '+(f.tip||'')+' '+(f.tag||'')+' '+f.cat);
-    f._s=qt.reduce(function(n,w){return n+(hay.some(function(h){return h.indexOf(w)===0||w.indexOf(h)===0;})?1:0);},0);
+    var hits=qt.reduce(function(n,w){
+      return n+(hay.some(function(h){return h.indexOf(w)===0||w.indexOf(h)===0;})?1:0);
+    },0);
+    f._s=hits + (hits && (f.cat==='program'||f.cat==='client') ? 3 : 0);
   });
-  rest.sort(function(a,b){return b._s-a._s;});
-  /* client and programme facts are never dropped; the gap note is, when tight */
-  var out=must.filter(function(f){return f.cat!=='gap';});
-  var used=out.reduce(function(n,f){return n+f.fact.length+60;},0);
-  var gap=must.filter(function(f){return f.cat==='gap';});
-  if(gap.length && used+gap[0].fact.length+60<budget){ out=out.concat(gap); used+=gap[0].fact.length+60; }
+  rest.sort(function(a,b){ return b._s-a._s; });
+
+  var out=core.slice();
+  var used=core.reduce(function(n,f){ return n+f.fact.length+f.name.length+20; },0);
   for(var i=0;i<rest.length;i++){
-    var len=rest[i].fact.length+(rest[i].tip?rest[i].tip.length:0)+60;
-    if(used+len>budget) break;
+    if(rest[i]._s===0 && rest[i].cat==='gap') continue;
+    var len=rest[i].fact.length+rest[i].name.length+(rest[i].tip?rest[i].tip.length:0)+20;
+    if(used+len>budget) continue;
     out.push(rest[i]); used+=len;
   }
   return out;
 }
+
 var LASTQ='';
 
 /* What the concierge is allowed to know, in tiers.
