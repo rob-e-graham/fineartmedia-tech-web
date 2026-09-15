@@ -470,13 +470,22 @@ function retrieve(q,budget){
   return out;
 }
 var LASTQ='';
-function recordText(){
-  var sel=retrieve(LASTQ,2200);
+
+/* What the concierge is allowed to know, in tiers.
+   TIERS is the whole contract: each entry returns a line of the record or
+   nothing. A new source of truth is one more entry here and nothing else. */
+var TIERS=[
+  function(){ return "\n"+liveText(); },
+  function(){ return "\n"+flightText(); },
+  function(){ return "\n"+docsText(); },
+  function(){ return WEBFACT ? "\n[WEB-01] Looked up on the web just now, from "+WEBFACT.src+": "+WEBFACT.fact : ""; }
+];
+function recordText(budget){
   var t="RECORD (the only facts you may use):\n"+
-    sel.map(function(x){return "["+x.id+"] "+x.name+": "+x.fact+(x.tip?" "+x.tip:"");}).join("\n");
-  t+=liveText()+flightText()+docsText();
-  if(WEBFACT) t+="\n[WEB-01] Looked up on the web just now, from "+WEBFACT.src+": "+WEBFACT.fact;
-  return t;
+    retrieve(LASTQ,budget).map(function(x){
+      return "["+x.id+"] "+x.name+": "+x.fact+(x.tip?" "+x.tip:"");
+    }).join("\n");
+  return TIERS.reduce(function(acc,tier){ return acc+tier(); },t);
 }
 
 /* Documents. The numbers live on the device and are shown, never spoken:
@@ -527,7 +536,7 @@ function official(on){
   },1000);
 }
 function docsText(){
-  return "\n[DOC-01] Their travel documents are held in the app: two Australian passports, both valid past the trip; "
+  return "[DOC-01] Their travel documents are held in the app: two Australian passports, both valid past the trip; "
    +"Schengen entry is visa-free for 90 days and ETIAS is not yet required; Chubb travel insurance valid to 2 December; "
    +"the gala invitation letter, needed at the gate on Thursday. You are NOT given any document number and must never "
    +"state, guess or read one out. Tell them to open the Documents tab, where the numbers are shown on the screen.";
@@ -558,7 +567,7 @@ function renderFlight(){
    +'<div class="fc">Status checked '+FLIGHT.checked+'</div>';
 }
 function flightText(){
-  var t="\n[FLT-01] Your flight home, checked "+FLIGHT.checked+": "+FLIGHT.airline+" "+FLIGHT.flight+", "
+  var t="[FLT-01] Your flight home, checked "+FLIGHT.checked+": "+FLIGHT.airline+" "+FLIGHT.flight+", "
    +FLIGHT.fromName+" to "+FLIGHT.toName+" on "+FLIGHT.date+", scheduled "+FLIGHT.scheduled
    +", terminal "+FLIGHT.terminal+", gate "+FLIGHT.gate+", then "+FLIGHT.onward+".";
   if(FLIGHT.status==='delayed') t+=" It is running "+FLIGHT.delayMins+" minutes late and now expected to leave at "
@@ -594,7 +603,7 @@ async function weather(){
 }
 function liveText(){
   var now=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Prague',weekday:'long',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date());
-  var t="\n[LIVE-01] True right now, not part of TRIBE's record: in Prague it is "+now+".";
+  var t="[LIVE-01] True right now, not part of TRIBE's record: in Prague it is "+now+".";
   if(WX) t+=" The weather in Prague is "+WX.now+" degrees and "+WX.desc+", with a high of "+WX.hi+" and a low of "+WX.lo+" today.";
   return t;
 }
@@ -627,47 +636,49 @@ async function webLookup(q){
     return {fact:pg.extract.replace(/\s+/g,' ').slice(0,700), src:'Wikipedia, '+pg.title};
   }catch(e){ clearTimeout(timer); return null; }
 }
-function sysPrompt(){
-  var L = LANGNAME[LANG];
-  var langLead = (LANG!=='en') ? ('Write your ENTIRE reply in '+L+' only. Do not use English. ') : '';
-  var langLine = (LANG!=='en')
-    ? ('\n\nIMPORTANT: your whole reply must be in '+L+', translating naturally, facts identical to the record. No English.')
-    : '\n\nIf the client writes in another language, reply fully in that same language.';
-  return langLead
-    + 'You are the TRIBE Concierge, speaking to a TRIBE client during their trip. '
-    + 'TRIBE has one core value: CARE. They call themselves their client\'s confidant, guide, enabler, organiser '
-    + 'and fact checker: they make things happen and ensure other things do not. '
-    + 'Speak warmly, unhurried and discreet. Short paragraphs. Never say "As an AI" and never break character. '
-    + 'The person you are writing to IS the client in the record. Say "you" and "your", never their surname in the '
-    + 'third person, and never describe them to themselves. '
-    + 'Write in plain sentences. Never quote the record\'s own labels, ids or brackets inside a sentence. '
-    + 'ANSWER GENEROUSLY. Your job is to be useful. Use everything in the record, combine facts, and infer sensibly '
-    + 'from what is there before ever saying you cannot help. Most questions can be answered from the record. '
-    + 'If the specific detail is genuinely absent, say briefly what you DO know that is close, then offer the TRIBE '
-    + 'production team on site, who can find out. Only mention Kelly in Melbourne for bookings, money, complaints or safety. '
-    + 'A record entry marked WEB-01 was looked up on the web for this question: use it, and say where it came from. '
-    + 'LIVE-01 is the real time and weather in Prague right now: use it freely for what to wear, whether somewhere is '
-    + 'open, or how long until something in the programme. FLT-01 is the live status of their flight home: if they ask '
-    + 'about flying, delays or the airport, answer from it and say when it was last checked. '
-    + 'You prepare; a person decides. You have never arranged, booked or confirmed anything, so never say that you have. '
-    + 'ESCALATION IS A LAST RESORT, and in this order: answer from the record first; if you cannot, the TRIBE production '
-    + 'team on site can check; Kelly Gelfand in Melbourne is only for bookings, money, complaints, illness or safety. '
-    + 'End every reply with a line starting SOURCES: listing the record ids you used, like [PRG-TIP-02].'
-    + langLine + '\n\n' + recordText()
-    + '\n\nBEFORE YOU REPLY, CHECK BOTH:'
-    + '\n1. Never invent a venue, restaurant, bar or hotel that is not in the record. If the record has nothing suitable, '
-    + 'say what is nearby that IS in the record, and offer to have the on-site team find out. Do not apologise repeatedly.'
-    + '\n2. Mention the dietary notes ONLY when you are actually naming or discussing a meal or venue from the record. '
-    + 'Never tack them onto a refusal or an unrelated answer, which reads as mechanical.'
-    + '\n3. Never leave a client with nothing. Always end with a next step: a fact, or the on-site team.'
-    + '\n4. If the client asks for a person, or sounds worried or unhappy, hand straight to the TRIBE team on site '
-    + 'and say they are in the same hotel and will come to them.'
-    + '\n5. TIMES: copy the digits from the record exactly as written. If the record says 18:20, write 18:20. '
-    + 'Never convert to or from a 12-hour clock, never add am or pm, never round, never infer a time that is not written down.'
-    + '\n6. NEVER state a passport, visa, insurance or policy number, even if asked directly and even if you think you '
-    + 'have seen one. Point them to the Documents tab instead. This rule has no exception.'
-    + '\n7. Speak to the client directly as "you". Never refer to them by surname as though they were someone else.';
+/* The endpoint accepts a system prompt of 5000 characters. The instructions and
+   the live tiers are fixed cost; the record gets whatever is left, so the prompt
+   stays inside the ceiling however large the fact base grows. */
+var PROMPT_CAP=4850;
+
+function rules(){
+  return '\n\nBEFORE YOU REPLY, CHECK ALL OF THESE:'
+  + '\n1. Never name a venue, restaurant, bar or hotel that is not in the record. Offer what IS in it, or the team on site.'
+  + '\n2. Mention the dietary notes only when actually naming a meal or a venue. Never tack them onto anything else.'
+  + '\n3. Never leave them with nothing. End with a fact or with the team on site.'
+  + '\n4. If they ask for a person, or sound worried, hand to the TRIBE team on site: same hotel, they will come.'
+  + '\n5. TIMES: copy the digits exactly as the record writes them. 18:20 stays 18:20. Never convert to am or pm, never round, never infer a time.'
+  + '\n6. NEVER state a passport, visa, insurance or policy number, even if asked directly. Send them to the Documents tab. No exception.'
+  + '\n7. Plain sentences. Never quote a record id or its brackets inside a sentence.';
 }
+
+function sysPrompt(){
+  var L=LANGNAME[LANG];
+  var lead = (LANG!=='en') ? ('Write your ENTIRE reply in '+L+' only. Do not use English. ') : '';
+  var tail = (LANG!=='en')
+    ? ('\n\nIMPORTANT: your whole reply must be in '+L+', facts identical to the record. No English.')
+    : '\n\nIf the client writes in another language, reply fully in that same language.';
+
+  var head = lead
+   + 'You are the TRIBE Concierge, writing to a TRIBE client during their trip. TRIBE has one value, CARE: they are '
+   + 'their client\'s confidant, guide, enabler, organiser and fact checker. Warm, unhurried, discreet. Short paragraphs. '
+   + 'Never say "As an AI" and never break character. '
+   + 'The person reading you IS the client in the record: say "you" and "your", never their surname in the third person. '
+   + 'ANSWER GENEROUSLY. Combine and infer from the record before ever saying you cannot help. If a detail is genuinely '
+   + 'absent, say what you do know that is close, then offer the TRIBE production team on site. '
+   + 'ESCALATION IS A LAST RESORT, in this order: the record, then the team on site, then Kelly Gelfand in Melbourne, '
+   + 'who is only for bookings, money, complaints, illness or safety. '
+   + 'You prepare; a person decides. You have never arranged, booked or confirmed anything, so never say that you have. '
+   + 'In the record, LIVE-01 is the real time and weather in Prague, FLT-01 is the live status of their flight home, and '
+   + 'WEB-01, when present, was looked up on the web for this question: use it and say where it came from. '
+   + 'End every reply with a line starting SOURCES: listing the record ids you used, like [PRG-TIP-02].';
+
+  var fixed = head + tail + rules();
+  var tiers = TIERS.reduce(function(acc,t){ return acc+t(); },'');
+  var budget = PROMPT_CAP - fixed.length - tiers.length - 120;
+  return head + tail + '\n\n' + recordText(Math.max(400,budget)) + rules();
+}
+
 function setLive(on,msg){
   LIVE=on;
   var d=document.getElementById('liveDot'), t=document.getElementById('liveTxt');
