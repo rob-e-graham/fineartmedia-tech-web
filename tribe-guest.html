@@ -258,11 +258,11 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
     </div>
 
     <div class="chips" id="chips" style="display:none">
-      <button class="chip" onclick="ask(0)">What time is my car tomorrow?</button>
+      <button class="chip" onclick="ask(0)">What time is my car?</button>
       <button class="chip" onclick="ask(1)">What&rsquo;s the dress code?</button>
-      <button class="chip" onclick="ask(2)">Where can we eat tonight?</button>
-      <button class="chip" onclick="ask(3)">Somewhere quiet this afternoon?</button>
-      <button class="chip" onclick="ask(4)">Can we change Thursday?</button>
+      <button class="chip" onclick="ask(2)">Where do I meet everyone?</button>
+      <button class="chip" onclick="ask(3)">Where can we eat tonight?</button>
+      <button class="chip" onclick="ask(4)">What is there to do this afternoon?</button>
       <button class="chip" onclick="ask(5)">I need to speak to someone</button>
       <form class="askform" id="askform"><input id="askInput" type="text" placeholder="Ask the concierge anything…" autocomplete="off"><button type="submit" aria-label="Send">→</button></form>
     </div>
@@ -290,8 +290,8 @@ function go(id,b){
   document.getElementById('pane').scrollTop=0;
 }
 function ask(i){
-  var qs=["What time is my car tomorrow?","What's the dress code?","Where can we eat tonight?",
-          "Somewhere quiet this afternoon?","Can we change Thursday?","I need to speak to someone"];
+  var qs=["What time is my car?","What's the dress code?","Where do I meet everyone?",
+          "Where can we eat tonight?","What is there to do this afternoon?","I need to speak to someone"];
   send(qs[i]);
 }
 
@@ -315,7 +315,7 @@ var FACTS=[
   fact:"Client said: loved the private tea ceremony, but sixty minutes felt rushed. Friday's palace visit was therefore booked at ninety minutes."},
 
  {id:'PRG-EVT-01',cat:'program',name:'Wednesday',
-  fact:"Free until 1pm. Lunch held at Cafe Savoy 1pm. Dinner at Field 7.30pm, car collects 7.05pm."},
+  fact:"Free until 13:00. Lunch held at Cafe Savoy 13:00. Dinner at Field 19:30 (7.30 in the evening), car collects 19:05."},
  {id:'PRG-EVT-02',cat:'program',name:'Thursday, the gala',
   fact:"Prague Castle. Arrival 6.45pm, car 6.20pm from the hotel forecourt. Czech National Ballet 7.30pm with a 48-piece orchestra. Dinner in the Spanish Hall 8.45pm, Table 3 with the Hartleys. Black tie. The courtyard is exposed; coats advised. FIXED — the castle, orchestra and ballet company all sit behind a locked call time."},
  {id:'PRG-EVT-03',cat:'program',name:'Friday',
@@ -442,7 +442,10 @@ function sysPrompt(){
     + 'If the record has none, say "That is not in my record" and name Kelly Gelfand. Do not offer a suggestion from general knowledge.'
     + '\n2. Mention the dietary notes ONLY when you are actually naming or discussing a meal or venue from the record. '
     + 'Never tack them onto a refusal or an unrelated answer, which reads as mechanical.'
-    + '\n3. Every refusal must name Kelly Gelfand and say she can help. Never refuse without offering her.';
+    + '\n3. Every refusal must name Kelly Gelfand and say she can help. Never refuse without offering her.'
+    + '\n4. If the client asks to speak to someone, asks for a person, or sounds worried or unhappy, do NOT offer to help '
+    + 'yourself. Hand straight to Kelly Gelfand by name and say she will call them.'
+    + '\n5. Always give times exactly as the record writes them, including whether it is morning or evening. Never convert or guess.';
 }
 function setLive(on,msg){
   LIVE=on;
