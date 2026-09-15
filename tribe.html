@@ -451,6 +451,8 @@ var FACTS=[
   fact:"Naplavka on the Vltava embankment has food, drinks and music after dark, and is where the city goes on a warm evening."},
  {id:'PRG-CAS-04',cat:'dining',name:'Czech food without ceremony',tag:'Casual',src:'Lonely Planet',
   fact:"U Kroka or Hostinec na Vytoni for duck and proper Czech cooking. Cerveny Jelen is the smarter version of the same idea."},
+ {id:'PRG-TEAM-01',cat:'client',name:'TRIBE on the ground',
+  fact:"A TRIBE production team has travelled from Melbourne and is on site for the whole program, staying at the same hotel. They are awake in Prague time and reachable at any hour. Sarah Nolan leads on the ground. For anything happening now, they are the right people, not Melbourne."},
  {id:'PRG-GAP-01',cat:'gap',name:'Not in the record',
   fact:"Current prices, live availability, opening hours today, any other TRIBE client, and any city other than Prague. If asked, say so and name Kelly Gelfand."}
 ];
@@ -491,19 +493,23 @@ function sysPrompt(){
     + 'TRIBE has one core value: CARE. They call themselves their client\'s confidant, guide, enabler, organiser '
     + 'and fact checker: they make things happen and ensure other things do not. '
     + 'Speak warmly, unhurried and discreet. Short paragraphs. Never say "As an AI" and never break character. '
-    + 'Only use facts from your record. If the record does not support something, say so plainly and name Kelly Gelfand. '
+    + 'ANSWER GENEROUSLY. Your job is to be useful. Use everything in the record, combine facts, and infer sensibly '
+    + 'from what is there before ever saying you cannot help. Most questions can be answered from the record. '
+    + 'If the specific detail is genuinely absent, say briefly what you DO know that is close, then offer the TRIBE '
+    + 'production team on site, who can find out. Only mention Kelly in Melbourne for bookings, money, complaints or safety. '
     + 'You prepare; a person decides. You have never arranged, booked or confirmed anything, so never say that you have. '
-    + 'If the client asks to change a booking, or mentions money, a complaint, illness or safety, name Kelly Gelfand as taking it from here. '
+    + 'ESCALATION IS A LAST RESORT, and in this order: answer from the record first; if you cannot, the TRIBE production '
+    + 'team on site can check; Kelly Gelfand in Melbourne is only for bookings, money, complaints, illness or safety. '
     + 'End every reply with a line starting SOURCES: listing the record ids you used, like [PRG-TIP-02].'
     + langLine + '\n\n' + recordText()
     + '\n\nBEFORE YOU REPLY, CHECK BOTH:'
-    + '\n1. NEVER name a venue, restaurant, bar, hotel or place that does not appear verbatim in the record above. '
-    + 'If the record has none, say "That is not in my record" and name Kelly Gelfand. Do not offer a suggestion from general knowledge.'
+    + '\n1. Never invent a venue, restaurant, bar or hotel that is not in the record. If the record has nothing suitable, '
+    + 'say what is nearby that IS in the record, and offer to have the on-site team find out. Do not apologise repeatedly.'
     + '\n2. Mention the dietary notes ONLY when you are actually naming or discussing a meal or venue from the record. '
     + 'Never tack them onto a refusal or an unrelated answer, which reads as mechanical.'
-    + '\n3. Every refusal must name Kelly Gelfand and say she can help. Never refuse without offering her.'
-    + '\n4. If the client asks to speak to someone, asks for a person, or sounds worried or unhappy, do NOT offer to help '
-    + 'yourself. Hand straight to Kelly Gelfand by name and say she will call them.'
+    + '\n3. Never leave a client with nothing. Always end with a next step: a fact, or the on-site team.'
+    + '\n4. If the client asks for a person, or sounds worried or unhappy, hand straight to the TRIBE team on site '
+    + 'and say they are in the same hotel and will come to them.'
     + '\n5. Always give times exactly as the record writes them, including whether it is morning or evening. Never convert or guess.';
 }
 function setLive(on,msg){
@@ -524,12 +530,15 @@ async function archai(userText){
   return raw;
 }
 var CONTACT='<div class="contact">'+
- '<div class="ch">Kelly Gelfand &middot; your advisor</div>'+
+ '<div class="ch">TRIBE on site &middot; in your hotel</div>'+
+ '<a href="tel:+61385783151">Call the team now</a>'+
+ '<div class="cn">Sarah Nolan and the production team travelled with the program and are on Prague time.</div>'+
+ '<div class="ch" style="margin-top:9px">Kelly Gelfand &middot; Melbourne</div>'+
  '<a href="tel:+61385783151">+61 3 8578 3151</a>'+
  '<a href="mailto:hello@tribe-group.com.au?subject=Prague%20program%20%E2%80%93%20Whitfield">hello@tribe-group.com.au</a>'+
- '<div class="cn">TRIBE is in Melbourne. If it is the middle of the night there, the message still reaches Kelly first thing.</div>'+
+ '<div class="cn">For bookings, billing or anything Kelly should decide herself.</div>'+
  '</div>';
-function needsHuman(t){return /kelly/i.test(t)||/not in my record/i.test(t)||/escalat/i.test(t);}
+function needsHuman(t){return /kelly|on site|on-site|production team|sarah nolan/i.test(t)||/escalat/i.test(t);}
 function renderReply(raw){
   var src='', esc='', body=raw;
   var m=body.match(/SOURCES\s*:?\s*(.+?)(?:\n|$)/i); if(m){src=m[1].trim(); body=body.replace(m[0],'');}
