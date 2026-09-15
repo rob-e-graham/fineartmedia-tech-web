@@ -160,6 +160,8 @@ b{color:var(--cream);font-weight:400}
          border-bottom:1px solid var(--line);font-size:10px;color:var(--dim);letter-spacing:.08em}
 .langbar select{background:transparent;border:1px solid var(--line);color:var(--body);
          font-family:inherit;font-size:10.5px;padding:5px 8px;border-radius:2px;font-weight:300}
+.secttl{font-family:var(--sans);font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);
+  margin:22px 0 4px;padding-top:16px;border-top:1px solid var(--line)}
 .dl{display:flex;flex-direction:column;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:3px;overflow:hidden}
 .dc{background:var(--ink);padding:12px 14px;display:flex;align-items:baseline;gap:10px}
 .dc .dt{font-family:var(--serif);font-size:16px;color:var(--cream)}
@@ -267,7 +269,6 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
       <button class="tab on" onclick="go('map',this)">The City</button>
       <button class="tab" onclick="go('dine',this)">Dining</button>
       <button class="tab" onclick="go('shop',this)">Shopping</button>
-      <button class="tab" onclick="go('tips',this)">TRIBE Tips</button>
     </div>
 
     <div class="pane" id="pane">
@@ -310,7 +311,18 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
             <div class="d">Eight places, chosen for you. Everything on this map is somewhere TRIBE has been, not somewhere we found online.</div>
           </div>
         </div>
+        <div class="secttl">TRIBE tips</div>
+        <div class="item"><div class="w">Timing</div><div class="h">The Charles Bridge, properly</div><div class="d">Impossible between 10am and 6pm. Go at 6.30am for the light, or after 10pm when it empties.</div><div class="tip">Thursday morning is your only genuinely free one.</div></div>
+        <div class="item has-img"><img class="thumb" src="/tribe-assets/06_vrtba_garden.png" alt=""><div class="body"><div class="w">Hidden</div><div class="h">Vrtba Garden</div><div class="d">A baroque terraced garden almost nobody finds, five minutes from your hotel. Unmarked door on Karmelitsk&aacute;.</div></div></div>
+        <div class="item"><div class="w">Worth the detour</div><div class="h">Strahov Monastery library</div><div class="d">The Philosophical Hall is extraordinary. General admission only lets you look in from the doorway.</div><div class="tip">Interior access needs arranging in advance. Two days&rsquo; notice &mdash; say the word.</div></div>
+        <div class="item"><div class="w">Practical</div><div class="h">Taxis and trams</div><div class="d">Use the hotel car or a ride app. Street taxis in the centre are the one thing Prague still does poorly.</div></div>
+        <div class="item"><div class="w">Practical</div><div class="h">November evenings</div><div class="d">Around 4&ndash;8&deg;C after dark and the castle courtyard is exposed. Coats over black tie on Thursday.</div></div>
       </div>
+
+      <div class="v" id="docs">
+        <div class="dl" id="docList"></div>
+        <button class="official" onclick="official(1)">Show to an official</button>
+        <div class="dn">Held on this device for the length of your trip, then removed. TRIBE does not keep a copy and the concierge is never given the numbers.      </div>
 
       <div class="v" id="dine">
         <div class="item has-img"><img class="thumb" src="/tribe-assets/08_fine_dining.png" alt=""><div class="body"><div class="w">Tonight &middot; booked</div><div class="h">Field</div><div class="d">Michelin starred, inventive, not stuffy. Your table is 7.30pm.</div><div class="tip">Ask for the kitchen counter if you&rsquo;d like to watch. We can request it.</div></div></div>
@@ -325,20 +337,6 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
         <div class="item"><div class="w">Made, not bought</div><div class="h">A Bohemian workshop, outside the centre</div><div class="d">TRIBE has commissioned gifts here for two previous programs. Needs a call ahead and about half a day.</div><div class="tip">If you&rsquo;d like something engraved for the anniversary, Friday is the last day that works.</div></div>
         <div class="item"><div class="w">Garnets</div><div class="h">Granát Turnov</div><div class="d">Czech garnet is the local stone and heavily faked. This is the cooperative that actually mines it.</div></div>
         <div class="item"><div class="w">Books &amp; prints</div><div class="h">Antikvari&aacute;t Kar&#101;l K&#345;enek</div><div class="d">Old maps, prints and first editions. The kind of shop you lose an hour in.</div></div>
-      </div>
-
-      <div class="v" id="tips">
-        <div class="item"><div class="w">Timing</div><div class="h">The Charles Bridge, properly</div><div class="d">Impossible between 10am and 6pm. Go at 6.30am for the light, or after 10pm when it empties.</div><div class="tip">Thursday morning is your only genuinely free one.</div></div>
-        <div class="item has-img"><img class="thumb" src="/tribe-assets/06_vrtba_garden.png" alt=""><div class="body"><div class="w">Hidden</div><div class="h">Vrtba Garden</div><div class="d">A baroque terraced garden almost nobody finds, five minutes from your hotel. Unmarked door on Karmelitsk&aacute;.</div></div></div>
-        <div class="item"><div class="w">Worth the detour</div><div class="h">Strahov Monastery library</div><div class="d">The Philosophical Hall is extraordinary. General admission only lets you look in from the doorway.</div><div class="tip">Interior access needs arranging in advance. Two days&rsquo; notice &mdash; say the word.</div></div>
-        <div class="item"><div class="w">Practical</div><div class="h">Taxis and trams</div><div class="d">Use the hotel car or a ride app. Street taxis in the centre are the one thing Prague still does poorly.</div></div>
-        <div class="item"><div class="w">Practical</div><div class="h">November evenings</div><div class="d">Around 4&ndash;8&deg;C after dark and the castle courtyard is exposed. Coats over black tie on Thursday.</div></div>
-      </div>
-
-      <div class="v" id="docs">
-        <div class="dl" id="docList"></div>
-        <button class="official" onclick="official(1)">Show to an official</button>
-        <div class="dn">Held on this device for the length of your trip, then removed. TRIBE does not keep a copy and the concierge is never given the numbers.</div>
       </div>
 
       <div class="v" id="ask">
@@ -387,7 +385,7 @@ function mp(id){
 }
 /* Two levels of navigation: four destinations along the base, and the
    browsing tabs, which only exist inside The City. */
-var EXPLORE=['map','dine','shop','tips'];
+var EXPLORE=['map','dine','shop'];
 function go(id,b){
   document.querySelectorAll('.v').forEach(function(v){ v.classList.remove('on'); });
   var view=document.getElementById(id);
