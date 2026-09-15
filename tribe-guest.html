@@ -461,7 +461,11 @@ function retrieve(q,budget){
     f._s=qt.reduce(function(n,w){return n+(hay.some(function(h){return h.indexOf(w)===0||w.indexOf(h)===0;})?1:0);},0);
   });
   rest.sort(function(a,b){return b._s-a._s;});
-  var out=must.slice(), used=must.reduce(function(n,f){return n+f.fact.length+60;},0);
+  /* client and programme facts are never dropped; the gap note is, when tight */
+  var out=must.filter(function(f){return f.cat!=='gap';});
+  var used=out.reduce(function(n,f){return n+f.fact.length+60;},0);
+  var gap=must.filter(function(f){return f.cat==='gap';});
+  if(gap.length && used+gap[0].fact.length+60<budget){ out=out.concat(gap); used+=gap[0].fact.length+60; }
   for(var i=0;i<rest.length;i++){
     var len=rest[i].fact.length+(rest[i].tip?rest[i].tip.length:0)+60;
     if(used+len>budget) break;
@@ -536,10 +540,9 @@ function official(on){
   },1000);
 }
 function docsText(){
-  return "[DOC-01] Their travel documents are held in the app: two Australian passports, both valid past the trip; "
-   +"Schengen entry is visa-free for 90 days and ETIAS is not yet required; Chubb travel insurance valid to 2 December; "
-   +"the gala invitation letter, needed at the gate on Thursday. You are NOT given any document number and must never "
-   +"state, guess or read one out. Tell them to open the Documents tab, where the numbers are shown on the screen.";
+  return "[DOC-01] Held in the app, numbers withheld from you: two Australian passports valid past the trip; Schengen "
+   +"entry visa-free 90 days, no ETIAS yet; Chubb insurance to 2 December; the gala invitation, needed at the gate "
+   +"Thursday. For any number, send them to the Documents tab.";
 }
 
 /* Flight tier. In production this object is filled by a scheduled status feed
@@ -567,12 +570,11 @@ function renderFlight(){
    +'<div class="fc">Status checked '+FLIGHT.checked+'</div>';
 }
 function flightText(){
-  var t="[FLT-01] Your flight home, checked "+FLIGHT.checked+": "+FLIGHT.airline+" "+FLIGHT.flight+", "
-   +FLIGHT.fromName+" to "+FLIGHT.toName+" on "+FLIGHT.date+", scheduled "+FLIGHT.scheduled
-   +", terminal "+FLIGHT.terminal+", gate "+FLIGHT.gate+", then "+FLIGHT.onward+".";
-  if(FLIGHT.status==='delayed') t+=" It is running "+FLIGHT.delayMins+" minutes late and now expected to leave at "
-   +FLIGHT.estimated+". "+FLIGHT.reason+" "+FLIGHT.action;
-  else t+=" It is on time.";
+  var t="[FLT-01] Flight home, checked "+FLIGHT.checked+": "+FLIGHT.airline+" "+FLIGHT.flight+" "+FLIGHT.fromName
+   +"-"+FLIGHT.toName+" "+FLIGHT.date+" "+FLIGHT.scheduled+", terminal "+FLIGHT.terminal+" gate "+FLIGHT.gate
+   +", then "+FLIGHT.onward+".";
+  if(FLIGHT.status==='delayed') t+=" Running "+FLIGHT.delayMins+" min late, now "+FLIGHT.estimated+". "+FLIGHT.action;
+  else t+=" On time.";
   return t;
 }
 
@@ -624,7 +626,7 @@ function covered(q){
 }
 async function webLookup(q){
   var u='https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch='
-    +encodeURIComponent(q+' Prague')+'&gsrlimit=1&prop=extracts&exintro=1&explaintext=1&exchars=700&format=json&origin=*';
+    +encodeURIComponent(q+' Prague')+'&gsrlimit=1&prop=extracts&exintro=1&explaintext=1&exchars=420&format=json&origin=*';
   var ctl=new AbortController(); var timer=setTimeout(function(){ctl.abort();},6000);
   try{
     var r=await fetch(u,{signal:ctl.signal}); clearTimeout(timer);
@@ -633,7 +635,7 @@ async function webLookup(q){
     var pages=d&&d.query&&d.query.pages; if(!pages) return null;
     var k=Object.keys(pages)[0]; var pg=pages[k];
     if(!pg||!pg.extract) return null;
-    return {fact:pg.extract.replace(/\s+/g,' ').slice(0,700), src:'Wikipedia, '+pg.title};
+    return {fact:pg.extract.replace(/\s+/g,' ').slice(0,420), src:'Wikipedia, '+pg.title};
   }catch(e){ clearTimeout(timer); return null; }
 }
 /* The endpoint accepts a system prompt of 5000 characters. The instructions and
@@ -660,18 +662,16 @@ function sysPrompt(){
     : '\n\nIf the client writes in another language, reply fully in that same language.';
 
   var head = lead
-   + 'You are the TRIBE Concierge, writing to a TRIBE client during their trip. TRIBE has one value, CARE: they are '
-   + 'their client\'s confidant, guide, enabler, organiser and fact checker. Warm, unhurried, discreet. Short paragraphs. '
-   + 'Never say "As an AI" and never break character. '
-   + 'The person reading you IS the client in the record: say "you" and "your", never their surname in the third person. '
-   + 'ANSWER GENEROUSLY. Combine and infer from the record before ever saying you cannot help. If a detail is genuinely '
-   + 'absent, say what you do know that is close, then offer the TRIBE production team on site. '
-   + 'ESCALATION IS A LAST RESORT, in this order: the record, then the team on site, then Kelly Gelfand in Melbourne, '
-   + 'who is only for bookings, money, complaints, illness or safety. '
-   + 'You prepare; a person decides. You have never arranged, booked or confirmed anything, so never say that you have. '
-   + 'In the record, LIVE-01 is the real time and weather in Prague, FLT-01 is the live status of their flight home, and '
-   + 'WEB-01, when present, was looked up on the web for this question: use it and say where it came from. '
-   + 'End every reply with a line starting SOURCES: listing the record ids you used, like [PRG-TIP-02].';
+   + 'You are the TRIBE Concierge, writing to a client during their trip. TRIBE has one value, CARE: confidant, guide, '
+   + 'enabler, organiser, fact checker. Warm, unhurried, discreet. Short paragraphs. Never say "As an AI". '
+   + 'The reader IS the client in the record: say "you", never their surname in the third person. '
+   + 'ANSWER GENEROUSLY: combine and infer from the record before ever saying you cannot help. If a detail is absent, '
+   + 'say what you do know that is close, then offer the TRIBE team on site. ESCALATION IS A LAST RESORT, in order: '
+   + 'the record, the team on site, then Kelly Gelfand in Melbourne for bookings, money, complaints, illness or safety. '
+   + 'You prepare; a person decides. You have never booked or confirmed anything, so never say you have. '
+   + 'LIVE-01 is the time and weather in Prague now, FLT-01 the live flight status, WEB-01 a web look-up for this '
+   + 'question: use it and say where it came from. '
+   + 'End every reply with a line starting SOURCES: listing the ids you used, like [PRG-TIP-02].';
 
   var fixed = head + tail + rules();
   var tiers = TIERS.reduce(function(acc,t){ return acc+t(); },'');
