@@ -503,12 +503,16 @@ function retrieve(q,budget){
   var qt=toks(q);
   var core=FACTS.filter(function(f){ return CORE.indexOf(f.id)>-1; });
   var rest=FACTS.filter(function(f){ return CORE.indexOf(f.id)<0; });
+  var hit=function(hay,w){ return hay.some(function(h){return h.indexOf(w)===0||w.indexOf(h)===0;}); };
   rest.forEach(function(f){
-    var hay=toks(f.name+' '+f.fact+' '+(f.tip||'')+' '+(f.tag||'')+' '+f.cat);
+    var title=toks(f.name+' '+(f.tag||''));
+    var body=toks(f.fact+' '+(f.tip||'')+' '+f.cat);
     var hits=qt.reduce(function(n,w){
-      return n+(hay.some(function(h){return h.indexOf(w)===0||w.indexOf(h)===0;})?1:0);
+      /* what a fact is called counts for more than a passing mention inside it,
+         or a question about coffee lands on the pizza entry */
+      return n + (hit(title,w)?3:0) + (hit(body,w)?1:0);
     },0);
-    f._s=hits + (hits && (f.cat==='program'||f.cat==='client') ? 3 : 0);
+    f._s=hits + (hits && (f.cat==='program'||f.cat==='client') ? 4 : 0);
   });
   rest.sort(function(a,b){ return b._s-a._s; });
 
