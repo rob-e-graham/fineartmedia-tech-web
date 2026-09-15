@@ -208,8 +208,8 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
 <div class="layout">
   <div class="device">
     <div class="d-top">
-      <div class="k">Prague &middot; day 2 of 5</div>
-      <div class="t">Wednesday</div>
+      <div class="k" id="dayKicker">Prague</div>
+      <div class="t" id="dayName">&nbsp;</div>
       <div class="m">Alexandra &amp; James Whitfield &middot; Prague, November</div>
     </div>
     <div class="langbar">
@@ -665,6 +665,10 @@ function flightText(){
   return t;
 }
 
+/* Where the client is in the programme. The header and the concierge read the
+   same object, so the interface can never say one day and the record another. */
+var TODAY={day:'Wednesday', n:2, of:5, tonight:'dinner at Field, 7.30pm, car collects 7.05pm', next:'the gala at Prague Castle tomorrow, Thursday'};
+
 /* Live tier: the clock and the weather are true right now, so the concierge
    may use them. They are separate from TRIBE's record and labelled as such. */
 var WX=null;
@@ -691,8 +695,9 @@ async function weather(){
   }catch(e){}
 }
 function liveText(){
-  var now=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Prague',weekday:'long',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date());
-  var t="[LIVE-01] True right now, not part of TRIBE's record: in Prague it is "+now+".";
+  var clock=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Prague',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date());
+  var t="[LIVE-01] Today is "+TODAY.day+", day "+TODAY.n+" of "+TODAY.of+", and the clock in Prague reads "+clock
+   +". Tonight means "+TODAY.tonight+". Next is "+TODAY.next+".";
   if(WX) t+=" The weather in Prague is "+WX.now+" degrees and "+WX.desc+", with a high of "+WX.hi+" and a low of "+WX.lo+" today.";
   return t;
 }
@@ -849,6 +854,8 @@ document.getElementById('askform').addEventListener('submit',function(e){
   if(!v) return; i.value=''; send(v);
 });
 document.getElementById('langSel').addEventListener('change',function(e){LANG=e.target.value;});
+document.getElementById('dayKicker').textContent='Prague \u00b7 day '+TODAY.n+' of '+TODAY.of;
+document.getElementById('dayName').textContent=TODAY.day;
 renderFlight(); renderDocs(); tick(); setInterval(tick,15000); weather(); setInterval(weather,900000);
 (async function(){
   try{ await archai('Reply with the single word: ready'); setLive(true); }
