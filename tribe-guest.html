@@ -32,6 +32,11 @@ body{font-family:var(--sans);font-weight:300;background:var(--deep);color:var(--
 .device{background:var(--ink2);border:1px solid var(--line);border-radius:3px;
         box-shadow:0 30px 70px -24px rgba(0,0,0,.9);overflow:hidden;max-width:520px;margin:0 auto;width:100%}
 
+.appid{display:flex;align-items:center;gap:9px;padding:12px 22px 11px;background:var(--deep);
+  border-bottom:1px solid var(--line)}
+.appid .mark{height:20px;width:auto;opacity:.92}
+.appid .wordmark{font-family:var(--sans);font-size:12px;letter-spacing:.34em;color:var(--cream);font-weight:400}
+.appid .sub{font-family:var(--serif);font-size:14.5px;letter-spacing:.02em;color:var(--gold);margin-left:-2px}
 .d-top{padding:20px 22px 16px;border-bottom:1px solid var(--line);background:var(--ink)}
 .d-top .k{font-size:9px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase}
 .d-top .t{font-family:var(--serif);font-size:clamp(21px,5.5vw,25px);color:var(--cream);margin-top:5px;line-height:1.15}
@@ -207,6 +212,10 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
 
 <div class="layout">
   <div class="device">
+    <div class="appid">
+      <img class="mark" id="appMark" alt="" aria-hidden="true">
+      <span class="wordmark">TRIBE</span><span class="sub">Concierge</span>
+    </div>
     <div class="d-top">
       <div class="k" id="dayKicker">Prague</div>
       <div class="t" id="dayName">&nbsp;</div>
@@ -810,6 +819,8 @@ document.getElementById('askform').addEventListener('submit',function(e){
   if(!v) return; i.value=''; send(v);
 });
 document.getElementById('langSel').addEventListener('change',function(e){LANG=e.target.value;});
+(function(){ var l=document.querySelector('.logo'), m=document.getElementById('appMark');
+  if(l&&m) m.src=l.src; })();
 document.getElementById('dayKicker').textContent='Prague \u00b7 day '+TODAY.n+' of '+TODAY.of;
 document.getElementById('dayName').textContent=TODAY.day;
 renderFlight(); renderDocs(); tick(); setInterval(tick,15000); weather(); setInterval(weather,900000);
