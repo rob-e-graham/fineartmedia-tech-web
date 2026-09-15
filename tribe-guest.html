@@ -337,7 +337,7 @@ function go(id,b){
   document.getElementById(id).classList.add('on');
   document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on')});
   b.classList.add('on');
-  document.getElementById('chips').style.display = id==='ask' ? 'flex':'none';
+  document.getElementById('chips').style.display = id==='ask' ? 'grid':'none';
   document.getElementById('pane').scrollTop=0;
 }
 function ask(i){
