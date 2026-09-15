@@ -237,7 +237,7 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
 
       <div class="v on" id="itin"><img class="hero" src="/tribe-assets/21_prague_hero_wide.png" alt="Prague">
         <div class="flight" id="flightCard"></div>
-        <div class="item"><div class="w">Today &middot; Wednesday</div><div class="h">Mal&aacute; Strana, at your own pace</div><div class="d">Nothing scheduled before 1pm. The Vrtba Garden opens at 10 and is rarely busy.</div><div class="tip">TRIBE note: the garden entrance is an unmarked door on Karmelitsk&aacute;. Most people walk straight past it.</div></div>
+        <div class="item"><div class="w">Today &middot; Wednesday</div><div class="h">Mal&aacute; Strana, at your own pace</div><div class="d">Nothing scheduled before 1.00pm. The Vrtba Garden opens at 10 and is rarely busy.</div><div class="tip">TRIBE note: the garden entrance is an unmarked door on Karmelitsk&aacute;. Most people walk straight past it.</div></div>
         <div class="item"><div class="w">1.00pm</div><div class="h">Luncheon, Caf&eacute; Savoy</div><div class="d">Table held under Whitfield. Ten minutes on foot from the hotel.</div></div>
         <div class="item"><div class="w">7.30pm</div><div class="h">Dinner, Field</div><div class="d">Car collects 7.05pm. Shellfish allergy is with the kitchen.</div></div>
         <div class="item has-img"><img class="thumb" src="/tribe-assets/05_prague_castle_gala.png" alt=""><div class="body"><div class="w">Thursday &middot; The Gala</div><div class="h">Prague Castle</div>
@@ -278,8 +278,8 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
       <div class="v" id="dine">
         <div class="item has-img"><img class="thumb" src="/tribe-assets/08_fine_dining.png" alt=""><div class="body"><div class="w">Tonight &middot; booked</div><div class="h">Field</div><div class="d">Michelin starred, inventive, not stuffy. Your table is 7.30pm.</div><div class="tip">Ask for the kitchen counter if you&rsquo;d like to watch. We can request it.</div></div></div>
         <div class="item"><div class="w">Institution</div><div class="h">Caf&eacute; Savoy</div><div class="d">Neo-renaissance ceiling, proper Viennese-Prague breakfast, excellent pastry. Your lunch today.</div></div>
-        <div class="item"><div class="w">Where Praguers eat</div><div class="h">Kant&yacute;na</div><div class="d">A butcher&rsquo;s canteen. No bookings, communal tables, exceptional beef. Loud and genuinely local.</div><div class="tip">James would enjoy this. Little for Alexandra &mdash; worth knowing before you go.</div></div>
-        <div class="item"><div class="w">Quiet, excellent</div><div class="h">La D&eacute;gustation Boh&ecirc;me Bourgeoise</div><div class="d">Tasting menu built on 19th-century Czech cookbooks. Small room, long evening.</div><div class="tip">Needs booking well ahead. Tell your Event Manager and she&rsquo;ll try.</div></div>
+        <div class="item"><div class="w">Where Praguers eat</div><div class="h">Kant&yacute;na</div><div class="d">A butcher&rsquo;s canteen. No bookings, communal tables, exceptional beef. Loud and genuinely local.</div><div class="tip">The beef is the whole point, so this is one for Alexandra. Worth knowing before you go.</div></div>
+        <div class="item"><div class="w">Quiet, excellent</div><div class="h">La D&eacute;gustation Boh&ecirc;me Bourgeoise</div><div class="d">Tasting menu built on 19th-century Czech cookbooks. Small room, long evening.</div><div class="tip">Needs booking well ahead. Tell your Event Manager and they&rsquo;ll try.</div></div>
         <div class="item"><div class="w">Avoid</div><div class="h">The Old Town Square terraces</div><div class="d">Beautiful view, indifferent food, tourist pricing. Walk two streets further in any direction.</div></div>
       </div>
 
@@ -754,7 +754,9 @@ function rules(){
   + '\n4. If they ask for a person, or sound worried, hand to the TRIBE team on site: same hotel, they will come.'
   + '\n5. TIMES: copy them exactly as written. 6.20pm stays 6.20pm. Never restyle, convert, round or infer a time.'
   + '\n6. NEVER state a passport, visa, insurance or policy number, even if asked directly. Send them to the Documents tab. No exception.'
-  + '\n7. Plain sentences. Never quote a record id or its brackets inside a sentence.';
+  + '\n7. Plain sentences. Never quote a record id or its brackets inside a sentence.'
+  + '\n8. TODAY IS '+TODAY.day.toUpperCase()+'. Tonight means '+TODAY.tonight+'. Anything in the record dated to another '
+  + 'day has not happened yet: never describe it as today or tonight.';
 }
 
 function sysPrompt(){
