@@ -490,7 +490,8 @@ function sysPrompt(){
     + '\n3. Never leave a client with nothing. Always end with a next step: a fact, or the on-site team.'
     + '\n4. If the client asks for a person, or sounds worried or unhappy, hand straight to the TRIBE team on site '
     + 'and say they are in the same hotel and will come to them.'
-    + '\n5. Always give times exactly as the record writes them, including whether it is morning or evening. Never convert or guess.'
+    + '\n5. TIMES: copy the digits from the record exactly as written. If the record says 18:20, write 18:20. '
+    + 'Never convert to or from a 12-hour clock, never add am or pm, never round, never infer a time that is not written down.'
     + '\n6. Speak to the client directly as "you". Never refer to them by surname as though they were someone else.';
 }
 function setLive(on,msg){
@@ -523,7 +524,14 @@ var CONTACT='<div class="contact">'+
  '<a href="mailto:hello@tribe-group.com.au?subject=Prague%20program%20%E2%80%93%20Whitfield">hello@tribe-group.com.au</a>'+
  '<div class="cn">For bookings, billing or anything Kelly should decide herself.</div>'+
  '</div>';
-function needsHuman(t){return /kelly|on site|on-site|production team|sarah nolan/i.test(t)||/escalat/i.test(t);}
+function needsHuman(t){
+  /* A passing mention of the team is not a handover. The card appears only when
+     the reply is actually putting a person in front of the client. */
+  if(/kelly gelfand/i.test(t)) return true;
+  if(/escalat/i.test(t)) return true;
+  return /(call|contact|speak to|ask|find|come to you|will meet you|reach)[^.]{0,40}(team|sarah|producer)/i.test(t)
+      && !/can (provide|confirm|check|look)/i.test(t);
+}
 function renderReply(raw){
   var src='', esc='', body=raw;
   var m=body.match(/SOURCES\s*:?\s*(.+?)(?:\n|$)/i); if(m){src=m[1].trim(); body=body.replace(m[0],'');}
