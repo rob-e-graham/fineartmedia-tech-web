@@ -34,6 +34,8 @@ body{font-family:var(--sans);font-weight:300;background:var(--deep);color:var(--
 
 .lock{position:absolute;inset:0;z-index:60;background:var(--deep);display:flex;align-items:center;
   justify-content:center;padding:34px 26px}
+/* a class sets display, so it beats the browser's [hidden] rule unless we say so */
+.lock[hidden]{display:none}
 .lk-in{max-width:330px;text-align:left}
 .lk-mark{height:26px;width:auto;opacity:.92;margin-bottom:24px}
 .lk-k{font-family:var(--sans);font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
