@@ -315,11 +315,11 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
       <button class="chip" onclick="ask(1)">What&rsquo;s the dress code?</button>
       <button class="chip" onclick="ask(2)">Where do I meet everyone?</button>
       <button class="chip" onclick="ask(3)">Where can we eat tonight?</button>
-      <button class="chip" onclick="ask(4)">What is there to do this afternoon?</button>
-      <button class="chip" onclick="ask(5)">Where can I get good coffee?</button>
-      <button class="chip" onclick="ask(6)">Something for our anniversary?</button>
-      <button class="chip" onclick="ask(7)">Is the Charles Bridge worth it?</button>
-      <button class="chip" onclick="ask(8)">I need to speak to someone</button>
+      <button class="chip" onclick="ask(4)">Where can I get good coffee?</button>
+      <button class="chip" onclick="ask(5)">I need to speak to someone</button>
+      <button class="chip" onclick="ask(6)">Something romantic</button>
+      <button class="chip" onclick="ask(7)">Something arty</button>
+      <button class="chip" onclick="ask(8)">Something fun</button>
       <form class="askform" id="askform"><input id="askInput" type="text" placeholder="Ask the concierge anything…" autocomplete="off"><button type="submit" aria-label="Send">→</button></form>
     </div>
 
@@ -374,8 +374,8 @@ function go(id,b){
 }
 function ask(i){
   var qs=["What time is my car?","What's the dress code?","Where do I meet everyone?",
-          "Where can we eat tonight?","What is there to do this afternoon?","Where can I get good coffee?",
-          "Something for our anniversary?","Is the Charles Bridge worth it?","I need to speak to someone"];
+          "Where can we eat tonight?","Where can I get good coffee?","I need to speak to someone",
+          "Something romantic","Something arty","Something fun"];
   send(qs[i]);
 }
 
@@ -411,7 +411,7 @@ var FACTS=[
   fact:"Neo-renaissance ceiling, Viennese-Prague breakfast, excellent pastry. Their lunch today."},
  {id:'PRG-DIN-03',cat:'dining',name:'Kantyna',tag:'Where Praguers eat',
   fact:"Butcher's canteen. No bookings, communal, exceptional beef. Loud and local.",tip:"James would enjoy it; little for Alexandra."},
- {id:'PRG-DIN-04',cat:'dining',name:'La Degustation Boheme Bourgeoise',tag:'Quiet, excellent',
+ {id:'PRG-DIN-04',cat:'dining',name:'La Degustation Boheme Bourgeoise',tag:'Quiet, excellent, romantic',
   fact:"Tasting menu built on 19th-century Czech cookbooks. Small room, long evening.",
   tip:"Needs booking well ahead. The team can try."},
  {id:'PRG-DIN-05',cat:'dining',name:'Old Town Square terraces',tag:'Avoid',
@@ -420,29 +420,29 @@ var FACTS=[
  {id:'PRG-SHP-01',cat:'shopping',name:'Moser',tag:'Crystal, the real thing',
   fact:"The Karlovy Vary house since 1857, flagship in Stare Mesto. Handles shipping and the VAT refund properly.",
   tip:"The shops on Celetna sell to visitors. This is where the pieces in the castle came from."},
- {id:'PRG-SHP-02',cat:'shopping',name:'A Bohemian glass workshop',tag:'Made, not bought',
+ {id:'PRG-SHP-02',cat:'shopping',name:'A Bohemian glass workshop',tag:'Made, not bought, arty',
   fact:"Outside the centre. TRIBE has commissioned gifts here on two previous programs. Needs a call ahead and about half a day.",
   tip:"For an anniversary piece, Friday is the last day that works this trip."},
  {id:'PRG-SHP-03',cat:'shopping',name:'Granat Turnov',tag:'Garnets',
   fact:"Czech garnet is the local stone and heavily faked. This is the cooperative that actually mines it."},
 
- {id:'PRG-TIP-01',cat:'tip',name:'Charles Bridge, properly',tag:'Timing',
+ {id:'PRG-TIP-01',cat:'tip',name:'Charles Bridge, properly',tag:'Timing, romantic',
   fact:"Impossible between 10am and 6pm. Go at 6.30am for the light, or after 10pm when it empties. Eight minutes on foot from their hotel.",
   tip:"Thursday morning is their only genuinely free one."},
- {id:'PRG-TIP-02',cat:'tip',name:'Vrtba Garden',tag:'Hidden',
+ {id:'PRG-TIP-02',cat:'tip',name:'Vrtba Garden',tag:'Hidden, romantic quiet',
   fact:"A baroque terraced garden almost nobody finds, five minutes from the hotel. The entrance is an UNMARKED door on Karmelitska. Open until 6pm."},
- {id:'PRG-TIP-03',cat:'tip',name:'Kampa island',tag:'Quiet',
+ {id:'PRG-TIP-03',cat:'tip',name:'Kampa island',tag:'Quiet, romantic quiet',
   fact:"Benches on the water, the quietest place in the centre, two minutes past the Vrtba Garden."},
- {id:'PRG-TIP-04',cat:'tip',name:'Strahov Monastery library',tag:'Worth the detour',
+ {id:'PRG-TIP-04',cat:'tip',name:'Strahov Monastery library',tag:'Worth the detour, arty cultural',
   fact:"The Philosophical Hall is extraordinary. General admission only lets you look in from the doorway; interior access needs two days notice."},
  {id:'PRG-TIP-05',cat:'tip',name:'Taxis and trams',tag:'Practical',
   fact:"Use the hotel car or a ride app. Street taxis in the centre are the one thing Prague is still bad at."},
  {id:'PRG-TIP-06',cat:'tip',name:'November evenings',tag:'Practical',
   fact:"Around 4 to 8 degrees after dark. The castle courtyard is exposed."},
 
- {id:'PRG-TIP-07',cat:'tip',name:'St Nicholas Church, Mala Strana',tag:'On the way',
+ {id:'PRG-TIP-07',cat:'tip',name:'St Nicholas Church, Mala Strana',tag:'On the way, arty cultural',
   fact:"High baroque. The acoustics are why concerts are held here. Two minutes from the Vrtba Garden."},
- {id:'PRG-TIP-08',cat:'tip',name:'National Theatre',tag:'If an evening frees up',
+ {id:'PRG-TIP-08',cat:'tip',name:'National Theatre',tag:'If an evening frees up, arty cultural evening',
   fact:"Gold-crowned, on the river in Nove Mesto. The team can check availability."},
  {id:'PRG-CTY-01',cat:'city',name:'Getting in',tag:'Practical',src:'Lonely Planet',
   fact:"Vaclav Havel Airport is 15km out. Trolleybus 59 or a taxi, about 30 minutes to the centre."},
@@ -452,29 +452,29 @@ var FACTS=[
   fact:"Old Town Square to Prague Castle is about an hour on foot at a leisurely pace. Most of the centre is walkable."},
  {id:'PRG-CTY-04',cat:'city',name:'Neighbourhoods',tag:'Orientation',src:'Lonely Planet',
   fact:"Stare Mesto is the historic heart with Josefov, the old Jewish quarter. Nove Mesto has many of the best places to eat and drink. Vinohrady, Karlin and Zizkov are the lively cafe and bar quarters. Holesovice is a former industrial zone turned arty."},
- {id:'PRG-CTY-05',cat:'city',name:'Classical music',tag:'Evenings',src:'Lonely Planet',
+ {id:'PRG-CTY-05',cat:'city',name:'Classical music',tag:'Evenings, cultural arty evening',src:'Lonely Planet',
   fact:"The National Theatre, the Rudolfinum, the State Opera and the Municipal House are the venues that match the music. Book ahead."},
- {id:'PRG-CTY-06',cat:'city',name:'Jazz',tag:'Evenings',src:'Lonely Planet',
+ {id:'PRG-CTY-06',cat:'city',name:'Jazz',tag:'Evenings, fun evening',src:'Lonely Planet',
   fact:"AghaRTA on Zelezna and the Reduta Jazz Club on Narodni, where Bill Clinton played an impromptu saxophone set in 1994."},
- {id:'PRG-CTY-07',cat:'city',name:'A proper Czech pub',tag:'Evenings',src:'Lonely Planet',
+ {id:'PRG-CTY-07',cat:'city',name:'A proper Czech pub',tag:'Evenings, fun casual evening',src:'Lonely Planet',
   fact:"Pilsner was invented in Pilsen in 1842. U Zlateho tygra is the classic drinking room locals love. Klasterni pivovar Strahov sits near the castle. Cerveny Jelen is the upscale end."},
- {id:'PRG-CTY-08',cat:'city',name:'Gardens beyond the Vrtba',tag:'Quiet',src:'Lonely Planet',
+ {id:'PRG-CTY-08',cat:'city',name:'Gardens beyond the Vrtba',tag:'Quiet, romantic quiet',src:'Lonely Planet',
   fact:"The Royal Garden north of the castle has Renaissance buildings from the 16th century. The Wallenstein Garden has a late-Renaissance artificial stalactite grotto."},
- {id:'PRG-CTY-09',cat:'city',name:'The Astronomical Clock',tag:'Timing',src:'Lonely Planet',
+ {id:'PRG-CTY-09',cat:'city',name:'The Astronomical Clock',tag:'Timing, cultural',src:'Lonely Planet',
   fact:"15th century, chimes on the hour in Old Town Square. Charles Bridge carries 30 baroque statues."},
  {id:'PRG-LUX-01',cat:'city',name:'The luxury addresses',tag:'Hotels',src:'Travel trade guides',
   fact:"Four Seasons on the Old Town riverside, closest to Charles Bridge. Aria in Mala Strana, music-themed, rooftop facing the castle. Augustine in Lesser Town, a converted 13th-century monastery with its own brewery. The Grand Mark, a restored baroque palace."},
  {id:'PRG-LUX-02',cat:'city',name:'Michelin in Prague',tag:'Dining',src:'Travel trade guides',
   fact:"The starred scene is small but serious, and costs a fraction of western Europe. Alcron has been part of the city since the 1930s and leans to seafood."},
- {id:'PRG-LUX-03',cat:'city',name:'Private experiences',tag:'Arranged',src:'Travel trade guides',
+ {id:'PRG-LUX-03',cat:'city',name:'Private experiences',tag:'Arranged, romantic cultural arranged',src:'Travel trade guides',
   fact:"Private guiding and river dinner cruises are the standard luxury options. Anything genuinely private at a palace or monastery needs arranging well ahead."},
  {id:'PRG-CAS-01',cat:'dining',name:'Pizza and casual Italian',tag:'Casual',src:'Travel trade guides',
   fact:"Pizza Nuova near Old Town does Neapolitan pizza and is part of the Ambiente group, which runs many of the city's reliable kitchens. Good when nobody wants a long dinner."},
  {id:'PRG-CAS-02',cat:'dining',name:'Coffee and a sit down',tag:'Casual',src:'Travel trade guides',
   fact:"Kavarna Slavia opposite the National Theatre is the grand old riverside cafe. Muj salek kavy in Karlin is where Praguers actually go for coffee."},
- {id:'PRG-CAS-03',cat:'dining',name:'Late and lively by the river',tag:'Casual',src:'Lonely Planet',
+ {id:'PRG-CAS-03',cat:'dining',name:'Late and lively by the river',tag:'Casual, fun late',src:'Lonely Planet',
   fact:"Naplavka on the Vltava embankment has food, drinks and music after dark, and is where the city goes on a warm evening."},
- {id:'PRG-CAS-04',cat:'dining',name:'Czech food without ceremony',tag:'Casual',src:'Lonely Planet',
+ {id:'PRG-CAS-04',cat:'dining',name:'Czech food without ceremony',tag:'Casual, fun casual',src:'Lonely Planet',
   fact:"U Kroka or Hostinec na Vytoni for duck and proper Czech cooking. Cerveny Jelen is the smarter version of the same idea."},
  {id:'PRG-TEAM-01',cat:'client',name:'TRIBE on the ground',
   fact:"A TRIBE production team has travelled from Melbourne and is on site for the whole program, staying at the same hotel. They are awake in Prague time and reachable at any hour. Sarah Nolan leads on the ground. For anything happening now, they are the right people, not Melbourne."},
