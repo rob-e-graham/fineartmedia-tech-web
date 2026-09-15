@@ -95,6 +95,13 @@ svg.map{display:block;width:100%;height:auto}
   padding-bottom:1px}
 .contact a:hover{color:var(--gold)}
 .contact .cn{width:100%;font-size:10.5px;color:var(--dim);line-height:1.5;margin-top:3px}
+.base{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);background:var(--ink)}
+.bt{background:none;border:0;padding:11px 4px 12px;cursor:pointer;color:var(--dim);font-family:var(--sans);
+  display:flex;flex-direction:column;align-items:center;gap:5px;transition:color .18s}
+.bt svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+.bt span{font-size:8.6px;letter-spacing:.11em;text-transform:uppercase}
+.bt:hover{color:var(--body)}
+.bt.on{color:var(--gold)}
 .chips{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:13px 18px 16px;border-top:1px solid var(--line);background:var(--ink)}
 @media(max-width:430px){.chips{grid-template-columns:repeat(2,1fr)}}
 .chip{font-size:10.5px;line-height:1.3;padding:11px 9px;background:transparent;border:1px solid var(--line);color:var(--body);cursor:pointer;font-family:inherit;font-weight:300;transition:.18s;border-radius:2px;text-align:center;min-height:56px;display:flex;align-items:center;justify-content:center}
@@ -152,12 +159,12 @@ b{color:var(--cream);font-weight:400}
 .flight .fd{font-size:11.5px;color:var(--dim);margin-top:7px;line-height:1.55}
 .flight .fd b{color:var(--cream);font-weight:400}
 .flight .fc{font-size:9.6px;color:var(--dim);margin-top:8px;letter-spacing:.06em}
-.nowbar{display:flex;gap:1px;background:var(--line);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.nb{flex:1;background:var(--ink);padding:7px 12px;display:flex;align-items:baseline;gap:8px}
-.nb.here{background:rgba(212,185,140,.06)}
-.nb .nl{font-family:var(--sans);font-size:8.6px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
-.nb .nt{font-family:var(--sans);font-size:14px;color:var(--cream);font-variant-numeric:tabular-nums;letter-spacing:.02em}
-.nb .nw{font-family:var(--sans);font-size:10px;color:var(--gold);margin-left:auto;text-align:right}
+.nowbar{display:flex;align-items:baseline;gap:7px;padding:7px 15px;background:var(--ink);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.nowbar .nl{font-family:var(--sans);font-size:8.2px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+.nowbar .nl.mel{margin-left:auto}
+.nowbar .nt{font-family:var(--sans);font-size:12.5px;color:var(--cream);font-variant-numeric:tabular-nums}
+.nowbar .nw{font-family:var(--sans);font-size:10px;color:var(--gold)}
 .dot{width:7px;height:7px;border-radius:99px;background:#6b5f4a;display:inline-block;margin-left:auto}
 .dot.on{background:var(--gold);box-shadow:0 0 7px rgba(212,185,140,.7)}
 .dot.off{background:#5c5550}
@@ -215,17 +222,15 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
       <span id="liveDot" class="dot off" title="Concierge status"></span><span id="liveTxt">Connecting to TRIBE Concierge…</span>
     </div>
     <div class="nowbar" id="nowbar">
-      <div class="nb here"><span class="nl">Prague</span><span class="nt" id="clkPrg">--:--</span><span class="nw" id="wxPrg">&nbsp;</span></div>
-      <div class="nb"><span class="nl">Melbourne</span><span class="nt" id="clkMel">--:--</span><span class="nw" id="wxMel">home</span></div>
+      <span class="nl">Prague</span><span class="nt" id="clkPrg">--:--</span>
+      <span class="nw" id="wxPrg"></span>
+      <span class="nl mel">Melbourne</span><span class="nt" id="clkMel">--:--</span>
     </div>
-    <div class="tabs">
-      <button class="tab on" onclick="go('itin',this)">Itinerary</button>
-      <button class="tab" onclick="go('map',this)">The City</button>
+    <div class="tabs" id="tabs" style="display:none">
+      <button class="tab on" onclick="go('map',this)">The City</button>
       <button class="tab" onclick="go('dine',this)">Dining</button>
       <button class="tab" onclick="go('shop',this)">Shopping</button>
       <button class="tab" onclick="go('tips',this)">TRIBE Tips</button>
-      <button class="tab" onclick="go('docs',this)">Documents</button>
-      <button class="tab" onclick="go('ask',this)">Ask</button>
     </div>
 
     <div class="pane" id="pane">
@@ -387,13 +392,29 @@ function mp(id){
     '<div class="d">'+x.fact+(x.tip?'<br><span style="color:var(--gold)">'+x.tip+'</span>':'')+'</div>'+
     '<div class="d" style="color:var(--dim);font-size:10px;margin-top:6px">['+x.id+'] &middot; '+srcLabel(x)+'</div>';
 }
+/* Two levels of navigation: four destinations along the base, and the
+   browsing tabs, which only exist inside The City. */
+var EXPLORE=['map','dine','shop','tips'];
 function go(id,b){
-  document.querySelectorAll('.v').forEach(function(v){v.classList.remove('on')});
-  document.getElementById(id).classList.add('on');
-  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on')});
-  b.classList.add('on');
-  document.getElementById('chips').style.display = id==='ask' ? 'grid':'none';
+  document.querySelectorAll('.v').forEach(function(v){ v.classList.remove('on'); });
+  var view=document.getElementById(id);
+  if(view) view.classList.add('on');
+
+  var inExplore=EXPLORE.indexOf(id)>-1;
+  document.getElementById('tabs').style.display = inExplore ? 'flex' : 'none';
+  if(inExplore){
+    document.querySelectorAll('.tab').forEach(function(t){
+      t.classList.toggle('on', b ? t===b : t.getAttribute('onclick').indexOf("'"+id+"'")>-1);
+    });
+  }
+  var base = inExplore ? 'map' : id;
+  document.querySelectorAll('.bt').forEach(function(t){
+    t.classList.toggle('on', t.getAttribute('data-go')===base);
+  });
+
+  document.getElementById('chips').style.display = id==='ask' ? 'grid' : 'none';
   document.getElementById('pane').scrollTop=0;
+  official(0);
 }
 function ask(i){
   var qs=["What time is my car?","What's the dress code?","Where do I meet everyone?",
