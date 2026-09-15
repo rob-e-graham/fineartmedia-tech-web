@@ -30,7 +30,7 @@ body{font-family:var(--sans);font-weight:300;background:var(--deep);color:var(--
 
 
 .device{background:var(--ink2);border:1px solid var(--line);border-radius:3px;
-        box-shadow:0 30px 70px -24px rgba(0,0,0,.9);overflow:hidden;width:100%}
+        box-shadow:0 30px 70px -24px rgba(0,0,0,.9);overflow:hidden;max-width:520px;margin:0 auto;width:100%}
 
 .d-top{padding:20px 22px 16px;border-bottom:1px solid var(--line);background:var(--ink)}
 .d-top .k{font-size:9px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase}
@@ -126,12 +126,15 @@ b{color:var(--cream);font-weight:400}
          font-size:15px;padding:0 15px;cursor:pointer;border-radius:2px}
 .askform button:hover{border-color:var(--gold)}
 .mapimg{position:relative;line-height:0}
-.mapimg img{width:100%;max-width:100%;height:auto;display:block}
+.mapimg img{width:100%;max-width:100%;height:auto;display:block;filter:grayscale(.85) contrast(1.05);transition:filter .6s ease}
+.mapimg:hover img{filter:grayscale(0) contrast(1)}
 .hs{position:absolute;width:34px;height:34px;transform:translate(-50%,-50%);border-radius:99px;
     background:transparent;border:2px solid transparent;cursor:pointer;padding:0}
 .hs:hover,.hs:focus-visible{border-color:var(--gold);background:rgba(212,185,140,.18);outline:none}
-.hero{width:100%;max-width:100%;height:auto;display:block;border-radius:2px;margin-bottom:14px}
-.pane img.thumb{width:112px;height:70px;object-fit:cover;object-position:center bottom;display:block;border-radius:2px;opacity:.95;flex:0 0 112px}
+.hero{width:100%;max-width:100%;height:auto;display:block;border-radius:2px;margin-bottom:14px;filter:grayscale(1) contrast(1.06) brightness(.94);transition:filter .5s ease}
+.hero:hover{filter:grayscale(0) contrast(1) brightness(1)}
+.pane img.thumb{width:112px;height:70px;object-fit:cover;object-position:center bottom;display:block;border-radius:2px;flex:0 0 112px;filter:grayscale(1) contrast(1.08) brightness(.9);transition:filter .45s ease}
+.item.has-img:hover img.thumb{filter:grayscale(0) contrast(1) brightness(1)}
 .item.has-img{display:flex;gap:14px;align-items:flex-start}
 .item.has-img .body{flex:1;min-width:0}
 footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:11px;
@@ -257,7 +260,7 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
   </div>
 
   </div>
-<div style="max-width:540px;margin:18px auto 0;font-size:10.5px;color:var(--dim);line-height:1.6;text-align:center">Concept demonstration &middot; Rob Graham for TRIBE Travel &amp; Events. Client, supplier and venue details are invented; the scenario draws on TRIBE&rsquo;s publicly described event history.</div>
+<div style="max-width:540px;margin:18px auto 0;font-size:10.5px;color:var(--dim);line-height:1.6;text-align:center">Concept demonstration &middot; Rob Graham for TRIBE Travel &amp; Events. Client, supplier and venue details are invented; city knowledge is attributed to its source.</div>
 </div>
 
 <script>
@@ -267,7 +270,7 @@ function mp(id){
   document.getElementById('mapinfo').innerHTML=
     '<div class="c">'+(x.tag||x.cat)+'</div><div class="h">'+x.name+'</div>'+
     '<div class="d">'+x.fact+(x.tip?'<br><span style="color:var(--gold)">'+x.tip+'</span>':'')+'</div>'+
-    '<div class="d" style="color:var(--dim);font-size:10px;margin-top:6px">['+x.id+']</div>';
+    '<div class="d" style="color:var(--dim);font-size:10px;margin-top:6px">['+x.id+'] &middot; '+srcLabel(x)+'</div>';
 }
 function go(id,b){
   document.querySelectorAll('.v').forEach(function(v){v.classList.remove('on')});
@@ -372,12 +375,58 @@ var FACTS=[
   fact:"High baroque. The acoustics are why concerts are held here. Two minutes from the Vrtba Garden."},
  {id:'PRG-TIP-08',cat:'tip',name:'National Theatre',tag:'If an evening frees up',
   fact:"Gold-crowned, on the river in Nove Mesto. Kelly can check availability."},
+ {id:'PRG-CTY-01',cat:'city',name:'Getting in',tag:'Practical',src:'Lonely Planet',
+  fact:"Vaclav Havel Airport is 15km out. Trolleybus 59 or a taxi, about 30 minutes to the centre."},
+ {id:'PRG-CTY-02',cat:'city',name:'Taxis, honestly',tag:'Practical',src:'Lonely Planet',
+  fact:"Book ahead rather than hailing. AAA Taxis is reliable. Some drivers charge tourists more, so agree the fare. Uber and Bolt both operate, and night trams run in the small hours."},
+ {id:'PRG-CTY-03',cat:'city',name:'The historic core is walkable',tag:'Practical',src:'Lonely Planet',
+  fact:"Old Town Square to Prague Castle is about an hour on foot at a leisurely pace. Most of the centre is walkable."},
+ {id:'PRG-CTY-04',cat:'city',name:'Neighbourhoods',tag:'Orientation',src:'Lonely Planet',
+  fact:"Stare Mesto is the historic heart with Josefov, the old Jewish quarter. Nove Mesto has many of the best places to eat and drink. Vinohrady, Karlin and Zizkov are the lively cafe and bar quarters. Holesovice is a former industrial zone turned arty."},
+ {id:'PRG-CTY-05',cat:'city',name:'Classical music',tag:'Evenings',src:'Lonely Planet',
+  fact:"The National Theatre, the Rudolfinum, the State Opera and the Municipal House are the venues that match the music. Book ahead."},
+ {id:'PRG-CTY-06',cat:'city',name:'Jazz',tag:'Evenings',src:'Lonely Planet',
+  fact:"AghaRTA on Zelezna and the Reduta Jazz Club on Narodni, where Bill Clinton played an impromptu saxophone set in 1994."},
+ {id:'PRG-CTY-07',cat:'city',name:'A proper Czech pub',tag:'Evenings',src:'Lonely Planet',
+  fact:"Pilsner was invented in Pilsen in 1842. U Zlateho tygra is the classic drinking room locals love. Klasterni pivovar Strahov sits near the castle. Cerveny Jelen is the upscale end."},
+ {id:'PRG-CTY-08',cat:'city',name:'Gardens beyond the Vrtba',tag:'Quiet',src:'Lonely Planet',
+  fact:"The Royal Garden north of the castle has Renaissance buildings from the 16th century. The Wallenstein Garden has a late-Renaissance artificial stalactite grotto."},
+ {id:'PRG-CTY-09',cat:'city',name:'The Astronomical Clock',tag:'Timing',src:'Lonely Planet',
+  fact:"15th century, chimes on the hour in Old Town Square. Charles Bridge carries 30 baroque statues."},
+ {id:'PRG-LUX-01',cat:'city',name:'The luxury addresses',tag:'Hotels',src:'Travel trade guides',
+  fact:"Four Seasons on the Old Town riverside, closest to Charles Bridge. Aria in Mala Strana, music-themed, rooftop facing the castle. Augustine in Lesser Town, a converted 13th-century monastery with its own brewery. The Grand Mark, a restored baroque palace."},
+ {id:'PRG-LUX-02',cat:'city',name:'Michelin in Prague',tag:'Dining',src:'Travel trade guides',
+  fact:"The starred scene is small but serious, and costs a fraction of western Europe. Alcron has been part of the city since the 1930s and leans to seafood."},
+ {id:'PRG-LUX-03',cat:'city',name:'Private experiences',tag:'Arranged',src:'Travel trade guides',
+  fact:"Private guiding and river dinner cruises are the standard luxury options. Anything genuinely private at a palace or monastery needs arranging well ahead."},
  {id:'PRG-GAP-01',cat:'gap',name:'Not in the record',
   fact:"Current prices, live availability, opening hours today, any other TRIBE client, and any city other than Prague. If asked, say so and name Kelly Gelfand."}
 ];
+function srcLabel(x){ return x.src ? x.src : "TRIBE record"; }
+var STOP={the:1,a:1,an:1,and:1,or:1,to:1,of:1,in:1,is:1,are:1,we:1,i:1,you:1,my:1,our:1,for:1,on:1,at:1,it:1,do:1,can:1,any:1,what:1,where:1,when:1,how:1,there:1,this:1,that:1,with:1,me:1,us:1};
+function toks(t){return String(t||'').toLowerCase().replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(function(w){return w.length>2&&!STOP[w];});}
+function retrieve(q,budget){
+  var qt=toks(q);
+  var must=FACTS.filter(function(f){return f.cat==='client'||f.cat==='program'||f.cat==='gap';});
+  var rest=FACTS.filter(function(f){return must.indexOf(f)<0;});
+  rest.forEach(function(f){
+    var hay=toks(f.name+' '+f.fact+' '+(f.tip||'')+' '+(f.tag||'')+' '+f.cat);
+    f._s=qt.reduce(function(n,w){return n+(hay.some(function(h){return h.indexOf(w)===0||w.indexOf(h)===0;})?1:0);},0);
+  });
+  rest.sort(function(a,b){return b._s-a._s;});
+  var out=must.slice(), used=must.reduce(function(n,f){return n+f.fact.length+60;},0);
+  for(var i=0;i<rest.length;i++){
+    var len=rest[i].fact.length+(rest[i].tip?rest[i].tip.length:0)+60;
+    if(used+len>budget) break;
+    out.push(rest[i]); used+=len;
+  }
+  return out;
+}
+var LASTQ='';
 function recordText(){
+  var sel=retrieve(LASTQ,2200);
   return "RECORD (the only facts you may use):\n"+
-    FACTS.map(function(x){return "["+x.id+"] "+x.name+": "+x.fact+(x.tip?" TIP: "+x.tip:"");}).join("\n");
+    sel.map(function(x){return "["+x.id+"] "+x.name+": "+x.fact+(x.tip?" TIP: "+x.tip:"");}).join("\n");
 }
 function sysPrompt(){
   var L = LANGNAME[LANG];
@@ -395,8 +444,11 @@ function sysPrompt(){
     + 'If the client asks to change a booking, or mentions money, a complaint, illness or safety, name Kelly Gelfand as taking it from here. '
     + 'End every reply with a line starting SOURCES: listing the record ids you used, like [PRG-TIP-02].'
     + langLine + '\n\n' + recordText()
-    + '\n\nBEFORE YOU REPLY: if the question touches food, a meal, a restaurant or dinner, you MUST state that '
-    + 'Alexandra has a shellfish allergy and James does not eat red meat.';
+    + '\n\nBEFORE YOU REPLY, CHECK BOTH:'
+    + '\n1. NEVER name a venue, restaurant, bar, hotel or place that does not appear verbatim in the record above. '
+    + 'If the record has none, say "That is not in my record" and name Kelly Gelfand. Do not offer a suggestion from general knowledge.'
+    + '\n2. If the question touches food, a meal, a restaurant or dinner, state that Alexandra has a shellfish allergy '
+    + 'and James does not eat red meat.';
 }
 function setLive(on,msg){
   LIVE=on;
@@ -406,6 +458,7 @@ function setLive(on,msg){
   t.textContent=msg||(on?'TRIBE Concierge · live · answering from your record':'Offline — showing prepared answers');
 }
 async function archai(userText){
+  LASTQ=userText;
   var res=await fetch(CHAT_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({systemPrompt:sysPrompt(),userPrompt:userText,history:HIST.slice(-6)})});
   if(!res.ok) throw new Error('offline');
