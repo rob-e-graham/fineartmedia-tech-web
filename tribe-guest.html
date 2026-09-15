@@ -322,6 +322,17 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
       <button class="chip" onclick="ask(8)">I need to speak to someone</button>
       <form class="askform" id="askform"><input id="askInput" type="text" placeholder="Ask the concierge anything…" autocomplete="off"><button type="submit" aria-label="Send">→</button></form>
     </div>
+
+    <nav class="base" id="base">
+      <button class="bt on" data-go="itin" onclick="go('itin')">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 4h14M3 10h14M3 16h9"/></svg><span>Itinerary</span></button>
+      <button class="bt" data-go="map" onclick="go('map')">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17s6-5.3 6-9.6A6 6 0 0 0 4 7.4C4 11.7 10 17 10 17z"/><circle cx="10" cy="7.5" r="2.1"/></svg><span>The City</span></button>
+      <button class="bt" data-go="docs" onclick="go('docs')">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 2.5h6.5L15 6v11.5H5z"/><path d="M11.5 2.5V6H15"/></svg><span>Documents</span></button>
+      <button class="bt" data-go="ask" onclick="go('ask')">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M17 11.5c0 2.8-3.1 5-7 5a8.6 8.6 0 0 1-2.3-.3L3.5 17.5l1.2-2.8C3.6 13.8 3 12.7 3 11.5c0-2.8 3.1-5 7-5s7 2.2 7 5z"/></svg><span>Ask TRIBE</span></button>
+    </nav>
   </div>
 
   </div>
