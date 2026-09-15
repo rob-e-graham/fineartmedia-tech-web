@@ -29,9 +29,33 @@ body{font-family:var(--sans);font-weight:300;background:var(--deep);color:var(--
 .layout{display:block;max-width:540px;margin:0 auto}
 
 
-.device{background:var(--ink2);border:1px solid var(--line);border-radius:3px;
+.device{position:relative;background:var(--ink2);border:1px solid var(--line);border-radius:3px;
         box-shadow:0 30px 70px -24px rgba(0,0,0,.9);overflow:hidden;max-width:520px;margin:0 auto;width:100%}
 
+.lock{position:absolute;inset:0;z-index:60;background:var(--deep);display:flex;align-items:center;
+  justify-content:center;padding:34px 26px}
+.lk-in{max-width:330px;text-align:left}
+.lk-mark{height:26px;width:auto;opacity:.92;margin-bottom:24px}
+.lk-k{font-family:var(--sans);font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+.lk-t{font-family:var(--serif);font-size:30px;line-height:1.12;color:var(--cream);margin-top:7px}
+.lk-p{font-size:12.5px;line-height:1.65;color:var(--body);margin-top:17px}
+.lk-m{color:var(--cream);font-variant-numeric:tabular-nums}
+.lk-go{width:100%;margin-top:21px;padding:14px;background:var(--gold);color:#241d16;border:0;border-radius:3px;
+  font-family:var(--sans);font-size:11px;letter-spacing:.17em;text-transform:uppercase;cursor:pointer}
+.lk-go:hover{background:var(--cream)}
+.lk-f{font-size:10.5px;line-height:1.6;color:var(--dim);margin-top:15px}
+.lockbtn{margin-left:auto;background:none;border:0;color:var(--dim);cursor:pointer;font-family:var(--sans);
+  font-size:8.6px;letter-spacing:.15em;text-transform:uppercase;padding:3px 0}
+.lockbtn:hover{color:var(--gold)}
+.gate{padding:26px 4px;max-width:300px}
+.gate .gt{font-family:var(--serif);font-size:20px;color:var(--cream)}
+.gate .gp{font-size:12px;color:var(--body);line-height:1.6;margin-top:8px}
+.gate input{margin-top:15px;width:150px;background:var(--ink2);border:1px solid var(--line);border-radius:3px;
+  color:var(--cream);font-family:var(--sans);font-size:23px;letter-spacing:.42em;text-align:center;padding:11px 0 11px 10px;
+  font-variant-numeric:tabular-nums}
+.gate input:focus{outline:none;border-color:var(--gold)}
+.gate .gh{font-size:10.5px;color:var(--dim);margin-top:12px;line-height:1.6}
+.gate .gerr{color:#e2a97e;font-size:11px;margin-top:9px;min-height:14px}
 .appid{display:flex;align-items:center;gap:9px;padding:12px 22px 11px;background:var(--deep);
   border-bottom:1px solid var(--line)}
 .appid .mark{height:20px;width:auto;opacity:.92}
@@ -201,9 +225,22 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
 
 <div class="layout">
   <div class="device">
+    <div class="lock" id="lock" hidden>
+      <div class="lk-in">
+        <img class="lk-mark" id="lockMark" alt="" aria-hidden="true">
+        <div class="lk-k">Prague &middot; November</div>
+        <div class="lk-t">Alexandra &amp; James<br>Whitfield</div>
+        <p class="lk-p">This programme opened from the link sent to
+          <span class="lk-m">a&bull;&bull;&bull;&bull;&bull;&bull;a@whitfield.com.au</span>.
+          Confirm once and it stays open on this device for the trip.</p>
+        <button class="lk-go" onclick="unlockDevice()">Open my programme</button>
+        <div class="lk-f">The link expires 2 December. Your documents are removed from the device when the trip ends.</div>
+      </div>
+    </div>
     <div class="appid">
       <img class="mark" id="appMark" src="data:image/png;base64,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" alt="" aria-hidden="true">
       <span class="wordmark">TRIBE</span><span class="sub">Concierge</span>
+      <button class="lockbtn" onclick="lockDevice()" title="Lock this device">Lock</button>
     </div>
     <div class="d-top">
       <div class="k" id="dayKicker">Prague</div>
@@ -369,6 +406,7 @@ function go(id,b){
   document.getElementById('chips').style.display = id==='ask' ? 'grid' : 'none';
   document.getElementById('pane').scrollTop=0;
   official(0);
+  if(id!=='docs' && DOCS_OPEN){ DOCS_OPEN=false; REVEAL={}; renderDocs(); }
 }
 function ask(i){
   var qs=["What time is my car?","What's the dress code?","Where do I meet everyone?",
@@ -535,6 +573,26 @@ function recordText(budget){
   return TIERS.reduce(function(acc,tier){ return acc+tier(); },t);
 }
 
+/* Two gates, sized to what is behind them. The link in the client's email is the
+   sign-in: opening it is the proof, and confirming once trusts this device for the
+   trip. The documents ask again, because that is where the passport numbers are. */
+var TRUSTED='tribe.device.whitfield.prague';
+function remembered(){ try{ return localStorage.getItem(TRUSTED)==='1'; }catch(e){ return false; } }
+function unlockDevice(){
+  try{ localStorage.setItem(TRUSTED,'1'); }catch(e){}
+  document.getElementById('lock').hidden=true;
+}
+function lockDevice(){
+  try{ localStorage.removeItem(TRUSTED); }catch(e){}
+  DOCS_OPEN=false; renderDocs();
+  document.getElementById('lock').hidden=false;
+}
+function initLock(){
+  var l=document.getElementById('lock'), m=document.getElementById('lockMark');
+  if(m) m.src=document.getElementById('appMark').src;
+  l.hidden=remembered();
+}
+
 /* Documents. The numbers live on the device and are shown, never spoken:
    the concierge is told what is held and whether it is valid, and nothing more.
    Revealing a number takes a deliberate tap and hides itself again. */
@@ -545,9 +603,37 @@ var DOCS=[
  {t:'Travel insurance',who:'Both travellers',    meta:'Chubb &middot; medical to $10m &middot; valid to 2 December', v:'ok', val:'CHB-441-90277'},
  {t:'Invitation letter',who:'Prague Castle gala',meta:'Required at the gate on Thursday', v:'ok', val:'Held &middot; shown at the gate'}
 ];
-var REVEAL={};
+var REVEAL={}, DOCS_OPEN=false;
+var DOC_CODE='2481';
+function docGate(){
+  return '<div class="gate">'
+   +'<div class="gt">Your documents</div>'
+   +'<p class="gp">Passports, entry status and insurance. Enter the four-digit code your '
+   +'TRIBE producer gave you when you arrived.</p>'
+   +'<input id="docPin" type="tel" inputmode="numeric" maxlength="4" autocomplete="off" aria-label="Four digit code">'
+   +'<div class="gerr" id="docErr"></div>'
+   +'<div class="gh">Held on this device only. TRIBE keeps no copy, and the concierge is never given the numbers.</div>'
+   +'<div class="gh" style="color:var(--gold)">Demonstration code: 2481</div>'
+   +'</div>';
+}
+function tryPin(v){
+  if(v.length<4) return;
+  if(v===DOC_CODE){ DOCS_OPEN=true; renderDocs(); return; }
+  var e=document.getElementById('docErr');
+  if(e) e.textContent='That code does not match. Your producer can reissue it.';
+  var i=document.getElementById('docPin'); if(i){ i.value=''; i.focus(); }
+}
 function renderDocs(){
   var e=document.getElementById('docList'); if(!e) return;
+  var btn=document.querySelector('.official'), note=document.querySelector('.dn');
+  if(btn) btn.style.display=DOCS_OPEN?'':'none';
+  if(note) note.style.display=DOCS_OPEN?'':'none';
+  if(!DOCS_OPEN){
+    e.innerHTML=docGate();
+    var i=document.getElementById('docPin');
+    if(i) i.addEventListener('input',function(){ tryPin(this.value.replace(/\D/g,'')); });
+    return;
+  }
   e.innerHTML=DOCS.map(function(d,i){
     return '<div class="dc"><div><div class="dt">'+d.t+'</div>'
      +'<div class="dm">'+d.who+' &middot; '+d.meta+'</div>'
@@ -585,7 +671,7 @@ function official(on){
 function docsText(){
   return "[DOC-01] Held in the app, numbers withheld from you: two Australian passports valid past the trip; Schengen "
    +"entry visa-free 90 days, no ETIAS yet; Chubb insurance to 2 December; the gala invitation, needed at the gate "
-   +"Thursday. For any number, send them to the Documents tab.";
+   +"Thursday. For any number, send them to the Documents tab, which asks for the code their producer gave them.";
 }
 
 /* Flight tier. In production this object is filled by a scheduled status feed
@@ -816,7 +902,7 @@ document.getElementById('langSel').addEventListener('change',function(e){LANG=e.
   if(l&&m) l.src=m.src; })();
 document.getElementById('dayKicker').textContent='Prague \u00b7 day '+TODAY.n+' of '+TODAY.of;
 document.getElementById('dayName').textContent=TODAY.day;
-renderFlight(); renderDocs(); tick(); setInterval(tick,15000); weather(); setInterval(weather,900000);
+initLock(); renderFlight(); renderDocs(); tick(); setInterval(tick,15000); weather(); setInterval(weather,900000);
 (async function(){
   try{ await archai('Reply with the single word: ready'); setLive(true); }
   catch(e){ setLive(false,'Offline — showing prepared answers'); }
