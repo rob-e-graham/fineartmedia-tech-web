@@ -88,6 +88,13 @@ svg.map{display:block;width:100%;height:auto}
 .src{font-size:9.5px;color:var(--dim);margin-top:8px;padding-top:7px;border-top:1px solid var(--line);
      line-height:1.5;letter-spacing:.03em}
 .esc{font-size:10px;color:var(--gold);margin-top:7px;letter-spacing:.04em}
+.contact{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);display:flex;
+  flex-wrap:wrap;gap:6px 14px;align-items:baseline}
+.contact .ch{width:100%;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.contact a{color:var(--cream);text-decoration:none;font-size:12.5px;border-bottom:1px solid var(--gold);
+  padding-bottom:1px}
+.contact a:hover{color:var(--gold)}
+.contact .cn{width:100%;font-size:10.5px;color:var(--dim);line-height:1.5;margin-top:3px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;padding:13px 18px 16px;border-top:1px solid var(--line);background:var(--ink)}
 .chip{font-size:11px;padding:10px 14px;background:transparent;border:1px solid var(--line);
       color:var(--body);cursor:pointer;font-family:inherit;font-weight:300;transition:.18s;border-radius:2px}
@@ -251,10 +258,12 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
     </div>
 
     <div class="chips" id="chips" style="display:none">
-      <button class="chip" onclick="ask(0)">Somewhere quiet this afternoon?</button>
-      <button class="chip" onclick="ask(1)">Can we change Thursday?</button>
-      <button class="chip" onclick="ask(2)">Something for our anniversary?</button>
-      <button class="chip" onclick="ask(3)">Is the bridge worth it?</button>
+      <button class="chip" onclick="ask(0)">What time is my car tomorrow?</button>
+      <button class="chip" onclick="ask(1)">What&rsquo;s the dress code?</button>
+      <button class="chip" onclick="ask(2)">Where can we eat tonight?</button>
+      <button class="chip" onclick="ask(3)">Somewhere quiet this afternoon?</button>
+      <button class="chip" onclick="ask(4)">Can we change Thursday?</button>
+      <button class="chip" onclick="ask(5)">I need to speak to someone</button>
       <form class="askform" id="askform"><input id="askInput" type="text" placeholder="Ask the concierge anything…" autocomplete="off"><button type="submit" aria-label="Send">→</button></form>
     </div>
   </div>
@@ -280,34 +289,10 @@ function go(id,b){
   document.getElementById('chips').style.display = id==='ask' ? 'flex':'none';
   document.getElementById('pane').scrollTop=0;
 }
-var Q=[
- {q:"Somewhere quiet this afternoon?",
-  a:"The <b>Vrtba Garden</b>, five minutes from your hotel. Baroque terraces, and almost nobody finds it &mdash; the entrance is an unmarked door on Karmelitsk&aacute;. Open until six.<br><br>If you would rather sit than climb, <b>Kampa island</b> is two minutes further, with benches on the water.",
-  s:"Sources &middot; Advisor note, K. Gelfand, Prague file &middot; Itinerary v4", e:""},
- {q:"Can we change Thursday?",
-  a:"Thursday is the gala at Prague Castle, so that one I cannot move myself &mdash; the orchestra, the ballet company and the castle all sit behind a fixed call time.<br><br>I have passed it to <b>Kelly</b> with what you have asked. It is 11.40pm in Melbourne, so it will reach her first thing.<br><br>If it is the 6.45pm arrival rather than the evening itself, tell me and I will add that &mdash; there may be room to move the car.",
-  s:"Sources &middot; Itinerary v4 &middot; Event run sheet, Prague Castle",
-  e:"Escalated to Kelly Gelfand &middot; 11.40pm AEST &middot; reply expected by 8am"},
- {q:"Something for our anniversary?",
-  a:"Friday is the thirtieth, and it is also your last full day.<br><br>Two things TRIBE has done before here: a commissioned piece from a <b>Bohemian glass workshop</b> outside the centre, which needs a call ahead and about half a day &mdash; Friday is the last day that works. Or <b>Moser</b> in the old town, who will engrave and ship.<br><br>I do not have current pricing or lead time for either. Kelly can confirm before Friday.",
-  s:"Sources &middot; Client record &middot; Supplier file CZ-114 &middot; Nordwood incentive, Sept 2024",
-  e:"Not in the record: pricing and lead time."},
- {q:"Is the bridge worth it?",
-  a:"Yes, but not when everyone else is on it. Between ten and six it is shoulder to shoulder.<br><br><b>Go at 6.30am</b> for the light, or <b>after ten at night</b> when it clears. Thursday morning is the only genuinely free one you have.<br><br>It is eight minutes on foot from your hotel.",
-  s:"Sources &middot; Advisor note, Prague file &middot; Itinerary v4", e:""}
-];
 function ask(i){
-  var d=Q[i], log=document.getElementById('log'), pane=document.getElementById('pane');
-  log.insertAdjacentHTML('beforeend','<div class="msg me"><div class="bub">'+d.q+'</div></div>');
-  pane.scrollTop=pane.scrollHeight;
-  var id='t'+(new Date()).getTime();
-  log.insertAdjacentHTML('beforeend','<div class="msg ai" id="'+id+'"><div class="bub" style="color:#8e857f">Checking TRIBE&rsquo;s record&hellip;</div></div>');
-  pane.scrollTop=pane.scrollHeight;
-  setTimeout(function(){
-    document.getElementById(id).outerHTML='<div class="msg ai"><div class="bub">'+d.a+
-      '<div class="src">'+d.s+'</div>'+(d.e?'<div class="esc">'+d.e+'</div>':'')+'</div></div>';
-    pane.scrollTop=pane.scrollHeight;
-  },900);
+  var qs=["What time is my car tomorrow?","What's the dress code?","Where can we eat tonight?",
+          "Somewhere quiet this afternoon?","Can we change Thursday?","I need to speak to someone"];
+  send(qs[i]);
 }
 
 /* ══ TRIBE Concierge · live ═══════════════════════════════════════
@@ -476,6 +461,13 @@ async function archai(userText){
   if(!raw) throw new Error('empty');
   return raw;
 }
+var CONTACT='<div class="contact">'+
+ '<div class="ch">Kelly Gelfand &middot; your advisor</div>'+
+ '<a href="tel:+61385783151">+61 3 8578 3151</a>'+
+ '<a href="mailto:hello@tribe-group.com.au?subject=Prague%20program%20%E2%80%93%20Whitfield">hello@tribe-group.com.au</a>'+
+ '<div class="cn">TRIBE is in Melbourne. If it is the middle of the night there, the message still reaches Kelly first thing.</div>'+
+ '</div>';
+function needsHuman(t){return /kelly/i.test(t)||/not in my record/i.test(t)||/escalat/i.test(t);}
 function renderReply(raw){
   var src='', esc='', body=raw;
   var m=body.match(/SOURCES\s*:?\s*(.+?)(?:\n|$)/i); if(m){src=m[1].trim(); body=body.replace(m[0],'');}
@@ -483,7 +475,8 @@ function renderReply(raw){
   body=body.trim().replace(/\n{2,}/g,'<br><br>').replace(/\n/g,'<br>');
   return '<div class="msg ai"><div class="bub">'+body+
     (src?'<div class="src">Sources &middot; '+src+'</div>':'')+
-    (esc?'<div class="esc">'+esc+'</div>':'')+'</div></div>';
+    (esc?'<div class="esc">'+esc+'</div>':'')+
+    (needsHuman(raw)?CONTACT:'')+'</div></div>';
 }
 async function send(text){
   var log=document.getElementById('log'), pane=document.getElementById('pane');
