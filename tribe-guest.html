@@ -306,7 +306,7 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
           </div>
           <div class="mapinfo" id="mapinfo">
             <div class="c">Tap any point</div>
-            <div class="h">Prague, your way</div>
+            <div class="h">Prague, as we know it</div>
             <div class="d">Eight places, chosen for you. Everything on this map is somewhere TRIBE has been, not somewhere we found online.</div>
           </div>
         </div>
@@ -331,7 +331,7 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
         <div class="item"><div class="w">Timing</div><div class="h">The Charles Bridge, properly</div><div class="d">Impossible between 10am and 6pm. Go at 6.30am for the light, or after 10pm when it empties.</div><div class="tip">Thursday morning is your only genuinely free one.</div></div>
         <div class="item has-img"><img class="thumb" src="/tribe-assets/06_vrtba_garden.png" alt=""><div class="body"><div class="w">Hidden</div><div class="h">Vrtba Garden</div><div class="d">A baroque terraced garden almost nobody finds, five minutes from your hotel. Unmarked door on Karmelitsk&aacute;.</div></div></div>
         <div class="item"><div class="w">Worth the detour</div><div class="h">Strahov Monastery library</div><div class="d">The Philosophical Hall is extraordinary. General admission only lets you look in from the doorway.</div><div class="tip">Interior access needs arranging in advance. Two days&rsquo; notice &mdash; say the word.</div></div>
-        <div class="item"><div class="w">Practical</div><div class="h">Taxis and trams</div><div class="d">Use the hotel car or a ride app. Street taxis in the centre are the one thing Prague is still bad at.</div></div>
+        <div class="item"><div class="w">Practical</div><div class="h">Taxis and trams</div><div class="d">Use the hotel car or a ride app. Street taxis in the centre are the one thing Prague still does poorly.</div></div>
         <div class="item"><div class="w">Practical</div><div class="h">November evenings</div><div class="d">Around 4&ndash;8&deg;C after dark and the castle courtyard is exposed. Coats over black tie on Thursday.</div></div>
       </div>
 
@@ -355,9 +355,9 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
       <button class="chip" onclick="ask(4)">Where can I get good coffee?</button>
       <button class="chip" onclick="ask(5)">I need to speak to someone</button>
       <button class="chip" onclick="ask(6)">Something romantic</button>
-      <button class="chip" onclick="ask(7)">Something arty</button>
+      <button class="chip" onclick="ask(7)">Art &amp; culture</button>
       <button class="chip" onclick="ask(8)">Something fun</button>
-      <form class="askform" id="askform"><input id="askInput" type="text" placeholder="Ask the concierge anything…" autocomplete="off"><button type="submit" aria-label="Send">→</button></form>
+      <form class="askform" id="askform"><input id="askInput" type="text" placeholder="Ask us anything…" autocomplete="off"><button type="submit" aria-label="Send">→</button></form>
     </div>
 
     <nav class="base" id="base">
@@ -413,7 +413,7 @@ function go(id,b){
 function ask(i){
   var qs=["What time is my car?","What's the dress code?","Where do I meet everyone?",
           "Where can we eat tonight?","Where can I get good coffee?","I need to speak to someone",
-          "Something romantic","Something arty","Something fun"];
+          "Something romantic","Art and culture","Something fun"];
   send(qs[i]);
 }
 
@@ -458,7 +458,7 @@ var FACTS=[
  {id:'PRG-SHP-01',cat:'shopping',name:'Moser',tag:'Crystal, the real thing',
   fact:"The Karlovy Vary house since 1857, flagship in Stare Mesto. Handles shipping and the VAT refund properly.",
   tip:"The shops on Celetna sell to visitors. This is where the pieces in the castle came from."},
- {id:'PRG-SHP-02',cat:'shopping',name:'A Bohemian glass workshop',tag:'Made, not bought, arty',
+ {id:'PRG-SHP-02',cat:'shopping',name:'A Bohemian glass workshop',tag:'Made, not bought, art culture',
   fact:"Outside the centre. TRIBE has commissioned gifts here on two previous programs. Needs a call ahead and about half a day.",
   tip:"For an anniversary piece, Friday is the last day that works this trip."},
  {id:'PRG-SHP-03',cat:'shopping',name:'Granat Turnov',tag:'Garnets',
@@ -471,16 +471,16 @@ var FACTS=[
   fact:"A baroque terraced garden almost nobody finds, five minutes from the hotel. The entrance is an UNMARKED door on Karmelitska. Open until 6pm."},
  {id:'PRG-TIP-03',cat:'tip',name:'Kampa island',tag:'Quiet, romantic quiet',
   fact:"Benches on the water, the quietest place in the centre, two minutes past the Vrtba Garden."},
- {id:'PRG-TIP-04',cat:'tip',name:'Strahov Monastery library',tag:'Worth the detour, arty cultural',
+ {id:'PRG-TIP-04',cat:'tip',name:'Strahov Monastery library',tag:'Worth the detour, art culture cultural',
   fact:"The Philosophical Hall is extraordinary. General admission only lets you look in from the doorway; interior access needs two days notice."},
  {id:'PRG-TIP-05',cat:'tip',name:'Taxis and trams',tag:'Practical',
-  fact:"Use the hotel car or a ride app. Street taxis in the centre are the one thing Prague is still bad at."},
+  fact:"Use the hotel car or a ride app. Street taxis in the centre are the one thing Prague still does poorly."},
  {id:'PRG-TIP-06',cat:'tip',name:'November evenings',tag:'Practical',
   fact:"Around 4 to 8 degrees after dark. The castle courtyard is exposed."},
 
- {id:'PRG-TIP-07',cat:'tip',name:'St Nicholas Church, Mala Strana',tag:'On the way, arty cultural',
+ {id:'PRG-TIP-07',cat:'tip',name:'St Nicholas Church, Mala Strana',tag:'On the way, art culture cultural',
   fact:"High baroque. The acoustics are why concerts are held here. Two minutes from the Vrtba Garden."},
- {id:'PRG-TIP-08',cat:'tip',name:'National Theatre',tag:'If an evening frees up, arty cultural evening',
+ {id:'PRG-TIP-08',cat:'tip',name:'National Theatre',tag:'If an evening frees up, art culture cultural evening',
   fact:"Gold-crowned, on the river in Nove Mesto. The team can check availability."},
  {id:'PRG-CTY-01',cat:'city',name:'Getting in',tag:'Practical',src:'Lonely Planet',
   fact:"Vaclav Havel Airport is 15km out. Trolleybus 59 or a taxi, about 30 minutes to the centre."},
@@ -489,8 +489,8 @@ var FACTS=[
  {id:'PRG-CTY-03',cat:'city',name:'The historic core is walkable',tag:'Practical',src:'Lonely Planet',
   fact:"Old Town Square to Prague Castle is about an hour on foot at a leisurely pace. Most of the centre is walkable."},
  {id:'PRG-CTY-04',cat:'city',name:'Neighbourhoods',tag:'Orientation',src:'Lonely Planet',
-  fact:"Stare Mesto is the historic heart with Josefov, the old Jewish quarter. Nove Mesto has many of the best places to eat and drink. Vinohrady, Karlin and Zizkov are the lively cafe and bar quarters. Holesovice is a former industrial zone turned arty."},
- {id:'PRG-CTY-05',cat:'city',name:'Classical music',tag:'Evenings, cultural arty evening',src:'Lonely Planet',
+  fact:"Stare Mesto is the historic heart with Josefov, the old Jewish quarter. Nove Mesto has many of the best places to eat and drink. Vinohrady, Karlin and Zizkov are the lively cafe and bar quarters. Holesovice is a former industrial quarter, now galleries and studios."},
+ {id:'PRG-CTY-05',cat:'city',name:'Classical music',tag:'Evenings, art culture cultural evening',src:'Lonely Planet',
   fact:"The National Theatre, the Rudolfinum, the State Opera and the Municipal House are the venues that match the music. Book ahead."},
  {id:'PRG-CTY-06',cat:'city',name:'Jazz',tag:'Evenings, fun evening',src:'Lonely Planet',
   fact:"AghaRTA on Zelezna and the Reduta Jazz Club on Narodni, where Bill Clinton played an impromptu saxophone set in 1994."},
@@ -832,7 +832,7 @@ function setLive(on,msg){
   var d=document.getElementById('liveDot'), t=document.getElementById('liveTxt');
   if(!d) return;
   d.className='dot '+(on?'on':'off');
-  t.textContent=msg||(on?'TRIBE Concierge · live · answering from your record':'Offline — showing prepared answers');
+  t.textContent=msg||(on?'TRIBE Concierge · live · answering from your record':'Offline \u00b7 showing prepared answers');
 }
 async function archai(userText,statusEl){
   LASTQ=userText; WEBFACT=null;
@@ -907,7 +907,7 @@ document.getElementById('dayName').textContent=TODAY.day;
 initLock(); renderFlight(); renderDocs(); tick(); setInterval(tick,15000); weather(); setInterval(weather,900000);
 (async function(){
   try{ await archai('Reply with the single word: ready'); setLive(true); }
-  catch(e){ setLive(false,'Offline — showing prepared answers'); }
+  catch(e){ setLive(false,'Offline \u00b7 showing prepared answers'); }
 })();
 
 </script>
