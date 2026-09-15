@@ -454,7 +454,7 @@ var FACTS=[
  {id:'PRG-TEAM-01',cat:'client',name:'TRIBE on the ground',
   fact:"A TRIBE production team has travelled from Melbourne and is on site for the whole program, staying at the same hotel. They are awake in Prague time and reachable at any hour. Sarah Nolan leads on the ground. For anything happening now, they are the right people, not Melbourne."},
  {id:'PRG-GAP-01',cat:'gap',name:'Not in the record',
-  fact:"Current prices, live availability, opening hours today, any other TRIBE client, and any city other than Prague. If asked, say so and name Kelly Gelfand."}
+  fact:"Live prices, bookable availability, any other TRIBE client, and any city other than Prague. For these, the TRIBE team on site can check and come back to you."}
 ];
 function srcLabel(x){ return x.src ? x.src : "TRIBE record"; }
 var STOP={the:1,a:1,an:1,and:1,or:1,to:1,of:1,in:1,is:1,are:1,we:1,i:1,you:1,my:1,our:1,for:1,on:1,at:1,it:1,do:1,can:1,any:1,what:1,where:1,when:1,how:1,there:1,this:1,that:1,with:1,me:1,us:1};
@@ -479,8 +479,39 @@ function retrieve(q,budget){
 var LASTQ='';
 function recordText(){
   var sel=retrieve(LASTQ,2200);
-  return "RECORD (the only facts you may use):\n"+
-    sel.map(function(x){return "["+x.id+"] "+x.name+": "+x.fact+(x.tip?" TIP: "+x.tip:"");}).join("\n");
+  var t="RECORD (the only facts you may use):\n"+
+    sel.map(function(x){return "["+x.id+"] "+x.name+": "+x.fact+(x.tip?" "+x.tip:"");}).join("\n");
+  if(WEBFACT) t+="\n[WEB-01] Looked up on the web just now, from "+WEBFACT.src+": "+WEBFACT.fact;
+  return t;
+}
+
+/* Web tier. The record is TRIBE's own knowledge. When a question falls outside it,
+   the concierge may look the answer up rather than hand the client to a person. */
+var WEBFACT=null;
+function covered(q){
+  var qt=toks(q).filter(function(w){return w.length>3;});
+  if(!qt.length) return 1;
+  var best=0;
+  FACTS.forEach(function(f){
+    var hay=toks(f.name+' '+f.fact+' '+(f.tip||'')+' '+(f.tag||''));
+    var n=qt.reduce(function(a,w){return a+(hay.some(function(h){return h.indexOf(w)===0||w.indexOf(h)===0;})?1:0);},0);
+    if(n>best) best=n;
+  });
+  return best;
+}
+async function webLookup(q){
+  var u='https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch='
+    +encodeURIComponent(q+' Prague')+'&gsrlimit=1&prop=extracts&exintro=1&explaintext=1&exchars=700&format=json&origin=*';
+  var ctl=new AbortController(); var timer=setTimeout(function(){ctl.abort();},6000);
+  try{
+    var r=await fetch(u,{signal:ctl.signal}); clearTimeout(timer);
+    if(!r.ok) return null;
+    var d=await r.json();
+    var pages=d&&d.query&&d.query.pages; if(!pages) return null;
+    var k=Object.keys(pages)[0]; var pg=pages[k];
+    if(!pg||!pg.extract) return null;
+    return {fact:pg.extract.replace(/\s+/g,' ').slice(0,700), src:'Wikipedia, '+pg.title};
+  }catch(e){ clearTimeout(timer); return null; }
 }
 function sysPrompt(){
   var L = LANGNAME[LANG];
@@ -493,10 +524,14 @@ function sysPrompt(){
     + 'TRIBE has one core value: CARE. They call themselves their client\'s confidant, guide, enabler, organiser '
     + 'and fact checker: they make things happen and ensure other things do not. '
     + 'Speak warmly, unhurried and discreet. Short paragraphs. Never say "As an AI" and never break character. '
+    + 'The person you are writing to IS the client in the record. Say "you" and "your", never their surname in the '
+    + 'third person, and never describe them to themselves. '
+    + 'Write in plain sentences. Never quote the record\'s own labels, ids or brackets inside a sentence. '
     + 'ANSWER GENEROUSLY. Your job is to be useful. Use everything in the record, combine facts, and infer sensibly '
     + 'from what is there before ever saying you cannot help. Most questions can be answered from the record. '
     + 'If the specific detail is genuinely absent, say briefly what you DO know that is close, then offer the TRIBE '
     + 'production team on site, who can find out. Only mention Kelly in Melbourne for bookings, money, complaints or safety. '
+    + 'A record entry marked WEB-01 was looked up on the web for this question: use it, and say where it came from. '
     + 'You prepare; a person decides. You have never arranged, booked or confirmed anything, so never say that you have. '
     + 'ESCALATION IS A LAST RESORT, and in this order: answer from the record first; if you cannot, the TRIBE production '
     + 'team on site can check; Kelly Gelfand in Melbourne is only for bookings, money, complaints, illness or safety. '
@@ -510,7 +545,8 @@ function sysPrompt(){
     + '\n3. Never leave a client with nothing. Always end with a next step: a fact, or the on-site team.'
     + '\n4. If the client asks for a person, or sounds worried or unhappy, hand straight to the TRIBE team on site '
     + 'and say they are in the same hotel and will come to them.'
-    + '\n5. Always give times exactly as the record writes them, including whether it is morning or evening. Never convert or guess.';
+    + '\n5. Always give times exactly as the record writes them, including whether it is morning or evening. Never convert or guess.'
+    + '\n6. Speak to the client directly as "you". Never refer to them by surname as though they were someone else.';
 }
 function setLive(on,msg){
   LIVE=on;
@@ -519,8 +555,12 @@ function setLive(on,msg){
   d.className='dot '+(on?'on':'off');
   t.textContent=msg||(on?'TRIBE Concierge · live · answering from your record':'Offline — showing prepared answers');
 }
-async function archai(userText){
-  LASTQ=userText;
+async function archai(userText,statusEl){
+  LASTQ=userText; WEBFACT=null;
+  if(covered(userText)===0){
+    if(statusEl) statusEl.textContent='Looking that up for you\u2026';
+    WEBFACT=await webLookup(userText);
+  }
   var res=await fetch(CHAT_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({systemPrompt:sysPrompt(),userPrompt:userText,history:HIST.slice(-6)})});
   if(!res.ok) throw new Error('offline');
@@ -542,6 +582,7 @@ function needsHuman(t){return /kelly|on site|on-site|production team|sarah nolan
 function renderReply(raw){
   var src='', esc='', body=raw;
   var m=body.match(/SOURCES\s*:?\s*(.+?)(?:\n|$)/i); if(m){src=m[1].trim(); body=body.replace(m[0],'');}
+  if(WEBFACT) src=src.replace(/\[?WEB-01\]?/gi,'live web search &middot; '+WEBFACT.src);
   var e=body.match(/ESCALATED\s*:?\s*(.+?)(?:\n|$)/i); if(e){esc=e[1].trim(); body=body.replace(e[0],'');}
   body=body.trim().replace(/\n{2,}/g,'<br><br>').replace(/\n/g,'<br>');
   return '<div class="msg ai"><div class="bub">'+body+
@@ -557,7 +598,7 @@ async function send(text){
   log.insertAdjacentHTML('beforeend','<div class="msg ai" id="'+id+'"><div class="bub" style="color:#8e857f">Checking TRIBE’s record&hellip;</div></div>');
   pane.scrollTop=pane.scrollHeight;
   try{
-    var raw=await archai(text);
+    var raw=await archai(text,document.querySelector('#'+id+' .bub'));
     HIST.push({role:'user',content:text},{role:'assistant',content:raw});
     document.getElementById(id).outerHTML=renderReply(raw);
     setLive(true);
