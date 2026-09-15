@@ -122,6 +122,25 @@ b{color:var(--cream);font-weight:400}
          border-bottom:1px solid var(--line);font-size:10px;color:var(--dim);letter-spacing:.08em}
 .langbar select{background:transparent;border:1px solid var(--line);color:var(--body);
          font-family:inherit;font-size:10.5px;padding:5px 8px;border-radius:2px;font-weight:300}
+.flight{border:1px solid var(--line);border-radius:3px;padding:12px 14px;margin-bottom:12px;background:rgba(212,185,140,.04)}
+.flight .fh{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.flight .fn{font-family:var(--sans);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.flight .fs{font-family:var(--sans);font-size:9.4px;letter-spacing:.12em;text-transform:uppercase;padding:2px 7px;border-radius:99px;margin-left:auto}
+.flight .fs.ok{background:rgba(212,185,140,.16);color:var(--gold)}
+.flight .fs.late{background:rgba(190,120,80,.22);color:#e2a97e}
+.flight .fr{display:flex;align-items:center;gap:10px;margin-top:7px;font-family:var(--serif);font-size:17px;color:var(--cream)}
+.flight .fr .ar{color:var(--dim);font-size:13px}
+.flight .ft{font-variant-numeric:tabular-nums}
+.flight .ft s{color:var(--dim);text-decoration:line-through;margin-right:6px;font-size:13px}
+.flight .fd{font-size:11.5px;color:var(--dim);margin-top:7px;line-height:1.55}
+.flight .fd b{color:var(--cream);font-weight:400}
+.flight .fc{font-size:9.6px;color:var(--dim);margin-top:8px;letter-spacing:.06em}
+.nowbar{display:flex;gap:1px;background:var(--line);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.nb{flex:1;background:var(--ink);padding:7px 12px;display:flex;align-items:baseline;gap:8px}
+.nb.here{background:rgba(212,185,140,.06)}
+.nb .nl{font-family:var(--sans);font-size:8.6px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.nb .nt{font-family:var(--sans);font-size:14px;color:var(--cream);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.nb .nw{font-family:var(--sans);font-size:10px;color:var(--gold);margin-left:auto;text-align:right}
 .dot{width:7px;height:7px;border-radius:99px;background:#6b5f4a;display:inline-block;margin-left:auto}
 .dot.on{background:var(--gold);box-shadow:0 0 7px rgba(212,185,140,.7)}
 .dot.off{background:#5c5550}
@@ -178,6 +197,10 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
       </select>
       <span id="liveDot" class="dot off" title="Concierge status"></span><span id="liveTxt">Connecting to TRIBE Concierge…</span>
     </div>
+    <div class="nowbar" id="nowbar">
+      <div class="nb here"><span class="nl">Prague</span><span class="nt" id="clkPrg">--:--</span><span class="nw" id="wxPrg">&nbsp;</span></div>
+      <div class="nb"><span class="nl">Melbourne</span><span class="nt" id="clkMel">--:--</span><span class="nw" id="wxMel">home</span></div>
+    </div>
     <div class="tabs">
       <button class="tab on" onclick="go('itin',this)">Itinerary</button>
       <button class="tab" onclick="go('map',this)">The City</button>
@@ -190,6 +213,7 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
     <div class="pane" id="pane">
 
       <div class="v on" id="itin"><img class="hero" src="/tribe-assets/21_prague_hero_wide.png" alt="Prague">
+        <div class="flight" id="flightCard"></div>
         <div class="item"><div class="w">Today &middot; Wednesday</div><div class="h">Mal&aacute; Strana, at your own pace</div><div class="d">Nothing scheduled before 1pm. The Vrtba Garden opens at 10 and is rarely busy.</div><div class="tip">Kelly&rsquo;s note: the garden entrance is an unmarked door on Karmelitsk&aacute;. Most people walk straight past it.</div></div>
         <div class="item"><div class="w">1.00pm</div><div class="h">Luncheon, Caf&eacute; Savoy</div><div class="d">Table held under Whitfield. Ten minutes on foot from the hotel.</div></div>
         <div class="item"><div class="w">7.30pm</div><div class="h">Dinner, Field</div><div class="d">Car collects 7.05pm. Shellfish allergy is with the kitchen.</div></div>
@@ -481,7 +505,74 @@ function recordText(){
   var sel=retrieve(LASTQ,2200);
   var t="RECORD (the only facts you may use):\n"+
     sel.map(function(x){return "["+x.id+"] "+x.name+": "+x.fact+(x.tip?" "+x.tip:"");}).join("\n");
+  t+=liveText()+flightText();
   if(WEBFACT) t+="\n[WEB-01] Looked up on the web just now, from "+WEBFACT.src+": "+WEBFACT.fact;
+  return t;
+}
+
+/* Flight tier. In production this object is filled by a scheduled status feed
+   (AviationStack, FlightAware AeroAPI or the airline\'s own) polled every few
+   minutes against the PNR. The shape below is what those return. The demo
+   carries a real delay so the knock-on through the programme is visible. */
+var FLIGHT={
+  flight:'EK140', airline:'Emirates', from:'PRG', fromName:'Prague',
+  to:'DXB', toName:'Dubai', onward:'EK406 to Melbourne',
+  date:'Saturday', scheduled:'15:45', estimated:'16:25', gate:'B7', terminal:'2',
+  status:'delayed', delayMins:40,
+  reason:'The inbound aircraft left Dubai late this morning.',
+  action:'Your car now collects at 13:25 rather than 12:45. Dubai connection is unaffected: 2h 50m on the ground.',
+  checked:'2 minutes ago'
+};
+function renderFlight(){
+  var e=document.getElementById('flightCard'); if(!e) return;
+  var late=FLIGHT.status==='delayed';
+  e.innerHTML='<div class="fh"><span class="fn">'+FLIGHT.date+' &middot; flying home</span>'
+   +'<span class="fs '+(late?'late':'ok')+'">'+(late?FLIGHT.delayMins+' min delay':'on time')+'</span></div>'
+   +'<div class="fr"><span>'+FLIGHT.from+'</span><span class="ar">&rarr;</span><span>'+FLIGHT.to+'</span>'
+   +'<span class="ft" style="margin-left:auto">'+(late?'<s>'+FLIGHT.scheduled+'</s>':'')+FLIGHT.estimated+'</span></div>'
+   +'<div class="fd">'+FLIGHT.airline+' '+FLIGHT.flight+' &middot; terminal '+FLIGHT.terminal+', gate '+FLIGHT.gate
+   +' &middot; then '+FLIGHT.onward+'.'+(late?'<br>'+FLIGHT.reason+' <b>'+FLIGHT.action+'</b>':'')+'</div>'
+   +'<div class="fc">Status checked '+FLIGHT.checked+'</div>';
+}
+function flightText(){
+  var t="\n[FLT-01] Your flight home, checked "+FLIGHT.checked+": "+FLIGHT.airline+" "+FLIGHT.flight+", "
+   +FLIGHT.fromName+" to "+FLIGHT.toName+" on "+FLIGHT.date+", scheduled "+FLIGHT.scheduled
+   +", terminal "+FLIGHT.terminal+", gate "+FLIGHT.gate+", then "+FLIGHT.onward+".";
+  if(FLIGHT.status==='delayed') t+=" It is running "+FLIGHT.delayMins+" minutes late and now expected to leave at "
+   +FLIGHT.estimated+". "+FLIGHT.reason+" "+FLIGHT.action;
+  else t+=" It is on time.";
+  return t;
+}
+
+/* Live tier: the clock and the weather are true right now, so the concierge
+   may use them. They are separate from TRIBE's record and labelled as such. */
+var WX=null;
+function tick(){
+  var f=function(tz){ return new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date()); };
+  var a=document.getElementById('clkPrg'), b=document.getElementById('clkMel');
+  if(a) a.textContent=f('Europe/Prague');
+  if(b) b.textContent=f('Australia/Melbourne');
+}
+var WXTEXT={0:'clear',1:'mostly clear',2:'partly cloudy',3:'overcast',45:'fog',48:'freezing fog',51:'light drizzle',
+ 53:'drizzle',55:'heavy drizzle',61:'light rain',63:'rain',65:'heavy rain',71:'light snow',73:'snow',75:'heavy snow',
+ 80:'showers',81:'showers',82:'heavy showers',85:'snow showers',86:'snow showers',95:'thunderstorms',96:'thunderstorms',99:'thunderstorms'};
+async function weather(){
+  try{
+    var r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=50.0755&longitude=14.4378'
+      +'&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=Europe%2FPrague&forecast_days=1');
+    if(!r.ok) return;
+    var d=await r.json(); var c=d.current;
+    var desc=WXTEXT[c.weather_code]||'';
+    var t=Math.round(c.temperature_2m);
+    WX={now:t, desc:desc, hi:Math.round(d.daily.temperature_2m_max[0]), lo:Math.round(d.daily.temperature_2m_min[0])};
+    var e=document.getElementById('wxPrg');
+    if(e) e.textContent=t+'\u00b0 '+desc;
+  }catch(e){}
+}
+function liveText(){
+  var now=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Prague',weekday:'long',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date());
+  var t="\n[LIVE-01] True right now, not part of TRIBE's record: in Prague it is "+now+".";
+  if(WX) t+=" The weather in Prague is "+WX.now+" degrees and "+WX.desc+", with a high of "+WX.hi+" and a low of "+WX.lo+" today.";
   return t;
 }
 
@@ -532,6 +623,9 @@ function sysPrompt(){
     + 'If the specific detail is genuinely absent, say briefly what you DO know that is close, then offer the TRIBE '
     + 'production team on site, who can find out. Only mention Kelly in Melbourne for bookings, money, complaints or safety. '
     + 'A record entry marked WEB-01 was looked up on the web for this question: use it, and say where it came from. '
+    + 'LIVE-01 is the real time and weather in Prague right now: use it freely for what to wear, whether somewhere is '
+    + 'open, or how long until something in the programme. FLT-01 is the live status of their flight home: if they ask '
+    + 'about flying, delays or the airport, answer from it and say when it was last checked. '
     + 'You prepare; a person decides. You have never arranged, booked or confirmed anything, so never say that you have. '
     + 'ESCALATION IS A LAST RESORT, and in this order: answer from the record first; if you cannot, the TRIBE production '
     + 'team on site can check; Kelly Gelfand in Melbourne is only for bookings, money, complaints, illness or safety. '
@@ -622,6 +716,7 @@ document.getElementById('askform').addEventListener('submit',function(e){
   if(!v) return; i.value=''; send(v);
 });
 document.getElementById('langSel').addEventListener('change',function(e){LANG=e.target.value;});
+renderFlight(); tick(); setInterval(tick,15000); weather(); setInterval(weather,900000);
 (async function(){
   try{ await archai('Reply with the single word: ready'); setLive(true); }
   catch(e){ setLive(false,'Offline — showing prepared answers'); }
