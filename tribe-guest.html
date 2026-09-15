@@ -131,7 +131,9 @@ b{color:var(--cream);font-weight:400}
     background:transparent;border:2px solid transparent;cursor:pointer;padding:0}
 .hs:hover,.hs:focus-visible{border-color:var(--gold);background:rgba(212,185,140,.18);outline:none}
 .hero{width:100%;max-width:100%;height:auto;display:block;border-radius:2px;margin-bottom:14px}
-.thumb{width:100%;max-width:100%;height:110px;object-fit:cover;display:block;margin-bottom:10px;border-radius:2px;opacity:.94}
+.thumb{width:112px;height:84px;object-fit:cover;display:block;border-radius:2px;opacity:.95;flex:0 0 112px}
+.item.has-img{display:flex;gap:14px;align-items:flex-start}
+.item.has-img .body{flex:1;min-width:0}
 footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:11px;
        color:var(--dim);line-height:1.6}
 </style>
@@ -181,13 +183,12 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
         <div class="item"><div class="w">Today &middot; Wednesday</div><div class="h">Mal&aacute; Strana, at your own pace</div><div class="d">Nothing scheduled before 1pm. The Vrtba Garden opens at 10 and is rarely busy.</div><div class="tip">Kelly&rsquo;s note: the garden entrance is an unmarked door on Karmelitsk&aacute;. Most people walk straight past it.</div></div>
         <div class="item"><div class="w">1.00pm</div><div class="h">Luncheon, Caf&eacute; Savoy</div><div class="d">Table held under Whitfield. Ten minutes on foot from the hotel.</div></div>
         <div class="item"><div class="w">7.30pm</div><div class="h">Dinner, Field</div><div class="d">Car collects 7.05pm. Shellfish allergy is with the kitchen.</div></div>
-        <div class="item"><img class="thumb" src="/tribe-assets/05_prague_castle_gala.png" alt=""><div class="w">Thursday &middot; The Gala</div><div class="h">Prague Castle</div>
+        <div class="item has-img"><img class="thumb" src="/tribe-assets/05_prague_castle_gala.png" alt=""><div class="body"><div class="w">Thursday &middot; The Gala</div><div class="h">Prague Castle</div>
           <div class="kv"><span>Arrival</span><b>6.45pm &middot; car 6.20pm</b></div>
           <div class="kv"><span>Czech National Ballet</span><b>7.30pm</b></div>
           <div class="kv"><span>Dinner, Spanish Hall</span><b>8.45pm &middot; Table 3</b></div>
-          <div class="kv"><span>Dress</span><b>Black tie</b></div>
-        </div>
-        <div class="item"><img class="thumb" src="/tribe-assets/07_lobkowicz_palace.png" alt=""><div class="w">Friday</div><div class="h">Lobkowicz Palace, before opening</div><div class="d">Private access. The curator will meet you. Beethoven manuscripts in the third room.</div><div class="tip">Booked at 90 minutes, not 60 &mdash; you told us Kyoto felt rushed.</div></div>
+          <div class="kv"><span>Dress</span><b>Black tie</b></div></div></div>
+        <div class="item has-img"><img class="thumb" src="/tribe-assets/07_lobkowicz_palace.png" alt=""><div class="body"><div class="w">Friday</div><div class="h">Lobkowicz Palace, before opening</div><div class="d">Private access. The curator will meet you. Beethoven manuscripts in the third room.</div><div class="tip">Booked at 90 minutes, not 60 &mdash; you told us Kyoto felt rushed.</div></div></div>
       </div>
 
       <div class="v" id="map">
@@ -218,7 +219,7 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
       </div>
 
       <div class="v" id="dine">
-        <div class="item"><img class="thumb" src="/tribe-assets/08_fine_dining.png" alt=""><div class="w">Tonight &middot; booked</div><div class="h">Field</div><div class="d">Michelin starred, inventive, not stuffy. Your table is 7.30pm.</div><div class="tip">Ask for the kitchen counter if you&rsquo;d like to watch. We can request it.</div></div>
+        <div class="item has-img"><img class="thumb" src="/tribe-assets/08_fine_dining.png" alt=""><div class="body"><div class="w">Tonight &middot; booked</div><div class="h">Field</div><div class="d">Michelin starred, inventive, not stuffy. Your table is 7.30pm.</div><div class="tip">Ask for the kitchen counter if you&rsquo;d like to watch. We can request it.</div></div></div>
         <div class="item"><div class="w">Institution</div><div class="h">Caf&eacute; Savoy</div><div class="d">Neo-renaissance ceiling, proper Viennese-Prague breakfast, excellent pastry. Your lunch today.</div></div>
         <div class="item"><div class="w">Where Praguers eat</div><div class="h">Kant&yacute;na</div><div class="d">A butcher&rsquo;s canteen. No bookings, communal tables, exceptional beef. Loud and genuinely local.</div><div class="tip">James would enjoy this. Little for Alexandra &mdash; worth knowing before you go.</div></div>
         <div class="item"><div class="w">Quiet, excellent</div><div class="h">La D&eacute;gustation Boh&ecirc;me Bourgeoise</div><div class="d">Tasting menu built on 19th-century Czech cookbooks. Small room, long evening.</div><div class="tip">Needs booking well ahead. Tell Kelly and she&rsquo;ll try.</div></div>
@@ -226,7 +227,7 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
       </div>
 
       <div class="v" id="shop">
-        <div class="item"><img class="thumb" src="/tribe-assets/09_bohemian_crystal.png" alt=""><div class="w">Crystal, the real thing</div><div class="h">Moser</div><div class="d">The Karlovy Vary house since 1857. Flagship on Star&eacute; M&#283;sto. They handle shipping and the VAT refund properly.</div><div class="tip">The shops on Celetn&aacute; sell to visitors. This is where the pieces in the castle came from.</div></div>
+        <div class="item has-img"><img class="thumb" src="/tribe-assets/09_bohemian_crystal.png" alt=""><div class="body"><div class="w">Crystal, the real thing</div><div class="h">Moser</div><div class="d">The Karlovy Vary house since 1857. Flagship on Star&eacute; M&#283;sto. They handle shipping and the VAT refund properly.</div><div class="tip">The shops on Celetn&aacute; sell to visitors. This is where the pieces in the castle came from.</div></div></div>
         <div class="item"><div class="w">Made, not bought</div><div class="h">A Bohemian workshop, outside the centre</div><div class="d">TRIBE has commissioned gifts here for two previous programs. Needs a call ahead and about half a day.</div><div class="tip">If you&rsquo;d like something engraved for the anniversary, Friday is the last day that works.</div></div>
         <div class="item"><div class="w">Garnets</div><div class="h">Granát Turnov</div><div class="d">Czech garnet is the local stone and heavily faked. This is the cooperative that actually mines it.</div></div>
         <div class="item"><div class="w">Books &amp; prints</div><div class="h">Antikvari&aacute;t Kar&#101;l K&#345;enek</div><div class="d">Old maps, prints and first editions. The kind of shop you lose an hour in.</div></div>
@@ -234,7 +235,7 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
 
       <div class="v" id="tips">
         <div class="item"><div class="w">Timing</div><div class="h">The Charles Bridge, properly</div><div class="d">Impossible between 10am and 6pm. Go at 6.30am for the light, or after 10pm when it empties.</div><div class="tip">Thursday morning is your only genuinely free one.</div></div>
-        <div class="item"><img class="thumb" src="/tribe-assets/06_vrtba_garden.png" alt=""><div class="w">Hidden</div><div class="h">Vrtba Garden</div><div class="d">A baroque terraced garden almost nobody finds, five minutes from your hotel. Unmarked door on Karmelitsk&aacute;.</div></div>
+        <div class="item has-img"><img class="thumb" src="/tribe-assets/06_vrtba_garden.png" alt=""><div class="body"><div class="w">Hidden</div><div class="h">Vrtba Garden</div><div class="d">A baroque terraced garden almost nobody finds, five minutes from your hotel. Unmarked door on Karmelitsk&aacute;.</div></div></div>
         <div class="item"><div class="w">Worth the detour</div><div class="h">Strahov Monastery library</div><div class="d">The Philosophical Hall is extraordinary. General admission only lets you look in from the doorway.</div><div class="tip">Interior access needs arranging in advance. Two days&rsquo; notice &mdash; say the word.</div></div>
         <div class="item"><div class="w">Practical</div><div class="h">Taxis and trams</div><div class="d">Use the hotel car or a ride app. Street taxis in the centre are the one thing Prague is still bad at.</div></div>
         <div class="item"><div class="w">Practical</div><div class="h">November evenings</div><div class="d">Around 4&ndash;8&deg;C after dark and the castle courtyard is exposed. Coats over black tie on Thursday.</div></div>
