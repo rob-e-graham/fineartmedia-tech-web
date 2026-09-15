@@ -43,7 +43,7 @@ body{font-family:var(--sans);font-weight:300;background:var(--deep);color:var(--
      cursor:pointer;font-family:inherit;font-weight:400;transition:.18s;white-space:nowrap}
 .tab:hover{color:var(--body)}
 .tab.on{color:var(--gold);border-bottom-color:var(--gold)}
-.pane{height:min(76vh,720px);overflow-y:auto;overflow-x:hidden;padding:16px;-webkit-overflow-scrolling:touch}
+.pane{position:relative;height:min(72vh,600px);overflow-y:auto;overflow-x:hidden;padding:16px;-webkit-overflow-scrolling:touch}
 @media(min-width:1000px){.pane{height:720px;padding:18px}}
 .pane::-webkit-scrollbar{width:0}
 .v{display:none}.v.on{display:block}
@@ -122,6 +122,23 @@ b{color:var(--cream);font-weight:400}
          border-bottom:1px solid var(--line);font-size:10px;color:var(--dim);letter-spacing:.08em}
 .langbar select{background:transparent;border:1px solid var(--line);color:var(--body);
          font-family:inherit;font-size:10.5px;padding:5px 8px;border-radius:2px;font-weight:300}
+.dl{display:flex;flex-direction:column;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.dc{background:var(--ink);padding:12px 14px;display:flex;align-items:baseline;gap:10px}
+.dc .dt{font-family:var(--serif);font-size:16px;color:var(--cream)}
+.dc .dm{font-size:11px;color:var(--dim);width:100%;margin-top:3px;font-variant-numeric:tabular-nums}
+.dc .dv{font-family:var(--sans);font-size:9.2px;letter-spacing:.12em;text-transform:uppercase;margin-left:auto;white-space:nowrap}
+.dc .dv.ok{color:var(--gold)} .dc .dv.warn{color:#e2a97e}
+.dc .rv{background:none;border:0;color:var(--gold);font-family:var(--sans);font-size:10px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;padding:0;margin-top:5px}
+.dc .rv:hover{text-decoration:underline}
+.official{width:100%;margin-top:12px;padding:13px;background:var(--gold);color:#241d16;border:0;border-radius:3px;font-family:var(--sans);font-size:11px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer}
+.dn{font-size:10.5px;color:var(--dim);line-height:1.6;margin-top:11px}
+.ofl{position:absolute;inset:0;background:#0f0c0a;z-index:40;padding:26px 22px;display:flex;flex-direction:column;gap:3px}
+.ofl .on{font-family:var(--serif);font-size:27px;color:var(--cream);line-height:1.15}
+.ofl .ol{font-family:var(--sans);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-top:15px}
+.ofl .ov{font-family:var(--sans);font-size:19px;color:var(--cream);font-variant-numeric:tabular-nums;letter-spacing:.06em}
+.ofl .ox{margin-top:auto;display:flex;align-items:center;gap:12px}
+.ofl .ot{font-size:11px;color:var(--dim);font-variant-numeric:tabular-nums}
+.ofl .ob{margin-left:auto;background:none;border:1px solid var(--line);color:var(--cream);padding:9px 16px;border-radius:3px;font-family:var(--sans);font-size:10px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
 .flight{border:1px solid var(--line);border-radius:3px;padding:12px 14px;margin-bottom:12px;background:rgba(212,185,140,.04)}
 .flight .fh{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
 .flight .fn{font-family:var(--sans);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
@@ -207,6 +224,7 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
       <button class="tab" onclick="go('dine',this)">Dining</button>
       <button class="tab" onclick="go('shop',this)">Shopping</button>
       <button class="tab" onclick="go('tips',this)">TRIBE Tips</button>
+      <button class="tab" onclick="go('docs',this)">Documents</button>
       <button class="tab" onclick="go('ask',this)">Ask</button>
     </div>
 
@@ -273,6 +291,12 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
         <div class="item"><div class="w">Worth the detour</div><div class="h">Strahov Monastery library</div><div class="d">The Philosophical Hall is extraordinary. General admission only lets you look in from the doorway.</div><div class="tip">Interior access needs arranging in advance. Two days&rsquo; notice &mdash; say the word.</div></div>
         <div class="item"><div class="w">Practical</div><div class="h">Taxis and trams</div><div class="d">Use the hotel car or a ride app. Street taxis in the centre are the one thing Prague is still bad at.</div></div>
         <div class="item"><div class="w">Practical</div><div class="h">November evenings</div><div class="d">Around 4&ndash;8&deg;C after dark and the castle courtyard is exposed. Coats over black tie on Thursday.</div></div>
+      </div>
+
+      <div class="v" id="docs">
+        <div class="dl" id="docList"></div>
+        <button class="official" onclick="official(1)">Show to an official</button>
+        <div class="dn">Held on this device for the length of your trip, then removed. TRIBE does not keep a copy and the concierge is never given the numbers.</div>
       </div>
 
       <div class="v" id="ask">
@@ -450,9 +474,63 @@ function recordText(){
   var sel=retrieve(LASTQ,2200);
   var t="RECORD (the only facts you may use):\n"+
     sel.map(function(x){return "["+x.id+"] "+x.name+": "+x.fact+(x.tip?" "+x.tip:"");}).join("\n");
-  t+=liveText()+flightText();
+  t+=liveText()+flightText()+docsText();
   if(WEBFACT) t+="\n[WEB-01] Looked up on the web just now, from "+WEBFACT.src+": "+WEBFACT.fact;
   return t;
+}
+
+/* Documents. The numbers live on the device and are shown, never spoken:
+   the concierge is told what is held and whether it is valid, and nothing more.
+   Revealing a number takes a deliberate tap and hides itself again. */
+var DOCS=[
+ {t:'Passport',       who:'Alexandra Whitfield', meta:'Australian &middot; expires 14 March 2029', v:'ok',   val:'PA4 921 663'},
+ {t:'Passport',       who:'James Whitfield',     meta:'Australian &middot; expires 2 August 2027', v:'ok',   val:'PA7 118 402'},
+ {t:'Schengen entry', who:'Both travellers',     meta:'Visa-free, 90 days. ETIAS not yet required.', v:'ok', val:'No visa required'},
+ {t:'Travel insurance',who:'Both travellers',    meta:'Chubb &middot; medical to $10m &middot; valid to 2 December', v:'ok', val:'CHB-441-90277'},
+ {t:'Invitation letter',who:'Prague Castle gala',meta:'Required at the gate on Thursday', v:'ok', val:'Held &middot; shown at the gate'}
+];
+var REVEAL={};
+function renderDocs(){
+  var e=document.getElementById('docList'); if(!e) return;
+  e.innerHTML=DOCS.map(function(d,i){
+    return '<div class="dc"><div><div class="dt">'+d.t+'</div>'
+     +'<div class="dm">'+d.who+' &middot; '+d.meta+'</div>'
+     +(REVEAL[i]?'<div class="dm" style="color:var(--gold)">'+d.val+'</div>'
+                :'<button class="rv" onclick="reveal('+i+')">Show number</button>')
+     +'</div><span class="dv '+d.v+'">'+(d.v==='ok'?'valid':'check')+'</span></div>';
+  }).join('');
+}
+function reveal(i){
+  REVEAL[i]=1; renderDocs();
+  setTimeout(function(){ REVEAL[i]=0; renderDocs(); },20000);
+}
+function official(on){
+  var pane=document.getElementById('pane');
+  var old=document.getElementById('oflPanel'); if(old) old.remove();
+  if(!on) return;
+  var left=60;
+  var el=document.createElement('div');
+  el.className='ofl'; el.id='oflPanel';
+  el.innerHTML='<div class="on">Alexandra &amp; James<br>Whitfield</div>'
+   +'<div class="ol">Passport &middot; Australia</div><div class="ov">PA4 921 663</div>'
+   +'<div class="ol">Passport &middot; Australia</div><div class="ov">PA7 118 402</div>'
+   +'<div class="ol">Entry</div><div class="ov" style="font-size:15px">Visa-free, 90 days</div>'
+   +'<div class="ol">Insurance</div><div class="ov" style="font-size:15px">Chubb CHB-441-90277</div>'
+   +'<div class="ox"><span class="ot" id="oflT">closes in 60s</span>'
+   +'<button class="ob" onclick="official(0)">Done</button></div>';
+  pane.scrollTop=0; pane.appendChild(el);
+  var iv=setInterval(function(){
+    left--; var t=document.getElementById('oflT');
+    if(!t){ clearInterval(iv); return; }
+    if(left<=0){ clearInterval(iv); official(0); return; }
+    t.textContent='closes in '+left+'s';
+  },1000);
+}
+function docsText(){
+  return "\n[DOC-01] Their travel documents are held in the app: two Australian passports, both valid past the trip; "
+   +"Schengen entry is visa-free for 90 days and ETIAS is not yet required; Chubb travel insurance valid to 2 December; "
+   +"the gala invitation letter, needed at the gate on Thursday. You are NOT given any document number and must never "
+   +"state, guess or read one out. Tell them to open the Documents tab, where the numbers are shown on the screen.";
 }
 
 /* Flight tier. In production this object is filled by a scheduled status feed
@@ -586,7 +664,9 @@ function sysPrompt(){
     + 'and say they are in the same hotel and will come to them.'
     + '\n5. TIMES: copy the digits from the record exactly as written. If the record says 18:20, write 18:20. '
     + 'Never convert to or from a 12-hour clock, never add am or pm, never round, never infer a time that is not written down.'
-    + '\n6. Speak to the client directly as "you". Never refer to them by surname as though they were someone else.';
+    + '\n6. NEVER state a passport, visa, insurance or policy number, even if asked directly and even if you think you '
+    + 'have seen one. Point them to the Documents tab instead. This rule has no exception.'
+    + '\n7. Speak to the client directly as "you". Never refer to them by surname as though they were someone else.';
 }
 function setLive(on,msg){
   LIVE=on;
@@ -661,7 +741,7 @@ document.getElementById('askform').addEventListener('submit',function(e){
   if(!v) return; i.value=''; send(v);
 });
 document.getElementById('langSel').addEventListener('change',function(e){LANG=e.target.value;});
-renderFlight(); tick(); setInterval(tick,15000); weather(); setInterval(weather,900000);
+renderFlight(); renderDocs(); tick(); setInterval(tick,15000); weather(); setInterval(weather,900000);
 (async function(){
   try{ await archai('Reply with the single word: ready'); setLive(true); }
   catch(e){ setLive(false,'Offline — showing prepared answers'); }
