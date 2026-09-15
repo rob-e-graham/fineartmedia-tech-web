@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TRIBE Concierge</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#231F20; --ink2:#1A1718; --deep:#141112;
+  --gold:#D4B98C; --gold-d:#B89A68; --cream:#FAF4EF; --olive:#747761; --slate:#4A4F54;
+  --line:#3a3436; --body:#c9c0b8; --dim:#8e857f;
+  --sans:"Lato",-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --serif:"Cormorant Garamond",Georgia,serif;
+}
+body{font-family:var(--sans);font-weight:300;background:var(--deep);color:var(--body);
+     font-size:14px;line-height:1.6;min-height:100vh;padding:18px 14px 34px;
+     -webkit-text-size-adjust:100%}
+.wrap{max-width:1200px;margin:0 auto}
+.masthead{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+          border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:22px}
+.mh-l{display:flex;align-items:center;gap:16px}
+.logo{height:46px;width:auto;opacity:.95}
+.mh-t{font-family:var(--serif);font-size:clamp(22px,5vw,27px);color:var(--cream);font-weight:400;letter-spacing:.01em}
+.mh-s{font-size:10px;letter-spacing:.26em;color:var(--gold);text-transform:uppercase;margin-top:3px;font-weight:400}
+.concept{font-size:10.5px;color:var(--gold);border:1px solid #4a3f2c;background:#221d15;
+         padding:8px 14px;border-radius:2px;letter-spacing:.05em;max-width:330px;line-height:1.5;flex:1 1 240px}
+.layout{display:block;max-width:540px;margin:0 auto}
+
+
+.device{background:var(--ink2);border:1px solid var(--line);border-radius:3px;
+        box-shadow:0 30px 70px -24px rgba(0,0,0,.9);overflow:hidden;width:100%}
+
+.d-top{padding:20px 22px 16px;border-bottom:1px solid var(--line);background:var(--ink)}
+.d-top .k{font-size:9px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase}
+.d-top .t{font-family:var(--serif);font-size:clamp(21px,5.5vw,25px);color:var(--cream);margin-top:5px;line-height:1.15}
+.d-top .m{font-size:11px;color:var(--dim);margin-top:5px;letter-spacing:.04em}
+.tabs{display:flex;overflow-x:auto;border-bottom:1px solid var(--line);background:var(--ink)}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;padding:14px 15px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+     background:none;border:none;border-bottom:2px solid transparent;color:var(--dim);
+     cursor:pointer;font-family:inherit;font-weight:400;transition:.18s;white-space:nowrap}
+.tab:hover{color:var(--body)}
+.tab.on{color:var(--gold);border-bottom-color:var(--gold)}
+.pane{height:min(76vh,720px);overflow-y:auto;overflow-x:hidden;padding:16px;-webkit-overflow-scrolling:touch}
+@media(min-width:1000px){.pane{height:720px;padding:18px}}
+.pane::-webkit-scrollbar{width:0}
+.v{display:none}.v.on{display:block}
+.pane img{max-width:100%;height:auto}
+
+.item{border-bottom:1px solid #2b2627;padding:13px 0}
+.item:first-child{padding-top:0}
+.item:last-child{border:none}
+.item .w{font-size:9px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase}
+.item .h{font-family:var(--serif);font-size:18px;color:var(--cream);margin:4px 0 4px;line-height:1.2}
+.item .d{font-size:12.5px;line-height:1.55;color:var(--body)}
+.item .tip{font-size:11.5px;color:var(--gold);margin-top:7px;font-style:italic;line-height:1.5}
+.kv{display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid #2b2627}
+.kv:last-child{border:none}
+.kv b{color:var(--cream);font-weight:400}
+
+/* map */
+.mapwrap{position:relative;background:#191617;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+svg.map{display:block;width:100%;height:auto}
+.pin{cursor:pointer;outline:none}
+.pin:focus-visible circle.dot{stroke:#FAF4EF;stroke-width:2}
+.pin circle{transition:.2s}
+.pin:hover circle.dot{r:7}
+.pin circle.dot{r:6}
+@media(min-width:1000px){.pin circle.dot{r:5}}
+.pin text{font-size:8.6px;fill:var(--cream);font-family:var(--sans);letter-spacing:.05em}
+.mapinfo{padding:13px 15px;border-top:1px solid var(--line);background:var(--ink);min-height:92px}
+.mapinfo .h{font-family:var(--serif);font-size:17px;color:var(--cream)}
+.mapinfo .c{font-size:9px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:4px}
+.mapinfo .d{font-size:12px;margin-top:5px;line-height:1.5}
+.maplegend{display:flex;gap:13px;flex-wrap:wrap;padding:11px 15px 0;font-size:10px;letter-spacing:.06em}
+.lg{display:flex;align-items:center;gap:5px;color:var(--dim)}
+.lg i{width:7px;height:7px;border-radius:99px;display:block}
+
+/* chat */
+.msg{margin-bottom:13px;font-size:12.5px;line-height:1.55}
+.msg.me{text-align:right}
+.bub{display:inline-block;padding:10px 14px;max-width:88%;text-align:left;border-radius:2px}
+.me .bub{background:#2e2a22;color:var(--cream);border:1px solid #453d2e}
+.ai .bub{background:var(--ink);border:1px solid var(--line);color:var(--body)}
+.ai .bub b{color:var(--cream);font-weight:400}
+.src{font-size:9.5px;color:var(--dim);margin-top:8px;padding-top:7px;border-top:1px solid var(--line);
+     line-height:1.5;letter-spacing:.03em}
+.esc{font-size:10px;color:var(--gold);margin-top:7px;letter-spacing:.04em}
+.chips{display:flex;flex-wrap:wrap;gap:6px;padding:13px 18px 16px;border-top:1px solid var(--line);background:var(--ink)}
+.chip{font-size:11px;padding:10px 14px;background:transparent;border:1px solid var(--line);
+      color:var(--body);cursor:pointer;font-family:inherit;font-weight:300;transition:.18s;border-radius:2px}
+.chip:hover{border-color:var(--gold);color:var(--gold)}
+
+/* right */
+.sec{margin-bottom:26px}
+h2{font-size:10px;font-weight:400;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;
+   margin-bottom:13px;padding-bottom:9px;border-bottom:1px solid var(--line)}
+.grid{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:680px){.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr}}
+@media(min-width:1000px){.g3{grid-template-columns:repeat(3,1fr)}}
+.c{background:var(--ink2);border:1px solid var(--line);padding:17px 19px;border-radius:2px}
+.c h3{font-family:var(--serif);font-size:19px;color:var(--cream);font-weight:400;margin-bottom:8px}
+.c p{font-size:12.5px;line-height:1.6}
+.c ul{list-style:none;margin-top:8px}
+.c li{font-size:12.5px;padding-left:14px;position:relative;margin-bottom:6px;line-height:1.55}
+.c li::before{content:"";position:absolute;left:0;top:.72em;width:6px;height:1px;background:var(--gold)}
+b{color:var(--cream);font-weight:400}
+.pull{font-family:var(--serif);font-size:clamp(17px,4vw,20px);color:var(--cream);line-height:1.4;
+      border-left:2px solid var(--gold);padding:4px 0 4px 16px;font-weight:300}
+.note{background:#1d1912;border-left:2px solid var(--gold);padding:14px 18px;font-size:12.5px;
+      color:#ded0b8;line-height:1.6}
+.langbar{display:flex;align-items:center;gap:9px;padding:9px 18px;background:var(--ink);
+         border-bottom:1px solid var(--line);font-size:10px;color:var(--dim);letter-spacing:.08em}
+.langbar select{background:transparent;border:1px solid var(--line);color:var(--body);
+         font-family:inherit;font-size:10.5px;padding:5px 8px;border-radius:2px;font-weight:300}
+.dot{width:7px;height:7px;border-radius:99px;background:#6b5f4a;display:inline-block;margin-left:auto}
+.dot.on{background:var(--gold);box-shadow:0 0 7px rgba(212,185,140,.7)}
+.dot.off{background:#5c5550}
+.askform{display:flex;gap:6px;width:100%;margin-top:4px}
+.askform input{flex:1;background:var(--deep);border:1px solid var(--line);color:var(--cream);
+         font-family:inherit;font-weight:300;font-size:12px;padding:10px 12px;border-radius:2px}
+.askform input:focus{outline:none;border-color:var(--gold)}
+.askform button{background:transparent;border:1px solid var(--line);color:var(--gold);
+         font-size:15px;padding:0 15px;cursor:pointer;border-radius:2px}
+.askform button:hover{border-color:var(--gold)}
+.mapimg{position:relative;line-height:0}
+.mapimg img{width:100%;max-width:100%;height:auto;display:block}
+.hs{position:absolute;width:34px;height:34px;transform:translate(-50%,-50%);border-radius:99px;
+    background:transparent;border:2px solid transparent;cursor:pointer;padding:0}
+.hs:hover,.hs:focus-visible{border-color:var(--gold);background:rgba(212,185,140,.18);outline:none}
+.hero{width:100%;max-width:100%;height:auto;display:block;border-radius:2px;margin-bottom:14px}
+.thumb{width:100%;max-width:100%;height:110px;object-fit:cover;display:block;margin-bottom:10px;border-radius:2px;opacity:.94}
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:11px;
+       color:var(--dim);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="masthead">
+  <div class="mh-l">
+    <img class="logo" src="data:image/png;base64,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" alt="TRIBE">
+    <div>
+      <div class="mh-t">Concierge</div>
+      <div class="mh-s">Prague &middot; Concept Demonstration</div>
+    </div>
+  </div>
+  
+</div>
+
+<div class="layout">
+  <div class="device">
+    <div class="d-top">
+      <div class="k">Program &middot; Day 2 of 5</div>
+      <div class="t">Prague Castle Gala</div>
+      <div class="m">Alexandra &amp; James Whitfield &middot; Advisor, Kelly Gelfand</div>
+    </div>
+    <div class="langbar">
+      <select id="langSel" aria-label="Language">
+        <option value="en">English</option><option value="zh">中文</option>
+        <option value="ja">日本語</option><option value="de">Deutsch</option>
+        <option value="fr">Français</option><option value="es">Español</option>
+        <option value="it">Italiano</option><option value="id">Bahasa Indonesia</option>
+      </select>
+      <span id="liveDot" class="dot off" title="Concierge status"></span><span id="liveTxt">Connecting to TRIBE Concierge…</span>
+    </div>
+    <div class="tabs">
+      <button class="tab on" onclick="go('itin',this)">Itinerary</button>
+      <button class="tab" onclick="go('map',this)">The City</button>
+      <button class="tab" onclick="go('dine',this)">Dining</button>
+      <button class="tab" onclick="go('shop',this)">Shopping</button>
+      <button class="tab" onclick="go('tips',this)">TRIBE Tips</button>
+      <button class="tab" onclick="go('ask',this)">Ask</button>
+    </div>
+
+    <div class="pane" id="pane">
+
+      <div class="v on" id="itin"><img class="hero" src="/tribe-assets/21_prague_hero_wide.png" alt="Prague">
+        <div class="item"><div class="w">Today &middot; Wednesday</div><div class="h">Mal&aacute; Strana, at your own pace</div><div class="d">Nothing scheduled before 1pm. The Vrtba Garden opens at 10 and is rarely busy.</div><div class="tip">Kelly&rsquo;s note: the garden entrance is an unmarked door on Karmelitsk&aacute;. Most people walk straight past it.</div></div>
+        <div class="item"><div class="w">1.00pm</div><div class="h">Luncheon, Caf&eacute; Savoy</div><div class="d">Table held under Whitfield. Ten minutes on foot from the hotel.</div></div>
+        <div class="item"><div class="w">7.30pm</div><div class="h">Dinner, Field</div><div class="d">Car collects 7.05pm. Shellfish allergy is with the kitchen.</div></div>
+        <div class="item"><img class="thumb" src="/tribe-assets/05_prague_castle_gala.png" alt=""><div class="w">Thursday &middot; The Gala</div><div class="h">Prague Castle</div>
+          <div class="kv"><span>Arrival</span><b>6.45pm &middot; car 6.20pm</b></div>
+          <div class="kv"><span>Czech National Ballet</span><b>7.30pm</b></div>
+          <div class="kv"><span>Dinner, Spanish Hall</span><b>8.45pm &middot; Table 3</b></div>
+          <div class="kv"><span>Dress</span><b>Black tie</b></div>
+        </div>
+        <div class="item"><img class="thumb" src="/tribe-assets/07_lobkowicz_palace.png" alt=""><div class="w">Friday</div><div class="h">Lobkowicz Palace, before opening</div><div class="d">Private access. The curator will meet you. Beethoven manuscripts in the third room.</div><div class="tip">Booked at 90 minutes, not 60 &mdash; you told us Kyoto felt rushed.</div></div>
+      </div>
+
+      <div class="v" id="map">
+        <div class="mapwrap">
+          <div class="mapimg">
+            <img src="/tribe-assets/22_prague_map_wide.png" alt="Illustrated map of central Prague">
+            <button class="hs" style="left:30.4%;top:28.2%" onclick="mp('PRG-EVT-02')" aria-label="Prague Castle"></button>
+            <button class="hs" style="left:51.0%;top:51.2%" onclick="mp('PRG-TIP-01')" aria-label="Charles Bridge"></button>
+            <button class="hs" style="left:68.2%;top:39.6%" onclick="mp('PRG-DIN-05')" aria-label="Old Town Square"></button>
+            <button class="hs" style="left:64.2%;top:67.8%" onclick="mp('PRG-TIP-08')" aria-label="National Theatre"></button>
+            <button class="hs" style="left:31.9%;top:60.1%" onclick="mp('PRG-TIP-02')" aria-label="Vrtba Garden"></button>
+            <button class="hs" style="left:10.7%;top:43.2%" onclick="mp('PRG-TIP-04')" aria-label="Strahov Monastery"></button>
+            <button class="hs" style="left:33.4%;top:42.4%" onclick="mp('PRG-TIP-07')" aria-label="St Nicholas Church"></button>
+            <button class="hs" style="left:22.2%;top:72.9%" onclick="mp('PRG-CLI-01')" aria-label="Your hotel"></button>
+          </div>
+          <div class="maplegend">
+            <span class="lg"><i style="background:#FAF4EF"></i>You</span>
+            <span class="lg"><i style="background:#D4B98C"></i>Your program</span>
+            <span class="lg"><i style="background:#9c8f6d"></i>Dining &amp; shopping</span>
+            <span class="lg"><i style="background:#747761"></i>TRIBE tips</span>
+          </div>
+          <div class="mapinfo" id="mapinfo">
+            <div class="c">Tap any point</div>
+            <div class="h">Prague, your way</div>
+            <div class="d">Eight places, chosen for you. Everything on this map is somewhere TRIBE has been, not somewhere we found online.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="v" id="dine">
+        <div class="item"><img class="thumb" src="/tribe-assets/08_fine_dining.png" alt=""><div class="w">Tonight &middot; booked</div><div class="h">Field</div><div class="d">Michelin starred, inventive, not stuffy. Your table is 7.30pm.</div><div class="tip">Ask for the kitchen counter if you&rsquo;d like to watch. We can request it.</div></div>
+        <div class="item"><div class="w">Institution</div><div class="h">Caf&eacute; Savoy</div><div class="d">Neo-renaissance ceiling, proper Viennese-Prague breakfast, excellent pastry. Your lunch today.</div></div>
+        <div class="item"><div class="w">Where Praguers eat</div><div class="h">Kant&yacute;na</div><div class="d">A butcher&rsquo;s canteen. No bookings, communal tables, exceptional beef. Loud and genuinely local.</div><div class="tip">James would enjoy this. Little for Alexandra &mdash; worth knowing before you go.</div></div>
+        <div class="item"><div class="w">Quiet, excellent</div><div class="h">La D&eacute;gustation Boh&ecirc;me Bourgeoise</div><div class="d">Tasting menu built on 19th-century Czech cookbooks. Small room, long evening.</div><div class="tip">Needs booking well ahead. Tell Kelly and she&rsquo;ll try.</div></div>
+        <div class="item"><div class="w">Avoid</div><div class="h">The Old Town Square terraces</div><div class="d">Beautiful view, indifferent food, tourist pricing. Walk two streets further in any direction.</div></div>
+      </div>
+
+      <div class="v" id="shop">
+        <div class="item"><img class="thumb" src="/tribe-assets/09_bohemian_crystal.png" alt=""><div class="w">Crystal, the real thing</div><div class="h">Moser</div><div class="d">The Karlovy Vary house since 1857. Flagship on Star&eacute; M&#283;sto. They handle shipping and the VAT refund properly.</div><div class="tip">The shops on Celetn&aacute; sell to visitors. This is where the pieces in the castle came from.</div></div>
+        <div class="item"><div class="w">Made, not bought</div><div class="h">A Bohemian workshop, outside the centre</div><div class="d">TRIBE has commissioned gifts here for two previous programs. Needs a call ahead and about half a day.</div><div class="tip">If you&rsquo;d like something engraved for the anniversary, Friday is the last day that works.</div></div>
+        <div class="item"><div class="w">Garnets</div><div class="h">Granát Turnov</div><div class="d">Czech garnet is the local stone and heavily faked. This is the cooperative that actually mines it.</div></div>
+        <div class="item"><div class="w">Books &amp; prints</div><div class="h">Antikvari&aacute;t Kar&#101;l K&#345;enek</div><div class="d">Old maps, prints and first editions. The kind of shop you lose an hour in.</div></div>
+      </div>
+
+      <div class="v" id="tips">
+        <div class="item"><div class="w">Timing</div><div class="h">The Charles Bridge, properly</div><div class="d">Impossible between 10am and 6pm. Go at 6.30am for the light, or after 10pm when it empties.</div><div class="tip">Thursday morning is your only genuinely free one.</div></div>
+        <div class="item"><img class="thumb" src="/tribe-assets/06_vrtba_garden.png" alt=""><div class="w">Hidden</div><div class="h">Vrtba Garden</div><div class="d">A baroque terraced garden almost nobody finds, five minutes from your hotel. Unmarked door on Karmelitsk&aacute;.</div></div>
+        <div class="item"><div class="w">Worth the detour</div><div class="h">Strahov Monastery library</div><div class="d">The Philosophical Hall is extraordinary. General admission only lets you look in from the doorway.</div><div class="tip">Interior access needs arranging in advance. Two days&rsquo; notice &mdash; say the word.</div></div>
+        <div class="item"><div class="w">Practical</div><div class="h">Taxis and trams</div><div class="d">Use the hotel car or a ride app. Street taxis in the centre are the one thing Prague is still bad at.</div></div>
+        <div class="item"><div class="w">Practical</div><div class="h">November evenings</div><div class="d">Around 4&ndash;8&deg;C after dark and the castle courtyard is exposed. Coats over black tie on Thursday.</div></div>
+      </div>
+
+      <div class="v" id="ask">
+        <div class="msg ai"><div class="bub">Good morning. Your table at Field is confirmed for 7.30pm and the car will collect you at 7.05pm.<div class="src">Sources &middot; Itinerary v4 &middot; Supplier file CZ-208</div></div></div>
+        <div id="log"></div>
+      </div>
+    </div>
+
+    <div class="chips" id="chips" style="display:none">
+      <button class="chip" onclick="ask(0)">Somewhere quiet this afternoon?</button>
+      <button class="chip" onclick="ask(1)">Can we change Thursday?</button>
+      <button class="chip" onclick="ask(2)">Something for our anniversary?</button>
+      <button class="chip" onclick="ask(3)">Is the bridge worth it?</button>
+      <form class="askform" id="askform"><input id="askInput" type="text" placeholder="Ask the concierge anything…" autocomplete="off"><button type="submit" aria-label="Send">→</button></form>
+    </div>
+  </div>
+
+  </div>
+<div style="max-width:540px;margin:18px auto 0;font-size:10.5px;color:var(--dim);line-height:1.6;text-align:center">Concept demonstration &middot; Rob Graham for TRIBE Travel &amp; Events. Client, supplier and venue details are invented; the scenario draws on TRIBE&rsquo;s publicly described event history.</div>
+</div>
+
+<script>
+
+function mp(id){
+  var x=FACTS.filter(function(f){return f.id===id;})[0]; if(!x) return;
+  document.getElementById('mapinfo').innerHTML=
+    '<div class="c">'+(x.tag||x.cat)+'</div><div class="h">'+x.name+'</div>'+
+    '<div class="d">'+x.fact+(x.tip?'<br><span style="color:var(--gold)">'+x.tip+'</span>':'')+'</div>'+
+    '<div class="d" style="color:var(--dim);font-size:10px;margin-top:6px">['+x.id+']</div>';
+}
+function go(id,b){
+  document.querySelectorAll('.v').forEach(function(v){v.classList.remove('on')});
+  document.getElementById(id).classList.add('on');
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on')});
+  b.classList.add('on');
+  document.getElementById('chips').style.display = id==='ask' ? 'flex':'none';
+  document.getElementById('pane').scrollTop=0;
+}
+var Q=[
+ {q:"Somewhere quiet this afternoon?",
+  a:"The <b>Vrtba Garden</b>, five minutes from your hotel. Baroque terraces, and almost nobody finds it &mdash; the entrance is an unmarked door on Karmelitsk&aacute;. Open until six.<br><br>If you would rather sit than climb, <b>Kampa island</b> is two minutes further, with benches on the water.",
+  s:"Sources &middot; Advisor note, K. Gelfand, Prague file &middot; Itinerary v4", e:""},
+ {q:"Can we change Thursday?",
+  a:"Thursday is the gala at Prague Castle, so that one I cannot move myself &mdash; the orchestra, the ballet company and the castle all sit behind a fixed call time.<br><br>I have passed it to <b>Kelly</b> with what you have asked. It is 11.40pm in Melbourne, so it will reach her first thing.<br><br>If it is the 6.45pm arrival rather than the evening itself, tell me and I will add that &mdash; there may be room to move the car.",
+  s:"Sources &middot; Itinerary v4 &middot; Event run sheet, Prague Castle",
+  e:"Escalated to Kelly Gelfand &middot; 11.40pm AEST &middot; reply expected by 8am"},
+ {q:"Something for our anniversary?",
+  a:"Friday is the thirtieth, and it is also your last full day.<br><br>Two things TRIBE has done before here: a commissioned piece from a <b>Bohemian glass workshop</b> outside the centre, which needs a call ahead and about half a day &mdash; Friday is the last day that works. Or <b>Moser</b> in the old town, who will engrave and ship.<br><br>I do not have current pricing or lead time for either. Kelly can confirm before Friday.",
+  s:"Sources &middot; Client record &middot; Supplier file CZ-114 &middot; Nordwood incentive, Sept 2024",
+  e:"Not in the record: pricing and lead time."},
+ {q:"Is the bridge worth it?",
+  a:"Yes, but not when everyone else is on it. Between ten and six it is shoulder to shoulder.<br><br><b>Go at 6.30am</b> for the light, or <b>after ten at night</b> when it clears. Thursday morning is the only genuinely free one you have.<br><br>It is eight minutes on foot from your hotel.",
+  s:"Sources &middot; Advisor note, Prague file &middot; Itinerary v4", e:""}
+];
+function ask(i){
+  var d=Q[i], log=document.getElementById('log'), pane=document.getElementById('pane');
+  log.insertAdjacentHTML('beforeend','<div class="msg me"><div class="bub">'+d.q+'</div></div>');
+  pane.scrollTop=pane.scrollHeight;
+  var id='t'+(new Date()).getTime();
+  log.insertAdjacentHTML('beforeend','<div class="msg ai" id="'+id+'"><div class="bub" style="color:#8e857f">Checking TRIBE&rsquo;s record&hellip;</div></div>');
+  pane.scrollTop=pane.scrollHeight;
+  setTimeout(function(){
+    document.getElementById(id).outerHTML='<div class="msg ai"><div class="bub">'+d.a+
+      '<div class="src">'+d.s+'</div>'+(d.e?'<div class="esc">'+d.e+'</div>':'')+'</div></div>';
+    pane.scrollTop=pane.scrollHeight;
+  },900);
+}
+
+/* ══ TRIBE Concierge · live ═══════════════════════════════════════
+   Same endpoint and request shape as the ACMI and Heide demos.
+   Falls back to the scripted answers when the sovereign node is unreachable. */
+var CHAT_ENDPOINT='https://archai-api.fineartmedia.tech/api/proxy/chat';
+var LIVE=false, HIST=[], LANG='en';
+var LANGNAME={en:'English',zh:'Chinese (Simplified)',ja:'Japanese',de:'German',
+              fr:'French',es:'Spanish',it:'Italian',id:'Indonesian'};
+
+/* ══ TRIBE FACT BASE ═══════════════════════════════════════════════
+   One record. The concierge answers from it, the panels render from it,
+   and every answer can name the entry it came from. Add a fact once. */
+var FACTS=[
+ {id:'PRG-CLI-01',cat:'client',name:'The Whitfields',
+  fact:"Alexandra and James Whitfield. With TRIBE since 2019, seven programs. Advisor Kelly Gelfand."},
+ {id:'PRG-CLI-02',cat:'client',name:'Preferences',
+  fact:"Aisle seats forward cabin. High floor away from lifts. Late starts, no 7am departures. ALEXANDRA HAS A SHELLFISH ALLERGY. James does not eat red meat. 30th wedding anniversary falls on the Friday."},
+ {id:'PRG-CLI-03',cat:'client',name:'Kyoto debrief, 2023',
+  fact:"Client said: loved the private tea ceremony, but sixty minutes felt rushed. Friday's palace visit was therefore booked at ninety minutes."},
+
+ {id:'PRG-EVT-01',cat:'program',name:'Wednesday',
+  fact:"Free until 1pm. Lunch held at Cafe Savoy 1pm. Dinner at Field 7.30pm, car collects 7.05pm."},
+ {id:'PRG-EVT-02',cat:'program',name:'Thursday, the gala',
+  fact:"Prague Castle. Arrival 6.45pm, car 6.20pm from the hotel forecourt. Czech National Ballet 7.30pm with a 48-piece orchestra. Dinner in the Spanish Hall 8.45pm, Table 3 with the Hartleys. Black tie. The courtyard is exposed; coats advised. FIXED — the castle, orchestra and ballet company all sit behind a locked call time."},
+ {id:'PRG-EVT-03',cat:'program',name:'Friday',
+  fact:"Lobkowicz Palace, private access before opening, curator meeting them, ninety minutes. Beethoven manuscripts in the third room."},
+
+ {id:'PRG-DIN-01',cat:'dining',name:'Field',tag:'Tonight, booked',
+  fact:"Michelin starred, inventive, not stuffy.",tip:"Kelly can request the kitchen counter."},
+ {id:'PRG-DIN-02',cat:'dining',name:'Cafe Savoy',tag:'Institution',
+  fact:"Neo-renaissance ceiling, Viennese-Prague breakfast, excellent pastry. Their lunch today."},
+ {id:'PRG-DIN-03',cat:'dining',name:'Kantyna',tag:'Where Praguers eat',
+  fact:"Butcher's canteen. No bookings, communal, exceptional beef. Loud and local.",tip:"James would enjoy it; little for Alexandra."},
+ {id:'PRG-DIN-04',cat:'dining',name:'La Degustation Boheme Bourgeoise',tag:'Quiet, excellent',
+  fact:"Tasting menu built on 19th-century Czech cookbooks. Small room, long evening.",
+  tip:"Needs booking well ahead. Kelly can try."},
+ {id:'PRG-DIN-05',cat:'dining',name:'Old Town Square terraces',tag:'Avoid',
+  fact:"Beautiful view, indifferent food, tourist pricing. Walk two streets further in any direction."},
+
+ {id:'PRG-SHP-01',cat:'shopping',name:'Moser',tag:'Crystal, the real thing',
+  fact:"The Karlovy Vary house since 1857, flagship in Stare Mesto. Handles shipping and the VAT refund properly.",
+  tip:"The shops on Celetna sell to visitors. This is where the pieces in the castle came from."},
+ {id:'PRG-SHP-02',cat:'shopping',name:'A Bohemian glass workshop',tag:'Made, not bought',
+  fact:"Outside the centre. TRIBE has commissioned gifts here on two previous programs. Needs a call ahead and about half a day.",
+  tip:"For an anniversary piece, Friday is the last day that works this trip."},
+ {id:'PRG-SHP-03',cat:'shopping',name:'Granat Turnov',tag:'Garnets',
+  fact:"Czech garnet is the local stone and heavily faked. This is the cooperative that actually mines it."},
+
+ {id:'PRG-TIP-01',cat:'tip',name:'Charles Bridge, properly',tag:'Timing',
+  fact:"Impossible between 10am and 6pm. Go at 6.30am for the light, or after 10pm when it empties. Eight minutes on foot from their hotel.",
+  tip:"Thursday morning is their only genuinely free one."},
+ {id:'PRG-TIP-02',cat:'tip',name:'Vrtba Garden',tag:'Hidden',
+  fact:"A baroque terraced garden almost nobody finds, five minutes from the hotel. The entrance is an UNMARKED door on Karmelitska. Open until 6pm."},
+ {id:'PRG-TIP-03',cat:'tip',name:'Kampa island',tag:'Quiet',
+  fact:"Benches on the water, the quietest place in the centre, two minutes past the Vrtba Garden."},
+ {id:'PRG-TIP-04',cat:'tip',name:'Strahov Monastery library',tag:'Worth the detour',
+  fact:"The Philosophical Hall is extraordinary. General admission only lets you look in from the doorway; interior access needs two days notice."},
+ {id:'PRG-TIP-05',cat:'tip',name:'Taxis and trams',tag:'Practical',
+  fact:"Use the hotel car or a ride app. Street taxis in the centre are the one thing Prague is still bad at."},
+ {id:'PRG-TIP-06',cat:'tip',name:'November evenings',tag:'Practical',
+  fact:"Around 4 to 8 degrees after dark. The castle courtyard is exposed."},
+
+ {id:'PRG-TIP-07',cat:'tip',name:'St Nicholas Church, Mala Strana',tag:'On the way',
+  fact:"High baroque. The acoustics are why concerts are held here. Two minutes from the Vrtba Garden."},
+ {id:'PRG-TIP-08',cat:'tip',name:'National Theatre',tag:'If an evening frees up',
+  fact:"Gold-crowned, on the river in Nove Mesto. Kelly can check availability."},
+ {id:'PRG-GAP-01',cat:'gap',name:'Not in the record',
+  fact:"Current prices, live availability, opening hours today, any other TRIBE client, and any city other than Prague. If asked, say so and name Kelly Gelfand."}
+];
+function recordText(){
+  return "RECORD (the only facts you may use):\n"+
+    FACTS.map(function(x){return "["+x.id+"] "+x.name+": "+x.fact+(x.tip?" TIP: "+x.tip:"");}).join("\n");
+}
+function sysPrompt(){
+  var L = LANGNAME[LANG];
+  var langLead = (LANG!=='en') ? ('Write your ENTIRE reply in '+L+' only. Do not use English. ') : '';
+  var langLine = (LANG!=='en')
+    ? ('\n\nIMPORTANT: your whole reply must be in '+L+', translating naturally, facts identical to the record. No English.')
+    : '\n\nIf the client writes in another language, reply fully in that same language.';
+  return langLead
+    + 'You are the TRIBE Concierge, speaking to a TRIBE client during their trip. '
+    + 'TRIBE has one core value: CARE. They call themselves their client\'s confidant, guide, enabler, organiser '
+    + 'and fact checker: they make things happen and ensure other things do not. '
+    + 'Speak warmly, unhurried and discreet. Short paragraphs. Never say "As an AI" and never break character. '
+    + 'Only use facts from your record. If the record does not support something, say so plainly and name Kelly Gelfand. '
+    + 'You prepare; a person decides. You have never arranged, booked or confirmed anything, so never say that you have. '
+    + 'If the client asks to change a booking, or mentions money, a complaint, illness or safety, name Kelly Gelfand as taking it from here. '
+    + 'End every reply with a line starting SOURCES: listing the record ids you used, like [PRG-TIP-02].'
+    + langLine + '\n\n' + recordText()
+    + '\n\nBEFORE YOU REPLY: if the question touches food, a meal, a restaurant or dinner, you MUST state that '
+    + 'Alexandra has a shellfish allergy and James does not eat red meat.';
+}
+function setLive(on,msg){
+  LIVE=on;
+  var d=document.getElementById('liveDot'), t=document.getElementById('liveTxt');
+  if(!d) return;
+  d.className='dot '+(on?'on':'off');
+  t.textContent=msg||(on?'TRIBE Concierge · live · answering from your record':'Offline — showing prepared answers');
+}
+async function archai(userText){
+  var res=await fetch(CHAT_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({systemPrompt:sysPrompt(),userPrompt:userText,history:HIST.slice(-6)})});
+  if(!res.ok) throw new Error('offline');
+  var data=await res.json();
+  var raw=(data&&data.message&&data.message.content)||(data&&data.response)||(data&&data.text)||'';
+  if(!raw) throw new Error('empty');
+  return raw;
+}
+function renderReply(raw){
+  var src='', esc='', body=raw;
+  var m=body.match(/SOURCES\s*:?\s*(.+?)(?:\n|$)/i); if(m){src=m[1].trim(); body=body.replace(m[0],'');}
+  var e=body.match(/ESCALATED\s*:?\s*(.+?)(?:\n|$)/i); if(e){esc=e[1].trim(); body=body.replace(e[0],'');}
+  body=body.trim().replace(/\n{2,}/g,'<br><br>').replace(/\n/g,'<br>');
+  return '<div class="msg ai"><div class="bub">'+body+
+    (src?'<div class="src">Sources &middot; '+src+'</div>':'')+
+    (esc?'<div class="esc">'+esc+'</div>':'')+'</div></div>';
+}
+async function send(text){
+  var log=document.getElementById('log'), pane=document.getElementById('pane');
+  log.insertAdjacentHTML('beforeend','<div class="msg me"><div class="bub">'+text.replace(/</g,'&lt;')+'</div></div>');
+  pane.scrollTop=pane.scrollHeight;
+  var id='t'+(new Date()).getTime();
+  log.insertAdjacentHTML('beforeend','<div class="msg ai" id="'+id+'"><div class="bub" style="color:#8e857f">Checking TRIBE’s record&hellip;</div></div>');
+  pane.scrollTop=pane.scrollHeight;
+  try{
+    var raw=await archai(text);
+    HIST.push({role:'user',content:text},{role:'assistant',content:raw});
+    document.getElementById(id).outerHTML=renderReply(raw);
+    setLive(true);
+  }catch(err){
+    document.getElementById(id).outerHTML='<div class="msg ai"><div class="bub">The concierge is offline just now, so I can’t look that up live. <b>Kelly Gelfand</b> has your question.<div class="src">Concierge offline &middot; prepared answers still available above</div></div></div>';
+    setLive(false);
+  }
+  pane.scrollTop=pane.scrollHeight;
+}
+document.getElementById('askform').addEventListener('submit',function(e){
+  e.preventDefault();
+  var i=document.getElementById('askInput'); var v=i.value.trim();
+  if(!v) return; i.value=''; send(v);
+});
+document.getElementById('langSel').addEventListener('change',function(e){LANG=e.target.value;});
+(async function(){
+  try{ await archai('Reply with the single word: ready'); setLive(true); }
+  catch(e){ setLive(false,'Offline — showing prepared answers'); }
+})();
+
+</script>
+</body>
+</html>
