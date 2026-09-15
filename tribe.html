@@ -679,7 +679,10 @@ function covered(q){
   });
   return best;
 }
+/* Their own arrangements are TRIBE's business, never the open web. */
+var PRIVATE=/passport|visa|insurance|policy|flight|delay|airport|gate|car |pickup|collect|book|reserv|itinerar|dress code|allerg|my room|check.?in|anniversar/i;
 async function webLookup(q){
+  if(PRIVATE.test(q)) return null;
   var u='https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch='
     +encodeURIComponent(q+' Prague')+'&gsrlimit=1&prop=extracts&exintro=1&explaintext=1&exchars=420&format=json&origin=*';
   var ctl=new AbortController(); var timer=setTimeout(function(){ctl.abort();},6000);
@@ -690,13 +693,21 @@ async function webLookup(q){
     var pages=d&&d.query&&d.query.pages; if(!pages) return null;
     var k=Object.keys(pages)[0]; var pg=pages[k];
     if(!pg||!pg.extract) return null;
+    /* Wikipedia answers every query with something. Keep it only when the article
+       is actually about what was asked, or the concierge repeats war history at
+       a client who asked about dinner. */
+    var asked=toks(q), title=toks(pg.title);
+    var relevant=title.some(function(w){
+      return asked.some(function(a){return a.indexOf(w)===0||w.indexOf(a)===0;});
+    });
+    if(!relevant) return null;
     return {fact:pg.extract.replace(/\s+/g,' ').slice(0,420), src:'Wikipedia, '+pg.title};
   }catch(e){ clearTimeout(timer); return null; }
 }
 /* The endpoint accepts a system prompt of 5000 characters. The instructions and
    the live tiers are fixed cost; the record gets whatever is left, so the prompt
    stays inside the ceiling however large the fact base grows. */
-var PROMPT_CAP=4850;
+var PROMPT_CAP=4950;
 
 function rules(){
   return '\n\nBEFORE YOU REPLY, CHECK ALL OF THESE:'
@@ -720,12 +731,11 @@ function sysPrompt(){
    + 'You are the TRIBE Concierge, writing to a client during their trip. TRIBE has one value, CARE: confidant, guide, '
    + 'enabler, organiser, fact checker. Warm, unhurried, discreet. Short paragraphs. Never say "As an AI". '
    + 'The reader IS the client in the record: say "you", never their surname in the third person. '
-   + 'ANSWER GENEROUSLY: combine and infer from the record before ever saying you cannot help. If a detail is absent, '
-   + 'say what you do know that is close, then offer the TRIBE team on site. ESCALATION IS A LAST RESORT, in order: '
-   + 'the record, the team on site, then your Event Manager in Melbourne for bookings, money, complaints or safety. '
+   + 'ANSWER GENEROUSLY: combine and infer from the record before saying you cannot help. If a detail is absent, say '
+   + 'what you do know that is close, then offer the team on site. ESCALATION IS A LAST RESORT, in order: the record, '
+   + 'the team on site, then your Event Manager in Melbourne for bookings, money, complaints or safety. '
    + 'You prepare; a person decides. You have never booked or confirmed anything, so never say you have. '
-   + 'LIVE-01 is the time and weather in Prague now, FLT-01 the live flight status, WEB-01 a web look-up for this '
-   + 'question: use it and say where it came from. '
+   + 'LIVE-01 is the time and weather in Prague now, FLT-01 the flight home, WEB-01 a web look-up: say where it came from. '
    + 'End every reply with a line starting SOURCES: listing the ids you used, like [PRG-TIP-02].';
 
   var fixed = head + tail + rules();
