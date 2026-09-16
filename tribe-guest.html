@@ -225,9 +225,30 @@ b{color:var(--cream);font-weight:400}
 .item.has-img .body{flex:1;min-width:0}
 footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:11px;
        color:var(--dim);line-height:1.6}
+
+/* The client view is an app, not a page in a page. On a phone it fills the
+   screen edge to edge; on a tablet or a laptop it settles into a device-sized
+   card rather than stretching a phone layout across a desktop. The demo page,
+   which sets the app beside its explanation, is unaffected. */
+body.appshell{padding:0;display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
+body.appshell .wrap{max-width:none;margin:0;flex:1;display:flex;flex-direction:column}
+body.appshell .layout{display:flex;flex-direction:column;max-width:none;margin:0;flex:1;gap:0}
+body.appshell .device{max-width:none;width:100%;margin:0;border:0;border-radius:0;box-shadow:none;
+  display:flex;flex-direction:column;flex:1;min-height:0}
+body.appshell .pane{height:auto;flex:1;min-height:0}
+body.appshell .lastnote{padding:12px 18px 16px;margin:0}
+@media(min-width:760px){
+  body.appshell{padding:24px 16px;justify-content:center}
+  body.appshell .layout{justify-content:center}
+  body.appshell .device{max-width:560px;margin:0 auto;border:1px solid var(--line);border-radius:4px;
+    box-shadow:0 30px 70px -24px rgba(0,0,0,.9);height:min(90vh,980px);height:min(90dvh,980px);flex:0 0 auto}
+}
+@media(min-width:1200px){
+  body.appshell .device{max-width:600px;height:min(88dvh,1040px)}
+}
 </style>
 </head>
-<body>
+<body class="appshell">
 <div class="wrap">
 
 <div class="layout">
@@ -375,7 +396,7 @@ footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-si
   </div>
 
   </div>
-<div style="max-width:540px;margin:18px auto 0;font-size:10.5px;color:var(--dim);line-height:1.6;text-align:center">Concept demonstration &middot; Rob Graham for TRIBE Travel &amp; Events. Client, supplier and venue details are invented; city knowledge is attributed to its source.</div>
+<div class="lastnote" style="max-width:540px;margin:18px auto 0;font-size:10.5px;color:var(--dim);line-height:1.6;text-align:center">Concept demonstration &middot; Rob Graham for TRIBE Travel &amp; Events. Client, supplier and venue details are invented; city knowledge is attributed to its source.</div>
 </div>
 
 <script>
