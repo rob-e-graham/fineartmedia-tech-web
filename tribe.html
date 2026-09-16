@@ -135,6 +135,20 @@ svg.map{display:block;width:100%;height:auto}
 .bt span{font-size:8.6px;letter-spacing:.11em;text-transform:uppercase}
 .bt:hover{color:var(--body)}
 .bt.on{color:var(--gold)}
+.think{background-image:linear-gradient(100deg,var(--dim) 34%,var(--gold) 50%,var(--dim) 66%);
+  background-size:280% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:shimmer 2.6s linear infinite}
+@keyframes shimmer{from{background-position:190% 0}to{background-position:-90% 0}}
+.dots{display:inline-block;margin-left:1px;white-space:nowrap}
+.dots i{display:inline-block;width:3px;height:3px;margin-left:3px;border-radius:99px;
+  background:var(--gold);opacity:.25;animation:blink 1.4s ease-in-out infinite}
+.dots i:nth-child(2){animation-delay:.18s}
+.dots i:nth-child(3){animation-delay:.36s}
+@keyframes blink{0%,100%{opacity:.22;transform:translateY(0)}50%{opacity:.9;transform:translateY(-2px)}}
+@media(prefers-reduced-motion:reduce){
+  .think{animation:none;color:var(--dim);-webkit-text-fill-color:var(--dim)}
+  .dots i{animation:none;opacity:.5}
+}
 .askbar{display:flex;flex-direction:column;padding:12px 18px 16px;border-top:1px solid var(--line);background:var(--ink)}
 .chips.compact{display:none}
 .sugg{display:flex;align-items:center;gap:7px;background:none;border:0;
@@ -969,7 +983,7 @@ function setLive(on,msg){
 async function archai(userText,statusEl){
   LASTQ=userText; WEBFACT=null;
   if(covered(userText)===0){
-    if(statusEl) statusEl.textContent='Looking that up for you\u2026';
+    if(statusEl) statusEl.textContent='Looking that up for you';
     WEBFACT=await webLookup(userText);
   }
   var res=await fetch(CHAT_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},
@@ -1067,10 +1081,12 @@ async function send(text){
   log.insertAdjacentHTML('beforeend','<div class="msg me"><div class="bub">'+text.replace(/</g,'&lt;')+'</div></div>');
   pane.scrollTop=pane.scrollHeight;
   var id='t'+(new Date()).getTime();
-  log.insertAdjacentHTML('beforeend','<div class="msg ai" id="'+id+'"><div class="bub" style="color:#8e857f">Checking TRIBE’s record&hellip;</div></div>');
+  log.insertAdjacentHTML('beforeend','<div class="msg ai" id="'+id+'"><div class="bub">'
+    +'<span class="think">Checking TRIBE\u2019s record</span>'
+    +'<span class="dots"><i></i><i></i><i></i></span></div></div>');
   pane.scrollTop=pane.scrollHeight;
   try{
-    var raw=await archai(text,document.querySelector('#'+id+' .bub'));
+    var raw=await archai(text,document.querySelector('#'+id+' .think'));
     HIST.push({role:'user',content:text},{role:'assistant',content:raw});
     document.getElementById(id).outerHTML=renderReply(raw);
     setLive(true);
