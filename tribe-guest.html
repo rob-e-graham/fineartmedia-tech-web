@@ -857,13 +857,19 @@ var CONTACT='<div class="contact">'+
  '<div class="cn">For bookings, billing, or anything that should be decided at TRIBE rather than on the ground.</div>'+
  '</div>';
 function needsHuman(t){
-  /* A passing mention of the team is not a handover. The card appears only when
-     the reply is actually putting a person in front of the client. */
+  /* Escalation is a last resort, so the card appears only when the reply is
+     genuinely handing the client to a person. A polite closing offer to ask
+     the team is not a handover, and printing the card on one makes every
+     answer look like a referral. */
   if(/event manager/i.test(t)) return true;
   if(/escalat/i.test(t)) return true;
-  return /(call|contact|speak to|ask|find|come to you|will meet you|reach)[^.]{0,40}(team|sarah|producer)/i.test(t)
-      && !/can (provide|confirm|check|look)/i.test(t);
+  if(/(speak|talk) (to|with) (someone|a person|the team|them)/i.test(t)) return true;
+  if(/(will|can) come to you/i.test(t)) return true;
+  if(/(call|contact) the team (now|on|straight)/i.test(t)) return true;
+  if(/I (cannot|can.t|am unable to|do not have|don.t have)[^.]{0,40}(confirm|help|answer|arrange|book)/i.test(t)) return true;
+  return false;
 }
+
 function renderReply(raw){
   var src='', esc='', body=raw;
   var m=body.match(/SOURCES\s*:?\s*(.+?)(?:\n|$)/i); if(m){src=m[1].trim(); body=body.replace(m[0],'');}
