@@ -133,10 +133,15 @@ svg.map{display:block;width:100%;height:auto}
 .bt span{font-size:8.6px;letter-spacing:.11em;text-transform:uppercase}
 .bt:hover{color:var(--body)}
 .bt.on{color:var(--gold)}
+.chips{max-height:52dvh;overflow-y:auto}
 .chips.compact{grid-template-columns:1fr;gap:0;padding-top:10px}
 .chips.compact .chip{display:none}
-.sugg{grid-column:1/-1;background:none;border:0;padding:0 0 9px;cursor:pointer;
-  font-family:var(--sans);font-size:9.4px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-align:left}
+.sugg{grid-column:1/-1;order:-1;display:flex;align-items:center;gap:7px;background:none;border:0;
+  padding:0 0 10px;cursor:pointer;font-family:var(--sans);font-size:9.4px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim);text-align:left}
+.sugg svg{width:10px;height:7px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;
+  stroke-linejoin:round;transition:transform .2s}
+.sugg[aria-expanded="false"] svg{transform:rotate(-90deg)}
 .sugg:hover{color:var(--gold)}
 .chips{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:13px 18px 16px;border-top:1px solid var(--line);background:var(--ink)}
 @media(max-width:430px){.chips{grid-template-columns:repeat(2,1fr)}}
@@ -386,7 +391,7 @@ body.appshell .lastnote{padding:12px 18px 16px;margin:0}
       <button class="chip" onclick="ask(6)">Something romantic</button>
       <button class="chip" onclick="ask(7)">Art &amp; culture</button>
       <button class="chip" onclick="ask(8)">Something fun</button>
-      <button class="sugg" id="sugg" hidden onclick="suggest()">Suggested questions</button>
+      <button class="sugg" id="sugg" onclick="suggest()" aria-expanded="true" aria-controls="chipgrid"><span>Suggested questions</span><svg viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5"/></svg></button>
       <form class="askform" id="askform"><input id="askInput" type="text" placeholder="Ask us anything…" autocomplete="off"><button type="submit" aria-label="Send">→</button></form>
     </div>
 
@@ -956,9 +961,12 @@ function compactChips(on){
   var c=document.getElementById('chips'), b=document.getElementById('sugg');
   if(!c||!b) return;
   c.classList.toggle('compact',on);
-  b.hidden=!on;
+  b.setAttribute('aria-expanded', on?'false':'true');
 }
-function suggest(){ compactChips(false); }
+function suggest(){
+  var c=document.getElementById('chips');
+  compactChips(!c.classList.contains('compact'));
+}
 async function send(text){
   var log=document.getElementById('log'), pane=document.getElementById('pane');
   compactChips(true);
