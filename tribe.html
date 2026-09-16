@@ -27,11 +27,11 @@ body{font-family:var(--sans);font-weight:300;background:var(--deep);color:var(--
 .concept{font-size:10.5px;color:var(--gold);border:1px solid #4a3f2c;background:#221d15;
          padding:8px 14px;border-radius:2px;letter-spacing:.05em;max-width:330px;line-height:1.5;flex:1 1 240px}
 .layout{display:grid;grid-template-columns:1fr;gap:26px;align-items:start}
-@media(min-width:1000px){.layout{grid-template-columns:372px 1fr;gap:30px}}
+@media(min-width:860px){.layout{grid-template-columns:minmax(320px,372px) 1fr;gap:28px}}
 
 .device{position:relative;background:var(--ink2);border:1px solid var(--line);border-radius:3px;
         box-shadow:0 30px 70px -24px rgba(0,0,0,.9);overflow:hidden;max-width:520px;margin:0 auto;width:100%}
-@media(min-width:1000px){.device{position:sticky;top:28px;max-width:none;margin:0}}
+@media(min-width:860px){.device{position:sticky;top:28px;max-width:none;margin:0}}
 .lock{position:absolute;inset:0;z-index:60;background:var(--deep);display:flex;align-items:center;
   justify-content:center;padding:34px 26px}
 /* a class sets display, so it beats the browser's [hidden] rule unless we say so */
@@ -75,7 +75,7 @@ body{font-family:var(--sans);font-weight:300;background:var(--deep);color:var(--
 .tab:hover{color:var(--body)}
 .tab.on{color:var(--gold);border-bottom-color:var(--gold)}
 .pane{position:relative;height:min(72vh,600px);overflow-y:auto;overflow-x:hidden;padding:18px 20px 22px;-webkit-overflow-scrolling:touch}
-@media(min-width:1000px){.pane{height:560px;padding:18px}}
+@media(min-width:860px){.pane{height:560px;padding:18px 20px}}
 .pane::-webkit-scrollbar{width:0}
 .v{display:none}.v.on{display:block}
 .pane img{max-width:100%;height:auto}
