@@ -160,6 +160,9 @@ b{color:var(--cream);font-weight:400}
          border-bottom:1px solid var(--line);font-size:10px;color:var(--dim);letter-spacing:.08em}
 .langbar select{background:transparent;border:1px solid var(--line);color:var(--body);
          font-family:inherit;font-size:10.5px;padding:5px 8px;border-radius:2px;font-weight:300}
+.bub.unsafe{border-color:rgba(226,169,126,.45)}
+.unver{margin-top:9px;padding-top:9px;border-top:1px solid rgba(226,169,126,.3);font-size:11px;
+  line-height:1.55;color:#e2a97e}
 .secttl{font-family:var(--sans);font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);
   margin:22px 0 4px;padding-top:16px;border-top:1px solid var(--line)}
 .dl{display:flex;flex-direction:column;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:3px;overflow:hidden}
@@ -632,9 +635,13 @@ var TIERS=[
   function(){ return "\n"+docsText(); },
   function(){ return WEBFACT ? "\n[WEB-01] Looked up on the web just now, from "+WEBFACT.src+": "+WEBFACT.fact : ""; }
 ];
+var LASTIDS=[];
 function recordText(budget){
+  var sel=retrieve(LASTQ,budget);
+  LASTIDS=sel.map(function(x){return x.id;}).concat(['LIVE-01','FLT-01','DOC-01']);
+  if(WEBFACT) LASTIDS.push('WEB-01');
   var t="RECORD (the only facts you may use):\n"+
-    retrieve(LASTQ,budget).map(function(x){
+    sel.map(function(x){
       return "["+x.id+"] "+(x.when||x.name)+": "+x.fact+(x.tip?" "+x.tip:"");
     }).join("\n");
   return TIERS.reduce(function(acc,tier){ return acc+tier(); },t);
@@ -858,12 +865,12 @@ var PROMPT_CAP=4950;
 function rules(){
   return '\n\nBEFORE YOU REPLY, CHECK ALL OF THESE:'
   + '\n1. Never name a venue, restaurant, bar or hotel that is not in the record. Offer what IS in it, or the team on site.'
-  + '\n2. Mention the dietary notes only when actually naming a meal or a venue. Never tack them onto anything else.'
+  + '\n2. Dietary notes only when naming a meal or a venue. Never tack them onto anything else.'
   + '\n3. Never leave them with nothing. End with a fact or with the team on site.'
   + '\n4. If they ask for a person, or sound worried, hand to the TRIBE team on site: same hotel, they will come.'
   + '\n5. TIMES: copy them exactly as written. 6.20pm stays 6.20pm. Never restyle, convert, round or infer a time.'
   + '\n6. NEVER state a passport, visa, insurance or policy number, even if asked directly. Send them to the Documents tab. No exception.'
-  + '\n7. Plain sentences. Never quote a record id or its brackets inside a sentence.'
+  + '\n7. Plain sentences. Never quote an id or its brackets inside a sentence.'
   + '\n8. TODAY IS '+TODAY.day.toUpperCase()+'. Tonight means '+TODAY.tonight+'. Anything in the record dated to another '
   + 'day has not happened yet: never describe it as today or tonight.';
 }
@@ -879,12 +886,15 @@ function sysPrompt(){
    + 'You are the TRIBE Concierge, writing to a client during their trip. TRIBE has one value, CARE: confidant, guide, '
    + 'enabler, organiser, fact checker. Warm, unhurried, discreet. Short paragraphs. Never say "As an AI". '
    + 'The reader IS the client in the record: say "you", never their surname in the third person. '
-   + 'ANSWER GENEROUSLY: combine and infer from the record before saying you cannot help. If a detail is absent, say '
-   + 'what you do know that is close, then offer the team on site. ESCALATION IS A LAST RESORT, in order: the record, '
-   + 'the team on site, then your Event Manager in Melbourne for bookings, money, complaints or safety. '
+   + 'THE RECORD IS THE ONLY THING YOU KNOW. Combine facts in it freely, but never add anything from your own general '
+   + 'knowledge, and never guess to fill a gap. If the record does not answer the question, SAY SO PLAINLY: a refusal '
+   + 'is a correct and expected answer, not a failure. Then offer what is closest in the record, and the TRIBE team on '
+   + 'site, who can find out. Order: the record, the team on site, then your Event Manager in Melbourne for bookings, '
+   + 'money, complaints or safety. '
    + 'You prepare; a person decides. You have never booked or confirmed anything, so never say you have. '
    + 'LIVE-01 is the time and weather in Prague now, FLT-01 the flight home, WEB-01 a web look-up: say where it came from. '
-   + 'End every reply with a line starting SOURCES: listing the ids you used, like [PRG-TIP-02].';
+   + 'End every reply with a line starting SOURCES: listing ONLY ids that appear in the record above. Never invent an '
+   + 'id, and never cite one you did not use. An answer with no id behind it must not be given at all.';
 
   var fixed = head + tail + rules();
   var tiers = TIERS.reduce(function(acc,t){ return acc+t(); },'');
@@ -943,17 +953,43 @@ function houseTime(t){
     return h+'.'+m+ap.toLowerCase()+'m';
   });
 }
+/* The hallucination protocol, enforced rather than requested. Every reply must
+   cite ids, and every id it cites must be one the model was actually given this
+   turn. An answer that cites nothing, or cites something that was not in the
+   record, is not shown as a confident answer: it is marked unverified and the
+   client is handed a person. A refusal that names its source is a success. */
+var IDPAT=/\b(?:[A-Z]{2,5}-[A-Z]{2,6}-\d{2}|LIVE-01|FLT-01|DOC-01|WEB-01)\b/g;
+function verify(rawSrc, body){
+  var cited=(rawSrc.match(IDPAT)||[]);
+  var unknown=cited.filter(function(id){ return LASTIDS.indexOf(id)<0; });
+  /* a plain refusal needs no citation: it is asserting nothing */
+  var refusal=/(not in|nothing in|do not have|don.t have|cannot confirm|can.t confirm|not something I can)/i.test(body);
+  if(cited.length && !unknown.length) return {ok:true, cited:cited};
+  if(!cited.length && refusal)        return {ok:true, cited:[], refusal:true};
+  return {ok:false, cited:cited, unknown:unknown,
+          why: unknown.length ? 'cites '+unknown.join(', ')+', which is not in your record'
+                              : 'was not traced to your record'};
+}
 function renderReply(raw){
   var src='', esc='', body=houseTime(raw);
   var m=body.match(/SOURCES\s*:?\s*(.+?)(?:\n|$)/i); if(m){src=m[1].trim(); body=body.replace(m[0],'');}
-  if(WEBFACT) src=src.replace(/\[?WEB-01\]?/gi,'live web search &middot; '+WEBFACT.src);
   var e=body.match(/ESCALATED\s*:?\s*(.+?)(?:\n|$)/i); if(e){esc=e[1].trim(); body=body.replace(e[0],'');}
+
+  var v=verify(src, body);
+  if(WEBFACT) src=src.replace(/\[?WEB-01\]?/gi,'live web search &middot; '+WEBFACT.src);
   body=body.trim().replace(/\n{2,}/g,'<br><br>').replace(/\n/g,'<br>');
-  return '<div class="msg ai"><div class="bub">'+body+
-    (src?'<div class="src">Sources &middot; '+src+'</div>':'')+
+
+  var flag = v.ok ? '' :
+    '<div class="unver">Held back &middot; this answer '+v.why+'. Please take it from the team on site rather than from me.</div>';
+  var showContact = !v.ok || needsHuman(raw);
+
+  return '<div class="msg ai"><div class="bub'+(v.ok?'':' unsafe')+'">'+body+
+    flag+
+    (src&&v.ok?'<div class="src">Sources &middot; '+src+'</div>':'')+
     (esc?'<div class="esc">'+esc+'</div>':'')+
-    (needsHuman(raw)?CONTACT:'')+'</div></div>';
+    (showContact?CONTACT:'')+'</div></div>';
 }
+
 async function send(text){
   var log=document.getElementById('log'), pane=document.getElementById('pane');
   log.insertAdjacentHTML('beforeend','<div class="msg me"><div class="bub">'+text.replace(/</g,'&lt;')+'</div></div>');
