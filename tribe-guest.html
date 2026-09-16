@@ -870,8 +870,15 @@ function needsHuman(t){
   return false;
 }
 
+/* The model keeps restyling 7.05pm as 7:05 pm. The digits are right; only the
+   house style slips, so correct it on the way to the screen. */
+function houseTime(t){
+  return t.replace(/(\d{1,2}):(\d{2})\s*([ap])\.?\s*m\.?/gi,function(_,h,m,ap){
+    return h+'.'+m+ap.toLowerCase()+'m';
+  });
+}
 function renderReply(raw){
-  var src='', esc='', body=raw;
+  var src='', esc='', body=houseTime(raw);
   var m=body.match(/SOURCES\s*:?\s*(.+?)(?:\n|$)/i); if(m){src=m[1].trim(); body=body.replace(m[0],'');}
   if(WEBFACT) src=src.replace(/\[?WEB-01\]?/gi,'live web search &middot; '+WEBFACT.src);
   var e=body.match(/ESCALATED\s*:?\s*(.+?)(?:\n|$)/i); if(e){esc=e[1].trim(); body=body.replace(e[0],'');}
