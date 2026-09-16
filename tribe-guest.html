@@ -133,7 +133,7 @@ svg.map{display:block;width:100%;height:auto}
 .bt span{font-size:8.6px;letter-spacing:.11em;text-transform:uppercase}
 .bt:hover{color:var(--body)}
 .bt.on{color:var(--gold)}
-.chips{max-height:52dvh;overflow-y:auto}
+.chips{max-height:44dvh;overflow-y:auto}
 .chips.compact{grid-template-columns:1fr;gap:0;padding-top:10px}
 .chips.compact .chip{display:none}
 .sugg{grid-column:1/-1;order:-1;display:flex;align-items:center;gap:7px;background:none;border:0;
@@ -245,7 +245,7 @@ body.appshell .wrap{max-width:none;margin:0;flex:1;min-height:0;display:flex;fle
 body.appshell .layout{display:flex;flex-direction:column;max-width:none;margin:0;flex:1;min-height:0;gap:0}
 body.appshell .device{max-width:none;width:100%;margin:0;border:0;border-radius:0;box-shadow:none;
   display:flex;flex-direction:column;flex:1;min-height:0}
-body.appshell .pane{height:auto;flex:1;min-height:200px}
+body.appshell .pane{height:auto;flex:1;min-height:min(200px,30dvh)}
 body.appshell .lastnote{flex:0 0 auto}
 body.appshell .lastnote{padding:12px 18px 16px;margin:0}
 @media(min-width:760px){
