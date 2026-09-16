@@ -122,6 +122,8 @@ svg.map{display:block;width:100%;height:auto}
 .contact{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);display:flex;
   flex-wrap:wrap;gap:6px 14px;align-items:baseline}
 .contact .ch{width:100%;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.contact .cfake{display:inline-block;color:var(--gold);border-bottom:1px dashed rgba(212,185,140,.45);
+  padding-bottom:1px;margin-right:12px;cursor:default}
 .contact a{color:var(--cream);text-decoration:none;font-size:12.5px;border-bottom:1px solid var(--gold);
   padding-bottom:1px}
 .contact a:hover{color:var(--gold)}
@@ -552,7 +554,7 @@ var FACTS=[
  {id:'PRG-CAS-04',cat:'dining',name:'Czech food without ceremony',tag:'Casual',keys:'fun casual',src:'Lonely Planet',
   fact:"U Kroka or Hostinec na Vytoni for duck and proper Czech cooking. Cerveny Jelen is the smarter version of the same idea."},
  {id:'PRG-TEAM-01',cat:'client',name:'TRIBE on the ground',
-  fact:"A TRIBE production team has travelled from Melbourne and is on site for the whole program, staying at the same hotel. They are awake in Prague time and reachable at any hour. Sarah Nolan leads on the ground. For anything happening now, they are the right people, not Melbourne."},
+  fact:"A TRIBE production team has travelled from Melbourne and is on site for the whole program, staying at the same hotel. They are awake in Prague time and reachable at any hour. A duty producer leads on the ground. For anything happening now, they are the right people, not Melbourne."},
  {id:'PRG-GAP-01',cat:'gap',name:'Not in the record',
   fact:"Live prices, bookable availability, any other TRIBE client, and any city other than Prague. For these, the TRIBE team on site can check and come back to you."}
 ];
@@ -892,14 +894,17 @@ async function archai(userText,statusEl){
   if(!raw) throw new Error('empty');
   return raw;
 }
+/* The on-site team is invented for the scenario, so its button must not dial a
+   real desk. TRIBE's published contact stays as itself, under Melbourne, where
+   it is accurate. */
 var CONTACT='<div class="contact">'+
  '<div class="ch">TRIBE on site &middot; in your hotel</div>'+
- '<a href="tel:+61385783151">Call the team now</a>'+
- '<div class="cn">Sarah Nolan and the production team travelled with the program and are on Prague time.</div>'+
+ '<span class="cfake">Call the team now</span>'+
+ '<div class="cn">The production team travelled with the program and are on Prague time. In a live program this dials the producer on duty.</div>'+
  '<div class="ch" style="margin-top:9px">Your Event Manager &middot; Melbourne</div>'+
  '<a href="tel:+61385783151">+61 3 8578 3151</a>'+
- '<a href="mailto:hello@tribe-group.com.au?subject=Prague%20program%20%E2%80%93%20Whitfield">hello@tribe-group.com.au</a>'+
- '<div class="cn">For bookings, billing, or anything that should be decided at TRIBE rather than on the ground.</div>'+
+ '<a href="mailto:hello@tribe-group.com.au?subject=TRIBE%20Concierge%20demonstration">hello@tribe-group.com.au</a>'+
+ '<div class="cn">TRIBE\'s own published contact. For bookings, billing, or anything decided at TRIBE rather than on the ground.</div>'+
  '</div>';
 function needsHuman(t){
   /* Escalation is a last resort, so the card appears only when the reply is
