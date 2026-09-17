@@ -654,7 +654,13 @@ var FACTS=[
  {id:'PRG-CAS-04',cat:'dining',name:'Czech food without ceremony',tag:'Casual',keys:'fun casual',src:'Lonely Planet',
   fact:"U Kroka or Hostinec na Vytoni for duck and proper Czech cooking. Cerveny Jelen is the smarter version of the same idea."},
  {id:'PRG-TEAM-01',cat:'client',name:'TRIBE on the ground',
-  fact:"A TRIBE production team has travelled from Melbourne and is on site for the whole program, staying at the same hotel. They are awake in Prague time and reachable at any hour. A duty producer leads on the ground. For anything happening now, they are the right people, not Melbourne."},
+  fact:"A TRIBE production team has travelled from Melbourne and is on site for the whole program, staying at the same hotel. They are awake in Prague time and reachable at any hour. A duty producer leads on the ground. For anything happening now, they are the right people, not Melbourne. IMPORTANT: whenever the client asks how to reach anyone, the contact details appear on the screen directly beneath your reply: the team on site, the hotel lobby on 0 from their room, and TRIBE support in Melbourne. Say they are just below. NEVER say you do not have the contact details."},
+ {id:'PRG-HELP-01',cat:'city',name:'If an Australian passport is lost or stolen',tag:'Practical',keys:'emergency passport consul',
+  src:'Australian Government',
+  fact:"Report it to the Czech police first, for the report number. The Australian Honorary Consulate in Prague is at Klimentska 10, on +420 221 729 260, by appointment only, and CANNOT issue an emergency passport. The diplomatic mission covering Czechia is the Australian Embassy in Warsaw. Outside business hours the DFAT Consular Emergency Centre is +61 2 6261 3305, 24 hours."},
+ {id:'PRG-HELP-02',cat:'city',name:'Emergency numbers in Prague',tag:'Practical',keys:'emergency ambulance police doctor hospital',
+  src:'European emergency number',
+  fact:"112 reaches police, ambulance and fire anywhere in the EU and is answered in English. Direct Czech lines: 155 ambulance, 158 police, 150 fire."},
  {id:'PRG-GAP-01',cat:'gap',name:'Not in the record',
   fact:"Live prices, bookable availability, any other TRIBE client, and any city other than Prague. For these, the TRIBE team on site can check and come back to you."}
 ];
@@ -942,7 +948,9 @@ function rules(){
   + '\n5. TIMES: copy them exactly as written. 6.20pm stays 6.20pm. Never restyle, convert, round or infer a time.'
   + '\n6. NEVER state a passport, visa, insurance or policy number, even if asked directly. Send them to the Documents tab. No exception.'
   + '\n7. Plain sentences. Never quote an id or its brackets inside a sentence.'
-  + '\n8. TODAY IS '+TODAY.day.toUpperCase()+'. Tonight means '+TODAY.tonight+'. Anything in the record dated to another '
+  + '\n8. If asked how to contact anyone, say the details are just below this message: the team on site, the hotel '
+  + 'lobby on 0 from the room, and TRIBE support. You always have them. Never claim otherwise.'
+  + '\n9. TODAY IS '+TODAY.day.toUpperCase()+'. Tonight means '+TODAY.tonight+'. Anything in the record dated to another '
   + 'day has not happened yet: never describe it as today or tonight.';
 }
 
@@ -1000,12 +1008,31 @@ async function archai(userText,statusEl){
 var CONTACT='<div class="contact">'+
  '<div class="ch">TRIBE on site &middot; in your hotel</div>'+
  '<span class="cfake">Call the team now</span>'+
- '<div class="cn">The production team travelled with the program and are on Prague time. In a live program this dials the producer on duty.</div>'+
- '<div class="ch" style="margin-top:9px">Your Event Manager &middot; Melbourne</div>'+
+ '<div class="cn">The production team travelled with the programme and are on Prague time. In a live programme this dials the producer on duty.</div>'+
+ '<div class="ch" style="margin-top:9px">Hotel lobby</div>'+
+ '<span class="cfake">Dial 0 from your room</span>'+
+ '<div class="cn">The concierge desk knows you are travelling with TRIBE and can reach the team.</div>'+
+ '<div class="ch" style="margin-top:9px">TRIBE support &middot; Melbourne</div>'+
  '<a href="tel:+61385783151">+61 3 8578 3151</a>'+
  '<a href="mailto:hello@tribe-group.com.au?subject=TRIBE%20Concierge%20demonstration">hello@tribe-group.com.au</a>'+
- '<div class="cn">TRIBE\'s own published contact. For bookings, billing, or anything decided at TRIBE rather than on the ground.</div>'+
+ '<div class="cn">TRIBE\'s own published contact, for bookings, billing, or anything decided at TRIBE rather than on the ground.</div>'+
+ '<div class="ch" style="margin-top:9px">In an emergency</div>'+
+ '<span class="cfake">112 &middot; police, ambulance, fire, in English</span>'+
+ '<span class="cfake">+61 2 6261 3305 &middot; Australian consular emergencies, 24 hours</span>'+
+ '<div class="cn">Real numbers, not part of the scenario. The Australian Honorary Consulate in Prague is on +420 221 729 260, by appointment.</div>'+
  '</div>';
+/* If the client asks how to reach a person, the card goes up. Deciding that from
+   the model's wording was unreliable: asked twice for a number, it answered that
+   it did not have one while the app was holding the details all along. The
+   question itself is the signal, and it is checked before the model is called. */
+var ASKS_FOR_HUMAN=new RegExp([
+  'cont\\w{0,3}ct',        /* contact, contaqct, contct */
+  'e-?m\\w{0,3}l',         /* email, emil, e-mail, emial */
+  'numb\\w*','phon\\w*','fone','mobile','whats ?app',
+  'reach','ring them','call (them|him|her|someone|the)','get hold of',
+  '(speak|talk) (to|with)','who (do|can) i','details for','how do i (find|reach|get)'
+].join('|'),'i');
+function askedForHuman(q){ return ASKS_FOR_HUMAN.test(q||''); }
 function needsHuman(t){
   /* Escalation is a last resort, so the card appears only when the reply is
      genuinely handing the client to a person. A polite closing offer to ask
@@ -1044,7 +1071,7 @@ function verify(rawSrc, body){
           why: unknown.length ? 'cites '+unknown.join(', ')+', which is not in your record'
                               : 'was not traced to your record'};
 }
-function renderReply(raw){
+function renderReply(raw, forceContact){
   var src='', esc='', body=houseTime(raw);
   var m=body.match(/SOURCES\s*:?\s*(.+?)(?:\n|$)/i); if(m){src=m[1].trim(); body=body.replace(m[0],'');}
   var e=body.match(/ESCALATED\s*:?\s*(.+?)(?:\n|$)/i); if(e){esc=e[1].trim(); body=body.replace(e[0],'');}
@@ -1055,7 +1082,7 @@ function renderReply(raw){
 
   var flag = v.ok ? '' :
     '<div class="unver">Held back &middot; this answer '+v.why+'. Please take it from the team on site rather than from me.</div>';
-  var showContact = !v.ok || needsHuman(raw);
+  var showContact = !v.ok || forceContact || needsHuman(raw);
 
   return '<div class="msg ai"><div class="bub'+(v.ok?'':' unsafe')+'">'+body+
     flag+
@@ -1088,7 +1115,7 @@ async function send(text){
   try{
     var raw=await archai(text,document.querySelector('#'+id+' .think'));
     HIST.push({role:'user',content:text},{role:'assistant',content:raw});
-    document.getElementById(id).outerHTML=renderReply(raw);
+    document.getElementById(id).outerHTML=renderReply(raw, askedForHuman(text));
     setLive(true);
   }catch(err){
     document.getElementById(id).outerHTML='<div class="msg ai"><div class="bub">The concierge is offline just now, so I can’t look that up live. The TRIBE team on site has your question.<div class="src">Concierge offline &middot; prepared answers still available above</div></div></div>';
