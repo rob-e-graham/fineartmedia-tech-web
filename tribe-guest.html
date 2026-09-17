@@ -980,14 +980,24 @@ function houseTime(t){
    turn. An answer that cites nothing, or cites something that was not in the
    record, is not shown as a confident answer: it is marked unverified and the
    client is handed a person. A refusal that names its source is a success. */
-var IDPAT=/\b(?:[A-Z]{2,5}-[A-Z]{2,6}-\d{2}|LIVE-01|FLT-01|DOC-01|WEB-01)\b/g;
+var IDPAT=/\b[A-Z]{2,6}(?:-[A-Z]{2,6})?-\d{2}\b/g;
+/* The model sometimes shortens an id it was genuinely given: PRG-HELP-01 comes back
+   as HELP-01. That is not a fabrication, and holding back a correct, grounded answer
+   for it would be the protocol failing the client. A shortened id is accepted only
+   when it resolves to exactly one id that was supplied this turn; anything that
+   resolves to nothing, or to more than one, still fails. */
+function resolveId(tok){
+  if(LASTIDS.indexOf(tok)>-1) return tok;
+  var hits=LASTIDS.filter(function(id){ return id.slice(-(tok.length+1))==='-'+tok; });
+  return hits.length===1 ? hits[0] : null;
+}
 function verify(rawSrc, body){
-  var cited=(rawSrc.match(IDPAT)||[]);
-  var unknown=cited.filter(function(id){ return LASTIDS.indexOf(id)<0; });
-  /* a plain refusal needs no citation: it is asserting nothing */
+  var toks=(rawSrc.match(IDPAT)||[]);
+  var cited=[], unknown=[];
+  toks.forEach(function(t){ var r=resolveId(t); if(r) cited.push(r); else unknown.push(t); });
   var refusal=/(not in|nothing in|do not have|don.t have|cannot confirm|can.t confirm|not something I can)/i.test(body);
   if(cited.length && !unknown.length) return {ok:true, cited:cited};
-  if(!cited.length && refusal)        return {ok:true, cited:[], refusal:true};
+  if(!toks.length && refusal)         return {ok:true, cited:[], refusal:true};
   return {ok:false, cited:cited, unknown:unknown,
           why: unknown.length ? 'cites '+unknown.join(', ')+', which is not in your record'
                               : 'was not traced to your record'};
