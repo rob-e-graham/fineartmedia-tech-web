@@ -571,7 +571,7 @@ var FACTS=[
   fact:"A TRIBE production team has travelled from Melbourne and is on site for the whole program, staying at the same hotel. They are awake in Prague time and reachable at any hour. A duty producer leads on the ground. For anything happening now, they are the right people, not Melbourne. IMPORTANT: whenever the client asks how to reach anyone, the contact details appear on the screen directly beneath your reply: the team on site, the hotel lobby on 0 from their room, and TRIBE support in Melbourne. Say they are just below. NEVER say you do not have the contact details."},
  {id:'PRG-HELP-01',cat:'city',name:'If an Australian passport is lost or stolen',tag:'Practical',keys:'emergency passport consul',
   src:'Australian Government',
-  fact:"Report it to the Czech police first, for the report number. The Australian Honorary Consulate in Prague is at Klimentska 10, on +420 221 729 260, by appointment only, and CANNOT issue an emergency passport. The diplomatic mission covering Czechia is the Australian Embassy in Warsaw. Outside business hours the DFAT Consular Emergency Centre is +61 2 6261 3305, 24 hours."},
+  fact:"Report it to Czech police first for a report number. Australian Honorary Consulate, Klimentska 10, +420 221 729 260, by appointment; it cannot issue an emergency passport. Embassy covering Czechia: Warsaw. After hours: DFAT Consular Emergency Centre +61 2 6261 3305, 24 hours."},
  {id:'PRG-HELP-02',cat:'city',name:'Emergency numbers in Prague',tag:'Practical',keys:'emergency ambulance police doctor hospital',
   src:'European emergency number',
   fact:"112 reaches police, ambulance and fire anywhere in the EU and is answered in English. Direct Czech lines: 155 ambulance, 158 police, 150 fire."},
@@ -604,6 +604,11 @@ function retrieve(q,budget){
   });
   rest.sort(function(a,b){ return b._s-a._s; });
 
+  /* When the question matches something, facts that match nothing are not allowed
+     to fill the space. Otherwise a short irrelevant entry beats a long relevant one
+     purely on length, which is how the consulate details lost to a Kyoto note. */
+  var best=rest.length?rest[0]._s:0;
+  if(best>0) rest=rest.filter(function(f){ return f._s>0; });
   var out=core.slice();
   var used=core.reduce(function(n,f){ return n+f.fact.length+f.name.length+20; },0);
   for(var i=0;i<rest.length;i++){
@@ -944,7 +949,8 @@ var ASKS_FOR_HUMAN=new RegExp([
   'e-?m\\w{0,3}l',         /* email, emil, e-mail, emial */
   'numb\\w*','phon\\w*','fone','mobile','whats ?app',
   'reach','ring them','call (them|him|her|someone|the)','get hold of',
-  '(speak|talk) (to|with)','who (do|can) i','details for','how do i (find|reach|get)'
+  '(speak|talk) (to|with)','who (do|can) i','details for','how do i (find|reach|get)',
+  'lost','stolen','emergenc\\w*','hospital','doctor','police','ambulance','injur\\w*','sick','unwell','accident','urgent','help me'
 ].join('|'),'i');
 function askedForHuman(q){ return ASKS_FOR_HUMAN.test(q||''); }
 function needsHuman(t){
@@ -953,6 +959,7 @@ function needsHuman(t){
      the team is not a handover, and printing the card on one makes every
      answer look like a referral. */
   if(/event manager/i.test(t)) return true;
+  if(/(just |directly )?below (this|my) (message|reply)|details (are )?(just )?below/i.test(t)) return true;
   if(/escalat/i.test(t)) return true;
   if(/(speak|talk) (to|with) (someone|a person|the team|them)/i.test(t)) return true;
   if(/(will|can) come to you/i.test(t)) return true;
