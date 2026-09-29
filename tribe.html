@@ -1,0 +1,1161 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TRIBE Concierge — Prague — Concept Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#231F20; --ink2:#1A1718; --deep:#141112;
+  --gold:#D4B98C; --gold-d:#B89A68; --cream:#FAF4EF; --olive:#747761; --slate:#4A4F54;
+  --line:#3a3436; --body:#c9c0b8; --dim:#8e857f;
+  --sans:"Lato",-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --serif:"Cormorant Garamond",Georgia,serif;
+}
+body{font-family:var(--sans);font-weight:300;background:var(--deep);color:var(--body);
+     font-size:14px;line-height:1.6;min-height:100vh;padding:18px 14px 34px;
+     -webkit-text-size-adjust:100%}
+.wrap{max-width:1200px;margin:0 auto}
+.masthead{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+          border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:22px}
+.mh-l{display:flex;align-items:center;gap:16px}
+.logo{height:46px;width:auto;opacity:.95}
+.mh-t{font-family:var(--serif);font-size:clamp(22px,5vw,27px);color:var(--cream);font-weight:400;letter-spacing:.01em}
+.mh-s{font-size:10px;letter-spacing:.26em;color:var(--gold);text-transform:uppercase;margin-top:3px;font-weight:400}
+.concept{font-size:10.5px;color:var(--gold);border:1px solid #4a3f2c;background:#221d15;
+         padding:8px 14px;border-radius:2px;letter-spacing:.05em;max-width:330px;line-height:1.5;flex:1 1 240px}
+.layout{display:grid;grid-template-columns:1fr;gap:26px;align-items:start}
+@media(min-width:860px){.layout{grid-template-columns:minmax(320px,372px) 1fr;gap:28px}}
+
+.device{position:relative;background:var(--ink2);border:1px solid var(--line);border-radius:3px;
+        box-shadow:0 30px 70px -24px rgba(0,0,0,.9);overflow:hidden;max-width:520px;margin:0 auto;width:100%}
+@media(min-width:860px){.device{position:sticky;top:28px;max-width:none;margin:0}}
+.lock{position:absolute;inset:0;z-index:60;background:var(--deep);display:flex;align-items:center;
+  justify-content:center;padding:34px 26px}
+/* a class sets display, so it beats the browser's [hidden] rule unless we say so */
+.lock[hidden]{display:none}
+.lk-in{max-width:330px;text-align:left}
+.lk-mark{height:26px;width:auto;opacity:.92;margin-bottom:24px}
+.lk-k{font-family:var(--sans);font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+.lk-t{font-family:var(--serif);font-size:30px;line-height:1.12;color:var(--cream);margin-top:7px}
+.lk-p{font-size:12.5px;line-height:1.65;color:var(--body);margin-top:17px}
+.lk-m{color:var(--cream);font-variant-numeric:tabular-nums}
+.lk-go{width:100%;margin-top:21px;padding:14px;background:var(--gold);color:#241d16;border:0;border-radius:3px;
+  font-family:var(--sans);font-size:11px;letter-spacing:.17em;text-transform:uppercase;cursor:pointer}
+.lk-go:hover{background:var(--cream)}
+.lk-f{font-size:10.5px;line-height:1.6;color:var(--dim);margin-top:15px}
+.lockbtn{margin-left:auto;background:none;border:0;color:var(--dim);cursor:pointer;font-family:var(--sans);
+  font-size:8.6px;letter-spacing:.15em;text-transform:uppercase;padding:3px 0}
+.lockbtn:hover{color:var(--gold)}
+.gate{padding:26px 4px;max-width:300px}
+.gate .gt{font-family:var(--serif);font-size:20px;color:var(--cream)}
+.gate .gp{font-size:12px;color:var(--body);line-height:1.6;margin-top:8px}
+.gate input{margin-top:15px;width:150px;background:var(--ink2);border:1px solid var(--line);border-radius:3px;
+  color:var(--cream);font-family:var(--sans);font-size:23px;letter-spacing:.42em;text-align:center;padding:11px 0 11px 10px;
+  font-variant-numeric:tabular-nums}
+.gate input:focus{outline:none;border-color:var(--gold)}
+.gate .gh{font-size:10.5px;color:var(--dim);margin-top:12px;line-height:1.6}
+.gate .gerr{color:#e2a97e;font-size:11px;margin-top:9px;min-height:14px}
+.appid{display:flex;align-items:center;gap:9px;padding:12px 22px 11px;background:var(--deep);
+  border-bottom:1px solid var(--line)}
+.appid .mark{height:20px;width:auto;opacity:.92}
+.appid .wordmark{font-family:var(--sans);font-size:12px;letter-spacing:.34em;color:var(--cream);font-weight:400}
+.appid .sub{font-family:var(--serif);font-size:14.5px;letter-spacing:.02em;color:var(--gold);margin-left:-2px}
+.d-top{padding:20px 22px 16px;border-bottom:1px solid var(--line);background:var(--ink)}
+.d-top .k{font-size:9px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase}
+.d-top .t{font-family:var(--serif);font-size:clamp(21px,5.5vw,25px);color:var(--cream);margin-top:5px;line-height:1.15}
+.d-top .m{font-size:11px;color:var(--dim);margin-top:5px;letter-spacing:.04em}
+.tabs{display:flex;overflow-x:auto;border-bottom:1px solid var(--line);background:var(--ink)}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;padding:14px 15px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+     background:none;border:none;border-bottom:2px solid transparent;color:var(--dim);
+     cursor:pointer;font-family:inherit;font-weight:400;transition:.18s;white-space:nowrap}
+.tab:hover{color:var(--body)}
+.tab.on{color:var(--gold);border-bottom-color:var(--gold)}
+.pane{position:relative;height:min(72vh,600px);overflow-y:auto;overflow-x:hidden;padding:18px 20px 22px;-webkit-overflow-scrolling:touch}
+@media(min-width:860px){.pane{height:560px;padding:18px 20px}}
+.pane::-webkit-scrollbar{width:0}
+.v{display:none}.v.on{display:block}
+.pane img{max-width:100%;height:auto}
+
+.item{border-bottom:1px solid rgba(212,185,140,.10);padding:19px 0}
+.item:first-child{padding-top:0}
+.item:last-child{border:none}
+.item .w{font-size:8.6px;letter-spacing:.26em;color:var(--gold);text-transform:uppercase}
+.item .h{font-family:var(--serif);font-size:20px;font-weight:300;color:var(--cream);margin:7px 0 6px;line-height:1.16;letter-spacing:.005em}
+.item .d{font-size:12.5px;line-height:1.68;color:var(--body);max-width:52ch}
+.item .tip{font-size:11.5px;color:var(--gold);margin-top:10px;font-style:italic;line-height:1.6;max-width:52ch}
+.kv{display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid #2b2627}
+.kv:last-child{border:none}
+.kv b{color:var(--cream);font-weight:400}
+
+/* map */
+.mapwrap{position:relative;background:#191617;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+svg.map{display:block;width:100%;height:auto}
+.pin{cursor:pointer;outline:none}
+.pin:focus-visible circle.dot{stroke:#FAF4EF;stroke-width:2}
+.pin circle{transition:.2s}
+.pin:hover circle.dot{r:7}
+.pin circle.dot{r:6}
+@media(min-width:1000px){.pin circle.dot{r:5}}
+.pin text{font-size:8.6px;fill:var(--cream);font-family:var(--sans);letter-spacing:.05em}
+.mapinfo{padding:13px 15px;border-top:1px solid var(--line);background:var(--ink);min-height:92px}
+.mapinfo .h{font-family:var(--serif);font-size:17px;color:var(--cream)}
+.mapinfo .c{font-size:9px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:4px}
+.mapinfo .d{font-size:12px;margin-top:5px;line-height:1.5}
+.maplegend{display:flex;gap:13px;flex-wrap:wrap;padding:11px 15px 0;font-size:10px;letter-spacing:.06em}
+.lg{display:flex;align-items:center;gap:5px;color:var(--dim)}
+.lg i{width:7px;height:7px;border-radius:99px;display:block}
+
+/* chat */
+.msg{margin-bottom:13px;font-size:12.5px;line-height:1.55}
+.msg.me{text-align:right}
+.bub{display:inline-block;padding:10px 14px;max-width:88%;text-align:left;border-radius:2px}
+.me .bub{background:#2e2a22;color:var(--cream);border:1px solid #453d2e}
+.ai .bub{background:var(--ink);border:1px solid var(--line);color:var(--body)}
+.ai .bub b{color:var(--cream);font-weight:400}
+.src{font-size:9.5px;color:var(--dim);margin-top:8px;padding-top:7px;border-top:1px solid var(--line);
+     line-height:1.5;letter-spacing:.03em}
+.esc{font-size:10px;color:var(--gold);margin-top:7px;letter-spacing:.04em}
+.contact{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);display:flex;
+  flex-wrap:wrap;gap:6px 14px;align-items:baseline}
+.contact .ch{width:100%;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.contact .cfake{display:inline-block;color:var(--gold);border-bottom:1px dashed rgba(212,185,140,.45);
+  padding-bottom:1px;margin-right:12px;cursor:default}
+.contact a{color:var(--cream);text-decoration:none;font-size:12.5px;border-bottom:1px solid var(--gold);
+  padding-bottom:1px}
+.contact a:hover{color:var(--gold)}
+.contact .cn{width:100%;font-size:10.5px;color:var(--dim);line-height:1.5;margin-top:3px}
+.base{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);background:var(--ink)}
+.bt{background:none;border:0;padding:11px 4px 12px;cursor:pointer;color:var(--dim);font-family:var(--sans);
+  display:flex;flex-direction:column;align-items:center;gap:5px;transition:color .18s}
+.bt svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+.bt span{font-size:8.6px;letter-spacing:.11em;text-transform:uppercase}
+.bt:hover{color:var(--body)}
+.bt.on{color:var(--gold)}
+.think{background-image:linear-gradient(100deg,var(--dim) 34%,var(--gold) 50%,var(--dim) 66%);
+  background-size:280% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:shimmer 2.6s linear infinite}
+@keyframes shimmer{from{background-position:190% 0}to{background-position:-90% 0}}
+.dots{display:inline-block;margin-left:1px;white-space:nowrap}
+.dots i{display:inline-block;width:3px;height:3px;margin-left:3px;border-radius:99px;
+  background:var(--gold);opacity:.25;animation:blink 1.4s ease-in-out infinite}
+.dots i:nth-child(2){animation-delay:.18s}
+.dots i:nth-child(3){animation-delay:.36s}
+@keyframes blink{0%,100%{opacity:.22;transform:translateY(0)}50%{opacity:.9;transform:translateY(-2px)}}
+@media(prefers-reduced-motion:reduce){
+  .think{animation:none;color:var(--dim);-webkit-text-fill-color:var(--dim)}
+  .dots i{animation:none;opacity:.5}
+}
+.askbar{display:flex;flex-direction:column;padding:12px 18px 16px;border-top:1px solid var(--line);background:var(--ink)}
+.chips.compact{display:none}
+.sugg{display:flex;align-items:center;gap:7px;background:none;border:0;
+  padding:0 0 10px;cursor:pointer;font-family:var(--sans);font-size:9.4px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim);text-align:left}
+.sugg svg{width:10px;height:7px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;
+  stroke-linejoin:round;transition:transform .2s}
+.sugg[aria-expanded="false"] svg{transform:rotate(-90deg)}
+.sugg:hover{color:var(--gold)}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;max-height:30dvh;overflow-y:auto;padding-bottom:10px}
+@media(max-width:430px){.chips{grid-template-columns:repeat(2,1fr)}}
+.chip{font-size:10.5px;line-height:1.3;padding:11px 9px;background:transparent;border:1px solid var(--line);color:var(--body);cursor:pointer;font-family:inherit;font-weight:300;transition:.18s;border-radius:2px;text-align:center;min-height:56px;display:flex;align-items:center;justify-content:center}
+.chip:hover{border-color:var(--gold);color:var(--gold)}
+
+/* right */
+.sec{margin-bottom:26px}
+h2{font-size:10px;font-weight:400;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;
+   margin-bottom:13px;padding-bottom:9px;border-bottom:1px solid var(--line)}
+.grid{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:680px){.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr}}
+@media(min-width:1000px){.g3{grid-template-columns:repeat(3,1fr)}}
+.c{background:var(--ink2);border:1px solid var(--line);padding:17px 19px;border-radius:2px}
+.c h3{font-family:var(--serif);font-size:19px;color:var(--cream);font-weight:400;margin-bottom:8px}
+.c p{font-size:12.5px;line-height:1.6}
+.c ul{list-style:none;margin-top:8px}
+.c li{font-size:12.5px;padding-left:14px;position:relative;margin-bottom:6px;line-height:1.55}
+.c li::before{content:"";position:absolute;left:0;top:.72em;width:6px;height:1px;background:var(--gold)}
+b{color:var(--cream);font-weight:400}
+.pull{font-family:var(--serif);font-size:clamp(17px,4vw,20px);color:var(--cream);line-height:1.4;
+      border-left:2px solid var(--gold);padding:4px 0 4px 16px;font-weight:300}
+.note{background:#1d1912;border-left:2px solid var(--gold);padding:14px 18px;font-size:12.5px;
+      color:#ded0b8;line-height:1.6}
+.langbar{display:flex;align-items:center;gap:9px;padding:9px 18px;background:var(--ink);
+         border-bottom:1px solid var(--line);font-size:10px;color:var(--dim);letter-spacing:.08em}
+.langbar select{background:transparent;border:1px solid var(--line);color:var(--body);
+         font-family:inherit;font-size:10.5px;padding:5px 8px;border-radius:2px;font-weight:300}
+.bub.unsafe{border-color:rgba(226,169,126,.45)}
+.unver{margin-top:9px;padding-top:9px;border-top:1px solid rgba(226,169,126,.3);font-size:11px;
+  line-height:1.55;color:#e2a97e}
+.secttl{font-family:var(--sans);font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);
+  margin:22px 0 4px;padding-top:16px;border-top:1px solid var(--line)}
+.dl{display:flex;flex-direction:column;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.dc{background:var(--ink);padding:12px 14px;display:flex;align-items:baseline;gap:10px}
+.dc .dt{font-family:var(--serif);font-size:16px;color:var(--cream)}
+.dc .dm{font-size:11px;color:var(--dim);width:100%;margin-top:3px;font-variant-numeric:tabular-nums}
+.dc .dv{font-family:var(--sans);font-size:9.2px;letter-spacing:.12em;text-transform:uppercase;margin-left:auto;white-space:nowrap}
+.dc .dv.ok{color:var(--gold)} .dc .dv.warn{color:#e2a97e}
+.dc .rv{background:none;border:0;color:var(--gold);font-family:var(--sans);font-size:10px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;padding:0;margin-top:5px}
+.dc .rv:hover{text-decoration:underline}
+.official{width:100%;margin-top:12px;padding:13px;background:var(--gold);color:#241d16;border:0;border-radius:3px;font-family:var(--sans);font-size:11px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer}
+.dn{font-size:10.5px;color:var(--dim);line-height:1.6;margin-top:11px}
+.ofl{position:absolute;inset:0;background:#0f0c0a;z-index:40;padding:26px 22px;display:flex;flex-direction:column;gap:3px}
+.ofl .on{font-family:var(--serif);font-size:27px;color:var(--cream);line-height:1.15}
+.ofl .ol{font-family:var(--sans);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-top:15px}
+.ofl .ov{font-family:var(--sans);font-size:19px;color:var(--cream);font-variant-numeric:tabular-nums;letter-spacing:.06em}
+.ofl .ox{margin-top:auto;display:flex;align-items:center;gap:12px}
+.ofl .ot{font-size:11px;color:var(--dim);font-variant-numeric:tabular-nums}
+.ofl .ob{margin-left:auto;background:none;border:1px solid var(--line);color:var(--cream);padding:9px 16px;border-radius:3px;font-family:var(--sans);font-size:10px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+.flight{border:1px solid var(--line);border-radius:3px;padding:12px 14px;margin-bottom:12px;background:rgba(212,185,140,.04)}
+.flight .fh{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.flight .fn{font-family:var(--sans);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.flight .fs{font-family:var(--sans);font-size:9.4px;letter-spacing:.12em;text-transform:uppercase;padding:2px 7px;border-radius:99px;margin-left:auto}
+.flight .fs.ok{background:rgba(212,185,140,.16);color:var(--gold)}
+.flight .fs.late{background:rgba(190,120,80,.22);color:#e2a97e}
+.flight .fr{display:flex;align-items:center;gap:10px;margin-top:7px;font-family:var(--serif);font-size:17px;color:var(--cream)}
+.flight .fr .ar{color:var(--dim);font-size:13px}
+.flight .ft{font-variant-numeric:tabular-nums}
+.flight .ft s{color:var(--dim);text-decoration:line-through;margin-right:6px;font-size:13px}
+.flight .fd{font-size:11.5px;color:var(--dim);margin-top:7px;line-height:1.55}
+.flight .fd b{color:var(--cream);font-weight:400}
+.flight .fc{font-size:9.6px;color:var(--dim);margin-top:8px;letter-spacing:.06em}
+.nowbar{display:flex;align-items:baseline;gap:7px;padding:7px 15px;background:var(--ink);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.nowbar .nl{font-family:var(--sans);font-size:8.2px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+.nowbar .nl.mel{margin-left:auto}
+.nowbar .nt{font-family:var(--sans);font-size:12.5px;color:var(--cream);font-variant-numeric:tabular-nums}
+.nowbar .nw{font-family:var(--sans);font-size:10px;color:var(--gold)}
+.dot{width:7px;height:7px;border-radius:99px;background:#6b5f4a;display:inline-block;margin-left:auto}
+.dot.on{background:var(--gold);box-shadow:0 0 7px rgba(212,185,140,.7)}
+.dot.off{background:#5c5550}
+.askform{display:flex;gap:6px;width:100%;margin-top:2px}
+.askform input{flex:1;background:var(--deep);border:1px solid var(--line);color:var(--cream);
+         font-family:inherit;font-weight:300;font-size:12px;padding:10px 12px;border-radius:2px}
+.askform input:focus{outline:none;border-color:var(--gold)}
+.askform button{background:transparent;border:1px solid var(--line);color:var(--gold);
+         font-size:15px;padding:0 15px;cursor:pointer;border-radius:2px}
+.askform button:hover{border-color:var(--gold)}
+.mapimg{position:relative;line-height:0}
+.mapimg img{width:100%;max-width:100%;height:auto;display:block;filter:grayscale(.85) contrast(1.05);transition:filter .6s ease}
+.mapimg:hover img{filter:grayscale(0) contrast(1)}
+.hs{position:absolute;width:34px;height:34px;transform:translate(-50%,-50%);border-radius:99px;
+    background:transparent;border:2px solid transparent;cursor:pointer;padding:0}
+.hs:hover,.hs:focus-visible{border-color:var(--gold);background:rgba(212,185,140,.18);outline:none}
+.hero{width:100%;max-width:100%;height:auto;display:block;border-radius:2px;margin-bottom:14px;filter:grayscale(1) contrast(1.06) brightness(.94);transition:filter .5s ease}
+.hero:hover{filter:grayscale(0) contrast(1) brightness(1)}
+.pane img.thumb{width:112px;height:70px;object-fit:cover;object-position:center bottom;display:block;border-radius:2px;flex:0 0 112px;filter:grayscale(1) contrast(1.08) brightness(.9);transition:filter .45s ease}
+.item.has-img:hover img.thumb{filter:grayscale(0) contrast(1) brightness(1)}
+.item.has-img{display:flex;gap:16px;align-items:flex-start}
+.item.has-img .body{flex:1;min-width:0}
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:11px;
+       color:var(--dim);line-height:1.6}
+
+/* The client view is an app, not a page in a page. On a phone it fills the
+   screen edge to edge; on a tablet or a laptop it settles into a device-sized
+   card rather than stretching a phone layout across a desktop. The demo page,
+   which sets the app beside its explanation, is unaffected. */
+body.appshell{padding:0;display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden}
+body.appshell .wrap{max-width:none;margin:0;flex:1;min-height:0;display:flex;flex-direction:column}
+body.appshell .layout{display:flex;flex-direction:column;max-width:none;margin:0;flex:1;min-height:0;gap:0}
+body.appshell .device{max-width:none;width:100%;margin:0;border:0;border-radius:0;box-shadow:none;
+  display:flex;flex-direction:column;flex:1;min-height:0}
+body.appshell .pane{height:auto;flex:1;min-height:min(200px,30dvh)}
+body.appshell.sugg-open .pane{min-height:90px}
+body.appshell .lastnote{flex:0 0 auto}
+body.appshell .lastnote{padding:12px 18px 16px;margin:0}
+@media(min-width:760px){
+  body.appshell{padding:24px 16px;justify-content:center;overflow:auto}
+  body.appshell .layout{justify-content:center}
+  body.appshell .device{max-width:560px;margin:0 auto;border:1px solid var(--line);border-radius:4px;
+    box-shadow:0 30px 70px -24px rgba(0,0,0,.9);height:min(90vh,980px);height:min(90dvh,980px);flex:0 0 auto}
+}
+@media(min-width:1200px){
+  body.appshell .device{max-width:600px;height:min(88dvh,1040px)}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="masthead">
+  <div class="mh-l">
+    <img class="logo" id="pageLogo" alt="TRIBE">
+    <div>
+      <div class="mh-t">Concierge</div>
+      <div class="mh-s">Prague &middot; Concept Demonstration</div>
+    </div>
+  </div>
+  <div class="concept">Concept only. Scenario drawn from TRIBE&rsquo;s publicly described event history. Client, supplier and venue details are illustrative and invented.</div>
+</div>
+
+<div class="layout">
+  <div class="device">
+    <div class="lock" id="lock" hidden>
+      <div class="lk-in">
+        <img class="lk-mark" id="lockMark" alt="" aria-hidden="true">
+        <div class="lk-k">Prague &middot; November</div>
+        <div class="lk-t">Alexandra &amp; James<br>Whitfield</div>
+        <p class="lk-p">This programme opened from the link sent to
+          <span class="lk-m">a&bull;&bull;&bull;&bull;&bull;&bull;a@whitfield.com.au</span>.
+          Confirm once and it stays open on this device for the trip.</p>
+        <button class="lk-go" onclick="unlockDevice()">Open my programme</button>
+        <div class="lk-f">The link expires 2 December. Your documents are removed from the device when the trip ends.</div>
+      </div>
+    </div>
+    <div class="appid">
+      <img class="mark" id="appMark" src="data:image/png;base64,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" alt="" aria-hidden="true">
+      <span class="wordmark">TRIBE</span><span class="sub">Concierge</span>
+      <button class="lockbtn" onclick="lockDevice()" title="Lock this device">Lock</button>
+    </div>
+    <div class="d-top">
+      <div class="k" id="dayKicker">Prague</div>
+      <div class="t" id="dayName">&nbsp;</div>
+      <div class="m">Alexandra &amp; James Whitfield &middot; Prague, November</div>
+    </div>
+    <div class="langbar">
+      <select id="langSel" aria-label="Language">
+        <option value="en">English</option><option value="zh">中文</option>
+        <option value="ja">日本語</option><option value="de">Deutsch</option>
+        <option value="fr">Français</option><option value="es">Español</option>
+        <option value="it">Italiano</option><option value="id">Bahasa Indonesia</option>
+      </select>
+      <span id="liveDot" class="dot off" title="Concierge status"></span><span id="liveTxt">Connecting to TRIBE Concierge…</span>
+    </div>
+    <div class="nowbar" id="nowbar">
+      <span class="nl">Prague</span><span class="nt" id="clkPrg">--:--</span>
+      <span class="nw" id="wxPrg"></span>
+      <span class="nl mel">Melbourne</span><span class="nt" id="clkMel">--:--</span>
+    </div>
+    <div class="tabs" id="tabs" style="display:none">
+      <button class="tab on" onclick="go('map',this)">The City</button>
+      <button class="tab" onclick="go('dine',this)">Dining</button>
+      <button class="tab" onclick="go('shop',this)">Shopping</button>
+    </div>
+
+    <div class="pane" id="pane">
+
+      <div class="v on" id="itin"><img class="hero" src="/tribe-assets/21_prague_hero_wide.png" alt="Prague">
+        <div class="flight" id="flightCard"></div>
+        <div class="item"><div class="w">Today &middot; Wednesday</div><div class="h">Mal&aacute; Strana, at your own pace</div><div class="d">Nothing scheduled before 1.00pm. The Vrtba Garden opens at 10 and is rarely busy.</div><div class="tip">TRIBE note: the garden entrance is an unmarked door on Karmelitsk&aacute;. Most people walk straight past it.</div></div>
+        <div class="item"><div class="w">1.00pm</div><div class="h">Luncheon, Caf&eacute; Savoy</div><div class="d">Table held under Whitfield. Ten minutes on foot from the hotel.</div></div>
+        <div class="item"><div class="w">7.30pm</div><div class="h">Dinner, Field</div><div class="d">Car collects 7.05pm. Shellfish allergy is with the kitchen.</div></div>
+        <div class="item has-img"><img class="thumb" src="/tribe-assets/05_prague_castle_gala.png" alt=""><div class="body"><div class="w">Thursday &middot; The Gala</div><div class="h">Prague Castle</div>
+          <div class="kv"><span>Arrival</span><b>6.45pm &middot; car 6.20pm</b></div>
+          <div class="kv"><span>Czech National Ballet</span><b>7.30pm</b></div>
+          <div class="kv"><span>Dinner, Spanish Hall</span><b>8.45pm &middot; Table 3</b></div>
+          <div class="kv"><span>Dress</span><b>Black tie</b></div></div></div>
+        <div class="item has-img"><img class="thumb" src="/tribe-assets/07_lobkowicz_palace.png" alt=""><div class="body"><div class="w">Friday</div><div class="h">Lobkowicz Palace, before opening</div><div class="d">Private access. The curator will meet you. Beethoven manuscripts in the third room.</div><div class="tip">Booked at 90 minutes, not 60 &mdash; you told us Kyoto felt rushed.</div></div></div>
+      </div>
+
+      <div class="v" id="map">
+        <div class="mapwrap">
+          <div class="mapimg">
+            <img src="/tribe-assets/22_prague_map_wide.png" alt="Illustrated map of central Prague">
+            <button class="hs" style="left:30.4%;top:28.2%" onclick="mp('PRG-EVT-02')" aria-label="Prague Castle"></button>
+            <button class="hs" style="left:51.0%;top:51.2%" onclick="mp('PRG-TIP-01')" aria-label="Charles Bridge"></button>
+            <button class="hs" style="left:68.2%;top:39.6%" onclick="mp('PRG-DIN-05')" aria-label="Old Town Square"></button>
+            <button class="hs" style="left:64.2%;top:67.8%" onclick="mp('PRG-TIP-08')" aria-label="National Theatre"></button>
+            <button class="hs" style="left:31.9%;top:60.1%" onclick="mp('PRG-TIP-02')" aria-label="Vrtba Garden"></button>
+            <button class="hs" style="left:10.7%;top:43.2%" onclick="mp('PRG-TIP-04')" aria-label="Strahov Monastery"></button>
+            <button class="hs" style="left:33.4%;top:42.4%" onclick="mp('PRG-TIP-07')" aria-label="St Nicholas Church"></button>
+            <button class="hs" style="left:22.2%;top:72.9%" onclick="mp('PRG-CLI-01')" aria-label="Your hotel"></button>
+          </div>
+          <div class="maplegend">
+            <span class="lg"><i style="background:#FAF4EF"></i>You</span>
+            <span class="lg"><i style="background:#D4B98C"></i>Your program</span>
+            <span class="lg"><i style="background:#9c8f6d"></i>Dining &amp; shopping</span>
+            <span class="lg"><i style="background:#747761"></i>TRIBE tips</span>
+          </div>
+          <div class="mapinfo" id="mapinfo">
+            <div class="c">Tap any point</div>
+            <div class="h">Prague, as we know it</div>
+            <div class="d">Eight places, chosen for you. Everything on this map is somewhere TRIBE has been, not somewhere we found online.</div>
+          </div>
+        </div>
+        <div class="secttl">TRIBE tips</div>
+        <div class="item"><div class="w">Timing</div><div class="h">The Charles Bridge, properly</div><div class="d">Impossible between 10am and 6pm. Go at 6.30am for the light, or after 10pm when it empties.</div><div class="tip">Thursday morning is your only genuinely free one.</div></div>
+        <div class="item has-img"><img class="thumb" src="/tribe-assets/06_vrtba_garden.png" alt=""><div class="body"><div class="w">Hidden</div><div class="h">Vrtba Garden</div><div class="d">A baroque terraced garden almost nobody finds, five minutes from your hotel. Unmarked door on Karmelitsk&aacute;.</div></div></div>
+        <div class="item"><div class="w">Worth the detour</div><div class="h">Strahov Monastery library</div><div class="d">The Philosophical Hall is extraordinary. General admission only lets you look in from the doorway.</div><div class="tip">Interior access needs arranging in advance. Two days&rsquo; notice &mdash; say the word.</div></div>
+        <div class="item"><div class="w">Practical</div><div class="h">Taxis and trams</div><div class="d">Use the hotel car or a ride app. Street taxis in the centre are the one thing Prague still does poorly.</div></div>
+        <div class="item"><div class="w">Practical</div><div class="h">November evenings</div><div class="d">Around 4&ndash;8&deg;C after dark and the castle courtyard is exposed. Coats over black tie on Thursday.</div></div>
+      </div>
+
+      <div class="v" id="docs">
+        <div class="dl" id="docList"></div>
+        <button class="official" onclick="official(1)">Show to an official</button>
+        <div class="dn">Held on this device for the length of your trip, then removed. TRIBE does not keep a copy and the concierge is never given the numbers.      </div>
+      </div>
+
+      <div class="v" id="dine">
+        <div class="item has-img"><img class="thumb" src="/tribe-assets/08_fine_dining.png" alt=""><div class="body"><div class="w">Tonight &middot; booked</div><div class="h">Field</div><div class="d">Michelin starred, inventive, not stuffy. Your table is 7.30pm.</div><div class="tip">Ask for the kitchen counter if you&rsquo;d like to watch. We can request it.</div></div></div>
+        <div class="item"><div class="w">Institution</div><div class="h">Caf&eacute; Savoy</div><div class="d">Neo-renaissance ceiling, proper Viennese-Prague breakfast, excellent pastry. Your lunch today.</div></div>
+        <div class="item"><div class="w">Where Praguers eat</div><div class="h">Kant&yacute;na</div><div class="d">A butcher&rsquo;s canteen. No bookings, communal tables, exceptional beef. Loud and genuinely local.</div><div class="tip">The beef is the whole point, so this is one for Alexandra. Worth knowing before you go.</div></div>
+        <div class="item"><div class="w">Quiet, excellent</div><div class="h">La D&eacute;gustation Boh&ecirc;me Bourgeoise</div><div class="d">Tasting menu built on 19th-century Czech cookbooks. Small room, long evening.</div><div class="tip">Needs booking well ahead. Tell your Event Manager and they&rsquo;ll try.</div></div>
+        <div class="item"><div class="w">Avoid</div><div class="h">The Old Town Square terraces</div><div class="d">Beautiful view, indifferent food, tourist pricing. Walk two streets further in any direction.</div></div>
+      </div>
+
+      <div class="v" id="shop">
+        <div class="item has-img"><img class="thumb" src="/tribe-assets/09_bohemian_crystal.png" alt=""><div class="body"><div class="w">Crystal, the real thing</div><div class="h">Moser</div><div class="d">The Karlovy Vary house since 1857. Flagship on Star&eacute; M&#283;sto. They handle shipping and the VAT refund properly.</div><div class="tip">The shops on Celetn&aacute; sell to visitors. This is where the pieces in the castle came from.</div></div></div>
+        <div class="item"><div class="w">Made, not bought</div><div class="h">A Bohemian workshop, outside the centre</div><div class="d">TRIBE has commissioned gifts here for two previous programs. Needs a call ahead and about half a day.</div><div class="tip">If you&rsquo;d like something engraved for the anniversary, Friday is the last day that works.</div></div>
+        <div class="item"><div class="w">Garnets</div><div class="h">Granát Turnov</div><div class="d">Czech garnet is the local stone and heavily faked. This is the cooperative that actually mines it.</div></div>
+        <div class="item"><div class="w">Books &amp; prints</div><div class="h">Antikvari&aacute;t Kar&#101;l K&#345;enek</div><div class="d">Old maps, prints and first editions. The kind of shop you lose an hour in.</div></div>
+      </div>
+
+      <div class="v" id="ask">
+        <div class="msg ai"><div class="bub">Good morning. Your table at Field is confirmed for 7.30pm and the car will collect you at 7.05pm.<div class="src">Sources &middot; Itinerary v4 &middot; Supplier file CZ-208</div></div></div>
+        <div id="log"></div>
+      </div>
+    </div>
+
+    <div class="askbar" id="askbar" style="display:none">
+      <button class="sugg" id="sugg" onclick="suggest()" aria-expanded="true" aria-controls="chips"><span>Suggested questions</span><svg viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5"/></svg></button>
+      <div class="chips" id="chips">
+      <button class="chip" onclick="ask(0)">What time is my car?</button>
+      <button class="chip" onclick="ask(1)">What&rsquo;s the dress code?</button>
+      <button class="chip" onclick="ask(2)">Where do I meet everyone?</button>
+      <button class="chip" onclick="ask(3)">Where can we eat tonight?</button>
+      <button class="chip" onclick="ask(4)">Where can I get good coffee?</button>
+      <button class="chip" onclick="ask(5)">I need to speak to someone</button>
+      <button class="chip" onclick="ask(6)">Something romantic</button>
+      <button class="chip" onclick="ask(7)">Art &amp; culture</button>
+      <button class="chip" onclick="ask(8)">Something fun</button>
+      </div>
+      <form class="askform" id="askform"><input id="askInput" type="text" placeholder="Ask us anything…" autocomplete="off"><button type="submit" aria-label="Send">→</button></form>
+    </div>
+
+    <nav class="base" id="base">
+      <button class="bt on" data-go="itin" onclick="go('itin')">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 4h14M3 10h14M3 16h9"/></svg><span>Itinerary</span></button>
+      <button class="bt" data-go="map" onclick="go('map')">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17s6-5.3 6-9.6A6 6 0 0 0 4 7.4C4 11.7 10 17 10 17z"/><circle cx="10" cy="7.5" r="2.1"/></svg><span>The City</span></button>
+      <button class="bt" data-go="docs" onclick="go('docs')">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 2.5h6.5L15 6v11.5H5z"/><path d="M11.5 2.5V6H15"/></svg><span>Documents</span></button>
+      <button class="bt" data-go="ask" onclick="go('ask')">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M17 11.5c0 2.8-3.1 5-7 5a8.6 8.6 0 0 1-2.3-.3L3.5 17.5l1.2-2.8C3.6 13.8 3 12.7 3 11.5c0-2.8 3.1-5 7-5s7 2.2 7 5z"/></svg><span>Ask TRIBE</span></button>
+    </nav>
+  </div>
+
+  <div>
+    <div class="sec">
+      <h2>Built on TRIBE&rsquo;s own words</h2>
+      <div class="pull">TRIBE has one core value: care. This is care at 3am, in a language the client chose, when the advisor who holds it is asleep in Melbourne.</div>
+    </div>
+
+    <div class="sec">
+      <h2>Confidant, guide, enabler, organiser &mdash; and fact checker</h2>
+      <div class="grid g2">
+        <div class="c"><h3>Where it comes from</h3>
+          <ul>
+            <li>Past itineraries, and what clients actually said afterwards</li>
+            <li>Advisor knowledge &mdash; the things an event manager knows that aren&rsquo;t written down anywhere yet</li>
+            <li>Site inspections and supplier debriefs</li>
+            <li>The Virtuoso preferred-partner network</li>
+          </ul>
+          <p style="margin-top:10px">Every recommendation on the previous panels names its source. Where that is TRIBE&rsquo;s own record it says so; where it is a published guide it names the guide. Nothing is offered as TRIBE knowledge that is not.</p>
+        </div>
+        <div class="c"><h3>The fact checker, literally</h3>
+          <p>TRIBE already describe themselves as their client&rsquo;s <b>fact checker</b>. That is exactly what grounded retrieval is: every answer names the itinerary, debrief or supplier file behind it, and where the record is silent it says so and names the person who knows.</p>
+          <p style="margin-top:9px">An advisor who cannot check an answer will not trust it twice. A client told something wrong about their own trip will not forgive it once.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2>Personal, because the record is</h2>
+      <div class="grid g3">
+        <div class="c"><h3>Known</h3><ul><li>Aisle seats, forward cabin</li><li>High floor, away from lifts</li><li>Late starts &mdash; no 7am departures</li><li>Shellfish allergy &middot; no red meat</li><li>30th anniversary, Friday</li></ul></div>
+        <div class="c"><h3>Remembered</h3><p>Kyoto 2023: <b>&ldquo;Loved the private tea ceremony. Said sixty minutes felt rushed.&rdquo;</b></p><p style="margin-top:9px">So Friday&rsquo;s palace visit was booked at ninety. The client never has to say it twice.</p></div>
+        <div class="c"><h3>Never asked for</h3><p>No preference form, no profile to complete. It is captured as a by-product of the work advisors already do.</p><p style="margin-top:9px">The luxury is in <b>not being asked again</b>.</p></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2>What happens when it does not know</h2>
+      <div class="grid g2">
+        <div class="c"><h3>Four places to go, in order</h3>
+          <ul>
+            <li><b>The record.</b> Almost everything a client asks is already in it</li>
+            <li><b>A published guide,</b> named on the answer, for the city rather than the trip</li>
+            <li><b>The producers on the ground,</b> in the same hotel, on Prague time</li>
+            <li><b>The Event Manager in Melbourne,</b> for bookings, money, complaints or safety</li>
+          </ul>
+          <p style="margin-top:10px">Handing a client to a person is the last step, not the first. A concierge that reaches for a human at the first difficult question is not a concierge, it is a switchboard.</p>
+        </div>
+        <div class="c"><h3>How you know an answer is true</h3>
+          <p>Every answer has to name the entry it came from, and the entry has to be one the system actually put in front of the model for that question. That is checked before the client sees it.</p>
+          <p style="margin-top:9px">An answer that cannot be traced is not shown as an answer. It is held back, and the client is given the team on site instead.</p>
+          <p style="margin-top:9px"><b>Saying &ldquo;that is not something I can confirm&rdquo; is a correct answer here,</b> not a failure. It is what a fact checker does.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2>Security, at this level of service</h2>
+      <div class="grid g3">
+        <div class="c"><h3>Stays private</h3><ul><li>Identities and contact details</li><li>Passports, visas, medical, dietary</li><li>Commercial terms and rates</li><li>The preference record itself</li></ul></div>
+        <div class="c"><h3>Leaves, de-identified</h3><ul><li>The reasoning, with minimum context</li><li>Public facts: hours, weather, transit</li><li>Never a name against a preference</li></ul></div>
+        <div class="c"><h3>Never</h3><ul><li>Books, rebooks or cancels</li><li>Quotes a price or commits TRIBE</li><li>Trains a public model on client data</li><li>Answers without saying where the answer came from</li></ul></div>
+      </div>
+      <div class="note" style="margin-top:14px"><b>The luxury standard and the security standard are the same standard.</b> Discretion is a condition of the relationship at this level. Anything that reads as a client&rsquo;s private information being handled casually costs more than the technology will ever save.</div>
+    </div>
+
+    <div class="sec">
+      <h2>Why Prague Castle</h2>
+      <div class="c"><p>TRIBE&rsquo;s own site names a gala at Prague Castle, with a 48-piece orchestra accompanying the Czech National Ballet, among Leon&rsquo;s favourite programs. It makes a useful demonstration because it holds everything difficult about this business at once: <b>a fixed immovable moment, a venue you do not control, international suppliers, a client with history, and two hundred details that all have to be right simultaneously.</b></p>
+      <p style="margin-top:10px">If the idea holds here, it holds on a Virtuoso leisure booking. The reverse is not true.</p></div>
+    </div>
+
+    
+
+    <footer>
+      Concept demonstration prepared by Rob Graham for discussion with TRIBE Travel &amp; Events, September 2026. No TRIBE systems, client records or supplier agreements were accessed. Client names, supplier references, dates and file numbers are invented for illustration. The scenario draws on TRIBE&rsquo;s publicly described event history. Logo shown for context in a proposal setting. TRIBE Concierge answers are generated on demand by a locally hosted model on infrastructure Rob controls, and are grounded in the record above.
+    </footer>
+  </div>
+</div>
+</div>
+
+<script>
+
+function mp(id){
+  var x=FACTS.filter(function(f){return f.id===id;})[0]; if(!x) return;
+  document.getElementById('mapinfo').innerHTML=
+    '<div class="c">'+(x.tag||x.cat)+'</div><div class="h">'+x.name+'</div>'+
+    '<div class="d">'+x.fact+(x.tip?'<br><span style="color:var(--gold)">'+x.tip+'</span>':'')+'</div>'+
+    '<div class="d" style="color:var(--dim);font-size:10px;margin-top:6px">['+x.id+'] &middot; '+srcLabel(x)+'</div>';
+}
+/* Two levels of navigation: four destinations along the base, and the
+   browsing tabs, which only exist inside The City. */
+var EXPLORE=['map','dine','shop'];
+function go(id,b){
+  document.querySelectorAll('.v').forEach(function(v){ v.classList.remove('on'); });
+  var view=document.getElementById(id);
+  if(view) view.classList.add('on');
+
+  var inExplore=EXPLORE.indexOf(id)>-1;
+  document.getElementById('tabs').style.display = inExplore ? 'flex' : 'none';
+  if(inExplore){
+    document.querySelectorAll('.tab').forEach(function(t){
+      t.classList.toggle('on', b ? t===b : t.getAttribute('onclick').indexOf("'"+id+"'")>-1);
+    });
+  }
+  var base = inExplore ? 'map' : id;
+  document.querySelectorAll('.bt').forEach(function(t){
+    t.classList.toggle('on', t.getAttribute('data-go')===base);
+  });
+
+  document.getElementById('askbar').style.display = id==='ask' ? 'flex' : 'none';
+  document.getElementById('pane').scrollTop=0;
+  official(0);
+  if(id!=='docs' && DOCS_OPEN){ DOCS_OPEN=false; REVEAL={}; renderDocs(); }
+}
+function ask(i){
+  var qs=["What time is my car?","What's the dress code?","Where do I meet everyone?",
+          "Where can we eat tonight?","Where can I get good coffee?","I need to speak to someone",
+          "Something romantic","Art and culture","Something fun"];
+  send(qs[i]);
+}
+
+/* ══ TRIBE Concierge · live ═══════════════════════════════════════
+   Same endpoint and request shape as the ACMI and Heide demos.
+   Falls back to the scripted answers when the sovereign node is unreachable. */
+var CHAT_ENDPOINT='https://archai-api.fineartmedia.tech/api/proxy/chat';
+var LIVE=false, HIST=[], LANG='en';
+var LANGNAME={en:'English',zh:'Chinese (Simplified)',ja:'Japanese',de:'German',
+              fr:'French',es:'Spanish',it:'Italian',id:'Indonesian'};
+
+/* ══ TRIBE FACT BASE ═══════════════════════════════════════════════
+   One record. The concierge answers from it, the panels render from it,
+   and every answer can name the entry it came from. Add a fact once. */
+var FACTS=[
+ {id:'PRG-CLI-01',cat:'client',name:'The Whitfields',
+  fact:"Alexandra and James Whitfield. With TRIBE since 2019, seven programs."},
+ {id:'PRG-CLI-02',cat:'client',name:'Preferences',
+  fact:"Aisle seats forward cabin. High floor away from lifts. Late starts, no 7am departures. ALEXANDRA HAS A SHELLFISH ALLERGY. James does not eat red meat. 30th wedding anniversary falls on the Friday."},
+ {id:'PRG-CLI-03',cat:'client',name:'Kyoto debrief, 2023',
+  fact:"Client said: loved the private tea ceremony, but sixty minutes felt rushed. Friday's palace visit was therefore booked at ninety minutes."},
+
+ {id:'PRG-EVT-01',cat:'program',name:'Wednesday',when:'TODAY, Wednesday. This is tonight',
+  fact:"Free until 1.00pm. Lunch held at Cafe Savoy 1.00pm. Dinner at Field 7.30pm, car collects 7.05pm. Field is smart but not formal: a jacket, no tie needed. Nobody else is joining you tonight."},
+ {id:'PRG-EVT-02',cat:'program',name:'Thursday, the gala',when:'TOMORROW, Thursday, the gala. NOT today and NOT tonight',
+  fact:"Prague Castle. Arrival 6.45pm, car 6.20pm from the hotel forecourt. Czech National Ballet 7.30pm with a 48-piece orchestra. Dinner in the Spanish Hall 8.45pm, Table 3 with the Hartleys. Black tie. The courtyard is exposed; coats advised. FIXED — the castle, orchestra and ballet company all sit behind a locked call time."},
+ {id:'PRG-EVT-03',cat:'program',name:'Friday',when:'Friday, in two days',
+  fact:"Lobkowicz Palace, private access before opening, curator meeting them, ninety minutes. Beethoven manuscripts in the third room."},
+
+ {id:'PRG-DIN-01',cat:'dining',name:'Field',tag:'Tonight, booked',
+  fact:"Michelin starred, inventive, not stuffy.",tip:"The team can request the kitchen counter."},
+ {id:'PRG-DIN-02',cat:'dining',name:'Cafe Savoy',tag:'Institution',
+  fact:"Neo-renaissance ceiling, Viennese-Prague breakfast, excellent pastry. Their lunch today."},
+ {id:'PRG-DIN-03',cat:'dining',name:'Kantyna',tag:'Where Praguers eat',
+  fact:"Butcher's canteen. No bookings, communal, exceptional beef. Loud and local.",tip:"James would enjoy it; little for Alexandra."},
+ {id:'PRG-DIN-04',cat:'dining',name:'La Degustation Boheme Bourgeoise',tag:'Quiet, excellent',keys:'romantic',
+  fact:"Tasting menu built on 19th-century Czech cookbooks. Small room, long evening.",
+  tip:"Needs booking well ahead. The team can try."},
+ {id:'PRG-DIN-05',cat:'dining',name:'Old Town Square terraces',tag:'Avoid',
+  fact:"Beautiful view, indifferent food, tourist pricing. Walk two streets further in any direction."},
+
+ {id:'PRG-SHP-01',cat:'shopping',name:'Moser',tag:'Crystal, the real thing',
+  fact:"The Karlovy Vary house since 1857, flagship in Stare Mesto. Handles shipping and the VAT refund properly.",
+  tip:"The shops on Celetna sell to visitors. This is where the pieces in the castle came from."},
+ {id:'PRG-SHP-02',cat:'shopping',name:'A Bohemian glass workshop',tag:'Made, not bought',keys:'art culture',
+  fact:"Outside the centre. TRIBE has commissioned gifts here on two previous programs. Needs a call ahead and about half a day.",
+  tip:"For an anniversary piece, Friday is the last day that works this trip."},
+ {id:'PRG-SHP-03',cat:'shopping',name:'Granat Turnov',tag:'Garnets',
+  fact:"Czech garnet is the local stone and heavily faked. This is the cooperative that actually mines it."},
+
+ {id:'PRG-TIP-01',cat:'tip',name:'Charles Bridge, properly',tag:'Timing',keys:'romantic',
+  fact:"Impossible between 10am and 6pm. Go at 6.30am for the light, or after 10pm when it empties. Eight minutes on foot from their hotel.",
+  tip:"Thursday morning is their only genuinely free one."},
+ {id:'PRG-TIP-02',cat:'tip',name:'Vrtba Garden',tag:'Hidden',keys:'romantic quiet',
+  fact:"A baroque terraced garden almost nobody finds, five minutes from the hotel. The entrance is an UNMARKED door on Karmelitska. Open 10am to 6pm, so it is a daytime visit and never an option after dinner."},
+ {id:'PRG-TIP-03',cat:'tip',name:'Kampa island',tag:'Quiet',keys:'romantic quiet',
+  fact:"Benches on the water, the quietest place in the centre, two minutes past the Vrtba Garden."},
+ {id:'PRG-TIP-04',cat:'tip',name:'Strahov Monastery library',tag:'Worth the detour',keys:'art culture cultural',
+  fact:"The Philosophical Hall is extraordinary. General admission only lets you look in from the doorway; interior access needs two days notice."},
+ {id:'PRG-TIP-05',cat:'tip',name:'Taxis and trams',tag:'Practical',
+  fact:"Use the hotel car or a ride app. Street taxis in the centre are the one thing Prague still does poorly."},
+ {id:'PRG-TIP-06',cat:'tip',name:'November evenings',tag:'Practical',
+  fact:"Around 4 to 8 degrees after dark. The castle courtyard is exposed."},
+
+ {id:'PRG-TIP-07',cat:'tip',name:'St Nicholas Church, Mala Strana',tag:'On the way',keys:'art culture cultural',
+  fact:"High baroque. The acoustics are why concerts are held here. Two minutes from the Vrtba Garden."},
+ {id:'PRG-TIP-08',cat:'tip',name:'National Theatre',tag:'If an evening frees up',keys:'art culture cultural evening',
+  fact:"Gold-crowned, on the river in Nove Mesto. The team can check availability."},
+ {id:'PRG-CTY-01',cat:'city',name:'Getting in',tag:'Practical',src:'Lonely Planet',
+  fact:"Vaclav Havel Airport is 15km out. Trolleybus 59 or a taxi, about 30 minutes to the centre."},
+ {id:'PRG-CTY-02',cat:'city',name:'Taxis, honestly',tag:'Practical',src:'Lonely Planet',
+  fact:"Book ahead rather than hailing. AAA Taxis is reliable. Some drivers charge tourists more, so agree the fare. Uber and Bolt both operate, and night trams run in the small hours."},
+ {id:'PRG-CTY-03',cat:'city',name:'The historic core is walkable',tag:'Practical',src:'Lonely Planet',
+  fact:"Old Town Square to Prague Castle is about an hour on foot at a leisurely pace. Most of the centre is walkable."},
+ {id:'PRG-CTY-04',cat:'city',name:'Neighbourhoods',tag:'Orientation',src:'Lonely Planet',
+  fact:"Stare Mesto is the historic heart with Josefov, the old Jewish quarter. Nove Mesto has many of the best places to eat and drink. Vinohrady, Karlin and Zizkov are the lively cafe and bar quarters. Holesovice is a former industrial quarter, now galleries and studios."},
+ {id:'PRG-CTY-05',cat:'city',name:'Classical music',tag:'Evenings',keys:'art culture cultural evening',src:'Lonely Planet',
+  fact:"The National Theatre, the Rudolfinum, the State Opera and the Municipal House are the venues that match the music. Book ahead."},
+ {id:'PRG-CTY-06',cat:'city',name:'Jazz',tag:'Evenings',keys:'fun evening',src:'Lonely Planet',
+  fact:"AghaRTA on Zelezna and the Reduta Jazz Club on Narodni, where Bill Clinton played an impromptu saxophone set in 1994."},
+ {id:'PRG-CTY-07',cat:'city',name:'A proper Czech pub',tag:'Evenings',keys:'fun casual evening',src:'Lonely Planet',
+  fact:"Pilsner was invented in Pilsen in 1842. U Zlateho tygra is the classic drinking room locals love. Klasterni pivovar Strahov sits near the castle. Cerveny Jelen is the upscale end."},
+ {id:'PRG-CTY-08',cat:'city',name:'Gardens beyond the Vrtba',tag:'Quiet',keys:'romantic quiet',src:'Lonely Planet',
+  fact:"The Royal Garden north of the castle has Renaissance buildings from the 16th century. The Wallenstein Garden has a late-Renaissance artificial stalactite grotto."},
+ {id:'PRG-CTY-09',cat:'city',name:'The Astronomical Clock',tag:'Timing',keys:'cultural',src:'Lonely Planet',
+  fact:"15th century, chimes on the hour in Old Town Square. Charles Bridge carries 30 baroque statues."},
+ {id:'PRG-LUX-01',cat:'city',name:'The luxury addresses',tag:'Hotels',src:'Travel trade guides',
+  fact:"Four Seasons on the Old Town riverside, closest to Charles Bridge. Aria in Mala Strana, music-themed, rooftop facing the castle. Augustine in Lesser Town, a converted 13th-century monastery with its own brewery. The Grand Mark, a restored baroque palace."},
+ {id:'PRG-LUX-02',cat:'city',name:'Michelin in Prague',tag:'Dining',src:'Travel trade guides',
+  fact:"The starred scene is small but serious, and costs a fraction of western Europe. Alcron has been part of the city since the 1930s and leans to seafood."},
+ {id:'PRG-LUX-03',cat:'city',name:'Private experiences',tag:'Arranged',keys:'romantic cultural arranged',src:'Travel trade guides',
+  fact:"Private guiding and river dinner cruises are the standard luxury options. Anything genuinely private at a palace or monastery needs arranging well ahead."},
+ {id:'PRG-CAS-01',cat:'dining',name:'Pizza and casual Italian',tag:'Casual',src:'Travel trade guides',
+  fact:"Pizza Nuova near Old Town does Neapolitan pizza and is part of the Ambiente group, which runs many of the city's reliable kitchens. Good when nobody wants a long dinner."},
+ {id:'PRG-CAS-02',cat:'dining',name:'Coffee and a sit down',tag:'Casual',src:'Travel trade guides',
+  fact:"Kavarna Slavia opposite the National Theatre is the grand old riverside cafe. Muj salek kavy in Karlin is where Praguers actually go for coffee."},
+ {id:'PRG-CAS-03',cat:'dining',name:'Late and lively by the river',tag:'Casual',keys:'fun late',src:'Lonely Planet',
+  fact:"Naplavka on the Vltava embankment has food, drinks and music after dark, and is where the city goes on a warm evening."},
+ {id:'PRG-CAS-04',cat:'dining',name:'Czech food without ceremony',tag:'Casual',keys:'fun casual',src:'Lonely Planet',
+  fact:"U Kroka or Hostinec na Vytoni for duck and proper Czech cooking. Cerveny Jelen is the smarter version of the same idea."},
+ {id:'PRG-TEAM-01',cat:'client',name:'TRIBE on the ground',
+  fact:"A TRIBE production team has travelled from Melbourne and is on site for the whole program, staying at the same hotel. They are awake in Prague time and reachable at any hour. A duty producer leads on the ground. For anything happening now, they are the right people, not Melbourne. IMPORTANT: whenever the client asks how to reach anyone, the contact details appear on the screen directly beneath your reply: the team on site, the hotel lobby on 0 from their room, and TRIBE support in Melbourne. Say they are just below. NEVER say you do not have the contact details."},
+ {id:'PRG-HELP-01',cat:'city',name:'If an Australian passport is lost or stolen',tag:'Practical',keys:'emergency passport consul',
+  src:'Australian Government',
+  fact:"Report it to Czech police first for a report number. Australian Honorary Consulate, Klimentska 10, +420 221 729 260, by appointment; it cannot issue an emergency passport. Embassy covering Czechia: Warsaw. After hours: DFAT Consular Emergency Centre +61 2 6261 3305, 24 hours."},
+ {id:'PRG-HELP-02',cat:'city',name:'Emergency numbers in Prague',tag:'Practical',keys:'emergency ambulance police doctor hospital',
+  src:'European emergency number',
+  fact:"112 reaches police, ambulance and fire anywhere in the EU and is answered in English. Direct Czech lines: 155 ambulance, 158 police, 150 fire."},
+ {id:'PRG-GAP-01',cat:'gap',name:'Not in the record',
+  fact:"Live prices, bookable availability, any other TRIBE client, and any city other than Prague. For these, the TRIBE team on site can check and come back to you."}
+];
+function srcLabel(x){ return x.src ? x.src : "TRIBE record"; }
+var STOP={the:1,a:1,an:1,and:1,or:1,to:1,of:1,in:1,is:1,are:1,we:1,i:1,you:1,my:1,our:1,for:1,on:1,at:1,it:1,do:1,can:1,any:1,what:1,where:1,when:1,how:1,there:1,this:1,that:1,with:1,me:1,us:1};
+function toks(t){return String(t||'').toLowerCase().replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(function(w){return w.length>2&&!STOP[w];});}
+/* Four facts are true of every question: who they are, what they will not eat,
+   what is happening today, and who is on the ground. Everything else competes
+   on the words in the question, with the programme and the client file weighted
+   up so they still win when they are relevant. Before this, the mandatory set
+   ate the whole prompt and no city knowledge ever reached the model. */
+var CORE=['PRG-CLI-01','PRG-CLI-02','PRG-EVT-01','PRG-TEAM-01'];
+function retrieve(q,budget){
+  var qt=toks(q);
+  var core=FACTS.filter(function(f){ return CORE.indexOf(f.id)>-1; });
+  var rest=FACTS.filter(function(f){ return CORE.indexOf(f.id)<0; });
+  var hit=function(hay,w){ return hay.some(function(h){return h.indexOf(w)===0||w.indexOf(h)===0;}); };
+  rest.forEach(function(f){
+    var title=toks(f.name+' '+(f.tag||'')+' '+(f.keys||''));
+    var body=toks(f.fact+' '+(f.tip||'')+' '+f.cat);
+    var hits=qt.reduce(function(n,w){
+      /* what a fact is called counts for more than a passing mention inside it,
+         or a question about coffee lands on the pizza entry */
+      return n + (hit(title,w)?3:0) + (hit(body,w)?1:0);
+    },0);
+    f._s=hits + (hits && (f.cat==='program'||f.cat==='client') ? 4 : 0);
+  });
+  rest.sort(function(a,b){ return b._s-a._s; });
+
+  /* When the question matches something, facts that match nothing are not allowed
+     to fill the space. Otherwise a short irrelevant entry beats a long relevant one
+     purely on length, which is how the consulate details lost to a Kyoto note. */
+  var best=rest.length?rest[0]._s:0;
+  if(best>0) rest=rest.filter(function(f){ return f._s>0; });
+  var out=core.slice();
+  var used=core.reduce(function(n,f){ return n+f.fact.length+f.name.length+20; },0);
+  for(var i=0;i<rest.length;i++){
+    if(rest[i]._s===0 && rest[i].cat==='gap') continue;
+    var len=rest[i].fact.length+rest[i].name.length+(rest[i].tip?rest[i].tip.length:0)+20;
+    if(used+len>budget) continue;
+    out.push(rest[i]); used+=len;
+  }
+  return out;
+}
+
+var LASTQ='';
+
+/* What the concierge is allowed to know, in tiers.
+   TIERS is the whole contract: each entry returns a line of the record or
+   nothing. A new source of truth is one more entry here and nothing else. */
+var TIERS=[
+  function(){ return "\n"+liveText(); },
+  function(){ return "\n"+flightText(); },
+  function(){ return "\n"+docsText(); },
+  function(){ return WEBFACT ? "\n[WEB-01] Looked up on the web just now, from "+WEBFACT.src+": "+WEBFACT.fact : ""; }
+];
+var LASTIDS=[];
+function recordText(budget){
+  var sel=retrieve(LASTQ,budget);
+  LASTIDS=sel.map(function(x){return x.id;}).concat(['LIVE-01','FLT-01','DOC-01']);
+  if(WEBFACT) LASTIDS.push('WEB-01');
+  var t="RECORD (the only facts you may use):\n"+
+    sel.map(function(x){
+      return "["+x.id+"] "+(x.when||x.name)+": "+x.fact+(x.tip?" "+x.tip:"");
+    }).join("\n");
+  return TIERS.reduce(function(acc,tier){ return acc+tier(); },t);
+}
+
+/* Two gates, sized to what is behind them. The link in the client's email is the
+   sign-in: opening it is the proof, and confirming once trusts this device for the
+   trip. The documents ask again, because that is where the passport numbers are. */
+var TRUSTED='tribe.device.whitfield.prague';
+function remembered(){ try{ return localStorage.getItem(TRUSTED)==='1'; }catch(e){ return false; } }
+function unlockDevice(){
+  try{ localStorage.setItem(TRUSTED,'1'); }catch(e){}
+  document.getElementById('lock').hidden=true;
+}
+function lockDevice(){
+  try{ localStorage.removeItem(TRUSTED); }catch(e){}
+  DOCS_OPEN=false; renderDocs();
+  document.getElementById('lock').hidden=false;
+}
+function initLock(){
+  var l=document.getElementById('lock'), m=document.getElementById('lockMark');
+  if(m) m.src=document.getElementById('appMark').src;
+  l.hidden=remembered();
+}
+
+/* Documents. The numbers live on the device and are shown, never spoken:
+   the concierge is told what is held and whether it is valid, and nothing more.
+   Revealing a number takes a deliberate tap and hides itself again. */
+var DOCS=[
+ {t:'Passport',       who:'Alexandra Whitfield', meta:'Australian &middot; expires 14 March 2029', v:'ok',   val:'PA4 921 663'},
+ {t:'Passport',       who:'James Whitfield',     meta:'Australian &middot; expires 2 August 2027', v:'ok',   val:'PA7 118 402'},
+ {t:'Schengen entry', who:'Both travellers',     meta:'Visa-free, 90 days. ETIAS not yet required.', v:'ok', val:'No visa required'},
+ {t:'Travel insurance',who:'Both travellers',    meta:'Chubb &middot; medical to $10m &middot; valid to 2 December', v:'ok', val:'CHB-441-90277'},
+ {t:'Invitation letter',who:'Prague Castle gala',meta:'Required at the gate on Thursday', v:'ok', val:'Held &middot; shown at the gate'}
+];
+var REVEAL={}, DOCS_OPEN=false;
+var DOC_CODE='2481';
+function docGate(){
+  return '<div class="gate">'
+   +'<div class="gt">Your documents</div>'
+   +'<p class="gp">Passports, entry status and insurance. Enter the four-digit code your '
+   +'TRIBE producer gave you when you arrived.</p>'
+   +'<input id="docPin" type="tel" inputmode="numeric" maxlength="4" autocomplete="off" aria-label="Four digit code">'
+   +'<div class="gerr" id="docErr"></div>'
+   +'<div class="gh">Held on this device only. TRIBE keeps no copy, and the concierge is never given the numbers.</div>'
+   +'<div class="gh" style="color:var(--gold)">Demonstration code: 2481</div>'
+   +'</div>';
+}
+function tryPin(v){
+  if(v.length<4) return;
+  if(v===DOC_CODE){ DOCS_OPEN=true; renderDocs(); return; }
+  var e=document.getElementById('docErr');
+  if(e) e.textContent='That code does not match. Your producer can reissue it.';
+  var i=document.getElementById('docPin'); if(i){ i.value=''; i.focus(); }
+}
+function renderDocs(){
+  var e=document.getElementById('docList'); if(!e) return;
+  var btn=document.querySelector('.official'), note=document.querySelector('.dn');
+  if(btn) btn.style.display=DOCS_OPEN?'':'none';
+  if(note) note.style.display=DOCS_OPEN?'':'none';
+  if(!DOCS_OPEN){
+    e.innerHTML=docGate();
+    var i=document.getElementById('docPin');
+    if(i) i.addEventListener('input',function(){ tryPin(this.value.replace(/\D/g,'')); });
+    return;
+  }
+  e.innerHTML=DOCS.map(function(d,i){
+    return '<div class="dc"><div><div class="dt">'+d.t+'</div>'
+     +'<div class="dm">'+d.who+' &middot; '+d.meta+'</div>'
+     +(REVEAL[i]?'<div class="dm" style="color:var(--gold)">'+d.val+'</div>'
+                :'<button class="rv" onclick="reveal('+i+')">Show number</button>')
+     +'</div><span class="dv '+d.v+'">'+(d.v==='ok'?'valid':'check')+'</span></div>';
+  }).join('');
+}
+function reveal(i){
+  REVEAL[i]=1; renderDocs();
+  setTimeout(function(){ REVEAL[i]=0; renderDocs(); },20000);
+}
+function official(on){
+  var pane=document.getElementById('pane');
+  var old=document.getElementById('oflPanel'); if(old) old.remove();
+  if(!on) return;
+  var left=60;
+  var el=document.createElement('div');
+  el.className='ofl'; el.id='oflPanel';
+  el.innerHTML='<div class="on">Alexandra &amp; James<br>Whitfield</div>'
+   +'<div class="ol">Passport &middot; Australia</div><div class="ov">PA4 921 663</div>'
+   +'<div class="ol">Passport &middot; Australia</div><div class="ov">PA7 118 402</div>'
+   +'<div class="ol">Entry</div><div class="ov" style="font-size:15px">Visa-free, 90 days</div>'
+   +'<div class="ol">Insurance</div><div class="ov" style="font-size:15px">Chubb CHB-441-90277</div>'
+   +'<div class="ox"><span class="ot" id="oflT">closes in 60s</span>'
+   +'<button class="ob" onclick="official(0)">Done</button></div>';
+  pane.scrollTop=0; pane.appendChild(el);
+  var iv=setInterval(function(){
+    left--; var t=document.getElementById('oflT');
+    if(!t){ clearInterval(iv); return; }
+    if(left<=0){ clearInterval(iv); official(0); return; }
+    t.textContent='closes in '+left+'s';
+  },1000);
+}
+function docsText(){
+  return "[DOC-01] Held in the app, numbers withheld from you: two Australian passports valid past the trip; Schengen "
+   +"entry visa-free 90 days, no ETIAS yet; Chubb insurance to 2 December; the gala invitation, needed at the gate "
+   +"Thursday. For any number, send them to the Documents tab, which asks for the code their producer gave them.";
+}
+
+/* Flight tier. In production this object is filled by a scheduled status feed
+   (AviationStack, FlightAware AeroAPI or the airline\'s own) polled every few
+   minutes against the PNR. The shape below is what those return. The demo
+   carries a real delay so the knock-on through the programme is visible. */
+var FLIGHT={
+  flight:'EK140', airline:'Emirates', from:'PRG', fromName:'Prague',
+  to:'DXB', toName:'Dubai', onward:'EK406 to Melbourne',
+  date:'Saturday', scheduled:'15:45', estimated:'16:25', gate:'B7', terminal:'2',
+  status:'delayed', delayMins:40,
+  reason:'The inbound aircraft left Dubai late this morning.',
+  action:'Your car now collects at 1.25pm rather than 12.45pm. The Dubai connection is unaffected: 2h 50m on the ground.',
+  checked:'2 minutes ago'
+};
+function renderFlight(){
+  var e=document.getElementById('flightCard'); if(!e) return;
+  var late=FLIGHT.status==='delayed';
+  e.innerHTML='<div class="fh"><span class="fn">'+FLIGHT.date+' &middot; flying home</span>'
+   +'<span class="fs '+(late?'late':'ok')+'">'+(late?FLIGHT.delayMins+' min delay':'on time')+'</span></div>'
+   +'<div class="fr"><span>'+FLIGHT.from+'</span><span class="ar">&rarr;</span><span>'+FLIGHT.to+'</span>'
+   +'<span class="ft" style="margin-left:auto">'+(late?'<s>'+FLIGHT.scheduled+'</s>':'')+FLIGHT.estimated+'</span></div>'
+   +'<div class="fd">'+FLIGHT.airline+' '+FLIGHT.flight+' &middot; terminal '+FLIGHT.terminal+', gate '+FLIGHT.gate
+   +' &middot; then '+FLIGHT.onward+'.'+(late?'<br>'+FLIGHT.reason+' <b>'+FLIGHT.action+'</b>':'')+'</div>'
+   +'<div class="fc">Status checked '+FLIGHT.checked+'</div>';
+}
+function flightText(){
+  var t="[FLT-01] Flight home, checked "+FLIGHT.checked+": "+FLIGHT.airline+" "+FLIGHT.flight+" "+FLIGHT.fromName
+   +"-"+FLIGHT.toName+" "+FLIGHT.date+" "+FLIGHT.scheduled+", terminal "+FLIGHT.terminal+" gate "+FLIGHT.gate
+   +", then "+FLIGHT.onward+".";
+  if(FLIGHT.status==='delayed') t+=" Running "+FLIGHT.delayMins+" min late, now "+FLIGHT.estimated+". "+FLIGHT.action;
+  else t+=" On time.";
+  return t;
+}
+
+/* Where the client is in the programme. The header and the concierge read the
+   same object, so the interface can never say one day and the record another. */
+var TODAY={day:'Wednesday', n:2, of:5, tonight:'dinner at Field, 7.30pm, car collects 7.05pm', next:'the gala at Prague Castle tomorrow, Thursday'};
+
+/* Live tier: the clock and the weather are true right now, so the concierge
+   may use them. They are separate from TRIBE's record and labelled as such. */
+var WX=null;
+function tick(){
+  var f=function(tz){ return new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date()); };
+  var a=document.getElementById('clkPrg'), b=document.getElementById('clkMel');
+  if(a) a.textContent=f('Europe/Prague');
+  if(b) b.textContent=f('Australia/Melbourne');
+}
+var WXTEXT={0:'clear',1:'mostly clear',2:'partly cloudy',3:'overcast',45:'fog',48:'freezing fog',51:'light drizzle',
+ 53:'drizzle',55:'heavy drizzle',61:'light rain',63:'rain',65:'heavy rain',71:'light snow',73:'snow',75:'heavy snow',
+ 80:'showers',81:'showers',82:'heavy showers',85:'snow showers',86:'snow showers',95:'thunderstorms',96:'thunderstorms',99:'thunderstorms'};
+async function weather(){
+  try{
+    var r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=50.0755&longitude=14.4378'
+      +'&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=Europe%2FPrague&forecast_days=1');
+    if(!r.ok) return;
+    var d=await r.json(); var c=d.current;
+    var desc=WXTEXT[c.weather_code]||'';
+    var t=Math.round(c.temperature_2m);
+    WX={now:t, desc:desc, hi:Math.round(d.daily.temperature_2m_max[0]), lo:Math.round(d.daily.temperature_2m_min[0])};
+    var e=document.getElementById('wxPrg');
+    if(e) e.textContent=t+'\u00b0 '+desc;
+  }catch(e){}
+}
+function liveText(){
+  var clock=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Prague',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date());
+  var t="[LIVE-01] Today is "+TODAY.day+", day "+TODAY.n+" of "+TODAY.of+", and the clock in Prague reads "+clock
+   +". Tonight means "+TODAY.tonight+". Next is "+TODAY.next+".";
+  if(WX) t+=" The weather in Prague is "+WX.now+" degrees and "+WX.desc+", with a high of "+WX.hi+" and a low of "+WX.lo+" today.";
+  return t;
+}
+
+/* Web tier. The record is TRIBE's own knowledge. When a question falls outside it,
+   the concierge may look the answer up rather than hand the client to a person. */
+var WEBFACT=null;
+function covered(q){
+  var qt=toks(q).filter(function(w){return w.length>3;});
+  if(!qt.length) return 1;
+  var best=0;
+  FACTS.forEach(function(f){
+    var hay=toks(f.name+' '+f.fact+' '+(f.tip||'')+' '+(f.tag||'')+' '+(f.keys||''));
+    var n=qt.reduce(function(a,w){return a+(hay.some(function(h){return h.indexOf(w)===0||w.indexOf(h)===0;})?1:0);},0);
+    if(n>best) best=n;
+  });
+  return best;
+}
+/* Their own arrangements are TRIBE's business, never the open web. */
+var PRIVATE=/passport|visa|insurance|policy|flight|delay|airport|gate|car |pickup|collect|book|reserv|itinerar|dress code|allerg|my room|check.?in|anniversar/i;
+async function webLookup(q){
+  if(PRIVATE.test(q)) return null;
+  var u='https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch='
+    +encodeURIComponent(q+' Prague')+'&gsrlimit=1&prop=extracts&exintro=1&explaintext=1&exchars=420&format=json&origin=*';
+  var ctl=new AbortController(); var timer=setTimeout(function(){ctl.abort();},6000);
+  try{
+    var r=await fetch(u,{signal:ctl.signal}); clearTimeout(timer);
+    if(!r.ok) return null;
+    var d=await r.json();
+    var pages=d&&d.query&&d.query.pages; if(!pages) return null;
+    var k=Object.keys(pages)[0]; var pg=pages[k];
+    if(!pg||!pg.extract) return null;
+    /* Wikipedia answers every query with something. Keep it only when the article
+       is actually about what was asked, or the concierge repeats war history at
+       a client who asked about dinner. */
+    var asked=toks(q), title=toks(pg.title);
+    var relevant=title.some(function(w){
+      return asked.some(function(a){return a.indexOf(w)===0||w.indexOf(a)===0;});
+    });
+    if(!relevant) return null;
+    return {fact:pg.extract.replace(/\s+/g,' ').slice(0,420), src:'Wikipedia, '+pg.title};
+  }catch(e){ clearTimeout(timer); return null; }
+}
+/* The endpoint accepts a system prompt of 5000 characters. The instructions and
+   the live tiers are fixed cost; the record gets whatever is left, so the prompt
+   stays inside the ceiling however large the fact base grows. */
+var PROMPT_CAP=4950;
+
+function rules(){
+  return '\n\nBEFORE YOU REPLY, CHECK ALL OF THESE:'
+  + '\n1. Never name a venue, restaurant, bar or hotel that is not in the record. Offer what IS in it, or the team on site.'
+  + '\n2. Dietary notes only when naming a meal or a venue. Never tack them onto anything else.'
+  + '\n3. Never leave them with nothing. End with a fact or with the team on site.'
+  + '\n4. If they ask for a person, or sound worried, hand to the TRIBE team on site: same hotel, they will come.'
+  + '\n5. TIMES: copy them exactly as written. 6.20pm stays 6.20pm. Never restyle, convert, round or infer a time.'
+  + '\n6. NEVER state a passport, visa, insurance or policy number, even if asked directly. Send them to the Documents tab. No exception.'
+  + '\n7. Plain sentences. Never quote an id or its brackets inside a sentence.'
+  + '\n8. If asked how to contact anyone, say the details are just below this message: the team on site, the hotel '
+  + 'lobby on 0 from the room, and TRIBE support. You always have them. Never claim otherwise.'
+  + '\n9. TODAY IS '+TODAY.day.toUpperCase()+'. Tonight means '+TODAY.tonight+'. Anything in the record dated to another '
+  + 'day has not happened yet: never describe it as today or tonight.';
+}
+
+function sysPrompt(){
+  var L=LANGNAME[LANG];
+  var lead = (LANG!=='en') ? ('Write your ENTIRE reply in '+L+' only. Do not use English. ') : '';
+  var tail = (LANG!=='en')
+    ? ('\n\nIMPORTANT: your whole reply must be in '+L+', facts identical to the record. No English.')
+    : '\n\nIf the client writes in another language, reply fully in that same language.';
+
+  var head = lead
+   + 'You are the TRIBE Concierge, writing to a client during their trip. TRIBE has one value, CARE: confidant, guide, '
+   + 'enabler, organiser, fact checker. Warm, unhurried, discreet. Short paragraphs. Never say "As an AI". '
+   + 'The reader IS the client in the record: say "you", never their surname in the third person. '
+   + 'THE RECORD IS THE ONLY THING YOU KNOW. Combine facts in it freely, but never add anything from your own general '
+   + 'knowledge, and never guess to fill a gap. If the record does not answer the question, SAY SO PLAINLY: a refusal '
+   + 'is a correct and expected answer, not a failure. Then offer what is closest in the record, and the TRIBE team on '
+   + 'site, who can find out. Order: the record, the team on site, then your Event Manager in Melbourne for bookings, '
+   + 'money, complaints or safety. '
+   + 'You prepare; a person decides. You have never booked or confirmed anything, so never say you have. '
+   + 'LIVE-01 is the time and weather in Prague now, FLT-01 the flight home, WEB-01 a web look-up: say where it came from. '
+   + 'End every reply with a line starting SOURCES: listing ONLY ids that appear in the record above. Never invent an '
+   + 'id, and never cite one you did not use. An answer with no id behind it must not be given at all.';
+
+  var fixed = head + tail + rules();
+  var tiers = TIERS.reduce(function(acc,t){ return acc+t(); },'');
+  var budget = PROMPT_CAP - fixed.length - tiers.length - 120;
+  return head + tail + '\n\n' + recordText(Math.max(400,budget)) + rules();
+}
+
+function setLive(on,msg){
+  LIVE=on;
+  var d=document.getElementById('liveDot'), t=document.getElementById('liveTxt');
+  if(!d) return;
+  d.className='dot '+(on?'on':'off');
+  t.textContent=msg||(on?'TRIBE Concierge · live · answering from your record':'Offline \u00b7 showing prepared answers');
+}
+async function archai(userText,statusEl){
+  LASTQ=userText; WEBFACT=null;
+  if(covered(userText)===0){
+    if(statusEl) statusEl.textContent='Looking that up for you';
+    WEBFACT=await webLookup(userText);
+  }
+  var res=await fetch(CHAT_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({systemPrompt:sysPrompt(),userPrompt:userText,history:HIST.slice(-6)})});
+  if(!res.ok) throw new Error('offline');
+  var data=await res.json();
+  var raw=(data&&data.message&&data.message.content)||(data&&data.response)||(data&&data.text)||'';
+  if(!raw) throw new Error('empty');
+  return raw;
+}
+/* The on-site team is invented for the scenario, so its button must not dial a
+   real desk. TRIBE's published contact stays as itself, under Melbourne, where
+   it is accurate. */
+var CONTACT='<div class="contact">'+
+ '<div class="ch">TRIBE on site &middot; in your hotel</div>'+
+ '<span class="cfake">Call the team now</span>'+
+ '<div class="cn">The production team travelled with the programme and are on Prague time. In a live programme this dials the producer on duty.</div>'+
+ '<div class="ch" style="margin-top:9px">Hotel lobby</div>'+
+ '<span class="cfake">Dial 0 from your room</span>'+
+ '<div class="cn">The concierge desk knows you are travelling with TRIBE and can reach the team.</div>'+
+ '<div class="ch" style="margin-top:9px">TRIBE support &middot; Melbourne</div>'+
+ '<a href="tel:+61385783151">+61 3 8578 3151</a>'+
+ '<a href="mailto:hello@tribe-group.com.au?subject=TRIBE%20Concierge%20demonstration">hello@tribe-group.com.au</a>'+
+ '<div class="cn">TRIBE\'s own published contact, for bookings, billing, or anything decided at TRIBE rather than on the ground.</div>'+
+ '<div class="ch" style="margin-top:9px">In an emergency</div>'+
+ '<span class="cfake">112 &middot; police, ambulance, fire, in English</span>'+
+ '<span class="cfake">+61 2 6261 3305 &middot; Australian consular emergencies, 24 hours</span>'+
+ '<div class="cn">Real numbers, not part of the scenario. The Australian Honorary Consulate in Prague is on +420 221 729 260, by appointment.</div>'+
+ '</div>';
+/* If the client asks how to reach a person, the card goes up. Deciding that from
+   the model's wording was unreliable: asked twice for a number, it answered that
+   it did not have one while the app was holding the details all along. The
+   question itself is the signal, and it is checked before the model is called. */
+var ASKS_FOR_HUMAN=new RegExp([
+  'cont\\w{0,3}ct',        /* contact, contaqct, contct */
+  'e-?m\\w{0,3}l',         /* email, emil, e-mail, emial */
+  'numb\\w*','phon\\w*','fone','mobile','whats ?app',
+  'reach','ring them','call (them|him|her|someone|the)','get hold of',
+  '(speak|talk) (to|with)','who (do|can) i','details for','how do i (find|reach|get)',
+  'lost','stolen','emergenc\\w*','hospital','doctor','police','ambulance','injur\\w*','sick','unwell','accident','urgent','help me'
+].join('|'),'i');
+function askedForHuman(q){ return ASKS_FOR_HUMAN.test(q||''); }
+function needsHuman(t){
+  /* Escalation is a last resort, so the card appears only when the reply is
+     genuinely handing the client to a person. A polite closing offer to ask
+     the team is not a handover, and printing the card on one makes every
+     answer look like a referral. */
+  if(/event manager/i.test(t)) return true;
+  if(/(just |directly )?below (this|my) (message|reply)|details (are )?(just )?below/i.test(t)) return true;
+  if(/escalat/i.test(t)) return true;
+  if(/(speak|talk) (to|with) (someone|a person|the team|them)/i.test(t)) return true;
+  if(/(will|can) come to you/i.test(t)) return true;
+  if(/(call|contact) the team (now|on|straight)/i.test(t)) return true;
+  if(/I (cannot|can.t|am unable to|do not have|don.t have)[^.]{0,40}(confirm|help|answer|arrange|book)/i.test(t)) return true;
+  return false;
+}
+
+/* The model keeps restyling 7.05pm as 7:05 pm. The digits are right; only the
+   house style slips, so correct it on the way to the screen. */
+function houseTime(t){
+  return t.replace(/(\d{1,2}):(\d{2})\s*([ap])\.?\s*m\.?/gi,function(_,h,m,ap){
+    return h+'.'+m+ap.toLowerCase()+'m';
+  });
+}
+/* The hallucination protocol, enforced rather than requested. Every reply must
+   cite ids, and every id it cites must be one the model was actually given this
+   turn. An answer that cites nothing, or cites something that was not in the
+   record, is not shown as a confident answer: it is marked unverified and the
+   client is handed a person. A refusal that names its source is a success. */
+var IDPAT=/\b[A-Z]{2,6}(?:-[A-Z]{2,6})?-\d{2}\b/g;
+/* The model sometimes shortens an id it was genuinely given: PRG-HELP-01 comes back
+   as HELP-01. That is not a fabrication, and holding back a correct, grounded answer
+   for it would be the protocol failing the client. A shortened id is accepted only
+   when it resolves to exactly one id that was supplied this turn; anything that
+   resolves to nothing, or to more than one, still fails. */
+function resolveId(tok){
+  if(LASTIDS.indexOf(tok)>-1) return tok;
+  var hits=LASTIDS.filter(function(id){ return id.slice(-(tok.length+1))==='-'+tok; });
+  return hits.length===1 ? hits[0] : null;
+}
+function verify(rawSrc, body){
+  var toks=(rawSrc.match(IDPAT)||[]);
+  var cited=[], unknown=[];
+  toks.forEach(function(t){ var r=resolveId(t); if(r) cited.push(r); else unknown.push(t); });
+  var refusal=/(not in|nothing in|do not have|don.t have|cannot confirm|can.t confirm|not something I can)/i.test(body);
+  if(cited.length && !unknown.length) return {ok:true, cited:cited};
+  if(!toks.length && refusal)         return {ok:true, cited:[], refusal:true};
+  return {ok:false, cited:cited, unknown:unknown,
+          why: unknown.length ? 'cites '+unknown.join(', ')+', which is not in your record'
+                              : 'was not traced to your record'};
+}
+function renderReply(raw, forceContact){
+  var src='', esc='', body=houseTime(raw);
+  var m=body.match(/SOURCES\s*:?\s*(.+?)(?:\n|$)/i); if(m){src=m[1].trim(); body=body.replace(m[0],'');}
+  var e=body.match(/ESCALATED\s*:?\s*(.+?)(?:\n|$)/i); if(e){esc=e[1].trim(); body=body.replace(e[0],'');}
+
+  var v=verify(src, body);
+  if(WEBFACT) src=src.replace(/\[?WEB-01\]?/gi,'live web search &middot; '+WEBFACT.src);
+  body=body.trim().replace(/\n{2,}/g,'<br><br>').replace(/\n/g,'<br>');
+
+  var flag = v.ok ? '' :
+    '<div class="unver">Held back &middot; this answer '+v.why+'. Please take it from the team on site rather than from me.</div>';
+  var showContact = !v.ok || forceContact || needsHuman(raw);
+
+  return '<div class="msg ai"><div class="bub'+(v.ok?'':' unsafe')+'">'+body+
+    flag+
+    (src&&v.ok?'<div class="src">Sources &middot; '+src+'</div>':'')+
+    (esc?'<div class="esc">'+esc+'</div>':'')+
+    (showContact?CONTACT:'')+'</div></div>';
+}
+
+function compactChips(on){
+  var c=document.getElementById('chips'), b=document.getElementById('sugg');
+  if(!c||!b) return;
+  c.classList.toggle('compact',on);
+  document.body.classList.toggle('sugg-open',!on);
+  b.setAttribute('aria-expanded', on?'false':'true');
+}
+function suggest(){
+  var c=document.getElementById('chips');
+  compactChips(!c.classList.contains('compact'));
+}
+async function send(text){
+  var log=document.getElementById('log'), pane=document.getElementById('pane');
+  compactChips(true);
+  log.insertAdjacentHTML('beforeend','<div class="msg me"><div class="bub">'+text.replace(/</g,'&lt;')+'</div></div>');
+  pane.scrollTop=pane.scrollHeight;
+  var id='t'+(new Date()).getTime();
+  log.insertAdjacentHTML('beforeend','<div class="msg ai" id="'+id+'"><div class="bub">'
+    +'<span class="think">Checking TRIBE\u2019s record</span>'
+    +'<span class="dots"><i></i><i></i><i></i></span></div></div>');
+  pane.scrollTop=pane.scrollHeight;
+  try{
+    var raw=await archai(text,document.querySelector('#'+id+' .think'));
+    HIST.push({role:'user',content:text},{role:'assistant',content:raw});
+    document.getElementById(id).outerHTML=renderReply(raw, askedForHuman(text));
+    setLive(true);
+  }catch(err){
+    document.getElementById(id).outerHTML='<div class="msg ai"><div class="bub">The concierge is offline just now, so I can’t look that up live. The TRIBE team on site has your question.<div class="src">Concierge offline &middot; prepared answers still available above</div></div></div>';
+    setLive(false);
+  }
+  pane.scrollTop=pane.scrollHeight;
+}
+document.getElementById('askform').addEventListener('submit',function(e){
+  e.preventDefault();
+  var i=document.getElementById('askInput'); var v=i.value.trim();
+  if(!v) return; i.value=''; send(v);
+});
+document.getElementById('langSel').addEventListener('change',function(e){LANG=e.target.value;});
+(function(){ var l=document.getElementById('pageLogo'), m=document.getElementById('appMark');
+  if(l&&m) l.src=m.src; })();
+document.getElementById('dayKicker').textContent='Prague \u00b7 day '+TODAY.n+' of '+TODAY.of;
+document.getElementById('dayName').textContent=TODAY.day;
+initLock(); renderFlight(); renderDocs(); tick(); setInterval(tick,15000); weather(); setInterval(weather,900000);
+(async function(){
+  try{ await archai('Reply with the single word: ready'); setLive(true); }
+  catch(e){ setLive(false,'Offline \u00b7 showing prepared answers'); }
+})();
+
+</script>
+</body>
+</html>
