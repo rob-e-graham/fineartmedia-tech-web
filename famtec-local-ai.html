@@ -1,0 +1,204 @@
+<!-- Copyright (c) 2026 Rob Graham / FAMTEC. All rights reserved. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAMTEC On-Device AI — Private Local AI for iOS &amp; Android</title>
+<meta name="description" content="FAMTEC On-Device AI: private local chat for iOS and Android. Download a model once, then write, ask questions and think out loud fully offline. No account, no cloud fallback. Built-in Saftio crisis detection.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#080808">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080808;
+  --fg:#e8e4dc;
+  --dim:#524e48;
+  --gold:#c8a96e;
+  --teal:#5fb4a2;
+  --rule:rgba(232,228,220,0.07);
+  --mono:'DM Mono',monospace;
+  --serif:'Libre Baskerville',Georgia,serif;
+  --sans:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--serif);font-size:16px;line-height:1.7;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:26px 48px;background:linear-gradient(to bottom,rgba(8,8,8,0.6) 0%,transparent 100%)}
+.nav-logo{display:flex;align-items:center;gap:11px;text-decoration:none}
+.nav-wordmark{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;color:rgba(232,228,220,0.6);text-transform:uppercase}
+.nav-links{display:flex;gap:36px;list-style:none;overflow-x:auto}
+.nav-links a{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:rgba(232,228,220,0.55);text-decoration:none;transition:color 0.25s;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:var(--fg)}
+@media(max-width:900px){
+  nav{padding:20px 24px}
+  .nav-links{gap:22px}
+  .nav-links a{font-size:10px}
+}
+
+/* HERO */
+.sc-hero{padding:150px 48px 70px;max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr;gap:48px;align-items:end}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal)}
+.hero-title{font-family:var(--sans);font-weight:500;font-size:clamp(38px,6vw,64px);line-height:1.05;margin:16px 0 22px;color:var(--fg)}
+.hero-subtitle{font-family:var(--sans);font-weight:300;font-size:19px;line-height:1.55;color:rgba(232,228,220,0.78);max-width:56ch}
+.hero-stats{display:flex;flex-wrap:wrap;gap:12px 26px;margin-top:28px}
+.stat{font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim)}
+.hero-panel{border:1px solid var(--rule);padding:22px 24px;font-family:var(--sans);font-size:13px;color:rgba(232,228,220,0.75)}
+.panel-label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.hero-panel p{margin-top:6px}
+.hero-panel strong{color:var(--fg);font-weight:500}
+@media(max-width:900px){.sc-hero{grid-template-columns:1fr;padding:120px 24px 50px}}
+
+main{max-width:1180px;margin:0 auto;padding:0 48px}
+@media(max-width:900px){main{padding:0 24px}}
+section{padding:64px 0;border-top:1px solid var(--rule)}
+.sec-label{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal);margin-bottom:26px}
+h2{font-family:var(--sans);font-weight:500;font-size:clamp(26px,3.4vw,36px);line-height:1.2;color:var(--fg);margin-bottom:18px}
+p.lede{font-family:var(--sans);font-weight:300;font-size:17px;line-height:1.65;color:rgba(232,228,220,0.78);max-width:66ch}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:36px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+@media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr}}
+
+.card{border:1px solid var(--rule);padding:26px}
+.card h3{font-family:var(--sans);font-weight:500;font-size:17px;color:var(--fg);margin-bottom:10px}
+.card p{font-family:var(--sans);font-weight:300;font-size:14.5px;line-height:1.6;color:rgba(232,228,220,0.72)}
+.card .tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+
+.model-row{display:flex;justify-content:space-between;align-items:baseline;padding:16px 0;border-top:1px solid var(--rule);font-family:var(--sans)}
+.model-row:first-of-type{border-top:none}
+.model-row strong{font-weight:500;color:var(--fg);font-size:15px}
+.model-row span{font-family:var(--mono);font-size:12px;color:var(--dim)}
+
+.status-line{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;color:var(--dim);margin-top:8px}
+.status-line .dot{width:7px;height:7px;border-radius:50%;background:var(--gold)}
+
+footer{border-top:1px solid var(--rule);padding:48px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--dim)}
+footer a{color:var(--dim);text-decoration:none;border-bottom:1px solid transparent}
+footer a:hover{color:var(--fg);border-color:var(--fg)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">
+    <span class="nav-wordmark">FAMTEC</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/#bio">Profile</a></li>
+    <li><a href="/#works">Works</a></li>
+    <li><a href="/archai.html">ARCHAI</a></li>
+    <li><a href="/aux.html">AUXIO</a></li>
+    <li><a href="/dark-plates.html">Dark Plates</a></li>
+    <li><a href="/safechat.html">Saftio</a></li>
+    <li><a href="/famtec-local-ai.html" class="active">On-Device AI</a></li>
+    <li><a href="/courtside.html">Courtside</a></li>
+    <li><a href="/huggle.html">Huggle</a></li>
+    <li><a href="/keytec.html">Keytec</a></li>
+    <li><a href="/cv">CV</a></li>
+    <li><a href="/#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="sc-hero">
+  <div class="hero-content">
+    <div class="hero-tag">Private On-Device AI · iOS &amp; Android</div>
+    <h1 class="hero-title">FAMTEC On-Device AI</h1>
+    <p class="hero-subtitle">Download a model once, then write, ask questions and think out loud — fully offline. No account. No subscription. No cloud fallback. Your words never leave your phone unless you explicitly ask.</p>
+    <div class="hero-stats">
+      <span class="stat">Zero Cloud Calls</span>
+      <span class="stat">Two Model Sizes</span>
+      <span class="stat">26 Automated Tests</span>
+      <span class="stat">Saftio Crisis Detection</span>
+    </div>
+  </div>
+  <div class="hero-panel">
+    <span class="panel-label">Status</span>
+    <p><strong>App license:</strong> Proprietary (FAMTEC)</p>
+    <p><strong>Model license:</strong> Apache-2.0 (Qwen3)</p>
+    <p><strong>Platform:</strong> iOS · Android planned</p>
+    <p><strong>Status:</strong> In development — pre-TestFlight</p>
+    <div class="status-line"><span class="dot"></span>Not yet submitted to any app store</div>
+  </div>
+</div>
+
+<main>
+
+  <section id="why">
+    <div class="sec-label">Why on-device</div>
+    <h2>Cloud AI sends your words to someone else's servers.<br>This doesn't.</h2>
+    <p class="lede">FAMTEC runs its language model directly on your phone's own chip — the same way Saftio's crisis detection and Huggle's coordination log stay local. Nothing about a normal conversation reaches a server, because there is no server for it to reach. The only network calls the app makes are the one-time model download and, if you explicitly approve it, a single web search.</p>
+  </section>
+
+  <section id="how">
+    <div class="sec-label">How it works</div>
+    <div class="grid-2">
+      <div class="card">
+        <span class="tag">Step 1</span>
+        <h3>Download a model, once</h3>
+        <p>Choose Quick Intelligence (639 MB, works on devices with 3 GB+ RAM) or Everyday Intelligence (1.83 GB, 6 GB+ RAM). Both are official Qwen3 releases, pinned to an exact Hugging Face revision and verified with SHA-256 before the app will use them.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Step 2</span>
+        <h3>Chat, fully offline</h3>
+        <p>Once installed, inference runs entirely on-device via llama.cpp. Turn off Wi-Fi and it still works. Conversations stay in memory and clear when the app restarts — nothing is written to a database, local or remote.</p>
+      </div>
+    </div>
+    <div style="margin-top:36px">
+      <div class="model-row"><strong>Quick Intelligence</strong><span>Qwen3-0.6B-Q8_0 · 639 MB · 3 GB RAM minimum</span></div>
+      <div class="model-row"><strong>Everyday Intelligence</strong><span>Qwen3-1.7B-Q8_0 · 1.83 GB · 6 GB RAM minimum</span></div>
+    </div>
+  </section>
+
+  <section id="safety">
+    <div class="sec-label">Built-in safety</div>
+    <h2>Saftio checks every message before the model sees it.</h2>
+    <p class="lede">The same deterministic, on-device crisis-detection engine behind <a href="/safechat.html" style="color:var(--teal)">Saftio</a> runs locally, before inference — for free, without a download. If a message reads as a crisis, the model is never called: the app responds immediately with sourced, verified Australian support resources instead. Saftio is a local pattern-based support feature, not a clinical service, and doesn't guarantee detecting every risk.</p>
+  </section>
+
+  <section id="search">
+    <div class="sec-label">Optional web search</div>
+    <h2>Off by default. Asks before every question.</h2>
+    <p class="lede">When you turn on web search in Settings, FAMTEC asks — every single time — before sending your typed question to DuckDuckGo's keyless, no-tracking Instant Answer API. No API key, no account, no analytics SDK. Decline, and the model answers from what it already knows. Every other message in the app never leaves your device.</p>
+  </section>
+
+  <section id="developers">
+    <div class="sec-label">For developers</div>
+    <h2>One shared local model, built to power a family of sovereign apps.</h2>
+    <p class="lede">FAMTEC On-Device AI is designed as shared infrastructure: a single downloaded model that sibling apps — starting with Daily Grace, Aura, and Kings+ — will reuse rather than each bundling their own copy. Third-party integration is planned through a versioned request/result contract, App Intents and deep links, not by exposing the private model container directly. Open to early technical partners — reach out via the contact link below.</p>
+  </section>
+
+  <section id="release">
+    <div class="sec-label">Release status</div>
+    <div class="grid-3">
+      <div class="card">
+        <h3>Done</h3>
+        <p>Real on-device inference, checksum-verified downloads, Saftio wired into chat, opt-in search, zero known dependency vulnerabilities, 26 automated tests passing.</p>
+      </div>
+      <div class="card">
+        <h3>In progress</h3>
+        <p>Physical-device acceptance testing on iPhone and iPad, distribution signing, public privacy policy hosting.</p>
+      </div>
+      <div class="card">
+        <h3>Not started</h3>
+        <p>App Store / Play submission, Android build, shared cross-app model access.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p><a href="/#contact">Contact</a> · fineartmedia.tech — Melbourne</p>
+</footer>
+
+</body>
+</html>
