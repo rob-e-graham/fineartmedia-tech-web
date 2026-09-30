@@ -83,6 +83,20 @@ p.lede{font-family:var(--sans);font-weight:300;font-size:17px;line-height:1.65;c
 footer{border-top:1px solid var(--rule);padding:48px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--dim)}
 footer a{color:var(--dim);text-decoration:none;border-bottom:1px solid transparent}
 footer a:hover{color:var(--fg);border-color:var(--fg)}
+
+/* App screenshots */
+.screenshot-link{display:inline-block;margin-top:24px;color:var(--teal);font-family:var(--sans);text-underline-offset:5px}
+.screenshot-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:40px;max-width:760px;margin:32px auto 0}
+.screenshot-grid figure{min-width:0}
+.screenshot-grid a{display:block;border:1px solid rgba(232,228,220,0.18);border-radius:24px;overflow:hidden;background:#f5f7f2;transition:transform .2s ease}
+.screenshot-grid a:hover{transform:translateY(-4px)}
+.screenshot-grid a:focus-visible{outline:3px solid var(--teal);outline-offset:6px}
+.screenshot-grid img{display:block;width:100%;height:auto}
+.screenshot-grid figcaption{font-family:var(--sans);font-size:14px;line-height:1.6;color:rgba(232,228,220,.72);margin-top:16px}
+.screenshot-grid figcaption strong{display:block;font-size:17px;font-weight:500;color:var(--fg);margin-bottom:4px}
+@media(max-width:600px){.screenshot-grid{grid-template-columns:1fr;gap:32px;max-width:340px}}
+@media(prefers-reduced-motion:reduce){.screenshot-grid a{transition:none}.screenshot-grid a:hover{transform:none}}
+
 </style>
 </head>
 <body>
@@ -113,6 +127,7 @@ footer a:hover{color:var(--fg);border-color:var(--fg)}
     <div class="hero-tag">Private On-Device AI · iOS &amp; Android</div>
     <h1 class="hero-title">FAMTEC On-Device AI</h1>
     <p class="hero-subtitle">Download a model once, then write, ask questions and think out loud — fully offline. No account. No subscription. No cloud fallback. Your words never leave your phone unless you explicitly ask.</p>
+    <a class="screenshot-link" href="#screenshots">See the app ↓</a>
     <div class="hero-stats">
       <span class="stat">Zero Cloud Calls</span>
       <span class="stat">Two Model Sizes</span>
@@ -131,6 +146,27 @@ footer a:hover{color:var(--fg);border-color:var(--fg)}
 </div>
 
 <main>
+
+
+  <section id="screenshots" aria-labelledby="screenshots-title">
+    <div class="sec-label">Inside the app</div>
+    <h2 id="screenshots-title">A look at FAMTEC Mobile AI.</h2>
+    <p class="lede">Screenshots from the current iPhone development build. Tap a screen to view it full size. App connections shown in the preview are planned features.</p>
+    <div class="screenshot-grid">
+      <figure>
+        <a href="/assets/famtec-mobile-ai/chat-home.png" aria-label="View the FAMTEC Mobile AI chat screen full size">
+          <img src="/assets/famtec-mobile-ai/chat-home.png" width="1320" height="2868" loading="lazy" decoding="async" alt="FAMTEC Mobile AI chat home with model setup and Write, Summarise, Ask and Reflect shortcuts">
+        </a>
+        <figcaption><strong>Your AI, on your device.</strong>Start with a model download, then use the chat workspace for writing, questions and reflection.</figcaption>
+      </figure>
+      <figure>
+        <a href="/assets/famtec-mobile-ai/settings.png" aria-label="View the FAMTEC Mobile AI settings screen full size">
+          <img src="/assets/famtec-mobile-ai/settings.png" width="1320" height="2868" loading="lazy" decoding="async" alt="FAMTEC Mobile AI settings with optional DuckDuckGo search switched off and planned app connections">
+        </a>
+        <figcaption><strong>You control web search.</strong>Optional search is off by default and asks before sending a question. Connections below it are a development preview.</figcaption>
+      </figure>
+    </div>
+  </section>
 
   <section id="why">
     <div class="sec-label">Why on-device</div>
