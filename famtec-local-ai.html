@@ -131,7 +131,7 @@ footer a:hover{color:var(--fg);border-color:var(--fg)}
     <div class="hero-stats">
       <span class="stat">Zero Cloud Calls</span>
       <span class="stat">Two Model Sizes</span>
-      <span class="stat">26 Automated Tests</span>
+      <span class="stat">30 Automated Tests</span>
       <span class="stat">Saftio Crisis Detection</span>
     </div>
   </div>
@@ -174,6 +174,18 @@ footer a:hover{color:var(--fg);border-color:var(--fg)}
     <p class="lede">FAMTEC runs its language model directly on your phone's own chip — the same way Saftio's crisis detection stays local. Nothing about a normal conversation reaches a server, because there is no server for it to reach. The only network calls the app makes are the one-time model download and, if you explicitly approve it, a single web search.</p>
   </section>
 
+  <section id="sovereignty">
+    <div class="sec-label">Why this matters beyond one app</div>
+    <h2>Your work shouldn't live inside someone else's subscription.</h2>
+    <p class="lede">Every prompt sent to a cloud AI service passes through infrastructure you don't own, under terms you didn't write and can't fix in place. That vendor can raise its price once you depend on it, change what it retains, get acquired, or shut the product down outright — and the drafts, records, and reasoning you built inside it go with it, or stay behind on someone else's server. This is the same lock-in problem enterprises and governments are now treating as a serious risk in AI procurement: the practical test of dependency is whether a vendor outage, a policy change, or a price rise can take your working environment away from you. The 2026 shift toward <a href="https://www.weforum.org/stories/artificial-intelligence/open-weight-ai-the-difference-between-renting-and-owning-tech-sovereignty/" style="color:var(--teal)">open-weight models as owned infrastructure rather than rented access</a> is the same argument applied to entire nations. FAMTEC applies it at the scale of one person's phone: the model is a file you hold, not a service you rent, and it keeps answering after the company that shipped it stops updating it.</p>
+  </section>
+
+  <section id="business-model">
+    <div class="sec-label">Why free doesn't have to mean extractive</div>
+    <h2>Free is only suspicious when the business model needs your behaviour.</h2>
+    <p class="lede">Shoshana Zuboff's critique of surveillance capitalism is more precise than the old line that "if it's free, you're the product." Her point is that you're the <em>source</em> of the product: your activity is captured as raw material, refined into a behavioural asset, and sold onward — a relationship she calls extractive because it is not reciprocal. That model only makes sense when a company needs your data to run its actual business. FAMTEC's architecture removes that need at the root: there is no server receiving your conversations, so there is no pipeline for a behavioural product to be built from them, now or after a future acquisition, policy change, or new revenue push. This isn't a promise about intentions — it's a structural fact about where the code runs. It's the same reasoning behind the wider on-device AI movement — tools like <a href="https://ollama.com" style="color:var(--teal)">Ollama</a>, <a href="https://gpt4all.io" style="color:var(--teal)">GPT4All</a> and <a href="https://jan.ai" style="color:var(--teal)">Jan</a> on the desktop, and Apple's own framing of on-device processing as the reason your requests aren't "used to target ads or sell you something." FAMTEC takes that further than a hybrid device/cloud split: there is no cloud fallback for chat at all.</p>
+  </section>
+
   <section id="how">
     <div class="sec-label">How it works</div>
     <div class="grid-2">
@@ -208,8 +220,9 @@ footer a:hover{color:var(--fg);border-color:var(--fg)}
 
   <section id="developers">
     <div class="sec-label">For developers</div>
-    <h2>One shared local model, built to power a family of sovereign apps.</h2>
-    <p class="lede">FAMTEC On-Device AI is designed as shared infrastructure: a single downloaded model that sibling apps — starting with Daily Grace, Aura, and Kings+ — will reuse rather than each bundling their own copy. Third-party integration is planned through a versioned request/result contract, App Intents and deep links, not by exposing the private model container directly. Open to early technical partners — reach out via the contact link below.</p>
+    <h2>One downloaded model, built to power a family of sovereign apps — and to keep getting better.</h2>
+    <p class="lede">Download the model once, and it becomes a shared resource: sibling apps — starting with Daily Grace, Aura, and Kings+ — read from the same on-device weights instead of each bundling their own multi-hundred-megabyte copy, the same way an operating system's shared libraries save every app from re-shipping the same code. Third-party integration is planned through a versioned request/result contract, App Intents and deep links, not by exposing the private model container directly. The economics work the opposite way to a subscription: one download, reused, is cheaper for everyone the more apps draw on it — not a recurring cost per app, per user, per month.</p>
+    <p class="lede" style="margin-top:20px">This also means the model on your phone is not fixed at the version you first downloaded. The three-line entry that names a model in this app — its source, its exact revision, its checksum — can point at a better release without asking anyone to pay for a new app or a new tier. As open-weight models improve and phone memory and neural-engine capacity grow, the same free app can carry a materially stronger model in twelve months than it does today, at no cost to whoever already installed it. Ownership compounds; a rented subscription does not.</p>
   </section>
 
   <section id="release">
@@ -217,7 +230,7 @@ footer a:hover{color:var(--fg);border-color:var(--fg)}
     <div class="grid-3">
       <div class="card">
         <h3>Done</h3>
-        <p>Real on-device inference, checksum-verified downloads, Saftio wired into chat, opt-in search, zero known dependency vulnerabilities, 26 automated tests passing.</p>
+        <p>Real on-device inference, checksum-verified downloads, Saftio wired into chat, opt-in search, plain-text document attachment, zero known dependency vulnerabilities, 30 automated tests passing.</p>
       </div>
       <div class="card">
         <h3>In progress</h3>
@@ -225,7 +238,31 @@ footer a:hover{color:var(--fg);border-color:var(--fg)}
       </div>
       <div class="card">
         <h3>Not started</h3>
-        <p>App Store / Play submission, Android build, shared cross-app model access.</p>
+        <p>App Store / Play submission, Android build, shared cross-app model access, image/PDF text recognition.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="reading">
+    <div class="sec-label">Further reading</div>
+    <h2>The argument this app is built on, in other people's words.</h2>
+    <p class="lede">None of this is a novel position — it draws on an existing line of research and practice this project takes seriously rather than name-drops:</p>
+    <div class="grid-2" style="margin-top:28px">
+      <div class="card">
+        <h3>Local-first software</h3>
+        <p>Martin Kleppmann and colleagues at Ink &amp; Switch set out seven ideals for software that keeps data private and secure "by architecture, not policy" — the standard this app is trying to meet, not just state. <a href="https://www.inkandswitch.com/essay/local-first/" style="color:var(--teal)">inkandswitch.com/essay/local-first</a></p>
+      </div>
+      <div class="card">
+        <h3>Open-weight models as owned infrastructure</h3>
+        <p>The World Economic Forum's framing of open-weight AI as the difference between renting access and owning infrastructure — applied here at the scale of a phone, not a data centre. <a href="https://www.weforum.org/stories/artificial-intelligence/open-weight-ai-the-difference-between-renting-and-owning-tech-sovereignty/" style="color:var(--teal)">weforum.org</a></p>
+      </div>
+      <div class="card">
+        <h3>The Age of Surveillance Capitalism</h3>
+        <p>Shoshana Zuboff's account of extractive, non-reciprocal data relationships — the precise version of "free" worth worrying about, and the one this architecture is built to make structurally impossible, not just policy-promised against. <a href="https://en.wikipedia.org/wiki/The_Age_of_Surveillance_Capitalism" style="color:var(--teal)">The Age of Surveillance Capitalism</a></p>
+      </div>
+      <div class="card">
+        <h3>The wider local-AI toolchain</h3>
+        <p>FAMTEC runs on llama.cpp, the same open engine behind <a href="https://ollama.com" style="color:var(--teal)">Ollama</a>, <a href="https://gpt4all.io" style="color:var(--teal)">GPT4All</a>, and <a href="https://jan.ai" style="color:var(--teal)">Jan</a> — established, independently-reviewed proof that on-device inference is a mature category, not an experiment.</p>
       </div>
     </div>
   </section>
