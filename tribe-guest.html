@@ -128,6 +128,17 @@ svg.map{display:block;width:100%;height:auto}
   padding-bottom:1px}
 .contact a:hover{color:var(--gold)}
 .contact .cn{width:100%;font-size:10.5px;color:var(--dim);line-height:1.5;margin-top:3px}
+.more{margin-top:9px}
+.more summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:7px;
+  padding-top:9px;border-top:1px solid var(--line);font-size:9.4px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim)}
+.more summary::-webkit-details-marker{display:none}
+.more summary::before{content:'';width:5px;height:5px;flex:none;border-right:1px solid currentColor;
+  border-bottom:1px solid currentColor;transform:rotate(-45deg);transition:transform .2s}
+.more[open] summary::before{transform:rotate(45deg)}
+.more summary:hover{color:var(--gold)}
+.moreb{margin-top:9px;display:flex;flex-direction:column;gap:9px}
+.moreb .unver,.moreb .src,.moreb .esc,.moreb .contact{margin:0;padding-top:0;border-top:0}
 .base{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);background:var(--ink)}
 .bt{background:none;border:0;padding:11px 4px 12px;cursor:pointer;color:var(--dim);font-family:var(--sans);
   display:flex;flex-direction:column;align-items:center;gap:5px;transition:color .18s}
@@ -907,18 +918,31 @@ function setLive(on,msg){
   d.className='dot '+(on?'on':'off');
   t.textContent=msg||(on?'TRIBE Concierge · live · answering from your record':'Offline \u00b7 showing prepared answers');
 }
+async function askOnce(sys,userText){
+  var res=await fetch(CHAT_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({systemPrompt:sys,userPrompt:userText,history:HIST.slice(-6)})});
+  if(!res.ok) throw new Error('offline');
+  var data=await res.json();
+  var raw=(data&&data.message&&data.message.content)||(data&&data.response)||(data&&data.text)||'';
+  if(!raw) throw new Error('empty');
+  return raw;
+}
+/* The 14b model on the sovereign node sometimes answers correctly but skips the
+   SOURCES line the protocol needs to verify it, which would otherwise flag a
+   perfectly grounded answer as unconfirmed. One quiet retry with a sharper
+   reminder clears most of those before the client ever sees them; a second miss
+   still fails safe through the normal unconfirmed path. */
 async function archai(userText,statusEl){
   LASTQ=userText; WEBFACT=null;
   if(covered(userText)===0){
     if(statusEl) statusEl.textContent='Looking that up for you';
     WEBFACT=await webLookup(userText);
   }
-  var res=await fetch(CHAT_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({systemPrompt:sysPrompt(),userPrompt:userText,history:HIST.slice(-6)})});
-  if(!res.ok) throw new Error('offline');
-  var data=await res.json();
-  var raw=(data&&data.message&&data.message.content)||(data&&data.response)||(data&&data.text)||'';
-  if(!raw) throw new Error('empty');
+  var sys=sysPrompt();
+  var raw=await askOnce(sys,userText);
+  if(!/SOURCES\s*:/i.test(raw)){
+    raw=await askOnce(sys,userText+'\n\n(Reminder: end your reply with a line starting exactly "SOURCES:" followed by the record ids you used.)');
+  }
   return raw;
 }
 /* The on-site team is invented for the scenario, so its button must not dial a
@@ -947,7 +971,7 @@ var CONTACT='<div class="contact">'+
 var ASKS_FOR_HUMAN=new RegExp([
   'cont\\w{0,3}ct',        /* contact, contaqct, contct */
   'e-?m\\w{0,3}l',         /* email, emil, e-mail, emial */
-  'numb\\w*','phon\\w*','fone','mobile','whats ?app',
+  'phon\\w*','fone','mobile','whats ?app',
   'reach','ring them','call (them|him|her|someone|the)','get hold of',
   '(speak|talk) (to|with)','who (do|can) i','details for','how do i (find|reach|get)',
   'lost','stolen','emergenc\\w*','hospital','doctor','police','ambulance','injur\\w*','sick','unwell','accident','urgent','help me'
@@ -959,7 +983,6 @@ function needsHuman(t){
      the team is not a handover, and printing the card on one makes every
      answer look like a referral. */
   if(/event manager/i.test(t)) return true;
-  if(/(just |directly )?below (this|my) (message|reply)|details (are )?(just )?below/i.test(t)) return true;
   if(/escalat/i.test(t)) return true;
   if(/(speak|talk) (to|with) (someone|a person|the team|them)/i.test(t)) return true;
   if(/(will|can) come to you/i.test(t)) return true;
@@ -1012,14 +1035,21 @@ function renderReply(raw, forceContact){
   body=body.trim().replace(/\n{2,}/g,'<br><br>').replace(/\n/g,'<br>');
 
   var flag = v.ok ? '' :
-    '<div class="unver">Held back &middot; this answer '+v.why+'. Please take it from the team on site rather than from me.</div>';
-  var showContact = !v.ok || forceContact || needsHuman(raw);
+    '<div class="unver">Unconfirmed &middot; this answer '+v.why+'. Please take it from the team on site rather than from me.</div>';
+  /* Contact details live in the dropdown on every reply, so they are always one tap
+     away without being asked for. The dropdown only springs open on its own when
+     something genuinely needs a person: an unconfirmed answer, an explicit ask, or
+     the model actually handing off rather than just mentioning the team in passing. */
+  var openDrop = !v.ok || forceContact || needsHuman(raw);
 
-  return '<div class="msg ai"><div class="bub'+(v.ok?'':' unsafe')+'">'+body+
-    flag+
-    (src&&v.ok?'<div class="src">Sources &middot; '+src+'</div>':'')+
-    (esc?'<div class="esc">'+esc+'</div>':'')+
-    (showContact?CONTACT:'')+'</div></div>';
+  var extras = flag
+    + (src&&v.ok?'<div class="src">Sources &middot; '+src+'</div>':'')
+    + (esc?'<div class="esc">'+esc+'</div>':'')
+    + CONTACT;
+  var drop = extras ? ('<details class="more"'+(openDrop?' open':'')+'>'
+    +'<summary>Details</summary><div class="moreb">'+extras+'</div></details>') : '';
+
+  return '<div class="msg ai"><div class="bub'+(v.ok?'':' unsafe')+'">'+body+drop+'</div></div>';
 }
 
 function compactChips(on){
