@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TRIBE Concierge — Prague — Concept Demo</title>
+<title>FAMTEC Concierge — Prague — Concept Demo</title>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -37,7 +37,7 @@ body{font-family:var(--sans);font-weight:300;background:var(--deep);color:var(--
 /* a class sets display, so it beats the browser's [hidden] rule unless we say so */
 .lock[hidden]{display:none}
 .lk-in{max-width:330px;text-align:left}
-.lk-mark{height:26px;width:auto;opacity:.92;margin-bottom:24px}
+.lk-mark-text{font-family:var(--sans);font-size:13px;letter-spacing:.36em;color:var(--cream);margin-bottom:24px}
 .lk-k{font-family:var(--sans);font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
 .lk-t{font-family:var(--serif);font-size:30px;line-height:1.12;color:var(--cream);margin-top:7px}
 .lk-p{font-size:12.5px;line-height:1.65;color:var(--body);margin-top:17px}
@@ -291,20 +291,19 @@ body.appshell .lastnote{padding:12px 18px 16px;margin:0}
 
 <div class="masthead">
   <div class="mh-l">
-    <img class="logo" id="pageLogo" alt="TRIBE">
     <div>
       <div class="mh-t">Concierge</div>
       <div class="mh-s">Prague &middot; Concept Demonstration</div>
     </div>
   </div>
-  <div class="concept">Concept only. Scenario drawn from TRIBE&rsquo;s publicly described event history. Client, supplier and venue details are illustrative and invented.</div>
+  <div class="concept">Concept demonstration. The operator, client, supplier and venue details are invented. City knowledge is attributed to its published source.</div>
 </div>
 
 <div class="layout">
   <div class="device">
     <div class="lock" id="lock" hidden>
       <div class="lk-in">
-        <img class="lk-mark" id="lockMark" alt="" aria-hidden="true">
+        <div class="lk-mark-text">FAMTEC</div>
         <div class="lk-k">Prague &middot; November</div>
         <div class="lk-t">Alexandra &amp; James<br>Whitfield</div>
         <p class="lk-p">This programme opened from the link sent to
@@ -315,8 +314,7 @@ body.appshell .lastnote{padding:12px 18px 16px;margin:0}
       </div>
     </div>
     <div class="appid">
-      <img class="mark" id="appMark" src="data:image/png;base64,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" alt="" aria-hidden="true">
-      <span class="wordmark">TRIBE</span><span class="sub">Concierge</span>
+      <span class="wordmark">FAMTEC</span><span class="sub">Concierge</span>
       <button class="lockbtn" onclick="lockDevice()" title="Lock this device">Lock</button>
     </div>
     <div class="d-top">
@@ -331,7 +329,7 @@ body.appshell .lastnote{padding:12px 18px 16px;margin:0}
         <option value="fr">Français</option><option value="es">Español</option>
         <option value="it">Italiano</option><option value="id">Bahasa Indonesia</option>
       </select>
-      <span id="liveDot" class="dot off" title="Concierge status"></span><span id="liveTxt">Connecting to TRIBE Concierge…</span>
+      <span id="liveDot" class="dot off" title="Concierge status"></span><span id="liveTxt">Connecting to the concierge…</span>
     </div>
     <div class="nowbar" id="nowbar">
       <span class="nl">Prague</span><span class="nt" id="clkPrg">--:--</span>
@@ -348,7 +346,7 @@ body.appshell .lastnote{padding:12px 18px 16px;margin:0}
 
       <div class="v on" id="itin"><img class="hero" src="/tribe-assets/21_prague_hero_wide.png" alt="Prague">
         <div class="flight" id="flightCard"></div>
-        <div class="item"><div class="w">Today &middot; Wednesday</div><div class="h">Mal&aacute; Strana, at your own pace</div><div class="d">Nothing scheduled before 1.00pm. The Vrtba Garden opens at 10 and is rarely busy.</div><div class="tip">TRIBE note: the garden entrance is an unmarked door on Karmelitsk&aacute;. Most people walk straight past it.</div></div>
+        <div class="item"><div class="w">Today &middot; Wednesday</div><div class="h">Mal&aacute; Strana, at your own pace</div><div class="d">Nothing scheduled before 1.00pm. The Vrtba Garden opens at 10 and is rarely busy.</div><div class="tip">Advisor note: the garden entrance is an unmarked door on Karmelitsk&aacute;. Most people walk straight past it.</div></div>
         <div class="item"><div class="w">1.00pm</div><div class="h">Luncheon, Caf&eacute; Savoy</div><div class="d">Table held under Whitfield. Ten minutes on foot from the hotel.</div></div>
         <div class="item"><div class="w">7.30pm</div><div class="h">Dinner, Field</div><div class="d">Car collects 7.05pm. Shellfish allergy is with the kitchen.</div></div>
         <div class="item has-img"><img class="thumb" src="/tribe-assets/05_prague_castle_gala.png" alt=""><div class="body"><div class="w">Thursday &middot; The Gala</div><div class="h">Prague Castle</div>
@@ -376,15 +374,15 @@ body.appshell .lastnote{padding:12px 18px 16px;margin:0}
             <span class="lg"><i style="background:#FAF4EF"></i>You</span>
             <span class="lg"><i style="background:#D4B98C"></i>Your program</span>
             <span class="lg"><i style="background:#9c8f6d"></i>Dining &amp; shopping</span>
-            <span class="lg"><i style="background:#747761"></i>TRIBE tips</span>
+            <span class="lg"><i style="background:#747761"></i>Insider tips</span>
           </div>
           <div class="mapinfo" id="mapinfo">
             <div class="c">Tap any point</div>
             <div class="h">Prague, as we know it</div>
-            <div class="d">Eight places, chosen for you. Everything on this map is somewhere TRIBE has been, not somewhere we found online.</div>
+            <div class="d">Eight places, chosen for you. Everything on this map is somewhere the team has actually been, not somewhere we found online.</div>
           </div>
         </div>
-        <div class="secttl">TRIBE tips</div>
+        <div class="secttl">Insider tips</div>
         <div class="item"><div class="w">Timing</div><div class="h">The Charles Bridge, properly</div><div class="d">Impossible between 10am and 6pm. Go at 6.30am for the light, or after 10pm when it empties.</div><div class="tip">Thursday morning is your only genuinely free one.</div></div>
         <div class="item has-img"><img class="thumb" src="/tribe-assets/06_vrtba_garden.png" alt=""><div class="body"><div class="w">Hidden</div><div class="h">Vrtba Garden</div><div class="d">A baroque terraced garden almost nobody finds, five minutes from your hotel. Unmarked door on Karmelitsk&aacute;.</div></div></div>
         <div class="item"><div class="w">Worth the detour</div><div class="h">Strahov Monastery library</div><div class="d">The Philosophical Hall is extraordinary. General admission only lets you look in from the doorway.</div><div class="tip">Interior access needs arranging in advance. Two days&rsquo; notice &mdash; say the word.</div></div>
@@ -395,7 +393,7 @@ body.appshell .lastnote{padding:12px 18px 16px;margin:0}
       <div class="v" id="docs">
         <div class="dl" id="docList"></div>
         <button class="official" onclick="official(1)">Show to an official</button>
-        <div class="dn">Held on this device for the length of your trip, then removed. TRIBE does not keep a copy and the concierge is never given the numbers.      </div>
+        <div class="dn">Held on this device for the length of your trip, then removed. We do not keep a copy and the concierge is never given the numbers.      </div>
       </div>
 
       <div class="v" id="dine">
@@ -408,7 +406,7 @@ body.appshell .lastnote{padding:12px 18px 16px;margin:0}
 
       <div class="v" id="shop">
         <div class="item has-img"><img class="thumb" src="/tribe-assets/09_bohemian_crystal.png" alt=""><div class="body"><div class="w">Crystal, the real thing</div><div class="h">Moser</div><div class="d">The Karlovy Vary house since 1857. Flagship on Star&eacute; M&#283;sto. They handle shipping and the VAT refund properly.</div><div class="tip">The shops on Celetn&aacute; sell to visitors. This is where the pieces in the castle came from.</div></div></div>
-        <div class="item"><div class="w">Made, not bought</div><div class="h">A Bohemian workshop, outside the centre</div><div class="d">TRIBE has commissioned gifts here for two previous programs. Needs a call ahead and about half a day.</div><div class="tip">If you&rsquo;d like something engraved for the anniversary, Friday is the last day that works.</div></div>
+        <div class="item"><div class="w">Made, not bought</div><div class="h">A Bohemian workshop, outside the centre</div><div class="d">We have commissioned gifts here for two previous programmes. Needs a call ahead and about half a day.</div><div class="tip">If you&rsquo;d like something engraved for the anniversary, Friday is the last day that works.</div></div>
         <div class="item"><div class="w">Garnets</div><div class="h">Granát Turnov</div><div class="d">Czech garnet is the local stone and heavily faked. This is the cooperative that actually mines it.</div></div>
         <div class="item"><div class="w">Books &amp; prints</div><div class="h">Antikvari&aacute;t Kar&#101;l K&#345;enek</div><div class="d">Old maps, prints and first editions. The kind of shop you lose an hour in.</div></div>
       </div>
@@ -443,14 +441,14 @@ body.appshell .lastnote{padding:12px 18px 16px;margin:0}
       <button class="bt" data-go="docs" onclick="go('docs')">
         <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 2.5h6.5L15 6v11.5H5z"/><path d="M11.5 2.5V6H15"/></svg><span>Documents</span></button>
       <button class="bt" data-go="ask" onclick="go('ask')">
-        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M17 11.5c0 2.8-3.1 5-7 5a8.6 8.6 0 0 1-2.3-.3L3.5 17.5l1.2-2.8C3.6 13.8 3 12.7 3 11.5c0-2.8 3.1-5 7-5s7 2.2 7 5z"/></svg><span>Ask TRIBE</span></button>
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M17 11.5c0 2.8-3.1 5-7 5a8.6 8.6 0 0 1-2.3-.3L3.5 17.5l1.2-2.8C3.6 13.8 3 12.7 3 11.5c0-2.8 3.1-5 7-5s7 2.2 7 5z"/></svg><span>Concierge</span></button>
     </nav>
   </div>
 
   <div>
     <div class="sec">
-      <h2>Built on TRIBE&rsquo;s own words</h2>
-      <div class="pull">TRIBE has one core value: care. This is care at 3am, in a language the client chose, when the advisor who holds it is asleep in Melbourne.</div>
+      <h2>Built on the operator&rsquo;s own record</h2>
+      <div class="pull">A luxury operator&rsquo;s product is the care of its people. This is that care at 3am, in a language the client chose, when the advisor who holds it is asleep in Melbourne.</div>
     </div>
 
     <div class="sec">
@@ -463,10 +461,10 @@ body.appshell .lastnote{padding:12px 18px 16px;margin:0}
             <li>Site inspections and supplier debriefs</li>
             <li>The Virtuoso preferred-partner network</li>
           </ul>
-          <p style="margin-top:10px">Every recommendation on the previous panels names its source. Where that is TRIBE&rsquo;s own record it says so; where it is a published guide it names the guide. Nothing is offered as TRIBE knowledge that is not.</p>
+          <p style="margin-top:10px">Every recommendation on the previous panels names its source. Where that is the operator&rsquo;s own record it says so; where it is a published guide it names the guide. Nothing is offered as the operator&rsquo;s own knowledge that is not.</p>
         </div>
         <div class="c"><h3>The fact checker, literally</h3>
-          <p>TRIBE already describe themselves as their client&rsquo;s <b>fact checker</b>. That is exactly what grounded retrieval is: every answer names the itinerary, debrief or supplier file behind it, and where the record is silent it says so and names the person who knows.</p>
+          <p>Good operators describe themselves as their client&rsquo;s <b>fact checker</b>. That is exactly what grounded retrieval is: every answer names the itinerary, debrief or supplier file behind it, and where the record is silent it says so and names the person who knows.</p>
           <p style="margin-top:9px">An advisor who cannot check an answer will not trust it twice. A client told something wrong about their own trip will not forgive it once.</p>
         </div>
       </div>
@@ -506,21 +504,21 @@ body.appshell .lastnote{padding:12px 18px 16px;margin:0}
       <div class="grid g3">
         <div class="c"><h3>Stays private</h3><ul><li>Identities and contact details</li><li>Passports, visas, medical, dietary</li><li>Commercial terms and rates</li><li>The preference record itself</li></ul></div>
         <div class="c"><h3>Leaves, de-identified</h3><ul><li>The reasoning, with minimum context</li><li>Public facts: hours, weather, transit</li><li>Never a name against a preference</li></ul></div>
-        <div class="c"><h3>Never</h3><ul><li>Books, rebooks or cancels</li><li>Quotes a price or commits TRIBE</li><li>Trains a public model on client data</li><li>Answers without saying where the answer came from</li></ul></div>
+        <div class="c"><h3>Never</h3><ul><li>Books, rebooks or cancels</li><li>Quotes a price or commits the business</li><li>Trains a public model on client data</li><li>Answers without saying where the answer came from</li></ul></div>
       </div>
       <div class="note" style="margin-top:14px"><b>The luxury standard and the security standard are the same standard.</b> Discretion is a condition of the relationship at this level. Anything that reads as a client&rsquo;s private information being handled casually costs more than the technology will ever save.</div>
     </div>
 
     <div class="sec">
-      <h2>Why Prague Castle</h2>
-      <div class="c"><p>TRIBE&rsquo;s own site names a gala at Prague Castle, with a 48-piece orchestra accompanying the Czech National Ballet, as one of the programs that defines what TRIBE does at its best. It makes a useful demonstration because it holds everything difficult about this business at once: <b>a fixed immovable moment, a venue you do not control, international suppliers, a client with history, and two hundred details that all have to be right simultaneously.</b></p>
+      <h2>Why this scenario</h2>
+      <div class="c"><p>A gala at Prague Castle, with a 48-piece orchestra accompanying the Czech National Ballet, makes a useful demonstration because it holds everything difficult about this business at once: <b>a fixed immovable moment, a venue you do not control, international suppliers, a client with history, and two hundred details that all have to be right simultaneously.</b></p>
       <p style="margin-top:10px">If the idea holds here, it holds on a Virtuoso leisure booking. The reverse is not true.</p></div>
     </div>
 
     
 
     <footer>
-      Concept demonstration prepared by Rob Graham for discussion with TRIBE Travel &amp; Events, September 2026. No TRIBE systems, client records or supplier agreements were accessed. Client names, supplier references, dates and file numbers are invented for illustration. The scenario draws on TRIBE&rsquo;s publicly described event history. Logo shown for context in a proposal setting. TRIBE Concierge answers are generated on demand by a locally hosted model on infrastructure Rob controls, and are grounded in the record above.
+      Concept demonstration by Rob Graham, FAMTEC. The operator, client names, supplier references, dates and file numbers are invented for illustration. City knowledge is attributed to its published source. In a live deployment this carries the operator&rsquo;s own brand. Answers are generated on demand by a locally hosted model on infrastructure FAMTEC controls, and are grounded in the record above.
     </footer>
   </div>
 </div>
@@ -567,7 +565,7 @@ function ask(i){
   send(qs[i]);
 }
 
-/* ══ TRIBE Concierge · live ═══════════════════════════════════════
+/* ══ Concierge · live ═══════════════════════════════════════
    Same endpoint and request shape as the ACMI and Heide demos.
    Falls back to the scripted answers when the sovereign node is unreachable. */
 var CHAT_ENDPOINT='https://archai-api.fineartmedia.tech/api/proxy/chat';
@@ -575,12 +573,12 @@ var LIVE=false, HIST=[], LANG='en';
 var LANGNAME={en:'English',zh:'Chinese (Simplified)',ja:'Japanese',de:'German',
               fr:'French',es:'Spanish',it:'Italian',id:'Indonesian'};
 
-/* ══ TRIBE FACT BASE ═══════════════════════════════════════════════
+/* ══ FACT BASE ═══════════════════════════════════════════════
    One record. The concierge answers from it, the panels render from it,
    and every answer can name the entry it came from. Add a fact once. */
 var FACTS=[
  {id:'PRG-CLI-01',cat:'client',name:'The Whitfields',
-  fact:"Alexandra and James Whitfield. With TRIBE since 2019, seven programs."},
+  fact:"Alexandra and James Whitfield. A client since 2019, seven programs."},
  {id:'PRG-CLI-02',cat:'client',name:'Preferences',
   fact:"Aisle seats forward cabin. High floor away from lifts. Late starts, no 7am departures. ALEXANDRA HAS A SHELLFISH ALLERGY. James does not eat red meat. 30th wedding anniversary falls on the Friday."},
  {id:'PRG-CLI-03',cat:'client',name:'Kyoto debrief, 2023',
@@ -609,7 +607,7 @@ var FACTS=[
   fact:"The Karlovy Vary house since 1857, flagship in Stare Mesto. Handles shipping and the VAT refund properly.",
   tip:"The shops on Celetna sell to visitors. This is where the pieces in the castle came from."},
  {id:'PRG-SHP-02',cat:'shopping',name:'A Bohemian glass workshop',tag:'Made, not bought',keys:'art culture',
-  fact:"Outside the centre. TRIBE has commissioned gifts here on two previous programs. Needs a call ahead and about half a day.",
+  fact:"Outside the centre. We have commissioned gifts here on two previous programmes. Needs a call ahead and about half a day.",
   tip:"For an anniversary piece, Friday is the last day that works this trip."},
  {id:'PRG-SHP-03',cat:'shopping',name:'Granat Turnov',tag:'Garnets',
   fact:"Czech garnet is the local stone and heavily faked. This is the cooperative that actually mines it."},
@@ -664,8 +662,8 @@ var FACTS=[
   fact:"Naplavka on the Vltava embankment has food, drinks and music after dark, and is where the city goes on a warm evening."},
  {id:'PRG-CAS-04',cat:'dining',name:'Czech food without ceremony',tag:'Casual',keys:'fun casual',src:'Lonely Planet',
   fact:"U Kroka or Hostinec na Vytoni for duck and proper Czech cooking. Cerveny Jelen is the smarter version of the same idea."},
- {id:'PRG-TEAM-01',cat:'client',name:'TRIBE on the ground',
-  fact:"A TRIBE production team has travelled from Melbourne and is on site for the whole program, staying at the same hotel. They are awake in Prague time and reachable at any hour. A duty producer leads on the ground. For anything happening now, they are the right people, not Melbourne. IMPORTANT: whenever the client asks how to reach anyone, the contact details appear on the screen directly beneath your reply: the team on site, the hotel lobby on 0 from their room, and TRIBE support in Melbourne. Say they are just below. NEVER say you do not have the contact details."},
+ {id:'PRG-TEAM-01',cat:'client',name:'The team on the ground',
+  fact:"A production team has travelled from Melbourne and is on site for the whole program, staying at the same hotel. They are awake in Prague time and reachable at any hour. A duty producer leads on the ground. For anything happening now, they are the right people, not Melbourne. IMPORTANT: whenever the client asks how to reach anyone, the contact details appear on the screen directly beneath your reply: the team on site, the hotel lobby on 0 from their room, and head office. Say they are just below. NEVER say you do not have the contact details."},
  {id:'PRG-HELP-01',cat:'city',name:'If an Australian passport is lost or stolen',tag:'Practical',keys:'emergency passport consul',
   src:'Australian Government',
   fact:"Report it to Czech police first for a report number. Australian Honorary Consulate, Klimentska 10, +420 221 729 260, by appointment; it cannot issue an emergency passport. Embassy covering Czechia: Warsaw. After hours: DFAT Consular Emergency Centre +61 2 6261 3305, 24 hours."},
@@ -673,9 +671,9 @@ var FACTS=[
   src:'European emergency number',
   fact:"112 reaches police, ambulance and fire anywhere in the EU and is answered in English. Direct Czech lines: 155 ambulance, 158 police, 150 fire."},
  {id:'PRG-GAP-01',cat:'gap',name:'Not in the record',
-  fact:"Live prices, bookable availability, any other TRIBE client, and any city other than Prague. For these, the TRIBE team on site can check and come back to you."}
+  fact:"Live prices, bookable availability, any other client, and any city other than Prague. For these, the team on site can check and come back to you."}
 ];
-function srcLabel(x){ return x.src ? x.src : "TRIBE record"; }
+function srcLabel(x){ return x.src ? x.src : "Operator record"; }
 var STOP={the:1,a:1,an:1,and:1,or:1,to:1,of:1,in:1,is:1,are:1,we:1,i:1,you:1,my:1,our:1,for:1,on:1,at:1,it:1,do:1,can:1,any:1,what:1,where:1,when:1,how:1,there:1,this:1,that:1,with:1,me:1,us:1};
 function toks(t){return String(t||'').toLowerCase().replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(function(w){return w.length>2&&!STOP[w];});}
 /* Four facts are true of every question: who they are, what they will not eat,
@@ -743,7 +741,7 @@ function recordText(budget){
 /* Two gates, sized to what is behind them. The link in the client's email is the
    sign-in: opening it is the proof, and confirming once trusts this device for the
    trip. The documents ask again, because that is where the passport numbers are. */
-var TRUSTED='tribe.device.whitfield.prague';
+var TRUSTED='famtec.concierge.device.demo';
 function remembered(){ try{ return localStorage.getItem(TRUSTED)==='1'; }catch(e){ return false; } }
 function unlockDevice(){
   try{ localStorage.setItem(TRUSTED,'1'); }catch(e){}
@@ -755,8 +753,7 @@ function lockDevice(){
   document.getElementById('lock').hidden=false;
 }
 function initLock(){
-  var l=document.getElementById('lock'), m=document.getElementById('lockMark');
-  if(m) m.src=document.getElementById('appMark').src;
+  var l=document.getElementById('lock');
   l.hidden=remembered();
 }
 
@@ -776,10 +773,10 @@ function docGate(){
   return '<div class="gate">'
    +'<div class="gt">Your documents</div>'
    +'<p class="gp">Passports, entry status and insurance. Enter the four-digit code your '
-   +'TRIBE producer gave you when you arrived.</p>'
+   +'producer gave you when you arrived.</p>'
    +'<input id="docPin" type="tel" inputmode="numeric" maxlength="4" autocomplete="off" aria-label="Four digit code">'
    +'<div class="gerr" id="docErr"></div>'
-   +'<div class="gh">Held on this device only. TRIBE keeps no copy, and the concierge is never given the numbers.</div>'
+   +'<div class="gh">Held on this device only. The operator keeps no copy, and the concierge is never given the numbers.</div>'
    +'<div class="gh" style="color:var(--gold)">Demonstration code: 2481</div>'
    +'</div>';
 }
@@ -879,7 +876,7 @@ function flightText(){
 var TODAY={day:'Wednesday', n:2, of:5, tonight:'dinner at Field, 7.30pm, car collects 7.05pm', next:'the gala at Prague Castle tomorrow, Thursday'};
 
 /* Live tier: the clock and the weather are true right now, so the concierge
-   may use them. They are separate from TRIBE's record and labelled as such. */
+   may use them. They are separate from the operator's record and labelled as such. */
 var WX=null;
 function tick(){
   var f=function(tz){ return new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date()); };
@@ -911,7 +908,7 @@ function liveText(){
   return t;
 }
 
-/* Web tier. The record is TRIBE's own knowledge. When a question falls outside it,
+/* Web tier. The record is the operator's own knowledge. When a question falls outside it,
    the concierge may look the answer up rather than hand the client to a person. */
 var WEBFACT=null;
 function covered(q){
@@ -925,7 +922,7 @@ function covered(q){
   });
   return best;
 }
-/* Their own arrangements are TRIBE's business, never the open web. */
+/* Their own arrangements are the operator's business, never the open web. */
 var PRIVATE=/passport|visa|insurance|policy|flight|delay|airport|gate|car |pickup|collect|book|reserv|itinerar|dress code|allerg|my room|check.?in|anniversar/i;
 async function webLookup(q){
   if(PRIVATE.test(q)) return null;
@@ -960,12 +957,12 @@ function rules(){
   + '\n1. Never name a venue, restaurant, bar or hotel that is not in the record. Offer what IS in it, or the team on site.'
   + '\n2. Dietary notes only when naming a meal or a venue. Never tack them onto anything else.'
   + '\n3. Never leave them with nothing. End with a fact or with the team on site.'
-  + '\n4. If they ask for a person, or sound worried, hand to the TRIBE team on site: same hotel, they will come.'
+  + '\n4. If they ask for a person, or sound worried, hand to the team on site: same hotel, they will come.'
   + '\n5. TIMES: copy them exactly as written. 6.20pm stays 6.20pm. Never restyle, convert, round or infer a time.'
   + '\n6. NEVER state a passport, visa, insurance or policy number, even if asked directly. Send them to the Documents tab. No exception.'
   + '\n7. Plain sentences. Never quote an id or its brackets inside a sentence.'
   + '\n8. If asked how to contact anyone, say the details are just below this message: the team on site, the hotel '
-  + 'lobby on 0 from the room, and TRIBE support. You always have them. Never claim otherwise.'
+  + 'lobby on 0 from the room, and head office. You always have them. Never claim otherwise.'
   + '\n9. TODAY IS '+TODAY.day.toUpperCase()+'. Tonight means '+TODAY.tonight+'. Anything in the record dated to another '
   + 'day has not happened yet: never describe it as today or tonight.';
 }
@@ -978,13 +975,13 @@ function sysPrompt(){
     : '\n\nIf the client writes in another language, reply fully in that same language.';
 
   var head = lead
-   + 'You are the TRIBE Concierge, writing to a client during their trip. TRIBE has one value, CARE: confidant, guide, '
+   + 'You are the concierge for a luxury travel and events company, writing to a client during their trip. The company has one value, care: confidant, guide, '
    + 'enabler, organiser, fact checker. Warm, unhurried, discreet. Short paragraphs. Never say "As an AI". '
    + 'The reader IS the client in the record: say "you", never their surname in the third person. '
    + 'THE RECORD IS THE ONLY THING YOU KNOW. Combine facts in it freely, but never add anything from your own general '
    + 'knowledge, and never guess to fill a gap. If the record does not answer the question, SAY SO PLAINLY: a refusal '
-   + 'is a correct and expected answer, not a failure. Then offer what is closest in the record, and the TRIBE team on '
-   + 'site, who can find out. Order: the record, the team on site, then your Event Manager in Melbourne for bookings, '
+   + 'is a correct and expected answer, not a failure. Then offer what is closest in the record, and the team on '
+   + 'site, who can find out. Order: the record, the team on site, then the client&rsquo;s advisor at head office for bookings, '
    + 'money, complaints or safety. '
    + 'You prepare; a person decides. You have never booked or confirmed anything, so never say you have. '
    + 'LIVE-01 is the time and weather in Prague now, FLT-01 the flight home, WEB-01 a web look-up: say where it came from. '
@@ -1002,7 +999,7 @@ function setLive(on,msg){
   var d=document.getElementById('liveDot'), t=document.getElementById('liveTxt');
   if(!d) return;
   d.className='dot '+(on?'on':'off');
-  t.textContent=msg||(on?'TRIBE Concierge · live · answering from your record':'Offline \u00b7 showing prepared answers');
+  t.textContent=msg||(on?'Concierge · live · answering from your record':'Offline \u00b7 showing prepared answers');
 }
 async function askOnce(sys,userText){
   var res=await fetch(CHAT_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},
@@ -1032,19 +1029,18 @@ async function archai(userText,statusEl){
   return raw;
 }
 /* The on-site team is invented for the scenario, so its button must not dial a
-   real desk. TRIBE's published contact stays as itself, under Melbourne, where
-   it is accurate. */
+   real desk. the head-office line is a placeholder. */
 var CONTACT='<div class="contact">'+
- '<div class="ch">TRIBE on site &middot; in your hotel</div>'+
+ '<div class="ch">Your team on site &middot; in your hotel</div>'+
  '<span class="cfake">Call the team now</span>'+
  '<div class="cn">The production team travelled with the programme and are on Prague time. In a live programme this dials the producer on duty.</div>'+
  '<div class="ch" style="margin-top:9px">Hotel lobby</div>'+
  '<span class="cfake">Dial 0 from your room</span>'+
- '<div class="cn">The concierge desk knows you are travelling with TRIBE and can reach the team.</div>'+
- '<div class="ch" style="margin-top:9px">TRIBE support &middot; Melbourne</div>'+
- '<a href="tel:+61385783151">+61 3 8578 3151</a>'+
- '<a href="mailto:hello@tribe-group.com.au?subject=TRIBE%20Concierge%20demonstration">hello@tribe-group.com.au</a>'+
- '<div class="cn">TRIBE\'s own published contact, for bookings, billing, or anything decided at TRIBE rather than on the ground.</div>'+
+ '<div class="cn">The concierge desk knows you are travelling with the operator and can reach the team.</div>'+
+ '<div class="ch" style="margin-top:9px">Head office</div>'+
+ '<span class="cfake">+61 3 0000 0000</span>'+
+ '<span class="cfake">concierge@example.com</span>'+
+ '<div class="cn">The operator&rsquo;s own contact, for bookings, billing, or anything decided at head office rather than on the ground.</div>'+
  '<div class="ch" style="margin-top:9px">In an emergency</div>'+
  '<span class="cfake">112 &middot; police, ambulance, fire, in English</span>'+
  '<span class="cfake">+61 2 6261 3305 &middot; Australian consular emergencies, 24 hours</span>'+
@@ -1156,7 +1152,7 @@ async function send(text){
   pane.scrollTop=pane.scrollHeight;
   var id='t'+(new Date()).getTime();
   log.insertAdjacentHTML('beforeend','<div class="msg ai" id="'+id+'"><div class="bub">'
-    +'<span class="think">Checking TRIBE\u2019s record</span>'
+    +'<span class="think">Checking the record</span>'
     +'<span class="dots"><i></i><i></i><i></i></span></div></div>');
   pane.scrollTop=pane.scrollHeight;
   try{
@@ -1165,7 +1161,7 @@ async function send(text){
     document.getElementById(id).outerHTML=renderReply(raw, askedForHuman(text));
     setLive(true);
   }catch(err){
-    document.getElementById(id).outerHTML='<div class="msg ai"><div class="bub">The concierge is offline just now, so I can’t look that up live. The TRIBE team on site has your question.<div class="src">Concierge offline &middot; prepared answers still available above</div></div></div>';
+    document.getElementById(id).outerHTML='<div class="msg ai"><div class="bub">The concierge is offline just now, so I can’t look that up live. The team on site has your question.<div class="src">Concierge offline &middot; prepared answers still available above</div></div></div>';
     setLive(false);
   }
   pane.scrollTop=pane.scrollHeight;
@@ -1176,8 +1172,7 @@ document.getElementById('askform').addEventListener('submit',function(e){
   if(!v) return; i.value=''; send(v);
 });
 document.getElementById('langSel').addEventListener('change',function(e){LANG=e.target.value;});
-(function(){ var l=document.getElementById('pageLogo'), m=document.getElementById('appMark');
-  if(l&&m) l.src=m.src; })();
+
 document.getElementById('dayKicker').textContent='Prague \u00b7 day '+TODAY.n+' of '+TODAY.of;
 document.getElementById('dayName').textContent=TODAY.day;
 initLock(); renderFlight(); renderDocs(); tick(); setInterval(tick,15000); weather(); setInterval(weather,900000);
