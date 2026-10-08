@@ -4,8 +4,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FAMTEC On-Device AI — Private Local AI for iOS &amp; Android</title>
-<meta name="description" content="FAMTEC On-Device AI: private local chat for iOS and Android. Download a model once, then write, ask questions and think out loud fully offline. No account, no cloud fallback. Built-in Saftio crisis detection.">
+<title>FAMTEC Local AI — Free private AI that works offline</title>
+<meta name="description" content="FAMTEC Local AI is a free assistant that runs on your iPhone or iPad. No account, no cloud, no tracking. Download a model once and chat offline. Reads photos and PDFs on your device.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="shortcut icon" href="favicon.ico">
@@ -124,54 +124,34 @@ footer a:hover{color:var(--fg);border-color:var(--fg)}
 <!-- HERO -->
 <div class="sc-hero">
   <div class="hero-content">
-    <div class="hero-tag">Private On-Device AI · iOS &amp; Android</div>
-    <h1 class="hero-title">FAMTEC On-Device AI</h1>
-    <p class="hero-subtitle">Download a model once, then write, ask questions and think out loud — fully offline. No account. No subscription. No cloud fallback. Your words never leave your phone unless you explicitly ask.</p>
-    <a class="screenshot-link" href="#screenshots">See the app ↓</a>
+    <div class="hero-tag">Private on-device AI · iPhone &amp; iPad</div>
+    <h1 class="hero-title">Free AI that stays on your phone.</h1>
+    <p class="hero-subtitle">No account. No cloud. No tracking. FAMTEC Local AI runs on your own device, so it works offline and what you ask is yours alone.</p>
     <div class="hero-stats">
-      <span class="stat">Zero Cloud Calls</span>
-      <span class="stat">Two Model Sizes</span>
-      <span class="stat">30 Automated Tests</span>
-      <span class="stat">Saftio Crisis Detection</span>
+      <span class="stat">Works offline</span>
+      <span class="stat">No account</span>
+      <span class="stat">Reads photos &amp; PDFs on-device</span>
+      <span class="stat">Saftio crisis detection</span>
     </div>
   </div>
   <div class="hero-panel">
     <span class="panel-label">Status</span>
     <p><strong>App license:</strong> Proprietary (FAMTEC)</p>
     <p><strong>Model license:</strong> Apache-2.0 (Qwen3)</p>
-    <p><strong>Platform:</strong> iOS · Android planned</p>
-    <p><strong>Status:</strong> In development — pre-TestFlight</p>
-    <div class="status-line"><span class="dot"></span>Not yet submitted to any app store</div>
+    <p><strong>Platform:</strong> iPhone &amp; iPad · Android planned</p>
+    <p><strong>Status:</strong> Preparing TestFlight beta</p>
+    <div class="status-line"><span class="dot"></span>Not yet on the App Store</div>
+    <p style="margin-top:14px"><a href="/famtec-local-ai-privacy.html" style="color:var(--teal)">Privacy</a> · <a href="/famtec-local-ai-support.html" style="color:var(--teal)">Support</a></p>
   </div>
 </div>
 
 <main>
 
 
-  <section id="screenshots" aria-labelledby="screenshots-title">
-    <div class="sec-label">Inside the app</div>
-    <h2 id="screenshots-title">A look at FAMTEC Mobile AI.</h2>
-    <p class="lede">Screenshots from the current iPhone development build. Tap a screen to view it full size. App connections shown in the preview are planned features.</p>
-    <div class="screenshot-grid">
-      <figure>
-        <a href="/assets/famtec-mobile-ai/chat-home.png" aria-label="View the FAMTEC Mobile AI chat screen full size">
-          <img src="/assets/famtec-mobile-ai/chat-home.png" width="1320" height="2868" loading="lazy" decoding="async" alt="FAMTEC Mobile AI chat home with model setup and Write, Summarise, Ask and Reflect shortcuts">
-        </a>
-        <figcaption><strong>Your AI, on your device.</strong>Start with a model download, then use the chat workspace for writing, questions and reflection.</figcaption>
-      </figure>
-      <figure>
-        <a href="/assets/famtec-mobile-ai/settings.png" aria-label="View the FAMTEC Mobile AI settings screen full size">
-          <img src="/assets/famtec-mobile-ai/settings.png" width="1320" height="2868" loading="lazy" decoding="async" alt="FAMTEC Mobile AI settings with optional DuckDuckGo search switched off and planned app connections">
-        </a>
-        <figcaption><strong>You control web search.</strong>Optional search is off by default and asks before sending a question. Connections below it are a development preview.</figcaption>
-      </figure>
-    </div>
-  </section>
-
   <section id="why">
     <div class="sec-label">Why on-device</div>
     <h2>Cloud AI sends your words to someone else's servers.<br>This doesn't.</h2>
-    <p class="lede">FAMTEC runs its language model directly on your phone's own chip — the same way Saftio's crisis detection stays local. Nothing about a normal conversation reaches a server, because there is no server for it to reach. The only network calls the app makes are the one-time model download and, if you explicitly approve it, a single web search.</p>
+    <p class="lede">FAMTEC runs its language model directly on your phone's own chip — the same way Saftio's crisis detection stays local. Nothing about a normal conversation reaches a server, because there is no server for it to reach. The only network calls the app makes are the one-time model download and, if you switch web search on, a short search sent to DuckDuckGo when the AI is not sure of an answer.</p>
   </section>
 
   <section id="sovereignty">
@@ -191,19 +171,33 @@ footer a:hover{color:var(--fg);border-color:var(--fg)}
     <div class="grid-2">
       <div class="card">
         <span class="tag">Step 1</span>
-        <h3>Download a model, once</h3>
-        <p>Choose Quick Intelligence (639 MB, works on devices with 3 GB+ RAM) or Everyday Intelligence (1.83 GB, 6 GB+ RAM). Both are official Qwen3 releases, pinned to an exact Hugging Face revision and verified with SHA-256 before the app will use them.</p>
+        <h3>Download a model that fits your device</h3>
+        <p>FAMTEC suggests the most capable model your phone or iPad can run, and you can pick another. Every model is an official open-source release, pinned to an exact Hugging Face revision and checked with SHA-256 before the app will use it. Models that would not fit your device's memory are switched off.</p>
       </div>
       <div class="card">
         <span class="tag">Step 2</span>
         <h3>Chat, fully offline</h3>
-        <p>Once installed, inference runs entirely on-device via llama.cpp. Turn off Wi-Fi and it still works. Conversations stay in memory and clear when the app restarts — nothing is written to a database, local or remote.</p>
+        <p>Once installed, the AI runs entirely on your device through llama.cpp. Turn off Wi-Fi and it still works. Chats stay in memory and clear when the app restarts; nothing is written to a database, local or remote.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Photos &amp; PDFs</span>
+        <h3>Read on your device</h3>
+        <p>Take a photo or add a PDF and the text is read by Apple's on-device text recognition. The picture is never uploaded. The AI sees the text, not the image itself.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Make it yours</span>
+        <h3>Name, style and appearance</h3>
+        <p>Add your name, choose how it should respond, and pick light or dark mode. These choices are stored only on your device and can be cleared in Settings.</p>
       </div>
     </div>
     <div style="margin-top:36px">
-      <div class="model-row"><strong>Quick Intelligence</strong><span>Qwen3-0.6B-Q8_0 · 639 MB · 3 GB RAM minimum</span></div>
-      <div class="model-row"><strong>Everyday Intelligence</strong><span>Qwen3-1.7B-Q8_0 · 1.83 GB · 6 GB RAM minimum</span></div>
+      <div class="model-row"><strong>Quick Intelligence</strong><span>Qwen3 0.6B · 639 MB · for most phones</span></div>
+      <div class="model-row"><strong>Everyday Intelligence</strong><span>Qwen3 1.7B · 1.83 GB · 6 GB+ devices</span></div>
+      <div class="model-row"><strong>Shared Intelligence</strong><span>Qwen3 4B Instruct · 2.50 GB · recent iPhones and iPads</span></div>
+      <div class="model-row"><strong>Large Intelligence</strong><span>Qwen3 8B · 5.03 GB · iPad Pro and Macs, 12 GB+</span></div>
+      <div class="model-row"><strong>Maximum Intelligence</strong><span>Qwen3 14B · 9.00 GB · 16 GB devices</span></div>
     </div>
+    <p class="lede" style="margin-top:24px">Larger models are more capable but slower and take more space. Models that run on a phone are smaller than the biggest cloud AI, so answers can be less detailed. AI can make mistakes.</p>
   </section>
 
   <section id="safety">
@@ -214,14 +208,14 @@ footer a:hover{color:var(--fg);border-color:var(--fg)}
 
   <section id="search">
     <div class="sec-label">Optional web search</div>
-    <h2>Off by default. Asks before every question.</h2>
-    <p class="lede">When you turn on web search in Settings, FAMTEC asks — every single time — before sending your typed question to DuckDuckGo's keyless, no-tracking Instant Answer API. No API key, no account, no analytics SDK. Decline, and the model answers from what it already knows. Every other message in the app never leaves your device.</p>
+    <h2>Off by default. Used only when the AI is not sure.</h2>
+    <p class="lede">Switch on the globe in the chat and the AI answers from its own knowledge first. When it is not sure, it sends a short search to DuckDuckGo's keyless Instant Answer API and uses what comes back. The search is sent over an encrypted connection with contact details and ID-style numbers removed, and no cookies are kept. DuckDuckGo still sees the search and your IP address, and the service returns summaries and related topics, not a full web search. No account, no API key, no analytics SDK. Turn it off and the AI answers from what it already knows.</p>
   </section>
 
   <section id="developers">
     <div class="sec-label">For developers</div>
     <h2>One downloaded model, built to power a family of sovereign apps — and to keep getting better.</h2>
-    <p class="lede">Download the model once, and it becomes a shared resource: sibling apps — starting with Daily Grace, Aura, and Kings+ — read from the same on-device weights instead of each bundling their own multi-hundred-megabyte copy, the same way an operating system's shared libraries save every app from re-shipping the same code. Third-party integration is planned through a versioned request/result contract, App Intents and deep links, not by exposing the private model container directly. The economics work the opposite way to a subscription: one download, reused, is cheaper for everyone the more apps draw on it — not a recurring cost per app, per user, per month.</p>
+    <p class="lede">Download the model once and it becomes a shared resource: sibling FAMTEC apps read the same on-device file, held in a shared App Group folder, instead of each bundling a multi-gigabyte copy. Whichever app downloads it first serves the rest, the same way an operating system's shared libraries save every app from re-shipping the same code. Third-party integration is planned through a versioned request/result contract, App Intents and deep links, not by exposing the private model container directly. The economics work the opposite way to a subscription: one download, reused, is cheaper for everyone the more apps draw on it — not a recurring cost per app, per user, per month.</p>
     <p class="lede" style="margin-top:20px">This also means the model on your phone is not fixed at the version you first downloaded. The three-line entry that names a model in this app — its source, its exact revision, its checksum — can point at a better release without asking anyone to pay for a new app or a new tier. As open-weight models improve and phone memory and neural-engine capacity grow, the same free app can carry a materially stronger model in twelve months than it does today, at no cost to whoever already installed it. Ownership compounds; a rented subscription does not.</p>
   </section>
 
@@ -229,16 +223,16 @@ footer a:hover{color:var(--fg);border-color:var(--fg)}
     <div class="sec-label">Release status</div>
     <div class="grid-3">
       <div class="card">
-        <h3>Done</h3>
-        <p>Real on-device inference, checksum-verified downloads, Saftio wired into chat, opt-in search, plain-text document attachment, zero known dependency vulnerabilities, 30 automated tests passing.</p>
+        <h3>Working on device</h3>
+        <p>Offline replies, checksum-verified downloads with background transfer, a model shared across apps, photo and PDF reading, optional DuckDuckGo lookup, Saftio, dark mode, 42 automated tests passing.</p>
       </div>
       <div class="card">
         <h3>In progress</h3>
-        <p>Physical-device acceptance testing on iPhone and iPad, distribution signing, public privacy policy hosting.</p>
+        <p>TestFlight beta, iPad acceptance testing, public privacy and support pages, App Store listing.</p>
       </div>
       <div class="card">
-        <h3>Not started</h3>
-        <p>App Store / Play submission, Android build, shared cross-app model access, image/PDF text recognition.</p>
+        <h3>Planned</h3>
+        <p>Android build, saved chat history, image understanding, voice. Dates are not promised.</p>
       </div>
     </div>
   </section>
@@ -270,7 +264,7 @@ footer a:hover{color:var(--fg);border-color:var(--fg)}
 </main>
 
 <footer>
-  <p><a href="/#contact">Contact</a> · fineartmedia.tech — Melbourne</p>
+  <p><a href="/famtec-local-ai-privacy.html">Privacy</a> · <a href="/famtec-local-ai-support.html">Support</a> · <a href="/#contact">Contact</a> · fineartmedia.tech — Melbourne</p>
 </footer>
 
 </body>
