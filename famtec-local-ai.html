@@ -86,7 +86,7 @@ footer a:hover{color:var(--fg);border-color:var(--fg)}
 
 /* App screenshots */
 .screenshot-link{display:inline-block;margin-top:24px;color:var(--teal);font-family:var(--sans);text-underline-offset:5px}
-.screenshot-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:40px;max-width:760px;margin:32px auto 0}
+.screenshot-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;max-width:980px;margin:32px auto 0}
 .screenshot-grid figure{min-width:0}
 .screenshot-grid a{display:block;border:1px solid rgba(232,228,220,0.18);border-radius:24px;overflow:hidden;background:#f5f7f2;transition:transform .2s ease}
 .screenshot-grid a:hover{transform:translateY(-4px)}
@@ -94,7 +94,7 @@ footer a:hover{color:var(--fg);border-color:var(--fg)}
 .screenshot-grid img{display:block;width:100%;height:auto}
 .screenshot-grid figcaption{font-family:var(--sans);font-size:14px;line-height:1.6;color:rgba(232,228,220,.72);margin-top:16px}
 .screenshot-grid figcaption strong{display:block;font-size:17px;font-weight:500;color:var(--fg);margin-bottom:4px}
-@media(max-width:600px){.screenshot-grid{grid-template-columns:1fr;gap:32px;max-width:340px}}
+@media(max-width:800px){.screenshot-grid{grid-template-columns:1fr;gap:32px;max-width:340px}}
 @media(prefers-reduced-motion:reduce){.screenshot-grid a{transition:none}.screenshot-grid a:hover{transform:none}}
 
 </style>
@@ -147,6 +147,32 @@ footer a:hover{color:var(--fg);border-color:var(--fg)}
 
 <main>
 
+
+  <section id="screenshots" aria-labelledby="screenshots-title">
+    <div class="sec-label">Inside the app</div>
+    <h2 id="screenshots-title">A look at FAMTEC Local AI.</h2>
+    <p class="lede">Screenshots from the current iPhone build, with the small Quick model. Tap a screen to view it full size.</p>
+    <div class="screenshot-grid">
+      <figure>
+        <a href="/assets/famtec-mobile-ai/chat-answer.png" aria-label="View the chat screen full size">
+          <img src="/assets/famtec-mobile-ai/chat-answer.png" width="1320" height="2868" loading="lazy" decoding="async" alt="FAMTEC Local AI chat with a question about sleep tips and an answer written on the device">
+        </a>
+        <figcaption><strong>Ask anything.</strong>Answers are written on your device, with no account and no connection needed.</figcaption>
+      </figure>
+      <figure>
+        <a href="/assets/famtec-mobile-ai/chat-dark.png" aria-label="View the dark mode chat screen full size">
+          <img src="/assets/famtec-mobile-ai/chat-dark.png" width="1320" height="2868" loading="lazy" decoding="async" alt="FAMTEC Local AI in dark mode">
+        </a>
+        <figcaption><strong>Light or dark.</strong>Follows your phone, or choose in Settings.</figcaption>
+      </figure>
+      <figure>
+        <a href="/assets/famtec-mobile-ai/settings-personalise.png" aria-label="View the settings screen full size">
+          <img src="/assets/famtec-mobile-ai/settings-personalise.png" width="1320" height="2868" loading="lazy" decoding="async" alt="FAMTEC Local AI settings with Appearance and Personalise options">
+        </a>
+        <figcaption><strong>Make it yours.</strong>Add your name, pick a style, and keep web search under your control.</figcaption>
+      </figure>
+    </div>
+  </section>
 
   <section id="why">
     <div class="sec-label">Why on-device</div>
