@@ -1,0 +1,148 @@
+<!-- Copyright (c) 2026 Rob Graham / FAMTEC. All rights reserved. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAMTEC Local AI Terms of Use</title>
+<meta name="description" content="Terms of use for the FAMTEC Local AI app.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#080808">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080808;
+  --fg:#e8e4dc;
+  --dim:#524e48;
+  --gold:#c8a96e;
+  --teal:#5fb4a2;
+  --rule:rgba(232,228,220,0.07);
+  --mono:'DM Mono',monospace;
+  --serif:'Libre Baskerville',Georgia,serif;
+  --sans:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--serif);font-size:16px;line-height:1.7;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:26px 48px;background:linear-gradient(to bottom,rgba(8,8,8,0.6) 0%,transparent 100%)}
+.nav-logo{display:flex;align-items:center;gap:11px;text-decoration:none}
+.nav-wordmark{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;color:rgba(232,228,220,0.6);text-transform:uppercase}
+.nav-links{display:flex;gap:36px;list-style:none;overflow-x:auto}
+.nav-links a{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:rgba(232,228,220,0.55);text-decoration:none;transition:color 0.25s;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:var(--fg)}
+@media(max-width:900px){
+  nav{padding:20px 24px}
+  .nav-links{gap:22px}
+  .nav-links a{font-size:10px}
+}
+
+/* HERO */
+.sc-hero{padding:150px 48px 70px;max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr;gap:48px;align-items:end}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal)}
+.hero-title{font-family:var(--sans);font-weight:500;font-size:clamp(38px,6vw,64px);line-height:1.05;margin:16px 0 22px;color:var(--fg)}
+.hero-subtitle{font-family:var(--sans);font-weight:300;font-size:19px;line-height:1.55;color:rgba(232,228,220,0.78);max-width:56ch}
+.hero-stats{display:flex;flex-wrap:wrap;gap:12px 26px;margin-top:28px}
+.stat{font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim)}
+.hero-panel{border:1px solid var(--rule);padding:22px 24px;font-family:var(--sans);font-size:13px;color:rgba(232,228,220,0.75)}
+.panel-label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.hero-panel p{margin-top:6px}
+.hero-panel strong{color:var(--fg);font-weight:500}
+@media(max-width:900px){.sc-hero{grid-template-columns:1fr;padding:120px 24px 50px}}
+
+main{max-width:1180px;margin:0 auto;padding:0 48px}
+@media(max-width:900px){main{padding:0 24px}}
+section{padding:64px 0;border-top:1px solid var(--rule)}
+.sec-label{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal);margin-bottom:26px}
+h2{font-family:var(--sans);font-weight:500;font-size:clamp(26px,3.4vw,36px);line-height:1.2;color:var(--fg);margin-bottom:18px}
+p.lede{font-family:var(--sans);font-weight:300;font-size:17px;line-height:1.65;color:rgba(232,228,220,0.78);max-width:66ch}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:36px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+@media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr}}
+
+.card{border:1px solid var(--rule);padding:26px}
+.card h3{font-family:var(--sans);font-weight:500;font-size:17px;color:var(--fg);margin-bottom:10px}
+.card p{font-family:var(--sans);font-weight:300;font-size:14.5px;line-height:1.6;color:rgba(232,228,220,0.72)}
+.card .tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+
+.model-row{display:flex;justify-content:space-between;align-items:baseline;padding:16px 0;border-top:1px solid var(--rule);font-family:var(--sans)}
+.model-row:first-of-type{border-top:none}
+.model-row strong{font-weight:500;color:var(--fg);font-size:15px}
+.model-row span{font-family:var(--mono);font-size:12px;color:var(--dim)}
+
+.status-line{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;color:var(--dim);margin-top:8px}
+.status-line .dot{width:7px;height:7px;border-radius:50%;background:var(--gold)}
+
+footer{border-top:1px solid var(--rule);padding:48px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--dim)}
+footer a{color:var(--dim);text-decoration:none;border-bottom:1px solid transparent}
+footer a:hover{color:var(--fg);border-color:var(--fg)}
+
+/* App screenshots */
+.screenshot-link{display:inline-block;margin-top:24px;color:var(--teal);font-family:var(--sans);text-underline-offset:5px}
+.screenshot-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:40px;max-width:760px;margin:32px auto 0}
+.screenshot-grid figure{min-width:0}
+.screenshot-grid a{display:block;border:1px solid rgba(232,228,220,0.18);border-radius:24px;overflow:hidden;background:#f5f7f2;transition:transform .2s ease}
+.screenshot-grid a:hover{transform:translateY(-4px)}
+.screenshot-grid a:focus-visible{outline:3px solid var(--teal);outline-offset:6px}
+.screenshot-grid img{display:block;width:100%;height:auto}
+.screenshot-grid figcaption{font-family:var(--sans);font-size:14px;line-height:1.6;color:rgba(232,228,220,.72);margin-top:16px}
+.screenshot-grid figcaption strong{display:block;font-size:17px;font-weight:500;color:var(--fg);margin-bottom:4px}
+@media(max-width:600px){.screenshot-grid{grid-template-columns:1fr;gap:32px;max-width:340px}}
+@media(prefers-reduced-motion:reduce){.screenshot-grid a{transition:none}.screenshot-grid a:hover{transform:none}}
+
+.doc{max-width:760px;margin:0 auto;padding:150px 24px 40px}.doc h1{font-family:var(--sans);font-weight:500;font-size:clamp(32px,5vw,44px);line-height:1.1;margin-bottom:10px}.doc h2{font-size:21px;margin:34px 0 10px}.doc p,.doc li{font-family:var(--sans);font-weight:300;font-size:16px;line-height:1.7;color:rgba(232,228,220,0.82)}.doc ul{margin:8px 0 8px 22px}.doc a{color:var(--teal)}.doc .meta{font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dim);margin-bottom:26px}</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">
+    <span class="nav-wordmark">FAMTEC</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/#bio">Profile</a></li>
+    <li><a href="/#works">Works</a></li>
+    <li><a href="/archai.html">ARCHAI</a></li>
+    <li><a href="/aux.html">AUXIO</a></li>
+    <li><a href="/dark-plates.html">Dark Plates</a></li>
+    <li><a href="/safechat.html">Saftio</a></li>
+    <li><a href="/famtec-local-ai.html" class="active">On-Device AI</a></li>
+    <li><a href="/courtside.html">Courtside</a></li>
+    <li><a href="/huggle.html">Huggle</a></li>
+    <li><a href="/keytec.html">Keytec</a></li>
+    <li><a href="/cv">CV</a></li>
+    <li><a href="/#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="doc">
+<div class="meta">Last updated 13 October 2026</div>
+<h1>FAMTEC Local AI: Terms of Use</h1>
+<p>These terms apply to the FAMTEC Local AI app, published by Rob Graham trading as FAMTEC, Melbourne, Australia. They sit alongside Apple's standard Licensed Application End User Licence Agreement. Our <a href="/famtec-local-ai-privacy.html">Privacy Policy</a> is part of these terms.</p>
+<ol>
+<li><strong>The app is free.</strong> We may add paid options or sponsor placements later. We will not charge you for anything without showing the price first.</li>
+<li><strong>AI can be wrong.</strong> The AI runs on your device and uses a smaller model than the largest cloud services. Check anything important. The app is not professional medical, legal, financial or mental-health advice.</li>
+<li><strong>Safety check.</strong> The app includes a check ("Saftio") that looks for signs of crisis or distress on your device and may show support services. It is not a clinical tool or an emergency service and may miss things. In an emergency call 000 (Australia) or your local emergency number.</li>
+<li><strong>Your content.</strong> What you type, attach or ask stays on your device (see the Privacy Policy). You are responsible for what you ask the AI to do and for how you use its answers. Do not use the app to break the law, harm others, or generate content intended to deceive or abuse.</li>
+<li><strong>Downloads and search.</strong> The app downloads AI models from third parties (such as Hugging Face) and, if you switch web search on, sends a short search to search providers. Those services have their own terms. Models are licensed by their authors (currently Apache-2.0); see our <a href="/famtec-local-ai-developers.html">developer and licence page</a>.</li>
+<li><strong>Sponsor strip.</strong> The app shows a fixed "Advertise here" strip that opens an email to us. It is not targeted advertising.</li>
+<li><strong>Our rights.</strong> FAMTEC owns the app, its name, icon and code. You may use the app for personal use as Apple's licence allows. You may not copy, modify, resell or reverse engineer the app except as the law allows. Developers who want to build on the FAMTEC Runtime should read the developer licence.</li>
+<li><strong>No warranty; limits on liability.</strong> The app is provided "as is". To the extent the law allows, we exclude warranties and are not liable for indirect or consequential loss, and our total liability is limited to AUD 100. Nothing in these terms limits any right or remedy you have under the Australian Consumer Law or any liability that cannot be excluded by law.</li>
+<li><strong>Changes and ending.</strong> We may update the app and these terms; the latest version is at the address above. You can stop using the app at any time by deleting it. We may stop offering it.</li>
+<li><strong>Governing law.</strong> The laws of Victoria, Australia, and its courts.</li>
+<li><strong>Contact.</strong> rob@fineartmedia.tech.</li>
+</ol>
+
+</div>
+<footer>
+  <p><a href="/famtec-local-ai.html">FAMTEC Local AI</a> · <a href="/famtec-local-ai-privacy.html">Privacy</a> · <a href="/famtec-local-ai-terms.html">Terms</a> · <a href="/famtec-local-ai-developers.html">Developers</a> · <a href="/famtec-local-ai-support.html">Support</a> · <a href="/#contact">Contact</a> · fineartmedia.tech, Melbourne</p>
+</footer>
+
+</body>
+</html>
