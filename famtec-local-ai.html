@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FAMTEC Local AI: Free AI. Private AI. Your own AI.</title>
-<meta name="description" content="FAMTEC Local AI is a free assistant that runs on your iPhone or iPad. No account, no cloud, no tracking. Download a model once and chat offline. Reads photos and PDFs on your device.">
+<meta name="description" content="FAMTEC Local AI is a private assistant for iPhone and iPad. Quick Intelligence is included for offline chat, with optional larger models and web search.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="shortcut icon" href="favicon.ico">
@@ -126,12 +126,12 @@ footer a:hover{color:var(--fg);border-color:var(--fg)}
   <div class="hero-content">
     <div class="hero-tag">Private on-device AI · iPhone &amp; iPad</div>
     <h1 class="hero-title">Free AI. Private AI. Your own AI.</h1>
-    <p class="hero-subtitle">No account. No cloud. No tracking. FAMTEC Local AI runs on your own device, so it is free to use, works offline and off grid, and what you ask is yours alone.</p>
+    <p class="hero-subtitle">No account or tracking. Quick Intelligence is included, so private on-device chat works offline from first launch. Optional web search and larger models are always your choice.</p>
     <div class="hero-stats">
       <span class="stat">Works offline, off grid</span>
       <span class="stat">No account</span>
       <span class="stat">Reads photos &amp; PDFs on-device</span>
-      <span class="stat">Saftio crisis detection</span>
+      <span class="stat">On-device safety support</span>
     </div>
   </div>
   <div class="hero-panel">
@@ -139,8 +139,8 @@ footer a:hover{color:var(--fg);border-color:var(--fg)}
     <p><strong>App license:</strong> Proprietary (FAMTEC)</p>
     <p><strong>Model license:</strong> Apache-2.0 (Qwen3)</p>
     <p><strong>Platform:</strong> iPhone &amp; iPad · Android planned</p>
-    <p><strong>Status:</strong> Preparing TestFlight beta</p>
-    <div class="status-line"><span class="dot"></span>Not yet on the App Store</div>
+    <p><strong>Status:</strong> Build 15 uploaded to App Store Connect</p>
+    <div class="status-line"><span class="dot"></span>Apple processing · public release pending</div>
     <p style="margin-top:14px"><a href="/famtec-local-ai-privacy.html" style="color:var(--teal)">Privacy</a> · <a href="/famtec-local-ai-support.html" style="color:var(--teal)">Support</a></p>
   </div>
 </div>
@@ -177,7 +177,7 @@ footer a:hover{color:var(--fg);border-color:var(--fg)}
   <section id="why">
     <div class="sec-label">Why on-device</div>
     <h2>Cloud AI sends your words to someone else's servers.<br>This doesn't.</h2>
-    <p class="lede">FAMTEC runs its language model directly on your phone's own chip — the same way Saftio's crisis detection stays local. Nothing about a normal conversation reaches a server, because there is no server for it to reach. The only network calls the app makes are the one-time model download and, if you switch web search on, a short search sent to DuckDuckGo for questions that need current information.</p>
+    <p class="lede">FAMTEC runs its language model directly on your phone's own chip. With web search off, chat inference, attachments and personalisation stay on your device. Internet access is used only for choices such as optional model downloads, web search and links you open.</p>
   </section>
 
   <section id="sovereignty">
@@ -197,13 +197,13 @@ footer a:hover{color:var(--fg);border-color:var(--fg)}
     <div class="grid-2">
       <div class="card">
         <span class="tag">Step 1</span>
-        <h3>Download a model that fits your device</h3>
-        <p>FAMTEC suggests the most capable model your phone or iPad can run, and you can pick another. Every model is an official open-source release, pinned to an exact Hugging Face revision and checked with SHA-256 before the app will use it. Models that would not fit your device's memory are switched off.</p>
+        <h3>Start with Quick Intelligence included</h3>
+        <p>Chat works from first launch with the included 639 MB model. The library also offers optional larger Apache-2.0 model weights for compatible devices. Every model is pinned to an exact revision and checked with SHA-256 before use.</p>
       </div>
       <div class="card">
         <span class="tag">Step 2</span>
-        <h3>Chat, fully offline</h3>
-        <p>Once installed, the AI runs entirely on your device through llama.cpp. Turn off Wi-Fi and it still works. Chats stay in memory and clear when the app restarts; nothing is written to a database, local or remote.</p>
+        <h3>Chat offline</h3>
+        <p>The AI runs on your device through llama.cpp. Turn off Wi-Fi and local chat still works. Chats stay in memory and clear when the app restarts; nothing is written to a chat database.</p>
       </div>
       <div class="card">
         <span class="tag">Photos &amp; PDFs</span>
@@ -217,32 +217,32 @@ footer a:hover{color:var(--fg);border-color:var(--fg)}
       </div>
     </div>
     <div style="margin-top:36px">
-      <div class="model-row"><strong>Quick Intelligence</strong><span>Qwen3 0.6B · 639 MB · for most phones</span></div>
-      <div class="model-row"><strong>Everyday Intelligence</strong><span>Qwen3 1.7B · 1.83 GB · 6 GB+ devices</span></div>
-      <div class="model-row"><strong>Shared Intelligence</strong><span>Qwen3 4B Instruct · 2.50 GB · recent iPhones and iPads</span></div>
-      <div class="model-row"><strong>Large Intelligence</strong><span>Qwen3 8B · 5.03 GB · iPad Pro and Macs, 12 GB+</span></div>
-      <div class="model-row"><strong>Maximum Intelligence</strong><span>Qwen3 14B · 9.00 GB · 16 GB devices</span></div>
+      <div class="model-row"><strong>Quick Intelligence · Included free</strong><span>Qwen3 0.6B · 639 MB · most phones</span></div>
+      <div class="model-row"><strong>Everyday Intelligence · Free</strong><span>Qwen3 1.7B · 1.83 GB · 6 GB+ devices</span></div>
+      <div class="model-row"><strong>Shared Intelligence · Free</strong><span>Qwen3 4B Instruct · 2.50 GB · recent iPhones and iPads</span></div>
+      <div class="model-row"><strong>Large Intelligence · Pro coming soon</strong><span>Qwen3 8B · 5.03 GB · 12 GB+ devices</span></div>
+      <div class="model-row"><strong>Maximum Intelligence · Pro coming soon</strong><span>Qwen3 14B · 9.00 GB · 16 GB devices</span></div>
     </div>
-    <p class="lede" style="margin-top:24px">Larger models are more capable but slower and take more space. Models that run on a phone are smaller than the biggest cloud AI, so answers can be less detailed. AI can make mistakes.</p>
+    <p class="lede" style="margin-top:24px">Pro is a planned one-time in-app purchase for access to Large and Maximum Intelligence on compatible hardware. Final availability and local pricing will appear in the app after Apple approval. Larger models can provide more capable answers but are slower and take more space. AI can make mistakes.</p>
   </section>
 
   <section id="safety">
     <div class="sec-label">Built-in safety</div>
-    <h2>Saftio checks every message before the model sees it.</h2>
-    <p class="lede"><a href="/safechat.html" style="color:var(--teal)">Saftio</a> is a deterministic, on-device crisis-detection engine that runs locally, before inference — included by default, no download required. If a message reads as a crisis, the model is never called: the app responds immediately with sourced, verified Australian support resources instead. Saftio is a local pattern-based support feature, not a clinical service, and doesn't guarantee detecting every risk.</p>
+    <h2>Saftio offers on-device safety support.</h2>
+    <p class="lede"><a href="/safechat.html" style="color:var(--teal)">Saftio</a> is a deterministic, on-device pattern check for common crisis and distress phrases. It may show sourced Australian support contacts before the model replies. It can miss risk or respond unnecessarily and is not a medical, clinical or emergency service.</p>
   </section>
 
   <section id="search">
     <div class="sec-label">Optional web search</div>
     <h2>Off by default. Fresh answers when you want them.</h2>
-    <p class="lede">A model on your phone only knows what it learned in training. Switch on the globe and questions that may need current information, such as a new film, the news, a price or a score, are searched on DuckDuckGo first, and the AI answers from those results. The search is a short query sent over an encrypted connection with contact details and ID-style numbers removed, and no cookies are kept. DuckDuckGo still sees the search and your IP address. Chit-chat, writing tasks and attachments are never searched. No account and no analytics SDK. If you want full web and news results from another source, you can add your own Brave Search key in Settings. Turn the globe off and nothing leaves your device.</p>
+    <p class="lede">A model on your phone only knows what it learned in training. Web search is off by default. When enabled, eligible questions may send a query and relevant follow-up context to DuckDuckGo, Wikipedia or Brave Search if you add your own key. Providers receive the query, IP address and connection metadata. Filters try to remove contact details and sensitive text but cannot guarantee this, so keep search off for confidential conversations.</p>
   </section>
 
   <section id="developers">
     <div class="sec-label">For developers</div>
     <h2>One downloaded model, built to power a family of sovereign apps — and to keep getting better.</h2>
     <p class="lede">Download the model once and it becomes a shared resource: sibling FAMTEC apps read the same on-device file, held in a shared App Group folder, instead of each bundling a multi-gigabyte copy. Whichever app downloads it first serves the rest, the same way an operating system's shared libraries save every app from re-shipping the same code. Developers can build their own apps on the same runtime: free up to US$1 million a year per app, with a commercial licence above that. <a href="/famtec-local-ai-developers.html" style="color:var(--teal)">See the developer page</a>. The economics work the opposite way to a subscription: one download, reused, is cheaper for everyone the more apps draw on it — not a recurring cost per app, per user, per month.</p>
-    <p class="lede" style="margin-top:20px">This also means the model on your phone is not fixed at the version you first downloaded. The three-line entry that names a model in this app — its source, its exact revision, its checksum — can point at a better release without asking anyone to pay for a new app or a new tier. As open-weight models improve and phone memory and neural-engine capacity grow, the same free app can carry a materially stronger model in twelve months than it does today, at no cost to whoever already installed it. Ownership compounds; a rented subscription does not.</p>
+    <p class="lede" style="margin-top:20px">The model on your phone is not fixed forever. Verified model options can improve as open-weight releases and device hardware improve. Free models remain useful on their own; the planned one-time Pro unlock adds access to the two largest tiers on hardware capable of running them.</p>
   </section>
 
   <section id="release">
@@ -250,15 +250,15 @@ footer a:hover{color:var(--fg);border-color:var(--fg)}
     <div class="grid-3">
       <div class="card">
         <h3>Working on device</h3>
-        <p>Offline replies, checksum-verified downloads with background transfer, a model shared across apps, photo and PDF reading, optional DuckDuckGo search, Saftio, dark mode, 42 automated tests passing.</p>
+        <p>Included offline model, checksum-verified optional downloads, shared model support, photo and PDF text extraction, optional web search, Saftio, dark mode, and 64 automated tests passing.</p>
       </div>
       <div class="card">
         <h3>In progress</h3>
-        <p>TestFlight beta, iPad acceptance testing, public privacy and support pages, App Store listing.</p>
+        <p>Build 15 is uploaded to App Store Connect. Apple processing, final metadata, iPad acceptance testing and App Review submission remain.</p>
       </div>
       <div class="card">
         <h3>Planned</h3>
-        <p>Android build, saved chat history, image understanding, voice. Dates are not promised.</p>
+        <p>Pro in-app purchase for Large and Maximum models, Android build, saved chat history, image understanding and voice. Dates are not promised.</p>
       </div>
     </div>
   </section>
