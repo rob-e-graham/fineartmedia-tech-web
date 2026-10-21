@@ -204,11 +204,37 @@ body.public-demo [data-staff-only]{display:none!important;}
 .convo-msg{margin-bottom:12px;padding:10px 14px;font-family:var(--mono);font-size:0.68rem;line-height:1.7;border-radius:2px;animation:fadeIn 0.3s ease}
 .convo-msg.user{background:rgba(200,169,110,0.06);border-left:2px solid var(--accent);color:var(--text2)}
 .convo-msg.assistant{background:rgba(232,228,220,0.02);border-left:2px solid var(--border2);color:var(--text);white-space:pre-wrap}
+.convo-web-toggle{display:flex;align-items:center;gap:8px;margin:8px 0 2px;font-family:var(--mono);font-size:0.6rem;color:var(--text2);cursor:pointer}
+.convo-web-toggle span{color:var(--text3,var(--text2));opacity:.75}
+.convo-model{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0 2px;font-family:var(--mono);font-size:0.6rem;color:var(--text2)}
+.convo-model .cm-btn{font-family:var(--mono);font-size:0.6rem;padding:4px 10px;border:1px solid var(--border2);background:transparent;color:var(--text2);border-radius:2px;cursor:pointer;margin-right:4px}
+.convo-model .cm-btn.on{border-color:var(--accent);color:var(--accent);background:rgba(200,169,110,0.08)}
+.convo-model .cm-btn:disabled{opacity:.35;cursor:not-allowed}
+.convo-model .cm-note{opacity:.7;flex-basis:100%}
+.convo-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.convo-act{font-family:var(--mono);font-size:0.58rem;padding:5px 10px;border:1px solid var(--border2);background:transparent;color:var(--text2);border-radius:2px;cursor:pointer}
+.convo-act:hover{border-color:var(--accent);color:var(--accent)}
+.convo-web{margin-top:12px;padding:10px 12px;border:1px dashed var(--border2);border-radius:2px;font-size:0.62rem;line-height:1.6;white-space:normal}
+.convo-web h4{margin:0 0 6px;font-weight:600;font-size:0.58rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text2)}
+.convo-web .w-item{margin:0 0 7px}
+.convo-web a{color:var(--accent)}
+.convo-ground{margin-top:8px;font-size:0.54rem;opacity:.7;white-space:normal}
 .convo-msg .convo-typing{display:inline-block;width:10px;height:10px;border:1.5px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.5s linear infinite}
+/* Chat layout: while Converse is on, the thread sits above the question box, like a normal chat */
+.convo-host.chat-layout{display:flex;flex-direction:column}
+.convo-host.chat-layout>.section-label{order:0}
+.convo-host.chat-layout>.pill-row{order:1}
+.convo-host.chat-layout>#convoThread{order:2;max-height:min(55vh,460px)!important;margin:14px 0 12px!important}
+.convo-host.chat-layout>.search-bar{order:3}
+.convo-host.chat-layout>.collection-voice-wrap{order:4}
 .convo-objects{display:flex;gap:8px;overflow-x:auto;padding:8px 0;margin-top:8px}
 .convo-obj-cards{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .convo-obj-card{flex:0 0 140px;max-width:140px;background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:border-color 0.2s}
 .convo-obj-card:hover{border-color:var(--accent)}
+.convo-obj-card{position:relative}
+.convo-obj-card .coc-n{position:absolute;top:5px;left:5px;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:var(--accent);color:#0a0a0a;font-family:var(--mono);font-size:0.55rem;font-weight:700;display:flex;align-items:center;justify-content:center;z-index:1}
+.convo-rest-divider{padding:14px 4px 6px;font-family:var(--mono);font-size:0.54rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);border-top:1px solid var(--border)}
+.result-card .r-num{display:inline-block;min-width:18px;height:18px;line-height:18px;text-align:center;border-radius:9px;background:var(--accent);color:#0a0a0a;font-family:var(--mono);font-size:0.55rem;font-weight:700;margin-right:6px;vertical-align:middle}
 .convo-obj-card img{width:100%;height:80px;object-fit:cover;filter:brightness(0.7)}
 .convo-obj-card .coc-title{padding:6px 8px;font-family:var(--mono);font-size:0.5rem;line-height:1.3;color:var(--text2)}
 .convo-obj-card .coc-meta{padding:0 8px 6px;font-family:var(--mono);font-size:0.44rem;color:var(--text3)}
@@ -779,11 +805,19 @@ body.public-demo [data-staff-only]{display:none!important;}
 <div class="panel active" id="panel-curator">
   <div class="curator-layout">
     <div class="main-col">
-      <div style="margin-bottom:22px;">
+      <div class="convo-host chat-layout" style="margin-bottom:22px;">
         <div class="section-label">Collection Intelligence — talk to the database</div>
         <div class="search-bar">
           <input class="search-input" id="curatorSearch" type="text" placeholder="Ask the collection anything… objects, connections, materials, stories, or registration numbers">
           <button class="search-btn" onclick="doConverse()">Ask</button>
+        </div>
+        <label class="convo-web-toggle" title="Off by default. When on, the words of your question are sent to DuckDuckGo and the results are shown separately from the museum records.">
+          <input type="checkbox" id="convoWeb"> Include public web knowledge (DuckDuckGo) <span>· shown separately from the museum records</span>
+        </label>
+        <div class="convo-model" id="convoModelBar" aria-label="Choose the model that answers">
+          <span class="cm-label">Answer with</span>
+          <span id="convoModelBtns"></span>
+          <span class="cm-note" id="convoModelNote"></span>
         </div>
         <div class="collection-voice-wrap">
           <div class="collection-voice-top">
@@ -1223,6 +1257,7 @@ body.public-demo [data-staff-only]{display:none!important;}
 </div>
 
 <!-- ████ SOUL & VOICE PANEL ████ -->
+
 <div class="panel" id="panel-soul">
   <div style="max-width:960px;margin:0 auto;">
     <h2 style="font-family:var(--mono);font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent2);margin:2px 0 6px;">Soul &amp; Voice · persona design</h2>
@@ -2246,6 +2281,11 @@ function resolveCollectionSpeechVoice(languageCode) {
 function updateCollectionVoiceNote() {
   const note = document.getElementById('collection-voice-note');
   if (!note) return;
+  const localId = collectionLocalVoiceId();
+  if (localId) {
+    note.textContent = 'Reading aloud with ' + (COLLECTION_VOICE_LABELS[localId] || localId) + ', a local voice running on the ARCHAI machine. Speak a staff-facing question to the whole collection.';
+    return;
+  }
   if (window._collectionVoiceChoice === 'browser-default') {
     note.textContent = 'Using the browser default voice for staff-facing collection response playback.';
     return;
@@ -2256,6 +2296,87 @@ function updateCollectionVoiceNote() {
     : 'Speak a staff-facing question to the whole collection. ARCHAI Neutral will use the best available modern browser voice for playback.';
 }
 
+// ── Local voice bridge (same voices as the ACMI and Heide demos) ──
+// Tries the Mac-hosted voice server first, then the encrypted tunnel. Falls back to browser voices.
+const COLLECTION_LOCAL_VOICE_SERVER = 'http://127.0.0.1:8123';
+const COLLECTION_REMOTE_VOICE_SERVER = 'https://archai-api.fineartmedia.tech/voice';
+const COLLECTION_VOICE_LABELS = {
+  aussie: 'Matilda · Female · Australian (MeloTTS)',
+  rob_au: 'Rob · Male · Australian (cloned voice)',
+  alba: 'Ada · Female · British (Piper)',
+  cori: 'Cate · Female · British (Piper)',
+  amy: 'Amy · Female · American (Piper)',
+  lessac: 'Nora · Female · American (Piper)',
+  ryan: 'Ryan · Male · American (Piper)',
+  alan: 'Alan · Male · British (Piper)',
+  northern: 'Ted · Male · British (Piper)'
+};
+window._collectionVoiceServer = '';
+window._collectionLocalVoices = [];
+window._collectionVoiceAudio = null;
+
+async function detectCollectionVoiceBridge() {
+  const candidates = [
+    { url: COLLECTION_LOCAL_VOICE_SERVER, timeout: 1600 },
+    { url: COLLECTION_REMOTE_VOICE_SERVER, timeout: 5000 }
+  ];
+  for (const c of candidates) {
+    try {
+      const r = await fetch(c.url + '/health', { cache: 'no-store', signal: AbortSignal.timeout(c.timeout) });
+      const data = await r.json();
+      if (!r.ok || !data.ok) throw new Error('offline');
+      const names = (data.voices || []).filter(id => COLLECTION_VOICE_LABELS[id]);
+      if (names.length) {
+        window._collectionVoiceServer = c.url;
+        window._collectionLocalVoices = names;
+        break;
+      }
+    } catch (e) { /* try the next bridge */ }
+  }
+  // First run: prefer a local voice over the browser voice. A saved choice always wins.
+  let saved = '';
+  try { saved = localStorage.getItem('archai.collectionVoice') || ''; } catch (e) {}
+  if (window._collectionLocalVoices.length) {
+    const savedOk = saved && (saved.indexOf('local:') !== 0 || window._collectionLocalVoices.includes(saved.slice(6)));
+    window._collectionVoiceChoice = savedOk ? saved : 'local:' + (window._collectionLocalVoices.includes('aussie') ? 'aussie' : window._collectionLocalVoices[0]);
+  } else if (saved && saved.indexOf('local:') !== 0) {
+    window._collectionVoiceChoice = saved;
+  }
+  populateCollectionVoiceSelect();
+}
+
+function collectionLocalVoiceId() {
+  const c = window._collectionVoiceChoice || '';
+  return c.indexOf('local:') === 0 && window._collectionVoiceServer ? c.slice(6) : '';
+}
+
+function collectionSpeechText(raw) {
+  let t = String(raw || '').replace(/<[^>]+>/g, ' ').replace(/[*_#`>]+/g, '').replace(/\s+/g, ' ').trim();
+  if (t.length > 1400) {
+    t = t.slice(0, 1400);
+    const cut = Math.max(t.lastIndexOf('. '), t.lastIndexOf('? '), t.lastIndexOf('! '));
+    if (cut > 600) t = t.slice(0, cut + 1);
+  }
+  return t;
+}
+
+async function collectionSpeakLocal(text, voiceId) {
+  collectionStopSpeaking(true);
+  updateCollectionVoiceUI('Preparing the ' + (COLLECTION_VOICE_LABELS[voiceId] || voiceId).split(' · ')[0] + ' voice…');
+  const r = await fetch(window._collectionVoiceServer + '/tts', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: collectionSpeechText(text), voice: voiceId, language: 'en' })
+  });
+  if (!r.ok) throw new Error('voice unavailable');
+  const blob = await r.blob();
+  const audio = new Audio(URL.createObjectURL(blob));
+  window._collectionVoiceAudio = audio;
+  audio.onended = () => updateCollectionVoiceUI('Collection response playback finished.');
+  audio.onerror = () => updateCollectionVoiceUI('Collection response playback failed in this browser.');
+  await audio.play();
+  updateCollectionVoiceUI('Reading the latest collection response aloud…');
+}
+
 function populateCollectionVoiceSelect() {
   const select = document.getElementById('collection-voice-select');
   if (!select) return;
@@ -2263,8 +2384,15 @@ function populateCollectionVoiceSelect() {
   const current = window._collectionVoiceChoice || 'archai-neutral';
   select.innerHTML = '';
 
+  (window._collectionLocalVoices || []).forEach(id => {
+    const option = document.createElement('option');
+    option.value = 'local:' + id;
+    option.textContent = COLLECTION_VOICE_LABELS[id];
+    select.appendChild(option);
+  });
+
   [
-    { value: 'archai-neutral', label: 'ARCHAI Neutral (recommended)' },
+    { value: 'archai-neutral', label: window._collectionLocalVoices && window._collectionLocalVoices.length ? 'ARCHAI Neutral (browser voice)' : 'ARCHAI Neutral (recommended)' },
     { value: 'browser-default', label: 'Browser Default' }
   ].forEach(meta => {
     const option = document.createElement('option');
@@ -2286,6 +2414,7 @@ function populateCollectionVoiceSelect() {
 
 function setCollectionVoicePreference(value) {
   window._collectionVoiceChoice = value || 'archai-neutral';
+  try { localStorage.setItem('archai.collectionVoice', window._collectionVoiceChoice); } catch (e) {}
   updateCollectionVoiceNote();
 }
 
@@ -2364,6 +2493,7 @@ function ensureCollectionSpeechRecognition() {
     if (finalResult && transcript) {
       window._collectionSpeechStatus = 'Question captured. Sending to ARCHAI…';
       updateCollectionVoiceUI();
+      window._collectionSpeakNext = true;
       doConverse();
     } else if (transcript) {
       updateCollectionVoiceUI('Listening… ' + transcript);
@@ -2389,7 +2519,54 @@ function ensureCollectionSpeechRecognition() {
   return recognition;
 }
 
+window._collectionRecorder = null;
+window._collectionAudioStream = null;
+window._collectionAudioChunks = [];
+
+async function collectionStartLocalVoiceQuery() {
+  try {
+    window._collectionAudioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch (e) {
+    updateCollectionVoiceUI('Microphone access was blocked in the browser.');
+    return;
+  }
+  window._collectionAudioChunks = [];
+  const rec = new MediaRecorder(window._collectionAudioStream);
+  window._collectionRecorder = rec;
+  rec.ondataavailable = e => { if (e.data && e.data.size) window._collectionAudioChunks.push(e.data); };
+  rec.onstart = () => {
+    window._collectionSpeechListening = true;
+    updateCollectionVoiceUI('Listening… ask the collection a question, then press Stop.');
+  };
+  rec.onstop = async () => {
+    window._collectionSpeechListening = false;
+    if (window._collectionAudioStream) { window._collectionAudioStream.getTracks().forEach(t => t.stop()); window._collectionAudioStream = null; }
+    updateCollectionVoiceUI('Transcribing with Whisper…');
+    try {
+      const blob = new Blob(window._collectionAudioChunks, { type: rec.mimeType || 'audio/webm' });
+      const r = await fetch(window._collectionVoiceServer + '/stt', { method: 'POST', headers: { 'Content-Type': 'application/octet-stream' }, body: blob });
+      const data = await r.json();
+      const text = String(data.text || '').trim();
+      if (!r.ok || !text) throw new Error('No speech captured');
+      document.getElementById('curatorSearch').value = text;
+      window._collectionSpeechStatus = 'Question captured. Sending to ARCHAI…';
+      updateCollectionVoiceUI();
+      window._collectionSpeakNext = true;
+      doConverse();
+    } catch (e) {
+      updateCollectionVoiceUI('I could not hear that clearly. Press Voice Query to try again, or type your question.');
+    }
+    window._collectionRecorder = null;
+    window._collectionAudioChunks = [];
+  };
+  rec.start();
+}
+
 function collectionStartVoiceQuery() {
+  if (window._collectionVoiceServer && navigator.mediaDevices && navigator.mediaDevices.getUserMedia && typeof MediaRecorder !== 'undefined') {
+    collectionStartLocalVoiceQuery();
+    return;
+  }
   const recognition = ensureCollectionSpeechRecognition();
   if (!recognition) {
     updateCollectionVoiceUI(getCollectionSpeechUnavailableMessage());
@@ -2409,6 +2586,10 @@ function collectionStartVoiceQuery() {
 }
 
 function collectionStopVoiceQuery() {
+  if (window._collectionRecorder && window._collectionRecorder.state === 'recording') {
+    window._collectionRecorder.stop();
+    return;
+  }
   if (!window._collectionSpeechRecognition) return;
   try { window._collectionSpeechRecognition.stop(); } catch {}
   window._collectionSpeechListening = false;
@@ -2416,6 +2597,18 @@ function collectionStopVoiceQuery() {
 }
 
 function collectionSpeakLatestReply() {
+  const _localId = collectionLocalVoiceId();
+  if (_localId && window._collectionLastAssistantReply) {
+    collectionSpeakLocal(window._collectionLastAssistantReply, _localId).catch(() => {
+      updateCollectionVoiceUI('The local voice was unavailable, so the browser voice is reading instead.');
+      collectionSpeakBrowser();
+    });
+    return;
+  }
+  collectionSpeakBrowser();
+}
+
+function collectionSpeakBrowser() {
   if (!window.speechSynthesis) {
     updateCollectionVoiceUI('Speech playback is not available in this browser. Coqui is the next production step.');
     return;
@@ -2442,20 +2635,23 @@ function collectionSpeakLatestReply() {
   updateCollectionVoiceUI('Reading the latest collection response aloud…');
 }
 
-function collectionStopSpeaking() {
-  if (!window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-  updateCollectionVoiceUI('Audio playback stopped.');
+function collectionStopSpeaking(quiet) {
+  if (window._collectionVoiceAudio) {
+    try { window._collectionVoiceAudio.pause(); } catch (e) {}
+    window._collectionVoiceAudio = null;
+  }
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  if (!quiet) updateCollectionVoiceUI('Audio playback stopped.');
 }
 
 // ── ROLE DEFINITIONS ────────────────────────────────────────────
 const ROLE_DEFS = {
   admin:       { label:'Admin',              note:'Admin access · user management, infra config, pipeline controls, all data',
-                 tabs:['curator','nodel','nfc','vocab','connect','shows','soul','visitor','famtec','objdetail'] },
+                 tabs:['curator','nodel','nfc','vocab','connect','shows','soul','assistant','visitor','famtec','objdetail'] },
   curator:     { label:'Curator',            note:'Curator access · collection editing, AUXIO publishing, vocab tools',
-                 tabs:['curator','nodel','nfc','vocab','connect','shows','soul','visitor','famtec','objdetail'] },
+                 tabs:['curator','nodel','nfc','vocab','connect','shows','soul','assistant','visitor','famtec','objdetail'] },
   collections: { label:'Collections Officer', note:'Collections Officer · data entry, upload/tagging, AUXIO assignment',
-                 tabs:['curator','nfc','vocab','connect','shows','soul','visitor','famtec','objdetail'] },
+                 tabs:['curator','nfc','vocab','connect','shows','soul','assistant','visitor','famtec','objdetail'] },
   technician:  { label:'Technician / AV',    note:'Technician / AV · Nodel operations and technical record visibility',
                  tabs:['nodel','visitor','famtec','objdetail'] },
   volunteer:   { label:'Volunteer',          note:'Volunteer · read-only collection lookup, AUXIO preview, visitor support',
@@ -2463,7 +2659,7 @@ const ROLE_DEFS = {
   visitor:     { label:'Visitor',            note:'Visitor mode · public-facing preview only',
                  tabs:['visitor'] },
   demo:        { label:'Public Demo',         note:'Public read-only demo · explore every part of ARCHAI. Search, converse, and browse freely; editing and publishing are disabled.',
-                 tabs:['curator','nodel','nfc','vocab','connect','shows','soul','visitor','famtec','objdetail'] }
+                 tabs:['curator','nodel','nfc','vocab','connect','shows','soul','assistant','visitor','famtec','objdetail'] }
 };
 
 // ── FAMTEC DATA ─────────────────────────────────────────────────
@@ -2631,6 +2827,7 @@ window.addEventListener('DOMContentLoaded', () => {
   initRoleUI();
   populateOdVoiceSelect();
   populateCollectionVoiceSelect();
+  detectCollectionVoiceBridge();
   updateCollectionVoiceUI();
   if (window.speechSynthesis) {
     window.speechSynthesis.onvoiceschanged = () => {
@@ -3400,7 +3597,14 @@ function switchTab(name, el) {
   if (name === 'soul') soulInit();
 }
 function setChip(el) { el.closest('.filter-group').querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); }
-function togglePill(el) { el.classList.toggle('active'); }
+function syncConvoLayout() {
+  var host = document.querySelector('.convo-host');
+  if (!host) return;
+  var first = host.querySelector('.pill-row .pill');
+  host.classList.toggle('chat-layout', !!(first && first.classList.contains('active')));
+}
+function togglePill(el) { el.classList.toggle('active'); syncConvoLayout(); }
+document.addEventListener('DOMContentLoaded', syncConvoLayout);
 
 // ═══════════════════════════════════════════════════════════════════
 // ROLE SWITCHING
@@ -4025,17 +4229,54 @@ function nfcAssigned(objId) { return NFC_TAGS.some(t => t.objectId === objId && 
 // ── Conversational Search — the database talks back ─────────────
 let convoHistory = [];
 
-function doConverse() {
-  const q = document.getElementById('curatorSearch').value.trim();
+let convoModel = '';
+let convoModelList = [];
+function convoSetModel(id, userPicked) {
+  convoModel = id;
+  if (userPicked) { try { fetch(`${BACKEND_BASE}/api/proxy/curator/warm`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model: id }) }); } catch (e) {} }
+  try { localStorage.setItem('archai_convo_model', id); } catch (e) {}
+  const m = convoModelList.find(x => x.id === id);
+  document.querySelectorAll('#convoModelBtns .cm-btn').forEach(b => b.classList.toggle('on', b.dataset.id === id));
+  const note = document.getElementById('convoModelNote');
+  if (note) note.textContent = m ? m.note + (userPicked ? ' Loading it now, so your first question may take a little longer.' : '') : '';
+}
+async function convoLoadModels() {
+  try {
+    const r = await fetch(`${BACKEND_BASE}/api/proxy/curator/models`);
+    const d = await r.json();
+    if (!d.ok || !d.models || !d.models.length) return;
+    convoModelList = d.models;
+    let saved = ''; try { saved = localStorage.getItem('archai_convo_model') || ''; } catch (e) {}
+    const usable = d.models.filter(m => m.available);
+    const start = usable.find(m => m.id === saved) || usable.find(m => m.id === d.default) || usable[0];
+    document.getElementById('convoModelBtns').innerHTML = d.models.map(m =>
+      `<button type="button" class="cm-btn" data-id="${escHTML(m.id)}" ${m.available ? '' : 'disabled title="Not installed on this server"'} onclick="convoSetModel('${escHTML(m.id)}', true)">${escHTML(m.label)} · ${escHTML(m.size)}</button>`).join('');
+    if (start) convoSetModel(start.id);
+  } catch (e) { const bar = document.getElementById('convoModelBar'); if (bar) bar.style.display = 'none'; }
+}
+setTimeout(convoLoadModels, 400);
+
+function convoFormat(text) {
+  // Escape first, then allow **bold** only, so model output can never inject markup.
+  return escHTML(String(text || '')).replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
+}
+function convoExpandWeb() { if (window._convoLastQ) doConverse(window._convoLastQ, true); }
+function convoContinue() { if (window._convoLastQ) doConverse(window._convoLastQ + ' (continue and finish the full answer in more detail)', !!(window._convoLastWeb)); }
+
+function doConverse(forcedQ, forceWeb) {
+  const q = (typeof forcedQ === 'string' ? forcedQ : document.getElementById('curatorSearch').value).trim();
   if (!q) return;
-  document.getElementById('curatorSearch').value = '';
+  if (typeof forcedQ !== 'string') document.getElementById('curatorSearch').value = '';
+  const webOn = forceWeb === true || !!(document.getElementById('convoWeb') && document.getElementById('convoWeb').checked);
+  if (!/\(continue and finish the full answer in more detail\)$/.test(q)) { window._convoLastQ = q; }
+  window._convoLastWeb = webOn;
 
   const thread = document.getElementById('convoThread');
   thread.style.display = 'block';
 
   // Add user message
-  thread.innerHTML += `<div class="convo-msg user">${q}</div>`;
-  thread.innerHTML += `<div class="convo-msg assistant" id="convo-pending"><span class="convo-typing"></span> Searching the collection...</div>`;
+  thread.innerHTML += `<div class="convo-msg user">${escHTML(q)}</div>`;
+  thread.innerHTML += `<div class="convo-msg assistant" id="convo-pending"><span class="convo-typing"></span> ${webOn ? 'Searching the collection and public web...' : 'Searching the collection...'}${(convoModelList.find(m => m.id === convoModel) || {}).size === '32B' ? ' (the deeper model can take 15-40 seconds)' : ''}</div>`;
   thread.scrollTop = thread.scrollHeight;
 
   // Update results label
@@ -4047,7 +4288,7 @@ function doConverse() {
   fetch(convoUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message: q, history: convoHistory.slice(-8) }),
+    body: JSON.stringify({ message: q, history: convoHistory.slice(-8), web: webOn, model: convoModel || undefined, exclude: (window._convoShown || []).slice(-40) }),
   })
   .then(r => r.json())
   .then(data => {
@@ -4067,32 +4308,88 @@ function doConverse() {
     convoHistory.push({ role: 'assistant', content: data.message || '' });
     window._collectionLastAssistantReply = data.message || '';
     updateCollectionVoiceUI('Collection response ready. You can read it aloud or ask another question.');
+    if (window._collectionSpeakNext) { window._collectionSpeakNext = false; setTimeout(collectionSpeakLatestReply, 50); }
 
     // Render assistant response
-    let html = data.message || 'No response received.';
+    let html = convoFormat(data.message || 'No response received.');
 
-    // Render object cards if present
-    if (data.objects && data.objects.length > 0) {
+    // Cards and results follow the order of the answer text, so the numbers match.
+    const named = namedObjectsInOrder(data.message || '', data.objects || []);
+    const smallTalk = named.cited.length === 0 && (data.message || '').length < 220;
+    if (!smallTalk && ((data.objects && data.objects.length) || named.cited.length)) {
+      const ordered = named.cited.length ? named.cited.concat(named.rest) : (data.objects || []);
+      const shownCards = named.cited.length ? named.cited : ordered.slice(0, 6);
       html += `<div class="convo-obj-cards">`;
-      for (const obj of data.objects) {
+      shownCards.forEach((obj, idx) => {
         const objKey = ensureConvoObject(obj);
         const objImage = pickSearchImage(OBJECTS[objKey]._mv || {});
         html += `<div class="convo-obj-card" onclick="openObj('${objKey}')">`;
+        if (named.cited.length) html += `<span class="coc-n">${idx + 1}</span>`;
         if (objImage) html += `<img src="${objImage}" loading="lazy" onerror="this.style.display='none'">`;
         html += `<div class="coc-title">${escHTML(obj.title)}</div>`;
         html += `<div class="coc-meta">${escHTML(obj.institution || '')} · ${(obj.score*100).toFixed(0)}%</div>`;
         html += `</div>`;
-      }
+      });
       html += `</div>`;
 
-      // Also update the main results area — renderConvoResults filters to
-      // image-ready records internally, so pass the full cited set.
-      document.getElementById('resultsLabel').textContent = data.objects.length + ' objects cited · conversational';
-      renderConvoResults(data.objects);
+      // The main results list uses the same order: named objects first, then the rest.
+      document.getElementById('resultsLabel').textContent = named.cited.length
+        ? named.cited.length + ' named in the answer (numbered as above) · ' + named.rest.length + ' more retrieved'
+        : ordered.length + ' objects retrieved · conversational';
+      renderConvoResults(ordered, named.cited.length);
+    }
+
+    if (data.noMatch) document.getElementById('resultsLabel').textContent = 'No matching records in the connected collection';
+
+    // Public web results: always labelled, always separate from the museum records.
+    if (data.web && data.web.used) {
+      html += `<div class="convo-web"><h4>Public web results (DuckDuckGo) · not museum records</h4>`;
+      if (data.web.results && data.web.results.length) {
+        data.web.results.forEach((r, i) => {
+          html += `<div class="w-item"><b>[W${i + 1}]</b> ${escHTML(r.text.length > 320 ? r.text.slice(0, 320) + '…' : r.text)}`
+            + (r.url ? ` <a href="${escHTML(r.url)}" target="_blank" rel="noopener noreferrer">${escHTML(r.source || 'source')}</a>` : ` <i>${escHTML(r.source || '')}</i>`) + `</div>`;
+        });
+      } else {
+        html += `<div class="w-item">No useful public web results were found for this question.</div>`;
+      }
+      html += `</div>`;
+    }
+
+    // Offer the next step instead of leaving the visitor at a dead end.
+    const acts = [];
+    if (data.truncated) acts.push(`<button class="convo-act" onclick="convoContinue()">Continue the answer</button>`);
+    if (!(data.web && data.web.used) && !data.fallback) acts.push(`<button class="convo-act" onclick="convoExpandWeb()" title="Sends the words of your question to DuckDuckGo. Results are shown separately from the museum records.">Expand with public web</button>`);
+    if (acts.length) html += `<div class="convo-actions">${acts.join('')}</div>`;
+
+    // Remember which records this answer actually named, so "more" can bring different ones.
+    window._convoShown = (window._convoShown || []).concat(named.cited.map(o => ({ registration: o.registration || '', title: o.title || '' })));
+
+    // Record of where the answer came from: every record it names, with its institution, registration and source link.
+    if (named.cited.length) {
+      html += `<div class="convo-web" style="border-style:solid"><h4>Sources for this answer · museum records</h4>`;
+      named.cited.forEach((o, i) => {
+        html += `<div class="w-item"><b>${i + 1}.</b> ${escHTML(o.title)} · ${escHTML(o.institution || '')}`
+          + (o.registration ? ` · reg. ${escHTML(o.registration)}` : '')
+          + (o.source_url && /^https?:\/\//.test(o.source_url) ? ` · <a href="${escHTML(o.source_url)}" target="_blank" rel="noopener noreferrer">source record</a>` : '')
+          + `</div>`;
+      });
+      html += `</div>`;
+    }
+
+    // Hallucination controls, stated in one line so the visitor can see what was checked.
+    const g = data.grounding;
+    if (g && g.usedRecords !== undefined) {
+      html += `<div class="convo-ground">Answered from ${g.usedRecords} matching record${g.usedRecords === 1 ? '' : 's'}`
+        + (g.withheldWeakMatches ? ` · ${g.withheldWeakMatches} weaker match${g.withheldWeakMatches === 1 ? '' : 'es'} not used` : '')
+        + (g.removedClaims ? ` · ${g.removedClaims} unsupported statement${g.removedClaims === 1 ? '' : 's'} removed` : ' · checked against the records')
+        + (data.model && !/^deterministic/.test(data.model) ? ` · ${escHTML(data.model)}` : '')
+        + (g.answerId ? ` · answer ${escHTML(g.answerId)} logged` : '')
+        + `</div>`;
     }
 
     if (pending) { pending.id = ''; pending.innerHTML = html; }
     thread.scrollTop = thread.scrollHeight;
+    var _q = document.getElementById('curatorSearch'); if (_q && _q.scrollIntoView) _q.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   })
   .catch(e => {
     const pending = document.getElementById('convo-pending');
@@ -4102,6 +4399,32 @@ function doConverse() {
     document.getElementById('curatorSearch').value = q;
     doSearch();
   });
+}
+
+// Which retrieved objects does the answer actually name, and in what order?
+function namedObjectsInOrder(message, objects) {
+  const text = String(message || '').toLowerCase();
+  const hits = [], rest = [];
+  (objects || []).forEach((obj, i) => {
+    const reg = String(obj.registration || '').toLowerCase();
+    const title = String(obj.title || '').toLowerCase();
+    let pos = -1;
+    if (reg && reg.length > 2) pos = text.indexOf(reg);
+    // A bare title only counts when no other retrieved record's title contains it ("Radio" vs "Radio Nurse");
+    // otherwise the registration number has to appear in the answer.
+    const ambiguous = (objects || []).some((o2) => o2 !== obj && String(o2.title || '').toLowerCase().includes(title));
+    if (pos < 0 && title.length > 3 && !ambiguous) {
+      // The model often shortens long catalogue titles, so also try the part before the first comma, colon or slash.
+      const head = title.split(/[:;,(\/]/)[0].trim();
+      const forms = [title];
+      if (head.length >= 8) forms.push(head);
+      if (title.length > 36) forms.push(title.slice(0, 30));
+      for (const f of forms) { const at = text.indexOf(f); if (at >= 0 && (pos < 0 || at < pos)) pos = at; }
+    }
+    if (pos >= 0) hits.push({ obj, pos, i }); else rest.push(obj);
+  });
+  hits.sort((a, b) => a.pos - b.pos || a.i - b.i);
+  return { cited: hits.map(h => h.obj), rest };
 }
 
 // Register a conversational-search citation as a browsable object with a
@@ -4132,9 +4455,12 @@ function ensureConvoObject(obj) {
   return objKey;
 }
 
-function renderConvoResults(objects) {
+function renderConvoResults(objects, citedCount) {
   const container = document.getElementById('resultsContainer');
+  objects.forEach((obj, i) => { obj._namedIndex = (citedCount && i < citedCount) ? i + 1 : 0; });
+  // Show every object the answer names (so the numbers never skip), plus the other image-ready matches.
   const imageReadyObjects = objects.filter(obj => {
+    if (obj._namedIndex) return true;
     const objPayload = { ...obj, _source_collection: obj.collection, source_institution: obj.institution, media_medium: obj.image };
     return Boolean(pickSearchImage(objPayload));
   });
@@ -4144,7 +4470,10 @@ function renderConvoResults(objects) {
     return;
   }
 
+  let _dividerDone = false;
   container.innerHTML = imageReadyObjects.map(obj => {
+    let divider = '';
+    if (citedCount && !obj._namedIndex && !_dividerDone) { _dividerDone = true; divider = '<div class="convo-rest-divider">Also retrieved, not named in the answer</div>'; }
     const label = COLLECTION_LABELS[obj.collection] || COLLECTION_LABELS.archai_pilot;
     const rights = getObjectRightsInfo(obj);
     const relationshipLabels = {
@@ -4159,10 +4488,10 @@ function renderConvoResults(objects) {
     const thumbInner = objImage
       ? `<img src="${objImage}" style="width:100%;height:100%;object-fit:cover" loading="lazy" onerror="this.style.display='none'">`
       : `<div style="font-size:1rem;opacity:0.15;margin-bottom:3px">▣</div>`;
-    return `<div class="result-card" onclick="openObj('${objKey}')">
+    return divider + `<div class="result-card" onclick="openObj('${objKey}')">
       <div class="thumb"><div class="thumb-live"></div>${thumbInner}</div>
       <div>
-        <div class="r-title">${escHTML(obj.title)}</div>
+        <div class="r-title">${obj._namedIndex ? '<span class="r-num">' + obj._namedIndex + '</span>' : ''}${escHTML(obj.title)}</div>
         <div class="r-meta">${escHTML([obj.type, obj.maker, obj.registration].filter(Boolean).join(' · '))}</div>
         <div class="r-summary">${escHTML(obj.date || '')}</div>
         <div class="tag-row">
