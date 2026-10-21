@@ -4246,6 +4246,8 @@ async function convoLoadModels() {
     const d = await r.json();
     if (!d.ok || !d.models || !d.models.length) return;
     convoModelList = d.models;
+    // One model only (the public site): nothing to choose, so hide the picker.
+    if (d.models.length < 2) { const bar = document.getElementById('convoModelBar'); if (bar) bar.style.display = 'none'; return; }
     let saved = ''; try { saved = localStorage.getItem('archai_convo_model') || ''; } catch (e) {}
     const usable = d.models.filter(m => m.available);
     const start = usable.find(m => m.id === saved) || usable.find(m => m.id === d.default) || usable[0];
