@@ -1291,8 +1291,12 @@ async function proxyChat(systemPrompt, userPrompt, history = []) {
       body: JSON.stringify({ systemPrompt, userPrompt, history }),
       signal: controller.signal,
     });
-    const d = await r.json();
-    return d.message?.content || 'I could not generate a response.';
+    const d = await r.json().catch(() => ({}));
+    if (d.message?.content) return d.message.content;
+    console.warn('ARCHAI chat failed', r.status, d.error, d.details);
+    if (r.status === 422 && d.error) return d.error;
+    if (r.status === 429) return 'Lots of questions at once. Give it a moment and ask again.';
+    return 'I could not generate a response just now. Please try asking again.';
   } finally {
     clearTimeout(timer);
   }
@@ -2351,14 +2355,38 @@ function setChatTone(tone) {
   updateToneControls();
 }
 
+// The backend rejects system prompts over 5,000 characters. Records carry search-only
+// fields (embedding text, image URLs) and the same description under several keys, so
+// those are dropped, repeated values are sent once, and long values are shortened
+// until the record fits alongside the longest tone instruction.
+const SYSTEM_PROMPT_LIMIT = 4600;
+const PROMPT_SKIP_FIELDS = /^(?:_|embedding|vector|media_(?:large|thumbnail|small|medium|url|iiif)|image_url|thumbnail|iiif)/i;
+function compactMetadataBlock(payload, budget = 3900) {
+  const seen = new Set();
+  const lines = [];
+  for (const [key, raw] of Object.entries(payload || {})) {
+    if (PROMPT_SKIP_FIELDS.test(key) || raw === null || raw === undefined || raw === '') continue;
+    const value = formatMetadataValue(raw).replace(/\s+/g, ' ').trim();
+    if (!value || /^https?:\/\/\S+$/.test(value)) continue;
+    const fingerprint = value.toLowerCase();
+    if (seen.has(fingerprint)) continue;
+    seen.add(fingerprint);
+    lines.push([key, value]);
+  }
+  let cap = 700;
+  let block = lines.map(([k, v]) => k + ': ' + v).join('\n');
+  while (block.length > budget && cap > 80) {
+    cap = Math.floor(cap * 0.75);
+    block = lines.map(([k, v]) => k + ': ' + (v.length > cap ? v.slice(0, cap).trimEnd() + '…' : v)).join('\n');
+  }
+  return block.length > budget ? block.slice(0, budget).trimEnd() + '…' : block;
+}
+
 function buildSystemPrompt(payload) {
   const title = payload.title || payload.object_name || 'Untitled';
   const col = payload._source_collection || 'archai_pilot';
   const institution = getCollectionMeta(col).institution;
-  const metadataBlock = Object.entries(payload)
-    .filter(([k]) => !k.startsWith('_'))
-    .map(([k, v]) => k + ': ' + formatMetadataValue(v))
-    .join('\n');
+  const metadataBlock = compactMetadataBlock(payload);
 
   const toneInstruction = {
     curatorial: 'Respond like a curator reviewing this object. Focus on significance, themes, cultural context, interpretation, and relationships to broader collection or art-historical material. Do not roleplay as the object.',
@@ -2367,10 +2395,11 @@ function buildSystemPrompt(payload) {
     interpretation: 'Respond like a museum interpretation writer. Use clear public-facing language for labels, tours, education, access, and visitor engagement. Explain specialist terms simply and avoid overclaiming. Do not roleplay as the object.'
   }[chatTone];
 
-  return 'You are interpreting "' + title + '", a museum object at ' + institution + '. ' +
+  const prompt = 'You are interpreting "' + title + '", a museum object at ' + institution + '. ' +
     toneInstruction + '\n' +
     'Every answer must stay grounded in the verified metadata below. If the record does not support the answer, say so plainly.\n\n' +
     metadataBlock;
+  return prompt.length > SYSTEM_PROMPT_LIMIT ? prompt.slice(0, SYSTEM_PROMPT_LIMIT).trimEnd() + '…' : prompt;
 }
 
 function titleCaseField(key) {
