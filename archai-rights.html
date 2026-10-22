@@ -1,0 +1,203 @@
+<!-- Copyright (c) 2026 Rob Graham / FAMTEC. All rights reserved. -->
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARCHAI — Rights and ethics gates</title>
+<meta name="description" content="How ARCHAI checks legal and ethical status before it harvests a record, and how that status is shown on every object page.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#080808">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080808; --fg:#e8e4dc; --dim:#524e48; --gold:#c8a96e; --teal:#5fb4a2;
+  --rule:rgba(232,228,220,0.09); --panel:#101010; --panel2:#151515;
+  --text2:#a09890; --ok:#7aad8a; --accent2:#8fbcb0; --accent3:#9b8fbf; --nodel:#e8a840; --warn:#c87060;
+  --mono:'DM Mono',monospace; --serif:'Libre Baskerville',Georgia,serif; --sans:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--serif);font-size:16px;line-height:1.75;overflow-x:hidden}
+a{color:var(--gold)}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:26px 48px;background:linear-gradient(to bottom,rgba(8,8,8,0.92) 0%,rgba(8,8,8,0.5) 70%,transparent 100%)}
+.nav-logo{text-decoration:none}
+.nav-wordmark{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;color:rgba(232,228,220,0.6);text-transform:uppercase}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:rgba(232,228,220,0.55);text-decoration:none}
+.nav-links a:hover,.nav-links a.active{color:var(--fg)}
+main{max-width:980px;margin:0 auto;padding:150px 48px 80px}
+.tag{font-family:var(--mono);font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold)}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(2.1rem,5vw,3.4rem);line-height:1.15;margin:14px 0 22px}
+.lede{font-size:1.1rem;color:rgba(232,228,220,0.82);max-width:760px}
+h2{font-family:var(--serif);font-weight:700;font-size:1.55rem;margin:64px 0 10px;line-height:1.25}
+h2 .n{font-family:var(--mono);font-size:0.75rem;letter-spacing:0.18em;color:var(--gold);display:block;margin-bottom:8px;font-weight:500}
+p{max-width:760px;margin:0 0 14px;color:rgba(232,228,220,0.82)}
+.mono{font-family:var(--mono);font-size:0.8rem;color:var(--text2)}
+hr{border:0;border-top:1px solid var(--rule);margin:56px 0 0}
+.grid{display:grid;gap:14px;margin:22px 0 8px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{background:var(--panel);border:1px solid var(--rule);border-left:3px solid var(--gold);padding:16px 18px}
+.card h3{font-family:var(--serif);font-size:1.02rem;margin-bottom:6px}
+.card p{font-family:var(--sans);font-size:0.92rem;line-height:1.6;margin:0;color:rgba(232,228,220,0.78)}
+.card.teal{border-left-color:var(--teal)}
+.card.ok{border-left-color:var(--ok)}
+.card.warn{border-left-color:var(--warn)}
+.q{font-family:var(--mono);font-size:0.68rem;letter-spacing:0.16em;text-transform:uppercase;margin-bottom:8px;display:block}
+.q.ready{color:var(--ok)} .q.review{color:var(--nodel)} .q.live{color:var(--accent2)} .q.blocked{color:var(--warn)}
+ul.plain{list-style:none;max-width:760px;margin:6px 0 14px}
+ul.plain li{font-family:var(--sans);font-size:0.95rem;line-height:1.65;padding:7px 0 7px 18px;border-bottom:1px solid var(--rule);color:rgba(232,228,220,0.82);position:relative}
+ul.plain li::before{content:'';position:absolute;left:0;top:16px;width:6px;height:6px;background:var(--gold);border-radius:50%}
+ul.plain li b{font-weight:500;color:var(--fg)}
+.badge{display:inline-block;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;padding:2px 8px;border:1px solid;border-radius:2px;margin-right:8px;vertical-align:middle}
+.badge.built{color:var(--ok);border-color:var(--ok)} .badge.designed{color:var(--nodel);border-color:var(--nodel)}
+.legal{margin:0;padding:12px 14px;border:1px solid var(--c);background:rgba(255,255,255,0.02)}
+.legal .l{font-family:var(--mono);font-size:0.56rem;letter-spacing:1.8px;text-transform:uppercase;color:var(--c);margin-bottom:6px}
+.legal .s{font-family:var(--sans);font-size:0.8rem;color:var(--text2);line-height:1.65}
+.legal .s strong{color:var(--fg);font-weight:500}
+.legal .d{font-family:var(--mono);font-size:0.58rem;color:#6f6a63;line-height:1.7;margin-top:6px}
+.note{border:1px dashed rgba(232,228,220,0.25);padding:14px 18px;margin:26px 0 0;max-width:760px;font-family:var(--sans);font-size:0.9rem;color:rgba(232,228,220,0.8)}
+footer{border-top:1px solid var(--rule);padding:34px 48px 50px;text-align:center;font-family:var(--mono);font-size:0.7rem;letter-spacing:0.06em;color:var(--dim);line-height:1.9}
+footer a{color:var(--text2)}
+@media(max-width:860px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:768px){
+  nav{padding:18px 20px;flex-wrap:wrap;gap:12px 0;background:rgba(8,8,8,0.94)}
+  .nav-links{width:100%;gap:0;overflow-x:auto;padding-top:8px;border-top:1px solid rgba(232,228,220,0.08);scrollbar-width:none}
+  .nav-links::-webkit-scrollbar{display:none}
+  .nav-links a{display:block;white-space:nowrap;padding:10px 16px 2px 0;font-size:10px}
+  main{padding:140px 20px 60px}
+  .g2,.g4{grid-template-columns:1fr}
+  footer{padding:30px 20px 44px}
+}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/"><span class="nav-wordmark">FAMTEC</span></a>
+  <ul class="nav-links">
+    <li><a href="/#bio">Profile</a></li>
+    <li><a href="/#works">Works</a></li>
+    <li><a href="/archai.html" class="active">ARCHAI</a></li>
+    <li><a href="/dark-plates.html">Dark Plates</a></li>
+    <li><a href="/safechat.html">Saftio</a></li>
+    <li><a href="/courtside.html">Courtside</a></li>
+    <li><a href="/huggle.html">Huggle</a></li>
+    <li><a href="/keytec.html">Keytec</a></li>
+    <li><a href="/cv">CV</a></li>
+    <li><a href="/#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="tag">ARCHAI · Rights and ethics</div>
+  <h1>Rights and ethics gates</h1>
+  <p class="lede">ARCHAI only works with records that institutions publish for reuse. Rights and cultural safety are checked before a record is harvested, checked again for each record, and the result is shown on every object page, so a person can see what they are allowed to do with it. Where a gate cannot tell whether something is legal or ethical, it does not guess. It hands the decision to a person.</p>
+  <p class="mono">This page describes what is in the code today and marks what is still a design. <a href="/archai.html">Back to ARCHAI</a></p>
+
+  <h2><span class="n">01 · BEFORE HARVESTING</span>Each source is checked before anything is collected</h2>
+  <p>Every source sits in a registry before it is harvested. The registry records the rights position for the source, not just a link to its API.</p>
+  <ul class="plain">
+    <li><b>Metadata rights and image rights</b>, kept separate, because a museum can open its catalogue and still keep its images.</li>
+    <li><b>Public demo policy</b>: whether the source is approved, approved with an item-level rights check, or held.</li>
+    <li><b>Quality gate</b>: for example image-backed, item rights cleared, and culturally appropriate.</li>
+    <li><b>Cultural protocol</b>: what the source itself asks of us. For Te Papa, for example, to respect taonga and tupuna guidance from the source.</li>
+    <li><b>Verification status and date</b>, and links to the official terms of use.</li>
+  </ul>
+  <p>A legal harvest bot reads the registry and sorts every source into one of four queues. By default it only reports. Nothing is collected unless it is asked to run, and it still skips sources that fail the gate.</p>
+  <div class="grid g4">
+    <div class="card ok"><span class="q ready">Ready</span><p>Verified, approved, and passes the policy. Can be harvested.</p></div>
+    <div class="card"><span class="q review">Review</span><p>Needs a partner or image rights review before any automatic harvesting.</p></div>
+    <div class="card teal"><span class="q live">Live</span><p>Already in the index. Refreshed only when someone asks.</p></div>
+    <div class="card warn"><span class="q blocked">Blocked</span><p>No harvester wired, verification still pending, held by policy, or non-commercial only.</p></div>
+  </div>
+
+  <h2><span class="n">02 · DURING HARVESTING</span>Each record is checked as well as each source</h2>
+  <p>A source being open does not make every record in it open. Each harvester applies the rule that source actually publishes.</p>
+  <ul class="plain">
+    <li><b>Smithsonian.</b> Only records flagged CC0 by the API are taken, checked on each item.</li>
+    <li><b>Wellcome Collection.</b> Only records with an open licence (CC BY 4.0 or better) on the image, checked on each item.</li>
+    <li><b>National Gallery of Art.</b> Images only where the item carries the open access flag.</li>
+    <li><b>Tate.</b> Metadata only, and a hard cut-off to works made before 1920.</li>
+    <li><b>Getty.</b> Images held back until each item is verified as Open Content.</li>
+    <li><b>QAGOMA.</b> Metadata only. Images are not harvested.</li>
+  </ul>
+  <p>Some sources are deliberately left out. Harvard Art Museums allows non-commercial use only. TMDB bans AI and machine learning use in its terms. AniList and MyAnimeList cover art belongs to the studios. For Whitney and MoMA the open licence covers the catalogue but not the images. Each reason is written down in the harvester notes.</p>
+  <p>The licence, rights title, rights mode and any rights notes are stored on every record, with the attribution, so the status travels with the object.</p>
+
+  <h2><span class="n">03 · BEFORE ANYTHING IS SHOWN</span>A media check sits between the record and the public page</h2>
+  <p>A connected record is not automatically shown as reusable media. A separate check looks at the image itself and marks each record:</p>
+  <ul class="plain">
+    <li><b>Is the image available?</b> The link has to work and return a real image.</li>
+    <li><b>Is it a placeholder?</b> Stand-in pictures (for example "no image" or "digital image not yet created") are detected, so they are not shown as if they were the object.</li>
+    <li><b>Is public display allowed?</b> If a record is marked not allowed, no image appears, whatever the museum's API returned.</li>
+  </ul>
+  <p>Images from Tate and Getty are never shown in the search results at all. Restricted images cannot be added to a public online show.</p>
+
+  <h2><span class="n">04 · ON THE OBJECT PAGE</span>The legal status is shown on every object</h2>
+  <p>Open any object and you will find a Legal Status panel. It gives a short label, one sentence on what that means for you, and the exact licence and rights text from the source. Where the source says nothing, the page says so and sends you to the source record. It never assumes a record is free to use.</p>
+  <p>The label comes from reading the rights text. The most cautious reading wins, so a record that mentions both an open licence and a restriction is shown as restricted.</p>
+  <div class="grid g2">
+    <div class="legal" style="--c:var(--ok)"><div class="l">Legal Status</div><div class="s"><strong>Open access</strong> — Appears reusable under open-access or public-domain terms.</div><div class="d">Licence / rights: CC0 1.0</div></div>
+    <div class="legal" style="--c:var(--accent2)"><div class="l">Legal Status</div><div class="s"><strong>Attribution required</strong> — Reusable with attribution to the source institution and creator where required.</div><div class="d">Licence / rights: CC BY 4.0</div></div>
+    <div class="legal" style="--c:var(--accent3)"><div class="l">Legal Status</div><div class="s"><strong>Share alike</strong> — Reusable with attribution, and derivative use should keep the same licence terms.</div><div class="d">Licence / rights: CC BY-SA 4.0</div></div>
+    <div class="legal" style="--c:var(--accent2)"><div class="l">Legal Status</div><div class="s"><strong>API display with attribution</strong> — Display is permitted with an active source link; downloadable redistribution is not granted.</div><div class="d">Licence / rights: free with attribution</div></div>
+    <div class="legal" style="--c:var(--nodel)"><div class="l">Legal Status</div><div class="s"><strong>Restricted / mixed</strong> — Metadata may be open, but media reuse is limited, non-commercial, or preview-only.</div><div class="d">Licence / rights: CC0 metadata · preview media</div></div>
+    <div class="legal" style="--c:var(--warn)"><div class="l">Legal Status</div><div class="s"><strong>Restricted</strong> — Do not reuse the media without permission from the rights holder or source institution.</div><div class="d">Licence / rights: in copyright · permission required</div></div>
+    <div class="legal" style="--c:var(--text2)"><div class="l">Legal Status</div><div class="s"><strong>Check source</strong> — Review the source record and item-level rights before reuse.</div><div class="d">Licence / rights: Source rights not yet specified</div></div>
+  </div>
+  <p class="mono" style="margin-top:12px">The examples above show the wording and colours used on the object page. The licence lines are illustrations.</p>
+  <p style="margin-top:18px">Every object also links back to the institution's own record, which stays the authority. ARCHAI points to it and does not replace it.</p>
+
+  <h2><span class="n">05 · WHEN THE GATES CANNOT DECIDE</span>If it is not clear, a person decides</h2>
+  <p>Software can read a licence. It cannot settle what is lawful or right in a hard case. So the gates are built to say "I cannot tell" and stop, and not to pick the safe-looking answer and carry on.</p>
+  <p><span class="badge built">In the code</span>These hand-offs work today.</p>
+  <ul class="plain">
+    <li><b>A source with unclear or partial rights</b> goes to the Review queue, or is Blocked while verification is pending. Nothing is collected until a person has verified it.</li>
+    <li><b>A record with no rights wording</b> is shown as Check source. The page sends the reader to the institution that holds the rights, and does not assume the record is free to use.</li>
+    <li><b>An object flagged as culturally restricted</b> does not answer. The visitor is sent to a staff member or curator.</li>
+    <li><b>A visitor message the moderator flags as harmful, or cannot judge,</b> is hidden and held in a queue. A curator approves it or removes it, and the moderator's name is kept with the decision. Crisis wording is routed to support services, and is not posted.</li>
+  </ul>
+  <p><span class="badge designed">Designed, not yet proven</span>This one is a proposal.</p>
+  <ul class="plain">
+    <li><b>"Unsure, flag for review"</b> is one of the four levels in the planned cultural safety review before material is embedded. It sends the decision to a person before any processing happens.</li>
+  </ul>
+  <div class="note">The system is allowed to say "I can't tell". It is not allowed to decide that something is lawful or ethical when the evidence is not there. That decision belongs to a person, and ultimately to the institution and the community the material comes from.</div>
+
+  <h2><span class="n">06 · ETHICS</span>Cultural safety and care</h2>
+  <p><span class="badge built">In the code</span>These are working today.</p>
+  <ul class="plain">
+    <li><b>Source protocols are recorded</b> with each source and followed, as in the Te Papa example above.</li>
+    <li><b>Restricted cultural flags.</b> An object flagged secret-sacred or community-restricted is not allowed to answer. The visitor is told so and sent to a staff member or curator.</li>
+    <li><b>Indigenous protocol notice.</b> The vocabulary layer carries a notice that restricted terms are governed by community protocol.</li>
+    <li><b>Visitor messages are screened and held for moderation</b> before they appear, and crisis wording is routed to support rather than posted (Saftio).</li>
+    <li><b>Provenance is logged.</b> Each reply records the object, model and source identifiers it came from.</li>
+  </ul>
+  <p style="margin-top:22px"><span class="badge designed">Designed, not yet proven</span>These are proposals, and are not yet tested end to end.</p>
+  <ul class="plain">
+    <li><b>A four-level cultural safety review before embedding:</b> no concern, unsure and flag for review, restrict access, or exclude from AI entirely.</li>
+    <li><b>Exclusion as a property of the record,</b> checked by the pipeline before any processing, and not a setting that can be switched back on.</li>
+  </ul>
+  <p>Until exclusion has been tested through re-indexing, backup and restore, it is a requirement and not a safeguard we can claim.</p>
+
+  <h2><span class="n">07 · LIMITS</span>What this does not do</h2>
+  <ul class="plain">
+    <li>The status label is guidance based on the source's own wording. It is not legal advice and it does not replace the institution's decision about its own collection.</li>
+    <li>Inclusion in the research network does not mean an institution endorses ARCHAI.</li>
+    <li>Ethics approval is not yet in place for research with participants. Nothing in this system is used in a study until it is.</li>
+    <li>If a record looks wrong, or you hold rights or cultural authority over it, <a href="/#contact">please get in touch</a> and it can be held back.</li>
+  </ul>
+  <div class="note">Where an institution wants a gate set differently, for example to exclude a category of object altogether, the gate belongs to the institution. ARCHAI is designed so the institution keeps that control.</div>
+</main>
+
+<footer>
+  <p>ARCHAI &copy; 2026 Rob Graham / <a href="/">FAMTEC</a> — All rights reserved</p>
+  <p>Research prototype · source inclusion does not imply endorsement.</p>
+</footer>
+</body>
+</html>
