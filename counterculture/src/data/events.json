@@ -1,0 +1,14 @@
+[
+  {
+    "id": "evt_s4mp01",
+    "eventId": "evt_s4mp01",
+    "artistIds": ["art_s4mp01"],
+    "title": "Sample show (placeholder)",
+    "venue": "Venue TBC",
+    "startsAt": "2027-02-12T20:00:00+11:00",
+    "timezone": "Australia/Melbourne",
+    "status": "published",
+    "provider": "yougig",
+    "ticketUrl": "https://yougig.com.au/"
+  }
+]

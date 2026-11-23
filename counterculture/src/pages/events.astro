@@ -1,0 +1,9 @@
+---
+import Base from '../layouts/Base.astro';
+import { catalog, formatEventDate } from '../lib/catalog'; const c = await catalog();
+---
+<Base title="Events">
+  <h1>Events</h1>
+  <p class="muted">Tickets are sold through YouGig.</p>
+  <ul class="plain">{c.events.map((e) => <li><span><strong>{e.title}</strong> <span class="muted">· {e.venue} · {formatEventDate(e.startsAt, e.timezone)}</span></span><a class="btn" href={e.ticketUrl} rel="noopener">Tickets</a></li>)}</ul>
+</Base>

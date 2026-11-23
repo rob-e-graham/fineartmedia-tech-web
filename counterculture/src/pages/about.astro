@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+<Base title="About">
+  <h1>About</h1>
+  <div class="prose">
+    <p>COUNTERCULTURE brings independent music, merch, radio and live events together around the artist.</p>
+    <h2>Artist earnings</h2>
+    <p>Digital: 95% to the artist. Standard physical merch and records: 85% of distributable profit. Counterculture-designed merch: 80%, agreed before listing.</p>
+    <h2>Privacy, takedowns and rights</h2>
+    <p>To update or remove a profile, report a broken link or raise a rights issue, {site.contactEmail ? <a href={`mailto:${site.contactEmail}`}>email us</a> : "contact us (address to be configured)"}.</p>
+  </div>
+</Base>

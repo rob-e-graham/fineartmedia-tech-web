@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+<Base title="Radio">
+  <h1>Radio</h1>
+  {site.radioStreamUrl ? (
+    <>
+      <audio controls preload="none" src={site.radioStreamUrl}>Your browser cannot play this stream.</audio>
+      <p class="muted">Not playing? <a href={site.radioStreamUrl} rel="noopener">Open the stream directly</a>{site.radioPageUrl && <> or <a href={site.radioPageUrl} rel="noopener">use the radio page</a></>}.</p>
+    </>
+  ) : <p class="notice">Stream URL not configured yet. Add it in src/data/site.ts.</p>}
+</Base>

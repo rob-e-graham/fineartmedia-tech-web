@@ -1,0 +1,11 @@
+[
+  {
+    "id": "feat_s4mp01",
+    "featureId": "feat_s4mp01",
+    "artistId": "art_s4mp01",
+    "headline": "Sample feature",
+    "blurb": "Editorial features are chosen separately from profile approval. This one is placeholder content.",
+    "rank": 1,
+    "status": "published"
+  }
+]

@@ -1,0 +1,8 @@
+---
+import Base from '../layouts/Base.astro';
+import { catalog } from '../lib/catalog'; const { artists } = await catalog(); const rows = artists.flatMap((a) => a.data.links.filter((l) => l.kind === 'listen').map((l) => ({ a, l })));
+---
+<Base title="Music">
+  <h1>Music</h1>
+  <ul class="plain">{rows.map(({ a, l }) => <li><a href={`/artists/${a.data.slug}/`}>{a.data.displayName}</a><a class="btn" href={l.url} rel="noopener">{l.label}</a></li>)}</ul>
+</Base>
