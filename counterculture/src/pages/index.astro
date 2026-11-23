@@ -1,0 +1,49 @@
+---
+import Base from '../layouts/Base.astro';
+import ArtistCard from '../components/ArtistCard.astro';
+import { catalog, formatEventDate } from '../lib/catalog';
+import { site } from '../data/site';
+const c = await catalog();
+---
+<Base>
+  <section>
+    <p class="kicker">Independent music · merch · radio · live</p>
+    <h1>Counter&shy;culture</h1>
+    <p class="prose muted">Find artists, then go straight to listening, buying merch or getting a ticket.</p>
+    <div class="actions">
+      <a class="btn primary" href="/artists/">Browse artists</a>
+      <a class="btn" href="/radio/">Listen live</a>
+      <a class="btn" href="/join/">Artists: apply</a>
+    </div>
+  </section>
+  {c.features.length > 0 && (
+    <section aria-labelledby="featured">
+      <h2 id="featured">Featured</h2>
+      <div class="grid">
+        {c.features.map((f) => { const a = c.byId.get(f.artistId)!; return (
+          <article class="card">
+            <p class="kicker">{a.data.displayName}</p>
+            <h3>{f.headline}</h3>
+            <p class="muted">{f.blurb}</p>
+            <a href={`/artists/${a.data.slug}/`}>View profile</a>
+          </article>
+        ); })}
+      </div>
+    </section>
+  )}
+  <section aria-labelledby="artists">
+    <h2 id="artists">Artists</h2>
+    <div class="grid">{c.artists.slice(0, 8).map((a) => <ArtistCard artist={a} />)}</div>
+  </section>
+  {c.events.length > 0 && (
+    <section aria-labelledby="shows">
+      <h2 id="shows">Upcoming shows</h2>
+      <ul class="plain">
+        {c.events.slice(0, 5).map((e) => (
+          <li><span><strong>{e.title}</strong> <span class="muted">· {e.venue} · {formatEventDate(e.startsAt, e.timezone)}</span></span>
+          <a class="btn" href={e.ticketUrl} rel="noopener">Tickets on YouGig</a></li>
+        ))}
+      </ul>
+    </section>
+  )}
+</Base>

@@ -1,0 +1,15 @@
+[
+  {
+    "id": "prd_s4mp01",
+    "productId": "prd_s4mp01",
+    "variantId": "var_s4mp01_m",
+    "artistId": "art_s4mp01",
+    "title": "Sample tee (placeholder)",
+    "status": "published",
+    "currency": "AUD",
+    "priceMinor": 5995,
+    "provider": "square",
+    "checkoutUrl": "https://example.square.site/product/sample-tee",
+    "termsVersion": "physical-85-15-v1"
+  }
+]

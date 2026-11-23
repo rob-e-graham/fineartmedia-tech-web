@@ -1,0 +1,47 @@
+---
+import '../styles/global.css';
+interface Props { title?: string; description?: string; }
+const { title, description = 'Independent music, merch, radio and live shows, built around the artist.' } = Astro.props;
+const fullTitle = title ? `${title} · COUNTERCULTURE` : 'COUNTERCULTURE';
+const nav = [
+  ['/artists/', 'Artists'], ['/music/', 'Music'], ['/shop/', 'Shop'], ['/radio/', 'Radio'],
+  ['/events/', 'Events'], ['/join/', 'Join'], ['/about/', 'About'],
+];
+const path = Astro.url.pathname;
+const isPreview = import.meta.env.PUBLIC_PREVIEW !== 'false';
+---
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={new URL(path, Astro.site)} />
+  {isPreview && <meta name="robots" content="noindex" />}
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site">
+    <div class="wrap">
+      <a class="brand" href="/">COUNTERCULTURE</a>
+      <nav class="primary" aria-label="Main">
+        <ul>
+          {nav.map(([href, label]) => (
+            <li><a href={href} aria-current={path.startsWith(href) ? 'page' : undefined}>{label}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="wrap"><slot /></main>
+  <footer class="site">
+    <div class="wrap">
+      <p>COUNTERCULTURE · independent artists first. <a href="/about/">Privacy, takedowns and rights</a>.</p>
+    </div>
+  </footer>
+</body>
+</html>

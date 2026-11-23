@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+<Base title="Join as an artist">
+  <h1>Join as an artist</h1>
+  <div class="prose">
+    <p>Any eligible independent artist can apply for a free profile. It takes about 10 minutes.</p>
+    <h2>What we ask for</h2>
+    <ul><li>Artist name and a private contact email (never published)</li><li>A short bio, and location or genre if you like</li><li>Listening and social links</li><li>Artwork you have the rights to, with a credit</li><li>Your consent to publish. Merch and YouGig links are optional</li></ul>
+    <h2>What happens next</h2>
+    <ol><li>You get a receipt and a way to send corrections.</li><li>We check eligibility, consent, credits, image rights and links.</li><li>We send you a preview to approve.</li><li>Your profile goes live and you get a permanent link.</li></ol>
+    <p>A profile is separate from editorial features, which we choose ourselves. Never send bank details or ID documents.</p>
+    {site.applyFormUrl ? <p class="actions"><a class="btn primary" href={site.applyFormUrl} rel="noopener">Start your application</a></p> : <p class="notice">Application form link not configured yet.</p>}
+  </div>
+</Base>

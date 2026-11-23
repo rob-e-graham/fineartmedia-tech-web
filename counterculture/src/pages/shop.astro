@@ -1,0 +1,10 @@
+---
+import Base from '../layouts/Base.astro';
+import { catalog, formatPrice } from '../lib/catalog'; import { site } from '../data/site'; const c = await catalog();
+---
+<Base title="Shop">
+  <h1>Shop</h1>
+  <p class="muted">Checkout and delivery are handled by our existing Square store.</p>
+  <ul class="plain">{c.products.map((p) => <li><span>{p.title} <span class="muted">· {c.byId.get(p.artistId)?.data.displayName} · {formatPrice(p.priceMinor, p.currency)}</span></span><a class="btn" href={p.checkoutUrl} rel="noopener">Buy</a></li>)}</ul>
+  {site.storeUrl && <p class="actions"><a class="btn primary" href={site.storeUrl} rel="noopener">Visit the full store</a></p>}
+</Base>

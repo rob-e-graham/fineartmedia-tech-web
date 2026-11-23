@@ -1,0 +1,11 @@
+---
+import Base from '../../layouts/Base.astro';
+import ArtistCard from '../../components/ArtistCard.astro';
+import { catalog } from '../../lib/catalog';
+const { artists } = await catalog();
+---
+<Base title="Artists" description="Directory of approved independent artists on COUNTERCULTURE.">
+  <h1>Artists</h1>
+  <p class="muted">{artists.length} approved {artists.length === 1 ? 'profile' : 'profiles'}. <a href="/join/">Apply for a free profile</a>.</p>
+  <div class="grid">{artists.map((a) => <ArtistCard artist={a} />)}</div>
+</Base>

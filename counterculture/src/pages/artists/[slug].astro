@@ -1,0 +1,56 @@
+---
+import Base from '../../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import { catalog, artistBundle, formatPrice, formatEventDate, type Artist } from '../../lib/catalog';
+
+export async function getStaticPaths() {
+  const { artists } = await catalog();
+  return artists.map((artist) => ({ params: { slug: artist.data.slug }, props: { artist } }));
+}
+const { artist } = Astro.props as { artist: Artist };
+const a = artist.data;
+const { Content } = await render(artist);
+const { products, events } = await artistBundle(a.artistId);
+const listen = a.links.filter((l) => l.kind === 'listen');
+const other = a.links.filter((l) => l.kind !== 'listen');
+---
+<Base title={a.displayName} description={a.tagline}>
+  {a.sample && <p class="notice">Sample profile for template testing. Not a real artist.</p>}
+  <article>
+    <p class="kicker">{[a.location, ...a.genres].filter(Boolean).join(' · ')}</p>
+    <h1>{a.displayName}</h1>
+    <p class="prose muted">{a.tagline}</p>
+    {a.image && (
+      <figure>
+        <Image src={a.image} alt={a.imageAlt ?? ''} widths={[400, 800, 1200]} sizes="(min-width: 72rem) 72rem, 100vw" />
+        <figcaption class="muted">Artwork: {a.imageCredit}</figcaption>
+      </figure>
+    )}
+    {listen.length > 0 && (
+      <div class="actions">{listen.map((l) => <a class="btn primary" href={l.url} rel="noopener">Listen on {l.label}</a>)}</div>
+    )}
+    <section class="prose" aria-label="Biography"><Content /></section>
+    {products.length > 0 && (
+      <section aria-labelledby="merch"><h2 id="merch">Merch</h2>
+        <ul class="plain">{products.map((p) => (
+          <li><span>{p.title} <span class="muted">· {formatPrice(p.priceMinor, p.currency)}</span></span>
+          <a class="btn" href={p.checkoutUrl} rel="noopener">Buy</a></li>
+        ))}</ul>
+      </section>
+    )}
+    {events.length > 0 && (
+      <section aria-labelledby="live"><h2 id="live">Live</h2>
+        <ul class="plain">{events.map((e) => (
+          <li><span>{e.title} <span class="muted">· {e.venue} · {formatEventDate(e.startsAt, e.timezone)}</span></span>
+          <a class="btn" href={e.ticketUrl} rel="noopener">Tickets on YouGig</a></li>
+        ))}</ul>
+      </section>
+    )}
+    {other.length > 0 && (
+      <section aria-labelledby="elsewhere"><h2 id="elsewhere">Elsewhere</h2>
+        <div class="actions">{other.map((l) => <a class="btn" href={l.url} rel="noopener">{l.label}</a>)}</div>
+      </section>
+    )}
+  </article>
+</Base>

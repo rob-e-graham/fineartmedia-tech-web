@@ -1,0 +1,17 @@
+---
+import { Image } from 'astro:assets';
+import type { Artist } from '../lib/catalog';
+interface Props { artist: Artist; }
+const { data } = Astro.props.artist;
+---
+<article class="card">
+  <a class="cover" href={`/artists/${data.slug}/`}>
+    <div class="art">
+      {data.image
+        ? <Image src={data.image} alt={data.imageAlt ?? ''} width={600} height={600} />
+        : <span aria-hidden="true">{data.displayName.slice(0, 2).toUpperCase()}</span>}
+    </div>
+    <h3>{data.displayName}</h3>
+  </a>
+  <p class="muted">{[data.location, data.genres.join(', ')].filter(Boolean).join(' · ')}</p>
+</article>
